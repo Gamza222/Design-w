@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Дизайн Сейчас - Студия дизайна интерьера</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#1d1b19",
+                        "secondary": "#745a32",
+                        "surface": "#fdf8f8",
+                        "outline-variant": "#c7c6ca",
+                        "surface-dim": "#ddd9d9",
+                        "on-primary-fixed": "#1c1b1c",
+                        "inverse-surface": "#313030",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#fedaa8",
+                        "background": "#fdf8f8",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#000000",
+                        "surface-variant": "#e5e2e1",
+                        "on-secondary-fixed": "#281800",
+                        "surface-container-low": "#f7f3f2",
+                        "inverse-primary": "#c8c6c7",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#fdf8f8",
+                        "tertiary-fixed": "#e6e2de",
+                        "tertiary": "#000000",
+                        "surface-container-high": "#ebe7e7",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-secondary-container": "#785e36",
+                        "on-secondary-fixed-variant": "#5a431d",
+                        "secondary-fixed-dim": "#e3c191",
+                        "surface-tint": "#5f5e5f",
+                        "surface-container": "#f1edec",
+                        "inverse-on-surface": "#f4f0ef",
+                        "secondary-fixed": "#ffdeae",
+                        "on-tertiary-fixed-variant": "#484644",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#1d1b19",
+                        "on-surface": "#1c1b1b",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#858384",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#e5e2e3",
+                        "primary-container": "#1c1b1c",
+                        "on-surface-variant": "#46464a",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#868380",
+                        "primary-fixed-dim": "#c8c6c7",
+                        "on-primary-fixed-variant": "#474647",
+                        "outline": "#77777b",
+                        "tertiary-fixed-dim": "#cac6c2",
+                        "on-background": "#1c1b1b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "container-max": "1280px",
+                        "section-gap": "120px",
+                        "margin": "32px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Manrope"],
+                        "h2": ["Manrope"],
+                        "h3": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "h1": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h2": ["42px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "h3": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body": ["16px", {"lineHeight": "1.7", "fontWeight": "400"}],
+                        "label": ["11px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .gold-gradient {
+            background: linear-gradient(135deg, #E3C191 0%, #C9A97A 50%, #9F8256 100%);
+        }
+        .gold-text-gradient {
+            background: linear-gradient(135deg, #E3C191 0%, #C9A97A 50%, #9F8256 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body text-body antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TOP APP BAR FROM JSON -->
+<header class="fixed top-0 w-full z-50 bg-white/95 dark:bg-[#0F0F10]/95 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-zinc-800 transition-all duration-300">
+<div class="max-w-[1280px] mx-auto px-6 flex flex-col justify-center h-24">
+<div class="flex justify-between items-center w-full">
+<!-- Logo -->
+<div class="flex items-center gap-3">
+<span class="text-xl font-black tracking-tighter text-[#0F0F10] dark:text-white">Дизайн Сейчас</span>
+</div>
+<!-- Navigation -->
+<nav class="hidden md:flex items-center gap-8 font-['Manrope'] text-sm tracking-wide font-medium">
+<a class="text-[#0F0F10] dark:text-gray-300 hover:text-[#C9A97A] transition-colors duration-300" href="#">Дизайн-проект</a>
+<a class="text-[#0F0F10] dark:text-gray-300 hover:text-[#C9A97A] transition-colors duration-300" href="#">О нас</a>
+<a class="text-[#0F0F10] dark:text-gray-300 hover:text-[#C9A97A] transition-colors duration-300" href="#">Портфолио</a>
+<a class="text-[#0F0F10] dark:text-gray-300 hover:text-[#C9A97A] transition-colors duration-300" href="#">Достижения</a>
+<a class="text-[#0F0F10] dark:text-gray-300 hover:text-[#C9A97A] transition-colors duration-300" href="#">Блог</a>
+<a class="text-[#0F0F10] dark:text-gray-300 hover:text-[#C9A97A] transition-colors duration-300" href="#">Контакты</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex gap-3 text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-[#C9A97A] transition-colors duration-300">send</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-[#C9A97A] transition-colors duration-300">group</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-[#C9A97A] transition-colors duration-300">chat</span>
+</div>
+<button class="gold-gradient text-[#0F0F10] px-6 py-2.5 rounded-full font-bold text-sm tracking-wide shadow-[0_4px_14px_0_rgba(199,162,81,0.35)] hover:shadow-[0_6px_20px_rgba(199,162,81,0.23)] hover:-translate-y-0.5 active:scale-95 transition-all duration-200">
+                        Рассчитать проект
+                    </button>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN CONTENT -->
+<main class="pt-24">
+<!-- HERO -->
+<section class="bg-[#0F0F10] text-white py-section-gap overflow-hidden relative">
+<div class="max-w-container-max mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+<div class="flex flex-col items-start gap-8">
+<span class="text-[#C9A97A] font-label text-label tracking-[0.2em] uppercase">СТУДИЯ ДИЗАЙНА ИНТЕРЬЕРА</span>
+<h1 class="font-h1 text-h1 text-white">Создаём пространства, в которых хочется жить</h1>
+<p class="font-body text-body text-gray-400 max-w-md">10 000+ реализованных проектов по всей России. Дизайн-проект от 30 дней.</p>
+<div class="flex flex-wrap gap-4 mt-4">
+<button class="gold-gradient text-[#0F0F10] px-8 py-4 rounded-full font-bold text-sm tracking-wide shadow-[0_4px_14px_0_rgba(199,162,81,0.35)] hover:shadow-[0_6px_20px_rgba(199,162,81,0.23)] hover:-translate-y-0.5 transition-all duration-300">
+                            Рассчитать проект
+                        </button>
+<button class="border border-white/20 text-white px-8 py-4 rounded-full font-bold text-sm hover:bg-white/5 transition-all duration-300">
+                            Смотреть портфолио
+                        </button>
+</div>
+</div>
+<div class="relative h-[600px] w-full rounded-xl overflow-hidden shadow-2xl">
+<div class="absolute inset-0 bg-gradient-to-tr from-[#0F0F10]/40 to-transparent z-10"></div>
+<img alt="Interior" class="w-full h-full object-cover" data-alt="A high-end, luxurious modern interior living room showcasing a warm color palette with gold and deep brown accents. The room is flooded with natural light from large windows, highlighting plush textures on the furniture and a minimalist architectural layout. The mood is sophisticated, calm, and exclusive, perfectly aligned with a premium interior design studio aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPFkuGfO4oe0iFEK0LuYtitSCBtHzdryQiHiTt01sDVPetVie3HQ3zOEc3JVQjQcnUXj3OqbmhpDAxKjauzxWEl8z7TXx-Egx4W5O49S8cBBl8KKbw6kK0iLNz9K1_useZrHE56Zd6EuTjousge-vuqn80yWqdRpelGXVauwZcdUIOlL4XgyV5jUCF_6ZgGFVcnfjQxPw08eZY4jQAWSajImZQ3sNxmmdnPY3Fjk_TeyU3C4nQKlQBuJm6d2TpEMlj9Z6vH6G8EOA"/>
+</div>
+</div>
+</section>
+<!-- SERVICES -->
+<section class="py-section-gap bg-surface">
+<div class="max-w-container-max mx-auto px-6">
+<div class="mb-16">
+<span class="text-secondary font-label text-label tracking-[0.2em] uppercase block mb-4">УСЛУГИ</span>
+<h2 class="font-h2 text-h2 text-primary">Что входит в дизайн-проект</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Service 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-surface-variant hover:-translate-y-1 transition-transform duration-300">
+<span class="material-symbols-outlined text-4xl text-secondary mb-6" style="font-variation-settings: 'wght' 200">architecture</span>
+<h3 class="font-h3 text-h3 text-primary mb-4">Планировочные решения</h3>
+<p class="font-body text-body text-on-surface-variant">Разработка эргономичных планировок с учетом образа жизни заказчика и архитектурных особенностей.</p>
+</div>
+<!-- Service 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-surface-variant hover:-translate-y-1 transition-transform duration-300">
+<span class="material-symbols-outlined text-4xl text-secondary mb-6" style="font-variation-settings: 'wght' 200">view_in_ar</span>
+<h3 class="font-h3 text-h3 text-primary mb-4">3D-визуализация</h3>
+<p class="font-body text-body text-on-surface-variant">Фотореалистичные изображения будущего интерьера с подбором реальных материалов и мебели.</p>
+</div>
+<!-- Service 3 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-surface-variant hover:-translate-y-1 transition-transform duration-300">
+<span class="material-symbols-outlined text-4xl text-secondary mb-6" style="font-variation-settings: 'wght' 200">engineering</span>
+<h3 class="font-h3 text-h3 text-primary mb-4">Авторский надзор</h3>
+<p class="font-body text-body text-on-surface-variant">Контроль соответствия строительных работ проекту, закупка материалов и комплектация объекта.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FOOTER FROM JSON -->
+<footer class="bg-[#0F0F10] dark:bg-[#050505] w-full pt-32 pb-12 border-t border-zinc-800">
+<div class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-16">
+<div class="col-span-1 md:col-span-2">
+<span class="text-2xl font-bold text-white mb-6 block">Дизайн Сейчас</span>
+<p class="text-gray-500 font-['Manrope'] text-sm max-w-xs mb-8">© 2024 Дизайн Сейчас. Искусство создавать пространства.</p>
+</div>
+<div>
+<h4 class="font-['Manrope'] text-xs uppercase tracking-[0.2em] font-bold text-[#C9A97A] mb-6">Документы</h4>
+<ul class="space-y-4 font-['Manrope'] text-sm">
+<li><a class="text-gray-500 hover:text-[#C9A97A] transition-colors duration-300" href="#">Политика конфиденциальности</a></li>
+<li><a class="text-gray-500 hover:text-[#C9A97A] transition-colors duration-300" href="#">Договор оферты</a></li>
+<li><a class="text-gray-500 hover:text-[#C9A97A] transition-colors duration-300" href="#">Карта сайта</a></li>
+</ul>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Bash(sed:*)",
+      "Bash(python3:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(mkdir:*)",
+      "Bash(ls:*)",
+      "Bash(wc:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(open:*)",
+      "Bash(npx:*)",
+      "Bash(pkill:*)",
+      "Bash(curl:*)",
+      "Read(*)",
+      "Write(*)"
+    ],
+    "deny": []
+  }
+}

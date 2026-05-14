@@ -152,10 +152,13 @@ blog3.jpg  ← НЕ СУЩЕСТВУЕТ
 ## 🔧 КОМАНДЫ
 
 ```bash
-# Сервер
+# Сервер (HTML-версия)
 pkill -f "npx.*serve" 2>/dev/null
 cd "/Users/annakareva/Desktop/дизайн нау" && npx -y serve -l 8080 . &
 open -a Safari http://localhost:8080
+
+# React dev server
+cd "/Users/annakareva/Desktop/дизайн нау/react-app" && npm run dev
 
 # Обновить страницу жёстко
 # Cmd+Shift+R в Safari
@@ -171,6 +174,47 @@ cp index_backup2.html index.html
 
 ---
 
+## 🔀 GIT WORKFLOW (ОБЯЗАТЕЛЬНО)
+
+### Репозиторий
+- **GitHub:** `git@github.com:Gamza222/Design-w.git`
+- **Главная ветка:** `main`
+- **Аккаунт:** `exelate2013`
+
+### ⚡ АЛГОРИТМ ДЛЯ КАЖДОЙ ЗАДАЧИ
+
+**При получении ЛЮБОГО запроса на изменение кода — ВСЕГДА выполнять эту последовательность:**
+
+```
+1. SYNC     → git checkout main && git pull origin main
+2. BRANCH   → git checkout -b feature/<краткое-описание-задачи>
+3. WORK     → вносить изменения в коде
+4. COMMIT   → git add -A && git commit -m "описание изменений"
+5. PUSH     → git push origin feature/<краткое-описание-задачи>
+6. MERGE    → git checkout main && git merge feature/<краткое-описание-задачи>
+7. PUSH     → git push origin main
+8. CLEANUP  → git branch -d feature/<краткое-описание-задачи>
+9. CLEANUP  → git push origin --delete feature/<краткое-описание-задачи>
+```
+
+### Правила именования веток
+- Формат: `feature/<краткое-описание>` (латиницей, через дефис)
+- Примеры: `feature/fix-header-mobile`, `feature/add-blog-images`, `feature/update-calculator`
+
+### Правила коммитов
+- Язык коммитов: русский или английский
+- Формат: краткое описание что сделано
+- Примеры: `"Исправлен мобильный хедер"`, `"Добавлены изображения блога"`
+
+### ⚠️ ВАЖНО
+- **НИКОГДА** не работать напрямую в `main` — всегда через feature-ветку
+- **ВСЕГДА** делать `git pull origin main` перед созданием ветки
+- **ВСЕГДА** пушить и мёрджить после завершения работы
+- Если задача мелкая (1 коммит) — всё равно через ветку
+- Если задача большая — можно делать промежуточные коммиты в feature-ветке
+
+---
+
 ## 🚫 ПРАВИЛА
 
 ### НИКОГДА:
@@ -178,11 +222,14 @@ cp index_backup2.html index.html
 - ❌ Удалять id у секций (якорная навигация)
 - ❌ Менять `data-tab` атрибуты
 - ❌ Трогать Web3Forms ключ
+- ❌ Работать напрямую в ветке `main`
 
 ### ВСЕГДА:
 - ✅ Бэкап перед большими правками
 - ✅ Cmd+Shift+R после правок в Safari
 - ✅ Проверять `body { padding-top }` в blog.html, article.html (должен быть 72px)
+- ✅ Создавать feature-ветку для каждой задачи
+- ✅ Коммитить, пушить и мёрджить после завершения
 
 ---
 
@@ -194,3 +241,5 @@ cp index_backup2.html index.html
 | 2026-05-01 | Добавлены blog.html, article.html, portfolio.html |
 | 2026-05-02 | Настроена среда Claude (.claude/, CLAUDE.md) |
 | 2026-05-02 | Редизайн хедера и всего сайта: 3 цвета (#1A1A2E, #C9A050, #E8E4DC), прозрачный хедер, одна строка, соцсети текстом (TG/VK/WA), hover-подчёркивание |
+| 2026-05-04 | Миграция на React + Tailwind (react-app/) |
+| 2026-05-14 | GitHub подключён (Gamza222/Design-w), настроен Git workflow с feature-ветками |

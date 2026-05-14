@@ -16,6 +16,10 @@
       "Bash(npx:*)",
       "Bash(pkill:*)",
       "Bash(curl:*)",
+      "Bash(git:*)",
+      "Bash(ssh:*)",
+      "Bash(npm:*)",
+      "Bash(pbcopy:*)",
       "Read(*)",
       "Write(*)"
     ],

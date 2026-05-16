@@ -4,172 +4,127 @@
 
 ---
 
-## 📁 ФАЙЛОВАЯ СТРУКТУРА
+## 📁 ФАЙЛОВАЯ СТРУКТУРА (FSD)
 
 ```
-дизайн нау/
-├── index.html          # Главная страница
-├── blog.html           # Страница блога
-├── article.html        # Страница статьи (читает хэш #1, #2, #3...)
-├── portfolio.html      # Портфолио-аккордеон
-├── style.css           # Главный CSS (~400 строк, новый дизайн 2026-05)
-├── script.js           # Весь JS (табы, слайдер, формы, EmailJS)
-├── style_backup.css    # Резервная копия CSS (старый стиль)
-├── style_backup2.css   # Резервная копия CSS (до редизайна мая 2026)
-├── index_backup.html   # Резервная копия HTML
-├── index_backup2.html  # Резервная копия HTML (до редизайна мая 2026)
-├── CLAUDE.md           # Этот файл
-├── РУКОВОДСТВО.md      # Руководство пользователя
-├── ДИЗАЙН-АУДИТ.md    # Аудит дизайна
-├── .claude/
-│   ├── settings.json
-│   └── design-skills.md
-│
-├── hero-bg.jpg         # Фото для hero секции
-├── russia-map.png      # Карта России
-├── gramota1.jpg        # Грамота 2024
-├── gramota2.jpg        # Грамота 2022
-├── review1-17.jpg      # Фото отзывов (17 штук)
-└── лого для сайта дизайн сейчас.png  # Логотип PNG
-```
-
-### ⚠️ ОТСУТСТВУЮЩИЕ ФАЙЛЫ
-```
-blog1.jpg  ← НЕ СУЩЕСТВУЕТ → блог показывает пустые карточки
-blog2.jpg  ← НЕ СУЩЕСТВУЕТ
-blog3.jpg  ← НЕ СУЩЕСТВУЕТ
+Design-w/
+├── src/
+│   ├── app/
+│   │   ├── App.jsx          # BrowserRouter + Layout (Header/Footer/CookieBanner)
+│   │   └── index.css        # Глобальные стили + Tailwind + CSS-компоненты
+│   ├── pages/
+│   │   ├── HomePage/
+│   │   │   ├── index.jsx    # Сборник всех секций главной
+│   │   │   └── sections/    # Hero, Services, HowWeWork, Portfolio, Russia,
+│   │   │                    # About, Fears, Blog, FAQ, Contacts
+│   │   ├── PortfolioPage/index.jsx
+│   │   ├── BlogPage/index.jsx
+│   │   └── ArticlePage/index.jsx
+│   ├── features/
+│   │   ├── Calculator/index.jsx   # Калькулятор: тарифы (radio) + доп.услуги (checkbox)
+│   │   ├── Reviews/index.jsx      # Слайдер отзывов + lightbox
+│   │   └── ServiceModal/index.jsx # Модальное окно услуги
+│   ├── widgets/
+│   │   ├── Header/index.jsx       # Хедер с React Router навигацией
+│   │   ├── Footer/index.jsx       # Футер
+│   │   └── CookieBanner/index.jsx
+│   ├── shared/
+│   │   ├── data/
+│   │   │   ├── services.js  # tariffs[] + extras[] + services[] (все вместе)
+│   │   │   ├── content.js   # blogPosts[], portfolioFlats[], portfolioHouses[]
+│   │   │   └── reviews.js   # reviews[] (17 фото)
+│   │   ├── ui/
+│   │   │   └── FadeInView.jsx
+│   │   └── hooks/
+│   │       └── useScrollReveal.js
+│   └── main.jsx             # React entry point
+├── public/
+│   ├── gramota1.jpg, gramota2.jpg
+│   ├── hero-bg.jpg
+│   ├── review1-17.jpg
+│   ├── russia-map.png
+│   └── лого для сайта дизайн сейчас.png
+├── index.html               # Vite entry HTML
+├── vite.config.js
+├── tailwind.config.js
+├── postcss.config.js
+├── package.json
+└── CLAUDE.md
 ```
 
 ---
 
-## 🗺️ КАРТА СТРАНИЦ
+## 🗺️ КАРТА РОУТОВ
 
-### index.html — Главная
-
-| Секция | ID | Класс | Примечания |
-|--------|-----|-------|------------|
-| Шапка | `#header` | `.header` | Фиксированная, прозрачная, одна строка |
-| Hero | `#hero` | `.hero` | bg-image: hero-bg.jpg + тёмный overlay |
-| Услуги | `#services` | `.services` | 10 карточек + 10 модальных окон |
-| Портфолио | `#portfolio` | `.portfolio` | Табы: квартиры/дома |
-| Россия | `#russia` | `.russia` | SVG самолётики, статистика |
-| О нас | `#about` | `.about` | Текст + числа + грамоты |
-| Достижения | `#achievements` | `.about__awards` | Внутри `.about` секции! |
-| Страхи/Гарантии | `#guarantees` | `.fears` | 5 карточек |
-| Блог | `#blog` | `.blog` | 3 карточки |
-| Калькулятор | `#price` | `.price` | Форма с EmailJS |
-| Отзывы | `#reviews` | `.reviews` | Слайдер 17 фото + lightbox |
-| Контакты | `#contacts` | `.contacts` | Форма + мессенджеры |
-| Подвал | — | `.footer` | 4 колонки |
+| URL | Компонент | Описание |
+|-----|-----------|----------|
+| `/` | `HomePage` | Главная со всеми секциями |
+| `/portfolio` | `PortfolioPage` | Полное портфолио (табы: квартиры/дома) |
+| `/blog` | `BlogPage` | Все 6 статей |
+| `/blog/:id` | `ArticlePage` | Статья по id (1-6) |
 
 ---
 
-## 🎨 ЦВЕТОВАЯ СИСТЕМА (обновлено 2026-05)
+## 🎨 ЦВЕТОВАЯ СИСТЕМА
 
-### Палитра — 3 цвета
 ```css
---dark:     #1A1A2E   /* основной тёмный (тёмно-синий) */
---dark2:    #16213E   /* чуть светлее тёмного */
---accent:   #C9A050   /* тёмное золото (акцент) */
---accent-d: #A8832E   /* тёмное золото при hover */
---light:    #E8E4DC   /* светлый нейтральный (текст на тёмном) */
---light2:   #F2EFE9   /* очень светлый (фоны светлых секций) */
---text-muted: rgba(232,228,220,0.6)  /* приглушённый текст */
---r:        12px
---tr:       0.28s ease
+/* ТЁМНЫЕ секции (Hero, HowWeWork, Portfolio, Russia, Blog, Calculator, Reviews) */
+#1C2340  /* основной тёмный */
+#243050  /* чуть светлее (Russia, Contacts, Reviews) */
+#1E2240  /* карточки на тёмном */
+
+/* СВЕТЛЫЕ секции (Services, About, Fears, FAQ, BlogPage, PortfolioPage) */
+#F7F4EF  /* кремово-белый фон */
+#FFFFFF  /* карточки на светлом */
+
+/* АКЦЕНТ */
+#C9A97A  /* золото */
+#B8852E  /* тёмное золото при hover */
+#F5B800  /* яркое золото (градиент) */
+
+/* ТЕКСТ */
+#E8E4DC  /* светлый текст (на тёмном фоне) */
+#1C2340  /* тёмный текст (на светлом фоне) */
 ```
 
-### Принцип чередования секций
-- **Тёмные** (dark/dark2): hero, portfolio, fears, contacts, reviews, price
-- **Светлые** (light2): services, about, blog
-- **dark с overlay**: russia
+### CSS-классы в index.css
+- `.section-tag` / `.section-title` / `.section-sub` — для тёмных секций
+- `.section-tag-dark` / `.section-title-dark` / `.section-sub-dark` — для светлых секций
+- `.service-card` — карточка на тёмном фоне
+- `.service-card-light` — карточка на светлом фоне
+- `.form-input` — инпут на тёмном фоне
+- `.form-input-light` — инпут на светлом фоне
+- `.btn-gold` — золотая кнопка
+- `.btn-outline` — контурная кнопка
+- `.btn-dark` — тёмная кнопка
 
 ---
 
-## 🏗️ СТРУКТУРА ХЕДЕРА (обновлено 2026-05)
+## ⚙️ КАЛЬКУЛЯТОР (features/Calculator)
 
-```html
-<header class="header" id="header">
-  <div class="container header__inner">
-    [ЛОГО]
-    <div class="header__right">
-      <nav class="nav" id="nav">
-        [6 nav-link ссылок]
-      </nav>
-      <span class="header__sep"></span>  <!-- скошенный разделитель -->
-      <div class="header__socials">
-        [TG] [VK] [WA]  <!-- текст, не иконки -->
-      </div>
-      <span class="header__sep"></span>
-      [Телефон .header__phone]
-      <span class="header__sep"></span>
-      [10:00–19:00 .header__hours]
-      <span class="header__sep"></span>
-      [Рассчитать проект .header__cta-btn]
-    </div>
-    [burger]
-  </div>
-</header>
+**Данные: `shared/data/services.js`**
+
 ```
+tariffs[] — 5 тарифов (radio, только один)
+  tariff4, tariff5 — имеют includes3D: true
 
-**Поведение хедера:**
-- По умолчанию: `background: transparent` — прозрачный поверх hero
-- При скролле > 60px: добавляется класс `.scrolled` → тёмный полупрозрачный фон с blur
-- Hover на ссылках: подчёркивание анимируется слева→направо (`scaleX`)
-
----
-
-## ⚙️ JAVASCRIPT (script.js)
-
-| Функция | Что делает |
-|---------|------------|
-| Бургер-меню | `.nav--open` на мобильных (< 900px) |
-| Прозрачный хедер | `.scrolled` при scroll > 60px |
-| Табы портфолио | `.tab-btn[data-tab]` → переключает `.tab-content` |
-| Слайдер отзывов | ID: reviewsSlider, reviewsTrack, dots |
-| Lightbox | Открытие фото в полный экран |
-| Грамоты (scrollAwards) | Горизонтальный скролл |
-| Модальные окна | `openModal(id)` / `closeModal(id)` |
-| Калькулятор | `calcPrice()` |
-| Web3Forms | `submitForm`, `submitLeadForm`, `submitCalcForm` |
-| Cookie banner | localStorage 'cookieAccepted' |
-
-**Web3Forms ключ:** `571ed5f8-bdbc-459e-a3e1-aec1c09223b4`
-
----
-
-## 🐛 ИЗВЕСТНЫЕ ПРОБЛЕМЫ
-
-| # | Проблема | Файл | Строка |
-|---|---------|------|--------|
-| 1 | `blog1.jpg`, `blog2.jpg`, `blog3.jpg` не существуют | index.html | ~373 |
-| 2 | Ссылки Telegram/VK = `yourusername` (плейсхолдеры) | index.html | в header и contacts |
-| 3 | «Смотреть проект →» в портфолио ведут на `#` | index.html | |
-| 4 | Кнопка «Получить каталог PDF» ведёт на `#catalog` (нет секции) | index.html | |
+extras[] — 5 доп.услуг (checkbox, несколько)
+  extra3d — заблокирован при tariff4/tariff5 (показывает badge "Включено")
+```
 
 ---
 
 ## 🔧 КОМАНДЫ
 
 ```bash
-# Сервер (HTML-версия)
-pkill -f "npx.*serve" 2>/dev/null
-cd "/Users/annakareva/Desktop/дизайн нау" && npx -y serve -l 8080 . &
-open -a Safari http://localhost:8080
+# Dev сервер (из корня)
+npm run dev
 
-# React dev server
-cd "/Users/annakareva/Desktop/дизайн нау/react-app" && npm run dev
+# Продакшен сборка
+npm run build
 
-# Обновить страницу жёстко
-# Cmd+Shift+R в Safari
-
-# Бэкап
-cp style.css style_backup.css
-cp index.html index_backup.html
-
-# Восстановить оригинал (до редизайна мая 2026)
-cp style_backup2.css style.css
-cp index_backup2.html index.html
+# Проверить что собирается
+npm run build && echo "OK"
 ```
 
 ---
@@ -178,146 +133,47 @@ cp index_backup2.html index.html
 
 ### Репозиторий
 - **GitHub:** `git@github.com:Gamza222/Design-w.git`
-- **Главная ветка:** `main` — это PRODUCTION, стабильная финальная версия
-- **Push-аккаунт:** `exelate2013`
-- **Владелец репозитория:** `Gamza222`
+- **Главная ветка:** `main`
 
-### 🤖 РЕЖИМ РАБОТЫ: ПОЛНЫЙ АВТОМАТ
-> **ВСЕ команды выполняются АВТОМАТИЧЕСКИ, без запроса у пользователя.**
-> Спрашивать пользователя ТОЛЬКО при:
-> - Конфликте мёрджа, который невозможно разрешить автоматически
-> - Неясности в требованиях задачи (что именно менять)
-> - Критической ошибке, требующей решения пользователя
->
-> Во всех остальных случаях — **просто делать**.
+### Автоматическая классификация веток
 
----
+| Тип задачи | Префикс |
+|-------------|---------|
+| Новая функция | `feature/` |
+| Исправление бага | `fix/` |
+| Визуальные правки | `design/` |
+| Рефакторинг | `refactor/` |
+| Срочный фикс | `hotfix/` |
+| Контент | `content/` |
 
-### 🏷️ АВТОМАТИЧЕСКАЯ КЛАССИФИКАЦИЯ ВЕТОК
-
-**При получении запроса — сам определить тип задачи и выбрать префикс:**
-
-| Тип задачи | Префикс ветки | Когда использовать |
-|-------------|---------------|---------------------|
-| **Новая функция** | `feature/` | Добавление нового раздела, компонента, страницы, функционала |
-| **Исправление бага** | `fix/` | Что-то сломано, не работает, отображается неправильно |
-| **Визуальные правки** | `design/` | Изменение цветов, шрифтов, отступов, анимаций, стилей |
-| **Рефакторинг** | `refactor/` | Реструктуризация кода без изменения функционала |
-| **Срочный фикс** | `hotfix/` | Критический баг, ломающий сайт (мёрджить немедленно) |
-| **Контент** | `content/` | Тексты, изображения, данные — без изменения логики |
-
-**Примеры:**
-- «сделай кнопку больше» → `design/enlarge-button`
-- «добавь раздел FAQ» → `feature/faq-section`
-- «слайдер не листается» → `fix/slider-navigation`
-- «обнови текст на главной» → `content/update-homepage-text`
-- «сайт крашится при открытии» → `hotfix/crash-on-load`
-
----
-
-### ⚡ ПОЛНЫЙ ЦИКЛ ЗАДАЧИ (выполнять АВТОМАТИЧЕСКИ)
-
+### Полный цикл задачи
 ```
-╔══════════════════════════════════════════════════════════════╗
-║  НАЧАЛО ЗАДАЧИ                                              ║
-╠══════════════════════════════════════════════════════════════╣
-║                                                              ║
-║  1. SYNC        git checkout main && git pull origin main    ║
-║                 (получить последнюю версию)                  ║
-║                                                              ║
-║  2. BRANCH      git checkout -b <тип>/<описание>            ║
-║                 (создать рабочую ветку)                      ║
-║                                                              ║
-║  3. WORK        вносить все изменения в коде                 ║
-║                 (при большой задаче — промежуточные коммиты) ║
-║                                                              ║
-║  4. VERIFY      проверить что ничего не сломалось:           ║
-║                 - HTML/CSS валидны                            ║
-║                 - React компилируется (npm run build)         ║
-║                 - Нет console.error                           ║
-║                                                              ║
-║  5. COMMIT      git add -A && git commit -m "описание"       ║
-║                                                              ║
-║  6. PUSH        git push origin <тип>/<описание>             ║
-║                 (сохранить ветку на GitHub)                   ║
-║                                                              ║
-║  7. MERGE       git checkout main                            ║
-║                 git merge <тип>/<описание>                   ║
-║                 (влить изменения в main)                      ║
-║                                                              ║
-║  8. PUSH MAIN   git push origin main                         ║
-║                 (обновить main на GitHub)                     ║
-║                                                              ║
-║  9. CLEANUP     git branch -d <тип>/<описание>               ║
-║                 git push origin --delete <тип>/<описание>    ║
-║                 (удалить рабочую ветку — она больше не нужна)║
-║                                                              ║
-╚══════════════════════════════════════════════════════════════╝
+1. git checkout main && git pull origin main
+2. git checkout -b <тип>/<описание>
+3. Вносить изменения
+4. npm run build — проверить
+5. git add -A && git commit -m "описание"
+6. git push origin <ветка>
+7. git checkout main && git merge <ветка>
+8. git push origin main
+9. git branch -d <ветка> && git push origin --delete <ветка>
 ```
 
----
-
-### 🛡️ ЗАЩИТА ОТ БАГОВ — ЧЕКЛИСТ ПЕРЕД МЁРДЖЕМ
-
-**Перед шагом 7 (MERGE) ВСЕГДА проверить:**
-
-- [ ] **React:** `cd react-app && npm run build` — компилируется без ошибок
-- [ ] **HTML:** не удалены id секций (`#header`, `#hero`, `#services` и т.д.)
-- [ ] **CSS:** не переименованы существующие классы
-- [ ] **JS:** не сломана логика `script.js` (табы, слайдер, формы)
-- [ ] **data-tab:** атрибуты не изменены
-- [ ] **Web3Forms ключ:** не тронут (`571ed5f8-bdbc-459e-a3e1-aec1c09223b4`)
-- [ ] **blog/article.html:** `body { padding-top: 72px }` на месте
-
-**Если проверка выявила ошибку:**
-1. Исправить в текущей ветке
-2. Сделать ещё один коммит `"fix: <что исправлено>"`
-3. Только потом мёрджить
+### Чеклист перед мёрджем
+- [ ] `npm run build` — без ошибок
+- [ ] Роуты `/`, `/portfolio`, `/blog`, `/blog/:id` работают
+- [ ] Web3Forms ключ не тронут: `571ed5f8-bdbc-459e-a3e1-aec1c09223b4`
+- [ ] ID секций сохранены (`#hero`, `#services`, `#portfolio`, `#about`, `#achievements`, `#blog`, `#price`, `#reviews`, `#contacts`)
 
 ---
 
-### 📝 ПРАВИЛА КОММИТОВ
+## 🐛 ИЗВЕСТНЫЕ ПРОБЛЕМЫ
 
-**Формат:** `<тип>: <описание на русском или английском>`
-
-| Тип | Пример |
-|-----|--------|
-| `feat:` | `feat: добавлен раздел FAQ` |
-| `fix:` | `fix: исправлен слайдер отзывов на мобильных` |
-| `design:` | `design: обновлены цвета кнопок` |
-| `refactor:` | `refactor: вынесены данные в отдельный файл` |
-| `content:` | `content: обновлены тексты услуг` |
-| `hotfix:` | `hotfix: критический баг формы отправки` |
-| `chore:` | `chore: обновлён CLAUDE.md` |
-
-**При большой задаче — промежуточные коммиты:**
-```
-feat: добавлен компонент FAQ — разметка
-feat: добавлен компонент FAQ — стили
-feat: добавлен компонент FAQ — анимации
-```
-
----
-
-### ⚠️ АБСОЛЮТНЫЕ ПРАВИЛА
-
-**НИКОГДА:**
-- ❌ Работать напрямую в `main` — ТОЛЬКО через ветку
-- ❌ Пушить в `main` без проверки билда
-- ❌ Оставлять незамёрдженные ветки после завершения задачи
-- ❌ Спрашивать разрешения на git-команды
-- ❌ Переименовывать CSS-классы (JS завязан)
-- ❌ Удалять id у секций (якорная навигация)
-- ❌ Менять `data-tab` атрибуты
-- ❌ Трогать Web3Forms ключ
-
-**ВСЕГДА:**
-- ✅ `git pull origin main` перед созданием ветки
-- ✅ Проверить билд React перед мёрджем
-- ✅ Коммитить → пушить → мёрджить → чистить после КАЖДОЙ задачи
-- ✅ Сам выбирать тип ветки по содержанию задачи
-- ✅ Сам писать осмысленные коммит-сообщения
-- ✅ `body { padding-top: 72px }` в blog.html и article.html
+| # | Проблема | Файл |
+|---|---------|------|
+| 1 | Telegram/VK ссылки = `yourusername` (плейсхолдеры) | Header, Footer, Contacts |
+| 2 | Изображения blog1-6.jpg не существуют → показывается заглушка-номер | BlogPage, ArticlePage |
+| 3 | Кнопка «Получить каталог PDF» ведёт на `#catalog` (секции нет) | Portfolio секция |
 
 ---
 
@@ -328,7 +184,7 @@ feat: добавлен компонент FAQ — анимации
 | 2026-04-29 | Создан сайт с нуля |
 | 2026-05-01 | Добавлены blog.html, article.html, portfolio.html |
 | 2026-05-02 | Настроена среда Claude (.claude/, CLAUDE.md) |
-| 2026-05-02 | Редизайн хедера и всего сайта: 3 цвета (#1A1A2E, #C9A050, #E8E4DC) |
+| 2026-05-02 | Редизайн хедера: 3 цвета (#1A1A2E, #C9A050, #E8E4DC) |
 | 2026-05-04 | Миграция на React + Tailwind (react-app/) |
-| 2026-05-14 | GitHub подключён (Gamza222/Design-w), настроен полный автоматический Git workflow |
-
+| 2026-05-14 | GitHub подключён (Gamza222/Design-w) |
+| 2026-05-16 | Большой рефакторинг: FSD-структура, React Router, светлые секции, обновлённый калькулятор |

@@ -1,45 +1,49 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
+const STATS = [
+  { num: '500+',  label: 'выполненных проектов' },
+  { num: '5 лет', label: 'на рынке с 2021 года' },
+  { num: '50+',   label: 'городов России' },
+  { num: '4.9 ★', label: 'средняя оценка' },
+]
+
 export default function Hero() {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-
-  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.6], [0.78, 0.95])
-  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
-
-  const stats = [
-    { num: '500+', label: 'выполненных проектов' },
-    { num: '5 лет', label: 'на рынке с 2021 года' },
-    { num: '50+', label: 'городов России и СНГ' },
-    { num: '4.9 ★', label: 'средняя оценка клиентов' },
-  ]
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '25%'])
+  const overlayOpacity = useTransform(scrollYProgress, [0, 0.7], [0.72, 0.92])
 
   return (
-    <section
-      ref={ref}
-      id="hero"
-      className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden"
-    >
-      {/* Фоновое изображение — параллакс */}
+    <section ref={ref} id="hero" className="relative min-h-screen flex items-center overflow-hidden">
+
+      {/* Фон — параллакс */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform"
+        className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/hero-bg.jpg')", y: bgY }}
       />
 
-      {/* Оверлей */}
+      {/* Тёмный оверлей */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-[#1C2340] via-[#1C2340] to-[#243050]"
-        style={{ opacity: overlayOpacity }}
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(135deg, #1C2340 0%, #243050 100%)',
+          opacity: overlayOpacity,
+        }}
       />
 
-      {/* Декоративные орбы */}
-      <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-[#C9A97A]/6 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-[-100px] w-[400px] h-[400px] bg-[#243050]/60 rounded-full blur-[80px] pointer-events-none" />
+      {/* Декоративные пятна */}
+      <div
+        className="absolute top-1/4 right-[-100px] w-[500px] h-[500px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(139,223,221,0.12) 0%, transparent 70%)' }}
+      />
+      <div
+        className="absolute bottom-0 left-[-80px] w-[400px] h-[400px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(244,143,104,0.10) 0%, transparent 70%)' }}
+      />
 
       {/* Контент */}
-      <motion.div className="container relative z-10" style={{ y: contentY }}>
+      <div className="container relative z-10 pt-28 pb-20">
         <motion.p
           className="section-tag mb-4"
           initial={{ opacity: 0, y: 20 }}
@@ -50,80 +54,87 @@ export default function Hero() {
         </motion.p>
 
         <motion.h1
-          className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#E8E4DC] leading-tight mb-3 max-w-3xl"
+          className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.05] mb-6 max-w-4xl"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          Создаём и реализуем{' '}
-          <span className="bg-gradient-to-r from-[#C9A97A] to-[#F5B800] bg-clip-text text-transparent">
-            интерьер вашей мечты
+          Создаём интерьер,{' '}
+          <span style={{
+            background: 'linear-gradient(90deg, #F48F68, #FFE394)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}>
+            в котором удобно жить
           </span>
         </motion.h1>
 
-        {/* Подстрочник */}
         <motion.p
-          className="text-[rgba(232,228,220,0.45)] text-sm mb-6"
-          initial={{ opacity: 0, y: 15 }}
+          className="text-white/70 text-base md:text-lg max-w-xl mb-10 leading-relaxed"
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
         >
-          Стадия дизайна интерьера с 2021 года
-        </motion.p>
-
-        <motion.p
-          className="text-[rgba(232,228,220,0.75)] text-lg max-w-2xl mb-10 leading-relaxed"
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.35 }}
-        >
-          Мы думаем о том, где будет стоять пылесос, как удобно сушить бельё и как сделать интерьер
-          именно таким, каким вы его представляете. Напишите нам — покажем ориентировочную
-          стоимость за 30 минут.
+          Продумываем всё до начала ремонта: где хранить, как освещать, как двигаться по квартире.
+          Узнайте ориентировочную стоимость за 30 минут.
         </motion.p>
 
         <motion.div
-          className="flex flex-wrap gap-4 mb-16"
+          className="flex flex-wrap gap-3 mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <a href="#price" className="btn-gold text-base px-8 py-4">
-            Рассчитать стоимость работ
+          <a href="/#contacts" className="btn-coral px-8 py-4 text-base">
+            Рассчитать стоимость
+          </a>
+          <a href="/#portfolio" className="btn-white px-8 py-4 text-base">
+            Смотреть работы
           </a>
         </motion.div>
 
         {/* Статистика */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {stats.map((s, i) => (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
+          {STATS.map((s, i) => (
             <motion.div
               key={s.num}
-              className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm border border-[rgba(201,169,122,0.15)] rounded-2xl p-5"
-              initial={{ opacity: 0, y: 30 }}
+              className="rounded-2xl p-4 text-center"
+              style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.10)' }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 + i * 0.1 }}
+              transition={{ duration: 0.5, delay: 0.65 + i * 0.08 }}
             >
-              <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#C9A97A] to-[#F5B800] bg-clip-text text-transparent mb-1">
+              <div
+                className="text-2xl font-bold mb-0.5"
+                style={{
+                  background: 'linear-gradient(90deg, #F48F68, #FFE394)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
                 {s.num}
               </div>
-              <div className="text-[rgba(232,228,220,0.65)] text-sm">{s.label}</div>
+              <div className="text-white/55 text-xs leading-snug">{s.label}</div>
             </motion.div>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      {/* Scroll-индикатор */}
+      {/* Scroll hint */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-[rgba(232,228,220,0.3)] text-xs"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
+        transition={{ delay: 1.3, duration: 0.8 }}
       >
-        <span className="tracking-widest uppercase">Scroll</span>
+        <span className="text-white/30 text-[10px] uppercase tracking-[0.2em]">Scroll</span>
         <motion.div
-          className="w-px h-8 bg-gradient-to-b from-[rgba(201,169,122,0.5)] to-transparent"
-          animate={{ scaleY: [1, 0.5, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          className="w-px h-8"
+          style={{ background: 'linear-gradient(to bottom, rgba(139,223,221,0.6), transparent)' }}
+          animate={{ scaleY: [1, 0.4, 1], opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
         />
       </motion.div>
     </section>

@@ -1,124 +1,170 @@
 import { useRef } from 'react'
 import FadeInView from '../../../shared/ui/FadeInView'
 
-const numCards = [
+const STATS = [
   { num: '500+', label: 'выполненных проектов' },
-  { num: '5 лет', label: 'на рынке дизайна интерьера' },
-  { num: '50+', label: 'городов присутствия' },
-  { num: '4.9 ★', label: 'средняя оценка на Яндексе' },
+  { num: '5 лет', label: 'на рынке дизайна' },
+  { num: '50+',   label: 'городов присутствия' },
+  { num: '4.9 ★', label: 'оценка на Яндексе' },
 ]
 
-const aboutList = [
+const ABOUT_ITEMS = [
   'Работаем по всей России и СНГ онлайн',
   'Команда из 50+ профессиональных дизайнеров',
-  'Результат за 30 минут после заявки',
-  'Фиксированная цена без скрытых доплат',
+  'Отвечаем на заявку в течение 30 минут',
+  'Фиксированная цена — без скрытых доплат',
+]
+
+/*
+  ВАЖНО по грамотам:
+  - gramota1.jpg — вертикальная, НЕ растягивать на всю рамку → object-contain
+  - gramota2.jpg — горизонтальная, заполнять рамку → object-cover
+*/
+const AWARDS = [
+  {
+    src: '/gramota1.jpg',
+    alt: 'Грамота 1',
+    // НЕ на всю рамку — отображаем как есть с паддингом
+    objectFit: 'contain',
+    bg: '#f5f5f0',
+  },
+  {
+    src: '/gramota2.jpg',
+    alt: 'Грамота 2',
+    // НА всю рамку
+    objectFit: 'cover',
+    bg: '#1C2340',
+  },
 ]
 
 export default function About() {
-  const trackRef = useRef(null)
-  const isDownRef = useRef(false)
-  const startXRef = useRef(0)
-  const scrollLeftRef = useRef(0)
+  const scrollRef = useRef(null)
 
-  const scrollAwards = (dir) => {
-    if (trackRef.current) {
-      trackRef.current.scrollBy({ left: dir * 400, behavior: 'smooth' })
+  const scroll = (dir) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: dir * 360, behavior: 'smooth' })
     }
   }
 
-  const onMouseDown = (e) => {
-    isDownRef.current = true
-    startXRef.current = e.pageX - trackRef.current.offsetLeft
-    scrollLeftRef.current = trackRef.current.scrollLeft
-  }
-  const onMouseLeave = () => { isDownRef.current = false }
-  const onMouseUp = () => { isDownRef.current = false }
-  const onMouseMove = (e) => {
-    if (!isDownRef.current) return
-    e.preventDefault()
-    const x = e.pageX - trackRef.current.offsetLeft
-    trackRef.current.scrollLeft = scrollLeftRef.current - (x - startXRef.current) * 1.5
-  }
-
   return (
-    <section className="py-24 bg-[#F7F4EF]" id="about">
+    <section className="py-24" style={{ background: '#FFFFFF' }} id="about">
       <div className="container">
-        {/* Основная часть */}
+
+        {/* ── ОСНОВНАЯ ЧАСТЬ ── */}
         <FadeInView>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+
+            {/* Текст */}
             <div>
-              <p className="section-tag-dark">О студии</p>
-              <h2 className="section-title-dark mb-6">Мы не бросаем после выдачи чертежей</h2>
+              <p className="section-tag-light">О студии</p>
+              <h2 className="section-title-light mb-6">
+                Мы не бросаем клиентов после выдачи чертежей
+              </h2>
               <ul className="space-y-3 mb-8">
-                {aboutList.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-[rgba(28,35,64,0.8)]">
-                    <span className="text-[#C9A97A] font-bold shrink-0 mt-0.5">✓</span>
+                {ABOUT_ITEMS.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-[#1A120B]/75 text-sm leading-relaxed">
+                    <span
+                      className="shrink-0 mt-1 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                      style={{ background: '#8BDFDD' }}
+                    >
+                      ✓
+                    </span>
                     {item}
                   </li>
                 ))}
               </ul>
-              <a href="#price" className="btn-gold">Рассчитать стоимость</a>
+              <a href="/#contacts" className="btn-coral">Обсудить проект</a>
             </div>
 
+            {/* Цифры */}
             <div className="grid grid-cols-2 gap-4">
-              {numCards.map((c) => (
+              {STATS.map((c) => (
                 <div
                   key={c.num}
-                  className="bg-white border border-[rgba(201,169,122,0.2)] rounded-2xl p-6 text-center hover:border-[rgba(201,169,122,0.5)] hover:shadow-md transition-all duration-300"
+                  className="rounded-2xl p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  style={{
+                    background: '#FFF6DE',
+                    border: '2px solid rgba(139,223,221,0.3)',
+                  }}
                 >
-                  <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#C9A97A] to-[#B8852E] bg-clip-text text-transparent mb-1">
+                  <div
+                    className="text-2xl md:text-3xl font-bold mb-1"
+                    style={{ color: '#F48F68' }}
+                  >
                     {c.num}
                   </div>
-                  <p className="text-[rgba(28,35,64,0.6)] text-sm">{c.label}</p>
+                  <p className="text-[#1A120B]/60 text-sm">{c.label}</p>
                 </div>
               ))}
             </div>
           </div>
         </FadeInView>
 
-        {/* Достижения */}
+        {/* ── ДОСТИЖЕНИЯ ── */}
         <div id="achievements">
-          <p className="text-[rgba(28,35,64,0.5)] text-sm text-center mb-6">
-            Достижения — грамоты от Сообщества дизайнеров интерьера России
-          </p>
+          <FadeInView>
+            <p
+              className="text-center text-sm mb-6"
+              style={{ color: '#1A120B', opacity: 0.45 }}
+            >
+              Дипломы и награды — от Сообщества дизайнеров интерьера России
+            </p>
+          </FadeInView>
 
-          <div className="relative flex items-center gap-3 justify-center">
+          <div className="flex items-center gap-3 justify-center">
+            {/* Кнопка назад */}
             <button
-              onClick={() => scrollAwards(-1)}
-              className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[rgba(201,169,122,0.12)] hover:bg-[rgba(201,169,122,0.25)] text-[#C9A97A] transition-all"
+              onClick={() => scroll(-1)}
+              className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full
+                         transition-all duration-200 text-lg font-bold"
+              style={{ background: '#FFF6DE', border: '2px solid rgba(139,223,221,0.5)', color: '#1A120B' }}
             >
               ←
             </button>
 
+            {/* Скролл-контейнер грамот */}
             <div
-              ref={trackRef}
-              className="flex gap-5 overflow-x-auto scroll-smooth cursor-grab active:cursor-grabbing select-none"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', maxWidth: '900px' }}
-              onMouseDown={onMouseDown}
-              onMouseLeave={onMouseLeave}
-              onMouseUp={onMouseUp}
-              onMouseMove={onMouseMove}
+              ref={scrollRef}
+              className="flex gap-4 overflow-x-auto scroll-smooth"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                maxWidth: '860px',
+              }}
             >
-              {['/gramota1.jpg', '/gramota2.jpg'].map((src, i) => (
+              {AWARDS.map((award, i) => (
                 <div
                   key={i}
-                  className="shrink-0 rounded-2xl overflow-hidden border border-[rgba(201,169,122,0.2)] hover:border-[rgba(201,169,122,0.5)] transition-all shadow-sm"
-                  style={{ flex: '0 0 calc(50% - 10px)', maxWidth: '420px', minWidth: '260px' }}
+                  className="shrink-0 rounded-2xl overflow-hidden"
+                  style={{
+                    width: '400px',
+                    minWidth: '260px',
+                    border: '2px solid rgba(139,223,221,0.3)',
+                    background: award.bg,
+                  }}
                 >
                   <img
-                    src={src}
-                    alt={`Грамота ${i + 1}`}
-                    className="w-full h-auto object-cover block"
+                    src={award.src}
+                    alt={award.alt}
                     loading="lazy"
+                    style={{
+                      width: '100%',
+                      height: award.objectFit === 'cover' ? '320px' : 'auto',
+                      maxHeight: '380px',
+                      objectFit: award.objectFit,
+                      display: 'block',
+                    }}
                   />
                 </div>
               ))}
             </div>
 
+            {/* Кнопка вперёд */}
             <button
-              onClick={() => scrollAwards(1)}
-              className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[rgba(201,169,122,0.12)] hover:bg-[rgba(201,169,122,0.25)] text-[#C9A97A] transition-all"
+              onClick={() => scroll(1)}
+              className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full
+                         transition-all duration-200 text-lg font-bold"
+              style={{ background: '#FFF6DE', border: '2px solid rgba(139,223,221,0.5)', color: '#1A120B' }}
             >
               →
             </button>

@@ -1,164 +1,230 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { reviews } from '../../shared/data/reviews'
 import FadeInView from '../../shared/ui/FadeInView'
 
+/* ──────────────────────────────────────────────────────────
+   REVIEWS SLIDER
+   - CSS scroll-snap (надёжнее JS transform при ресайзе)
+   - Рамка тянется ровно по высоте изображения (h-auto)
+   - Lightbox с клавиатурной навигацией
+────────────────────────────────────────────────────────── */
+
+function getPerView() {
+  if (typeof window === 'undefined') return 3
+  if (window.innerWidth < 480) return 1
+  if (window.innerWidth < 768) return 2
+  return 3
+}
+
 export default function Reviews() {
-  const [current, setCurrent] = useState(0)
-  const [perView, setPerView] = useState(3)
   const [lightbox, setLightbox] = useState(null)
-  const trackRef = useRef(null)
+  const [perView, setPerView] = useState(getPerView)
+  const [current, setCurrent] = useState(0)
+  const scrollRef = useRef(null)
   const autoRef = useRef(null)
-
   const total = reviews.length
-  const max = Math.max(0, total - perView)
 
+  /* Обновляем perView при ресайзе */
   useEffect(() => {
-    const calc = () => {
-      if (window.innerWidth < 500) setPerView(1)
-      else if (window.innerWidth < 768) setPerView(2)
-      else setPerView(3)
+    const onResize = () => {
+      const next = getPerView()
+      setPerView(next)
     }
-    calc()
-    window.addEventListener('resize', calc)
-    return () => window.removeEventListener('resize', calc)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  const goTo = useCallback((idx) => {
-    setCurrent(Math.max(0, Math.min(idx, max)))
-  }, [max])
+  /* Скроллим к нужному слайду программно */
+  const scrollTo = useCallback((idx) => {
+    const container = scrollRef.current
+    if (!container) return
+    const slides = container.querySelectorAll('.review-slide')
+    if (!slides[idx]) return
+    // Scroll так, чтобы слайд был слева видимой области
+    container.scrollTo({ left: slides[idx].offsetLeft, behavior: 'smooth' })
+    setCurrent(idx)
+  }, [])
 
+  /* Отслеживаем видимый слайд при ручном скролле */
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+    const onScroll = () => {
+      const slides = container.querySelectorAll('.review-slide')
+      let closest = 0
+      let minDist = Infinity
+      slides.forEach((slide, i) => {
+        const dist = Math.abs(slide.offsetLeft - container.scrollLeft)
+        if (dist < minDist) { minDist = dist; closest = i }
+      })
+      setCurrent(closest)
+    }
+    container.addEventListener('scroll', onScroll, { passive: true })
+    return () => container.removeEventListener('scroll', onScroll)
+  }, [])
+
+  /* Автопрокрутка */
+  const stopAuto = useCallback(() => clearInterval(autoRef.current), [])
   const startAuto = useCallback(() => {
+    stopAuto()
     autoRef.current = setInterval(() => {
-      setCurrent((c) => (c < max ? c + 1 : 0))
-    }, 4000)
-  }, [max])
-
-  const stopAuto = () => clearInterval(autoRef.current)
+      setCurrent((c) => {
+        const next = c + 1 < total ? c + 1 : 0
+        scrollTo(next)
+        return next
+      })
+    }, 4500)
+  }, [total, scrollTo, stopAuto])
 
   useEffect(() => {
     startAuto()
     return stopAuto
-  }, [startAuto])
+  }, [startAuto, stopAuto])
 
-  useEffect(() => {
-    if (!trackRef.current) return
-    const slide = trackRef.current.children[0]
-    if (!slide) return
-    const slideW = slide.offsetWidth + 18
-    trackRef.current.style.transform = `translateX(-${current * slideW}px)`
-  }, [current, perView])
-
+  /* Lightbox */
   const openLightbox = (idx) => {
+    stopAuto()
     setLightbox(idx)
     document.body.style.overflow = 'hidden'
   }
   const closeLightbox = () => {
     setLightbox(null)
     document.body.style.overflow = ''
+    startAuto()
   }
 
   useEffect(() => {
     const onKey = (e) => {
       if (lightbox === null) return
       if (e.key === 'Escape') closeLightbox()
-      if (e.key === 'ArrowLeft' && lightbox > 0) setLightbox(lightbox - 1)
-      if (e.key === 'ArrowRight' && lightbox < total - 1) setLightbox(lightbox + 1)
+      if (e.key === 'ArrowLeft' && lightbox > 0) setLightbox(l => l - 1)
+      if (e.key === 'ArrowRight' && lightbox < total - 1) setLightbox(l => l + 1)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [lightbox, total])
 
+  /* Ширина слайда */
+  const slideWidth = `calc((100% - ${(perView - 1) * 16}px) / ${perView})`
+
+  const canPrev = current > 0
+  const canNext = current + perView < total
+
   return (
-    <section className="py-24 bg-[#243050]" id="reviews">
+    <section className="py-24" style={{ background: '#FFF6DE' }} id="reviews">
       <div className="container">
         <FadeInView>
-          <div className="text-center mb-10">
-            <p className="section-tag">Отзывы</p>
-            <h2 className="section-title">Что говорят наши клиенты</h2>
+          <div className="text-center mb-12">
+            <p className="section-tag-light">Отзывы</p>
+            <h2 className="section-title-light">Что говорят клиенты</h2>
+            <p className="section-sub-light mx-auto">
+              Реальные отзывы — скриншоты из переписок и мессенджеров
+            </p>
           </div>
         </FadeInView>
 
-        <div className="relative" onMouseEnter={stopAuto} onMouseLeave={startAuto}>
-          {/* Стрелки */}
+        {/* Слайдер */}
+        <div
+          className="relative"
+          onMouseEnter={stopAuto}
+          onMouseLeave={startAuto}
+        >
+          {/* Кнопка НАЗАД */}
           <button
-            onClick={() => goTo(current - 1)}
-            disabled={current === 0}
-            className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-[rgba(26,26,46,0.9)] border border-[rgba(201,169,122,0.2)] text-[#C9A97A] hover:bg-[rgba(201,169,122,0.1)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            onClick={() => scrollTo(Math.max(0, current - 1))}
+            disabled={!canPrev}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 z-20
+                       w-10 h-10 flex items-center justify-center rounded-full
+                       bg-[#1C2340] text-white shadow-lg
+                       hover:bg-[#F48F68] disabled:opacity-25 disabled:cursor-not-allowed
+                       transition-all duration-200"
+            aria-label="Назад"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
           </button>
 
-          <div className="overflow-hidden mx-4">
-            <div
-              ref={trackRef}
-              className="reviews-track"
-              style={{ gap: 18 }}
-            >
-              {reviews.map((r, i) => (
-                <div
-                  key={r.id}
-                  className="shrink-0 rounded-2xl overflow-hidden cursor-zoom-in border border-[rgba(201,169,122,0.1)] hover:border-[rgba(201,169,122,0.3)] transition-all inline-flex"
-                  style={{ width: `calc((100% - ${(perView - 1) * 18}px) / ${perView})` }}
-                  onClick={() => openLightbox(i)}
-                >
-                  <img
-                    src={r.src}
-                    alt={r.alt}
-                    loading="lazy"
-                    className="w-full h-auto object-contain bg-[#1E2240] block"
-                  />
-                </div>
-              ))}
-            </div>
+          {/* Scroll-контейнер */}
+          <div
+            ref={scrollRef}
+            className="reviews-scroll-container"
+          >
+            {reviews.map((r, i) => (
+              <div
+                key={r.id}
+                className="review-slide"
+                style={{ width: slideWidth, minWidth: slideWidth }}
+                onClick={() => openLightbox(i)}
+              >
+                <img
+                  src={r.src}
+                  alt={r.alt}
+                  loading={i < perView * 2 ? 'eager' : 'lazy'}
+                />
+              </div>
+            ))}
           </div>
 
+          {/* Кнопка ВПЕРЁД */}
           <button
-            onClick={() => goTo(current + 1)}
-            disabled={current >= max}
-            className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-[rgba(26,26,46,0.9)] border border-[rgba(201,169,122,0.2)] text-[#C9A97A] hover:bg-[rgba(201,169,122,0.1)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            onClick={() => scrollTo(Math.min(total - 1, current + 1))}
+            disabled={!canNext}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 z-20
+                       w-10 h-10 flex items-center justify-center rounded-full
+                       bg-[#1C2340] text-white shadow-lg
+                       hover:bg-[#F48F68] disabled:opacity-25 disabled:cursor-not-allowed
+                       transition-all duration-200"
+            aria-label="Вперёд"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
           </button>
         </div>
 
         {/* Точки */}
-        <div className="flex justify-center gap-2 mt-6">
+        <div className="flex justify-center gap-2 mt-6 flex-wrap">
           {reviews.map((_, i) => (
             <button
               key={i}
-              onClick={() => goTo(i)}
-              className={`rounded-full transition-all duration-300 ${
-                i === current ? 'w-6 h-2 bg-[#C9A97A]' : 'w-2 h-2 bg-[rgba(201,169,122,0.3)]'
-              }`}
+              onClick={() => scrollTo(i)}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: i === current ? 24 : 8,
+                height: 8,
+                background: i === current ? '#F48F68' : 'rgba(244,143,104,0.3)',
+              }}
               aria-label={`Отзыв ${i + 1}`}
             />
           ))}
         </div>
       </div>
 
-      {/* Лайтбокс */}
+      {/* LIGHTBOX */}
       {lightbox !== null && (
         <div className="lightbox-overlay" onClick={closeLightbox}>
+          {/* Закрыть */}
           <button
             onClick={closeLightbox}
-            className="absolute top-5 right-5 text-white/70 hover:text-white w-10 h-10 flex items-center justify-center rounded-full bg-white/10 transition-colors"
+            className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center
+                       rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
+            aria-label="Закрыть"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
           </button>
 
+          {/* Назад */}
           {lightbox > 0 && (
             <button
-              onClick={(e) => { e.stopPropagation(); setLightbox(lightbox - 1) }}
-              className="absolute left-4 text-white/70 hover:text-white w-12 h-12 flex items-center justify-center rounded-full bg-white/10 transition-colors"
+              onClick={(e) => { e.stopPropagation(); setLightbox(l => l - 1) }}
+              className="absolute left-4 w-12 h-12 flex items-center justify-center
+                         rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               </svg>
             </button>
           )}
@@ -170,18 +236,20 @@ export default function Reviews() {
             className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
           />
 
+          {/* Вперёд */}
           {lightbox < total - 1 && (
             <button
-              onClick={(e) => { e.stopPropagation(); setLightbox(lightbox + 1) }}
-              className="absolute right-4 text-white/70 hover:text-white w-12 h-12 flex items-center justify-center rounded-full bg-white/10 transition-colors"
+              onClick={(e) => { e.stopPropagation(); setLightbox(l => l + 1) }}
+              className="absolute right-4 w-12 h-12 flex items-center justify-center
+                         rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               </svg>
             </button>
           )}
 
-          <div className="absolute bottom-5 text-white/50 text-sm">
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/40 text-sm">
             {lightbox + 1} / {total}
           </div>
         </div>

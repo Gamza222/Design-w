@@ -1,43 +1,43 @@
 import FadeInView from '../../../shared/ui/FadeInView'
 
-const FEARS = [
+const fears = [
   {
     icon: '💰',
-    title: 'Боюсь выйти за бюджет',
-    text: 'Создаём проект строго в вашем бюджете. Только те материалы, которые можно купить прямо сейчас. Стоимость фиксируется в договоре.',
+    title: 'Боюсь, что выйдет дороже запланированного',
+    text: 'Мы создаём проект строго в рамках вашего бюджета. Предлагаем только те материалы, которые реально можно купить прямо сейчас. Стоимость работ прописана в договоре и не меняется в процессе.',
   },
   {
     icon: '🧹',
-    title: 'Будет красиво, но неудобно',
-    text: 'Мы спросим: где заряжаете телефон, куда деваете сумку, где сушите бельё. Красиво и по-настоящему удобно — это разные вещи.',
+    title: 'Будет красиво, но неудобно жить',
+    text: 'Мы обязательно спросим: где вы привыкли заряжать телефон, куда деваете сумку, когда приходите домой, где сушите бельё. Мы хотим понять вашу жизнь — тогда всё будет не просто красиво, но и по-настоящему удобно.',
   },
   {
     icon: '🔨',
-    title: 'Строители не поймут проект',
-    text: 'Подготовим полный пакет чертежей так, чтобы любой строитель понял сразу. Если нужен авторский надзор — добавим.',
+    title: 'Как передать проект строителям',
+    text: 'Мы подготовим полный пакет чертежей и описаний так, чтобы любой строитель понял, что и как делать. А если нужен авторский надзор — просто скажите нам об этом.',
   },
   {
     icon: '📁',
-    title: 'После проекта все пропадут',
-    text: 'Остаёмся на связи. Если у строителей будут вопросы — ответим. Захотите изменить — обсудим. Не пропадаем.',
+    title: 'Боюсь, что после получения проекта никого не найдёшь',
+    text: 'Мы остаёмся на связи после выдачи проекта. Если у строителей возникнут вопросы по чертежам, мы ответим. Если захотите что-то изменить, обсудим. Мы не пропадаем.',
   },
   {
     icon: '🛠️',
-    title: 'А что если что-то пойдёт не так?',
-    text: 'Тогда исправим. Без споров и поиска виноватых. Ошибки бывают — мы берём за них ответственность. Гарантия в договоре.',
+    title: 'Что будет, если что-то пойдёт не так',
+    text: 'Тогда мы просто исправим это. Без споров, без поиска виноватых. Ошибки бывают у всех, но мы берём за них ответственность на себя. Гарантия по условиям договора.',
   },
 ]
 
 export default function Fears() {
   return (
-    <section className="py-24" style={{ background: '#FFFFFF' }} id="guarantees">
+    <section className="py-24 bg-[#F7F4EF]" id="guarantees">
       <div className="container">
         <FadeInView>
           <div className="text-center mb-12">
-            <p className="section-tag-light">Мы понимаем ваши опасения</p>
-            <h2 className="section-title-light">
-              Знаем, чего вы боитесь.{' '}
-              <span style={{ color: 'rgba(26,18,11,0.4)', fontWeight: 400, fontSize: '0.75em' }}>
+            <p className="section-tag-dark">Мы понимаем ваши опасения</p>
+            <h2 className="section-title-dark">
+              Мы знаем, чего вы боитесь.{' '}
+              <span className="text-[rgba(28,35,64,0.5)] font-normal text-2xl md:text-3xl">
                 И вот как мы с этим работаем.
               </span>
             </h2>
@@ -45,37 +45,28 @@ export default function Fears() {
         </FadeInView>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {FEARS.map((f, i) => (
-            <FadeInView key={f.title} delay={i * 0.07}>
-              <div
-                className="rounded-2xl p-6 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                style={{
-                  background: '#FFF6DE',
-                  border: '2px solid rgba(139,223,221,0.2)',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(139,223,221,0.6)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(139,223,221,0.2)' }}
-              >
+          {fears.map((f, i) => (
+            <FadeInView key={f.title} delay={i * 0.08}>
+              <div className="bg-white border border-[rgba(201,169,122,0.15)] rounded-2xl p-6 hover:border-[rgba(201,169,122,0.4)] hover:shadow-md transition-all duration-300 hover:-translate-y-1 h-full">
                 <div className="text-3xl mb-4">{f.icon}</div>
-                <h3 className="text-sm font-bold text-[#1A120B] mb-3 leading-snug">{f.title}</h3>
-                <p className="text-[#1A120B]/65 text-sm leading-relaxed">{f.text}</p>
+                <h3 className="text-base font-semibold text-[#1C2340] mb-3 leading-snug">{f.title}</h3>
+                <p className="text-[rgba(28,35,64,0.6)] text-sm leading-relaxed">{f.text}</p>
               </div>
             </FadeInView>
           ))}
 
           {/* CTA карточка */}
-          <FadeInView delay={5 * 0.07}>
-            <div
-              className="rounded-2xl p-6 flex flex-col justify-between h-full"
-              style={{ background: 'linear-gradient(135deg, #F48F68, #FFE394)' }}
-            >
+          <FadeInView delay={5 * 0.08}>
+            <div className="bg-gradient-to-br from-[#C9A97A] to-[#B8852E] rounded-2xl p-6 flex flex-col justify-between h-full">
               <div>
-                <h3 className="text-sm font-bold text-[#1A120B] mb-3">Остались вопросы?</h3>
-                <p className="text-[#1A120B]/70 text-sm mb-6 leading-relaxed">
-                  Напишите нам. Дизайнер ответит лично, без скриптов и готовых ответов.
+                <h3 className="text-base font-semibold text-[#1C2340] mb-3">Остались вопросы?</h3>
+                <p className="text-[rgba(28,35,64,0.7)] text-sm mb-6 leading-relaxed">
+                  Напишите нам в любое время. Дизайнер ответит лично, по-человечески. Без скриптов и готовых ответов.
                 </p>
               </div>
-              <a href="/#contacts" className="btn-dark justify-center">Написать дизайнеру</a>
+              <a href="#contacts" className="btn-dark justify-center">
+                Написать дизайнеру
+              </a>
             </div>
           </FadeInView>
         </div>

@@ -1,11 +1,17 @@
 import { Link } from 'react-router-dom'
+import { FaTelegramPlane, FaVk, FaWhatsapp } from 'react-icons/fa'
+
+const socials = [
+  { href: 'https://t.me/yourusername', icon: FaTelegramPlane, label: 'Telegram' },
+  { href: 'https://vk.me/yourusername', icon: FaVk, label: 'VK' },
+  { href: 'https://wa.me/78007077483', icon: FaWhatsapp, label: 'WhatsApp' },
+]
 
 export default function Footer() {
   return (
-    <footer className="py-14" style={{ background: '#1A120B', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+    <footer className="bg-[#12122A] border-t border-[rgba(201,169,122,0.1)] py-14" id="footer">
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-
           {/* Бренд */}
           <div>
             <img
@@ -14,41 +20,34 @@ export default function Footer() {
               className="h-12 w-auto mb-4"
               onError={(e) => {
                 e.target.style.display = 'none'
-                e.target.parentElement.insertAdjacentHTML('afterbegin',
-                  '<span style="font-size:20px;font-weight:800;color:#FFF6DE">Дизайн <em style="color:#F48F68;font-style:normal">Сейчас</em></span>'
+                e.target.parentElement.insertAdjacentHTML(
+                  'afterbegin',
+                  '<span class="text-xl font-bold text-white">Дизайн <em class="text-[#C9A97A] not-italic">Сейчас</em></span>'
                 )
               }}
             />
-            <p style={{ color: 'rgba(255,246,222,0.45)', fontSize: 13, lineHeight: 1.65, marginBottom: 12 }}>
+            <p className="text-[rgba(232,228,220,0.5)] text-sm leading-relaxed mb-4">
               Студия дизайна интерьера. Делаем пространства, в которых хочется проводить время.
             </p>
-            <p style={{ color: 'rgba(255,246,222,0.25)', fontSize: 12 }}>
-              © 2025 Дизайн Сейчас. Все права защищены.
-            </p>
+            <p className="text-[rgba(232,228,220,0.3)] text-xs">© 2025 Дизайн Сейчас. Все права защищены.</p>
           </div>
 
           {/* Услуги */}
           <div>
-            <h4 style={{ color: '#FFF6DE', fontWeight: 600, fontSize: 14, marginBottom: 16 }}>Услуги</h4>
+            <h4 className="text-[#E8E4DC] font-semibold text-sm mb-4">Услуги</h4>
             {[
               { href: '/#services', label: 'Дизайн-проект' },
-              { to: '/portfolio',   label: 'Портфолио' },
-              { href: '/#about',    label: 'О нас' },
-              { to: '/blog',        label: 'Блог' },
+              { to: '/portfolio', label: 'Портфолио' },
+              { href: '/#about', label: 'О нас' },
+              { to: '/blog', label: 'Блог и обзоры' },
               { href: '/#contacts', label: 'Контакты' },
             ].map((l) =>
               l.to ? (
-                <Link key={l.label} to={l.to} className="block mb-2 text-sm transition-colors"
-                  style={{ color: 'rgba(255,246,222,0.4)' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = '#F48F68' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,246,222,0.4)' }}>
+                <Link key={l.label} to={l.to} className="block text-[rgba(232,228,220,0.5)] text-sm mb-2 hover:text-[#C9A97A] transition-colors">
                   {l.label}
                 </Link>
               ) : (
-                <a key={l.label} href={l.href} className="block mb-2 text-sm transition-colors"
-                  style={{ color: 'rgba(255,246,222,0.4)' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = '#F48F68' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,246,222,0.4)' }}>
+                <a key={l.label} href={l.href} className="block text-[rgba(232,228,220,0.5)] text-sm mb-2 hover:text-[#C9A97A] transition-colors">
                   {l.label}
                 </a>
               )
@@ -57,28 +56,24 @@ export default function Footer() {
 
           {/* Контакты */}
           <div>
-            <h4 style={{ color: '#FFF6DE', fontWeight: 600, fontSize: 14, marginBottom: 16 }}>Контакты</h4>
-            <a href="tel:+78007077483" className="block mb-2 text-sm transition-colors"
-              style={{ color: 'rgba(255,246,222,0.4)' }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#F48F68' }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,246,222,0.4)' }}>
+            <h4 className="text-[#E8E4DC] font-semibold text-sm mb-4">Контакты</h4>
+            <a href="tel:+78007077483" className="block text-[rgba(232,228,220,0.5)] text-sm mb-2 hover:text-[#C9A97A] transition-colors">
               8 (800) 707-74-83
             </a>
-            <a href="mailto:dizain.seichas@yandex.ru" className="block mb-4 text-sm transition-colors"
-              style={{ color: 'rgba(255,246,222,0.4)' }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#8BDFDD' }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,246,222,0.4)' }}>
+            <a href="mailto:dizain.seichas@yandex.ru" className="block text-[rgba(232,228,220,0.5)] text-sm mb-4 hover:text-[#C9A97A] transition-colors">
               dizain.seichas@yandex.ru
             </a>
             <div className="flex gap-2">
-              {['TG', 'VK', 'WA'].map((s) => (
-                <a key={s} href="#"
-                  className="w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold transition-all"
-                  style={{ background: 'rgba(255,246,222,0.06)', color: 'rgba(255,246,222,0.45)', border: '1px solid rgba(255,246,222,0.08)' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(244,143,104,0.15)'; e.currentTarget.style.color = '#F48F68' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,246,222,0.06)'; e.currentTarget.style.color = 'rgba(255,246,222,0.45)' }}
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={s.label}
+                  className="w-9 h-9 flex items-center justify-center rounded-full border border-[rgba(201,169,122,0.2)] text-[#C9A97A] hover:bg-[rgba(201,169,122,0.15)] hover:border-[#C9A97A] transition-all"
                 >
-                  {s}
+                  <s.icon size={16} />
                 </a>
               ))}
             </div>
@@ -86,12 +81,14 @@ export default function Footer() {
 
           {/* Документы */}
           <div>
-            <h4 style={{ color: '#FFF6DE', fontWeight: 600, fontSize: 14, marginBottom: 16 }}>Документы</h4>
-            {['Политика конфиденциальности', 'Реквизиты компании', 'Договор оферты', 'Лицензия на товарный знак'].map((doc) => (
-              <a key={doc} href="#" className="block mb-2 text-sm transition-colors"
-                style={{ color: 'rgba(255,246,222,0.4)' }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = '#8BDFDD' }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,246,222,0.4)' }}>
+            <h4 className="text-[#E8E4DC] font-semibold text-sm mb-4">Документы</h4>
+            {[
+              'Политика конфиденциальности',
+              'Реквизиты компании',
+              'Договор оферты',
+              'Лицензия на товарный знак',
+            ].map((doc) => (
+              <a key={doc} href="#" className="block text-[rgba(232,228,220,0.5)] text-sm mb-2 hover:text-[#C9A97A] transition-colors">
                 {doc}
               </a>
             ))}

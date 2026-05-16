@@ -2,285 +2,191 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ======================================================
-   DESIGN-W · GLOBAL STYLES
-   Palette: #FFF6DE (cream) · #8BDFDD (teal) · #F48F68 (coral) · #FFE394 (yellow)
-   Dark: #1C2340 (navy)
-   Text on light: #1A120B (ink)
-====================================================== */
-
 @layer base {
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; font-size: 16px; }
-
-  body {
-    font-family: 'Inter', system-ui, sans-serif;
-    background: #FFF6DE;
-    color: #1A120B;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
-  /* Скроллбар */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #FFF6DE; }
-  ::-webkit-scrollbar-thumb { background: #8BDFDD; border-radius: 3px; }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F7F4EF;
+    color: #1C2340;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
 @layer components {
-
-  /* ─── КОНТЕЙНЕР ─────────────────────────────────── */
+  /* Контейнер */
   .container {
     @apply max-w-7xl mx-auto px-4 md:px-8;
   }
 
-  /* ─── КНОПКИ ─────────────────────────────────────── */
-
-  /* Коралловая (primary CTA) */
-  .btn-coral {
-    @apply inline-flex items-center justify-center gap-2
-           px-6 py-3 rounded-xl font-semibold text-sm
-           bg-[#F48F68] text-white
-           hover:bg-[#e07a54] active:scale-[0.98]
-           transition-all duration-200 shadow-sm hover:shadow-md
-           cursor-pointer whitespace-nowrap;
+  /* ===== КНОПКИ ===== */
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           bg-gradient-to-r from-[#C9A97A] to-[#B8852E]
+           text-[#1C2340] font-semibold text-sm rounded-lg
+           hover:from-[#D4B896] hover:to-[#C9A97A]
+           transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg
+           active:translate-y-0 cursor-pointer;
   }
 
-  /* Бирюзовая (secondary) */
-  .btn-teal {
-    @apply inline-flex items-center justify-center gap-2
-           px-6 py-3 rounded-xl font-semibold text-sm
-           bg-[#8BDFDD] text-[#1A120B]
-           hover:bg-[#74d4d2] active:scale-[0.98]
-           transition-all duration-200 shadow-sm hover:shadow-md
-           cursor-pointer whitespace-nowrap;
-  }
-
-  /* Контурная (outline) */
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2
-           px-6 py-3 rounded-xl font-semibold text-sm
-           border-2 border-[#F48F68] text-[#F48F68]
-           hover:bg-[#F48F68] hover:text-white active:scale-[0.98]
-           transition-all duration-200
-           cursor-pointer whitespace-nowrap;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           border border-[rgba(201,169,122,0.4)] text-[#C9A97A]
+           font-semibold text-sm rounded-lg
+           hover:bg-[rgba(201,169,122,0.08)] hover:border-[#C9A97A]
+           transition-all duration-300 cursor-pointer;
   }
 
-  /* Тёмная (на светлых секциях) */
   .btn-dark {
-    @apply inline-flex items-center justify-center gap-2
-           px-6 py-3 rounded-xl font-semibold text-sm
-           bg-[#1A120B] text-[#FFF6DE]
-           hover:bg-[#2D1E10] active:scale-[0.98]
-           transition-all duration-200
-           cursor-pointer whitespace-nowrap;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           bg-[#1C2340] text-[#E8E4DC] font-semibold text-sm rounded-lg
+           hover:bg-[#243050] transition-all duration-300 cursor-pointer;
   }
 
-  /* Белая (на тёмных секциях) */
-  .btn-white {
-    @apply inline-flex items-center justify-center gap-2
-           px-6 py-3 rounded-xl font-semibold text-sm
-           bg-white text-[#1A120B]
-           hover:bg-[#FFF6DE] active:scale-[0.98]
-           transition-all duration-200
-           cursor-pointer whitespace-nowrap;
-  }
-
-  /* Алиасы для совместимости */
-  .btn-gold { @apply btn-coral; }
-
-  /* ─── ТЕГИ СЕКЦИЙ (ТЁМНЫЙ фон: navy) ───────────── */
+  /* ===== ТЕГИ СЕКЦИЙ — тёмный фон ===== */
   .section-tag {
-    @apply text-[#8BDFDD] font-semibold text-xs uppercase tracking-[0.18em] mb-3 block;
+    @apply text-[#C9A97A] font-semibold text-sm uppercase tracking-widest mb-3 block;
   }
+
   .section-title {
-    @apply text-2xl md:text-4xl font-bold text-white leading-tight;
+    @apply text-2xl md:text-4xl font-bold text-[#E8E4DC] leading-tight;
   }
+
   .section-sub {
-    @apply text-white/65 mt-3 text-base max-w-2xl;
+    @apply text-[rgba(232,228,220,0.65)] mt-3 text-base;
   }
 
-  /* ─── ТЕГИ СЕКЦИЙ (СВЕТЛЫЙ фон: cream/white) ────── */
-  .section-tag-light {
-    @apply text-[#F48F68] font-semibold text-xs uppercase tracking-[0.18em] mb-3 block;
-  }
-  .section-title-light {
-    @apply text-2xl md:text-4xl font-bold text-[#1A120B] leading-tight;
-  }
-  .section-sub-light {
-    @apply text-[#1A120B]/60 mt-3 text-base max-w-2xl;
+  /* ===== ТЕГИ СЕКЦИЙ — светлый фон ===== */
+  .section-tag-dark {
+    @apply text-[#B8852E] font-semibold text-sm uppercase tracking-widest mb-3 block;
   }
 
-  /* ─── КАРТОЧКИ ───────────────────────────────────── */
-
-  /* На тёмном фоне */
-  .card-dark {
-    @apply rounded-2xl p-6 hover:-translate-y-1
-           transition-all duration-300 cursor-pointer;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.10);
-  }
-  .card-dark:hover {
-    border-color: rgba(139,223,221,0.4);
+  .section-title-dark {
+    @apply text-2xl md:text-4xl font-bold text-[#1C2340] leading-tight;
   }
 
-  /* На светлом фоне */
-  .card-light {
-    @apply bg-white rounded-2xl p-6
-           hover:-translate-y-1 hover:shadow-lg
-           transition-all duration-300 cursor-pointer;
-    border: 1px solid rgba(26,18,11,0.08);
+  .section-sub-dark {
+    @apply text-[rgba(28,35,64,0.6)] mt-3 text-base;
   }
-  .service-card-light { @apply card-light; }
 
-  /* ─── ФОРМЫ (тёмный фон) ─────────────────────────── */
-  .form-label {
-    @apply block text-white/60 text-xs font-semibold mb-1.5 uppercase tracking-wider;
+  /* ===== КАРТОЧКИ УСЛУГ — тёмный фон ===== */
+  .service-card {
+    @apply bg-[#1E2240] border border-[rgba(201,169,122,0.15)] rounded-2xl p-6
+           cursor-pointer hover:border-[rgba(201,169,122,0.5)] hover:-translate-y-1
+           transition-all duration-300 hover:shadow-[0_8px_32px_rgba(201,169,122,0.1)];
   }
+
+  /* ===== КАРТОЧКИ УСЛУГ — светлый фон ===== */
+  .service-card-light {
+    @apply bg-white border border-[rgba(201,169,122,0.2)] rounded-2xl p-6
+           cursor-pointer hover:border-[rgba(201,169,122,0.5)] hover:-translate-y-1
+           transition-all duration-300 hover:shadow-md;
+  }
+
+  /* ===== ФОРМЫ — тёмный фон ===== */
   .form-input {
-    @apply w-full rounded-xl px-4 py-3 text-white text-sm
-           focus:outline-none focus:border-[#8BDFDD]
-           transition-all duration-200;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-  }
-  .form-input::placeholder { color: rgba(255,255,255,0.35); }
-  .form-input:focus { background: rgba(255,255,255,0.12); }
-  select.form-input option {
-    background: #1C2340;
-    color: white;
+    @apply w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(201,169,122,0.2)]
+           rounded-xl px-4 py-3 text-[#E8E4DC] text-sm outline-none
+           focus:border-[#C9A97A] focus:bg-[rgba(201,169,122,0.05)]
+           transition-all duration-200 placeholder:text-[rgba(232,228,220,0.35)];
   }
 
-  /* ─── ФОРМЫ (светлый фон) ────────────────────────── */
-  .form-label-light {
-    @apply block text-[#1A120B]/60 text-xs font-semibold mb-1.5 uppercase tracking-wider;
+  .form-label {
+    @apply block text-[rgba(232,228,220,0.75)] text-xs font-medium mb-1.5 uppercase tracking-wide;
   }
+
+  /* ===== ФОРМЫ — светлый фон ===== */
   .form-input-light {
-    @apply w-full bg-white border border-[#1A120B]/15
-           rounded-xl px-4 py-3 text-[#1A120B] text-sm
-           placeholder:text-[#1A120B]/35
-           focus:outline-none focus:border-[#8BDFDD] focus:bg-[#FFF6DE]
-           transition-all duration-200;
+    @apply w-full bg-[#F7F4EF] border border-[rgba(201,169,122,0.25)]
+           rounded-xl px-4 py-3 text-[#1C2340] text-sm outline-none
+           focus:border-[#C9A97A] focus:bg-white
+           transition-all duration-200 placeholder:text-[rgba(28,35,64,0.35)];
   }
 }
 
-/* ======================================================
-   ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
-====================================================== */
-:root {
-  --cream:  #FFF6DE;
-  --teal:   #8BDFDD;
-  --coral:  #F48F68;
-  --yellow: #FFE394;
-  --navy:   #1C2340;
-  --ink:    #1A120B;
-}
-
-/* ======================================================
-   МОДАЛЬНОЕ ОКНО
-====================================================== */
+/* ===== МОДАЛЬНЫЕ ОКНА ===== */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(26, 18, 11, 0.85);
+  background: rgba(0, 0, 0, 0.82);
   backdrop-filter: blur(8px);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  animation: fadeInModal 0.2s ease;
+  animation: fadeIn 0.2s ease;
 }
 
-@keyframes fadeInModal {
+@keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* ======================================================
-   СЛАЙДЕР ОТЗЫВОВ — CSS Scroll Snap (надёжнее JS transform)
-====================================================== */
-.reviews-scroll-container {
+/* ===== СЛАЙДЕР ОТЗЫВОВ ===== */
+.reviews-track {
   display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  gap: 16px;
-  padding: 4px 2px 8px;
-}
-.reviews-scroll-container::-webkit-scrollbar { display: none; }
-
-.review-slide {
-  scroll-snap-align: start;
-  flex: 0 0 auto;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: zoom-in;
-  border: 2px solid transparent;
-  transition: border-color 0.2s, transform 0.2s;
-  /* КЛЮЧЕВОЕ: рамка подстраивается под контент */
-  display: inline-flex;
-  align-items: flex-start;
-}
-.review-slide:hover {
-  border-color: #8BDFDD;
-  transform: translateY(-2px);
-}
-.review-slide img {
-  display: block;
-  width: 100%;
-  height: auto;          /* высота по содержимому */
-  object-fit: contain;
-  max-height: 480px;
-  background: #f5f5f5;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ======================================================
-   ЛАЙТБОКС
-====================================================== */
+/* ===== ЛАЙТБОКС ===== */
 .lightbox-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.96);
+  background: rgba(0, 0, 0, 0.95);
   z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeInModal 0.2s ease;
+  animation: fadeIn 0.2s ease;
 }
 
-/* ======================================================
-   FAQ DETAILS
-====================================================== */
+/* ===== АНИМАЦИИ САМОЛЁТОВ ===== */
+@keyframes fly1 {
+  0% { offset-distance: 0%; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* ===== СКРЫТЬ СКРОЛЛБАР В СЛАЙДЕРЕ ГРАМОТ ===== */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ===== DETAILS/SUMMARY FAQ ===== */
 details summary::-webkit-details-marker { display: none; }
 
-/* ======================================================
-   СЕКЦИИ — разделители
-====================================================== */
-main > section { position: relative; }
-
-/* ======================================================
-   НАВБАР
-====================================================== */
-#header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  transition: background 0.35s ease, box-shadow 0.35s ease, padding 0.35s ease;
+/* ===== ЭФФЕКТ ГЛУБИНЫ СЕКЦИЙ ===== */
+main > section {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
 }
 
-/* ======================================================
-   АНИМАЦИИ
-====================================================== */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+main > section:nth-child(odd) {
+  box-shadow:
+    inset 0 18px 36px -12px rgba(0, 0, 0, 0.25),
+    inset 0 -18px 36px -12px rgba(0, 0, 0, 0.18);
+  z-index: 1;
 }
-@keyframes pulse-ring {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(1.5); opacity: 0; }
+
+main > section:nth-child(even) {
+  box-shadow:
+    0 -8px 28px -6px rgba(0, 0, 0, 0.12),
+    0 8px 28px -6px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+main > section:first-child {
+  box-shadow: none;
+  z-index: 3;
 }

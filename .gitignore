@@ -1,7 +1,9 @@
 # Dependencies
 node_modules/
+react-app/node_modules/
 
 # Build output
+dist/
 react-app/dist/
 
 # OS files

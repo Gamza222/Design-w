@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F7F4EF;
+    color: #1C2340;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  /* Контейнер */
+  .container {
+    @apply max-w-7xl mx-auto px-4 md:px-8;
+  }
+
+  /* ===== КНОПКИ ===== */
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           bg-gradient-to-r from-[#C9A97A] to-[#B8852E]
+           text-[#1C2340] font-semibold text-sm rounded-lg
+           hover:from-[#D4B896] hover:to-[#C9A97A]
+           transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg
+           active:translate-y-0 cursor-pointer;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           border border-[rgba(201,169,122,0.4)] text-[#C9A97A]
+           font-semibold text-sm rounded-lg
+           hover:bg-[rgba(201,169,122,0.08)] hover:border-[#C9A97A]
+           transition-all duration-300 cursor-pointer;
+  }
+
+  .btn-dark {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           bg-[#1C2340] text-[#E8E4DC] font-semibold text-sm rounded-lg
+           hover:bg-[#243050] transition-all duration-300 cursor-pointer;
+  }
+
+  /* ===== ТЕГИ СЕКЦИЙ — тёмный фон ===== */
+  .section-tag {
+    @apply text-[#C9A97A] font-semibold text-sm uppercase tracking-widest mb-3 block;
+  }
+
+  .section-title {
+    @apply text-2xl md:text-4xl font-bold text-[#E8E4DC] leading-tight;
+  }
+
+  .section-sub {
+    @apply text-[rgba(232,228,220,0.65)] mt-3 text-base;
+  }
+
+  /* ===== ТЕГИ СЕКЦИЙ — светлый фон ===== */
+  .section-tag-dark {
+    @apply text-[#B8852E] font-semibold text-sm uppercase tracking-widest mb-3 block;
+  }
+
+  .section-title-dark {
+    @apply text-2xl md:text-4xl font-bold text-[#1C2340] leading-tight;
+  }
+
+  .section-sub-dark {
+    @apply text-[rgba(28,35,64,0.6)] mt-3 text-base;
+  }
+
+  /* ===== КАРТОЧКИ УСЛУГ — тёмный фон ===== */
+  .service-card {
+    @apply bg-[#1E2240] border border-[rgba(201,169,122,0.15)] rounded-2xl p-6
+           cursor-pointer hover:border-[rgba(201,169,122,0.5)] hover:-translate-y-1
+           transition-all duration-300 hover:shadow-[0_8px_32px_rgba(201,169,122,0.1)];
+  }
+
+  /* ===== КАРТОЧКИ УСЛУГ — светлый фон ===== */
+  .service-card-light {
+    @apply bg-white border border-[rgba(201,169,122,0.2)] rounded-2xl p-6
+           cursor-pointer hover:border-[rgba(201,169,122,0.5)] hover:-translate-y-1
+           transition-all duration-300 hover:shadow-md;
+  }
+
+  /* ===== ФОРМЫ — тёмный фон ===== */
+  .form-input {
+    @apply w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(201,169,122,0.2)]
+           rounded-xl px-4 py-3 text-[#E8E4DC] text-sm outline-none
+           focus:border-[#C9A97A] focus:bg-[rgba(201,169,122,0.05)]
+           transition-all duration-200 placeholder:text-[rgba(232,228,220,0.35)];
+  }
+
+  .form-label {
+    @apply block text-[rgba(232,228,220,0.75)] text-xs font-medium mb-1.5 uppercase tracking-wide;
+  }
+
+  /* ===== ФОРМЫ — светлый фон ===== */
+  .form-input-light {
+    @apply w-full bg-[#F7F4EF] border border-[rgba(201,169,122,0.25)]
+           rounded-xl px-4 py-3 text-[#1C2340] text-sm outline-none
+           focus:border-[#C9A97A] focus:bg-white
+           transition-all duration-200 placeholder:text-[rgba(28,35,64,0.35)];
+  }
+}
+
+/* ===== МОДАЛЬНЫЕ ОКНА ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ===== СЛАЙДЕР ОТЗЫВОВ ===== */
+.reviews-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== ЛАЙТБОКС ===== */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ===== АНИМАЦИИ САМОЛЁТОВ ===== */
+@keyframes fly1 {
+  0% { offset-distance: 0%; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* ===== СКРЫТЬ СКРОЛЛБАР В СЛАЙДЕРЕ ГРАМОТ ===== */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ===== DETAILS/SUMMARY FAQ ===== */
+details summary::-webkit-details-marker { display: none; }
+
+/* ===== ЭФФЕКТ ГЛУБИНЫ СЕКЦИЙ ===== */
+main > section {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+}
+
+main > section:nth-child(odd) {
+  box-shadow:
+    inset 0 18px 36px -12px rgba(0, 0, 0, 0.25),
+    inset 0 -18px 36px -12px rgba(0, 0, 0, 0.18);
+  z-index: 1;
+}
+
+main > section:nth-child(even) {
+  box-shadow:
+    0 -8px 28px -6px rgba(0, 0, 0, 0.12),
+    0 8px 28px -6px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+main > section:first-child {
+  box-shadow: none;
+  z-index: 3;
+}

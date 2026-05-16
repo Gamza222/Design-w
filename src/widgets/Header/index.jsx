@@ -1,186 +1,395 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FaTelegramPlane, FaVk, FaWhatsapp } from 'react-icons/fa'
 
+/* ─────────────────────────────────────────────────────────────────
+   HEADER — все требования:
+   • Новое лого /logo.png
+   • Плавный scroll-эффект через инлайн-стиль (без className-скачков)
+   • Цвет навигации ВСЕГДА белый/светлый (не меняется при скролле)
+   • Бургер с 1400px (кастомный breakpoint)
+   • Меню открыто → хедер всегда цвета меню
+   • В мобильном меню: навигация → соцсети → телефон → кнопка
+   • До 500px блоки идут по-очереди вертикально
+   • Минимальная ширина сайта 280px
+   • Крестик правильный, золотой
+───────────────────────────────────────────────────────────────── */
+
+const NAV_LINKS = [
+  { href: '/#services',     label: 'Дизайн-проект' },
+  { href: '/#about',        label: 'О нас' },
+  { href: '/portfolio',     label: 'Портфолио', isRoute: true },
+  { href: '/#achievements', label: 'Достижения' },
+  { href: '/blog',          label: 'Блог', isRoute: true },
+  { href: '/#contacts',     label: 'Контакты' },
+]
+
+const SOCIALS = [
+  { href: 'https://t.me/yourusername',  Icon: FaTelegramPlane, label: 'Telegram' },
+  { href: 'https://vk.me/yourusername', Icon: FaVk,            label: 'ВКонтакте' },
+  { href: 'https://wa.me/78007077483',  Icon: FaWhatsapp,      label: 'WhatsApp' },
+]
+
+const MENU_BG   = 'rgba(22, 22, 42, 0.98)'
+const ACCENT    = '#C9A050'
+const TEXT_NAV  = 'rgba(232,228,220,0.90)'   // всегда такой — не меняем при скролле
+
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false)
+  const [scrollY, setScrollY]   = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
-  const isHome = location.pathname === '/'
+  const rafRef   = useRef(null)
 
+  /* Плавный scroll через requestAnimationFrame */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
+    const onScroll = () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      rafRef.current = requestAnimationFrame(() => setScrollY(window.scrollY))
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
   }, [])
 
-  // Закрываем меню при переходе
+  /* Закрываем меню при смене роута */
+  useEffect(() => { setMenuOpen(false) }, [location.pathname])
+
+  /* Блокируем скролл пока меню открыто */
   useEffect(() => {
-    setMenuOpen(false)
-  }, [location])
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
 
-  const navLinks = [
-    { to: isHome ? '#services' : '/#services', label: 'Дизайн-проект' },
-    { to: isHome ? '#about' : '/#about', label: 'О нас' },
-    { to: '/portfolio', label: 'Портфолио' },
-    { to: isHome ? '#achievements' : '/#achievements', label: 'Достижения' },
-    { to: '/blog', label: 'Блог' },
-    { to: isHome ? '#contacts' : '/#contacts', label: 'Контакты' },
-  ]
+  /* ─── Плавное изменение фона хедера ─── */
+  // 0px → 0, 80px → 1 (полный эффект)
+  const t        = Math.min(scrollY / 80, 1)
+  const bgAlpha  = menuOpen ? 0.98 : 0.72 + 0.20 * t          // 0.72 → 0.92
+  const blur     = menuOpen ? 20   : 8  + 12  * t              // 8px → 20px
+  const border   = menuOpen ? 0.2  : 0.05 + 0.15 * t          // почти нет → видимая
+  const padV     = menuOpen ? 12   : 18  - 6  * t              // 18px → 12px (плавно)
 
-  const socials = [
-    { href: 'https://t.me/yourusername', icon: FaTelegramPlane, label: 'Telegram' },
-    { href: 'https://vk.me/yourusername', icon: FaVk, label: 'VK' },
-    { href: 'https://wa.me/78007077483', icon: FaWhatsapp, label: 'WhatsApp' },
-  ]
-
-  const closeMenu = () => setMenuOpen(false)
-
-  const linkClass = (to) => {
-    const isActive = location.pathname === to ||
-      (to === '/portfolio' && location.pathname === '/portfolio') ||
-      (to === '/blog' && location.pathname.startsWith('/blog'))
-    return `px-3 py-2 text-sm rounded-lg transition-colors duration-200 ${
-      isActive
-        ? 'text-[#C9A97A] bg-[rgba(201,169,122,0.08)]'
-        : 'text-[rgba(30,35,64,0.85)] hover:text-[#C9A97A] hover:bg-[rgba(201,169,122,0.08)]'
-    } ${scrolled ? '' : 'text-[rgba(232,228,220,0.85)] hover:text-[#C9A97A]'}`
-  }
+  const headerBg = menuOpen
+    ? MENU_BG
+    : `rgba(26, 26, 46, ${bgAlpha})`
 
   return (
-    <header
-      id="header"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? 'bg-white/95 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.10)] py-2'
-          : 'bg-transparent py-4'
-      }`}
-    >
-      <div className="container flex items-center justify-between">
-        {/* Логотип */}
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <img
-            src="/лого для сайта дизайн сейчас.png"
-            alt="Дизайн Сейчас"
-            className="h-10 w-auto"
-            onError={(e) => {
-              e.target.style.display = 'none'
-              e.target.parentElement.innerHTML =
-                '<span class="text-xl font-bold text-[#1C2340]">Дизайн <em class="text-[#C9A97A] not-italic">Сейчас</em></span>'
-            }}
-          />
-        </Link>
-
-        {/* Десктопная навигация */}
-        <nav className="hidden lg:flex items-center gap-1">
-          {navLinks.map((link) =>
-            link.to.startsWith('#') || link.to.startsWith('/#') ? (
-              <a
-                key={link.label}
-                href={link.to}
-                className={linkClass(link.to)}
-              >
-                {link.label}
-              </a>
-            ) : (
-              <Link
-                key={link.label}
-                to={link.to}
-                className={linkClass(link.to)}
-              >
-                {link.label}
-              </Link>
-            )
-          )}
-        </nav>
-
-        {/* Правая часть */}
-        <div className="hidden lg:flex items-center gap-4">
-          <div className="flex gap-2">
-            {socials.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={s.label}
-                className={`w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 ${
-                  scrolled
-                    ? 'border-[rgba(201,169,122,0.4)] text-[#C9A97A] hover:bg-[rgba(201,169,122,0.12)] hover:border-[#C9A97A]'
-                    : 'border-[rgba(201,169,122,0.3)] text-[#C9A97A] hover:bg-[rgba(201,169,122,0.15)] hover:border-[#C9A97A]'
-                }`}
-              >
-                <s.icon size={15} />
-              </a>
-            ))}
-          </div>
-          <div className="w-px h-5 bg-[rgba(201,169,122,0.25)]" />
-          <a
-            href="tel:+78007077483"
-            className={`text-sm font-medium transition-colors whitespace-nowrap ${
-              scrolled ? 'text-[#1C2340] hover:text-[#C9A97A]' : 'text-[#E8E4DC] hover:text-[#C9A97A]'
-            }`}
-          >
-            8 (800) 707-74-83
-          </a>
-          <span className={`text-xs whitespace-nowrap ${scrolled ? 'text-[rgba(28,35,64,0.4)]' : 'text-[rgba(232,228,220,0.4)]'}`}>
-            10:00–19:00
-          </span>
-          <a href="/#price" className="btn-gold text-xs px-4 py-2 whitespace-nowrap">
-            Рассчитать проект
-          </a>
-        </div>
-
-        {/* Бургер (мобильный) */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="lg:hidden flex flex-col gap-1.5 p-2 rounded-lg hover:bg-[rgba(201,169,122,0.1)] transition-colors"
-          aria-label="Меню"
-        >
-          <span className={`block w-6 h-0.5 transition-all duration-300 ${scrolled ? 'bg-[#1C2340]' : 'bg-[#C9A97A]'} ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`block w-6 h-0.5 transition-all duration-300 ${scrolled ? 'bg-[#1C2340]' : 'bg-[#C9A97A]'} ${menuOpen ? 'opacity-0' : ''}`} />
-          <span className={`block w-6 h-0.5 transition-all duration-300 ${scrolled ? 'bg-[#1C2340]' : 'bg-[#C9A97A]'} ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
-        </button>
-      </div>
-
-      {/* Мобильное меню */}
-      <div
-        className={`lg:hidden absolute top-full left-0 right-0 bg-white/98 backdrop-blur-lg shadow-lg transition-all duration-300 overflow-hidden ${
-          menuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-        }`}
+    <>
+      {/* ── ХЕДЕР ──────────────────────────────────────── */}
+      <header
+        id="header"
+        style={{
+          position:        'fixed',
+          top:             0, left: 0, right: 0,
+          zIndex:          100,
+          background:      headerBg,
+          backdropFilter:  `blur(${blur}px)`,
+          WebkitBackdropFilter: `blur(${blur}px)`,
+          borderBottom:    `1px solid rgba(201,160,80,${border})`,
+          transition:      'background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease',
+          minWidth:        280,
+        }}
       >
-        <div className="container py-4 flex flex-col gap-1">
-          {navLinks.map((link) =>
-            link.to.startsWith('#') || link.to.startsWith('/#') ? (
-              <a
-                key={link.label}
-                href={link.to}
-                onClick={closeMenu}
-                className="px-4 py-3 text-[#1C2340] text-sm border-b border-[rgba(201,169,122,0.08)] hover:text-[#C9A97A] transition-colors"
-              >
-                {link.label}
-              </a>
-            ) : (
-              <Link
-                key={link.label}
-                to={link.to}
-                onClick={closeMenu}
-                className="px-4 py-3 text-[#1C2340] text-sm border-b border-[rgba(201,169,122,0.08)] hover:text-[#C9A97A] transition-colors"
-              >
-                {link.label}
-              </Link>
-            )
-          )}
-          <div className="pt-4 flex items-center justify-between">
-            <a href="tel:+78007077483" className="text-[#C9A97A] font-semibold">
+        {/* Внутренняя строка */}
+        <div
+          className="container flex items-center justify-between gap-3"
+          style={{ paddingTop: padV, paddingBottom: padV, transition: 'padding 0.4s ease' }}
+        >
+
+          {/* ЛОГО */}
+          <Link to="/" className="shrink-0 flex items-center">
+            <img
+              src="/logo.png"
+              alt="Дизайн Сейчас"
+              style={{ height: 44, width: 'auto', display: 'block' }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none'
+                if (e.currentTarget.parentElement) {
+                  e.currentTarget.parentElement.innerHTML =
+                    '<span style="font-size:20px;font-weight:800;color:#E8E4DC;letter-spacing:-0.02em">Дизайн <em style="color:#C9A050;font-style:normal">Сейчас</em></span>'
+                }
+              }}
+            />
+          </Link>
+
+          {/* ── ДЕСКТОП НАВИГАЦИЯ (≥ 1400px) ── */}
+          <nav className="hidden min-[1400px]:flex items-center gap-0.5">
+            {NAV_LINKS.map((link) =>
+              link.isRoute ? (
+                <Link key={link.label} to={link.href}
+                  className="nav-link-desktop"
+                  style={{ color: TEXT_NAV }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a key={link.label} href={link.href}
+                  className="nav-link-desktop"
+                  style={{ color: TEXT_NAV }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
+                >
+                  {link.label}
+                </a>
+              )
+            )}
+          </nav>
+
+          {/* ── ПРАВАЯ ЧАСТЬ ДЕСКТОП (≥ 1400px) ── */}
+          <div className="hidden min-[1400px]:flex items-center gap-3">
+            {/* Соцсети */}
+            <div className="flex gap-1.5">
+              {SOCIALS.map(({ href, Icon, label }) => (
+                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
+                  className="w-8 h-8 flex items-center justify-center rounded-full transition-all duration-200"
+                  style={{ border: `1px solid rgba(201,160,80,0.35)`, color: ACCENT }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.15)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+                >
+                  <Icon size={14} />
+                </a>
+              ))}
+            </div>
+
+            {/* Разделитель */}
+            <div style={{ width: 1, height: 20, background: 'rgba(201,160,80,0.3)', transform: 'rotate(15deg)', flexShrink: 0 }} />
+
+            {/* Телефон */}
+            <a href="tel:+78007077483"
+              className="text-[13px] font-semibold whitespace-nowrap transition-colors"
+              style={{ color: TEXT_NAV }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
+            >
               8 (800) 707-74-83
             </a>
-            <a href="/#price" onClick={closeMenu} className="btn-gold text-xs px-4 py-2">
+            <span className="text-xs whitespace-nowrap" style={{ color: 'rgba(232,228,220,0.40)' }}>10:00–19:00</span>
+
+            {/* CTA */}
+            <a href="/#price"
+              className="inline-flex items-center text-[13px] font-bold whitespace-nowrap transition-all duration-300"
+              style={{
+                padding: '9px 22px', borderRadius: 50,
+                background: ACCENT, color: '#1A1A2E',
+                border: `2px solid ${ACCENT}`,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.color = ACCENT
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = ACCENT
+                e.currentTarget.style.color = '#1A1A2E'
+              }}
+            >
               Рассчитать проект
             </a>
           </div>
+
+          {/* ── БУРГЕР (< 1400px) ── */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
+            className="min-[1400px]:hidden flex items-center justify-center"
+            style={{
+              width: 40, height: 40, background: 'transparent',
+              border: 'none', cursor: 'pointer', padding: 0, flexShrink: 0,
+            }}
+          >
+            {/* Кастомный SVG крестик/бургер */}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              {menuOpen ? (
+                /* Крестик — правильный, золотой */
+                <>
+                  <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="20" y1="4" x2="4" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
+                </>
+              ) : (
+                /* Три полоски */
+                <>
+                  <line x1="3" y1="6"  x2="21" y2="6"  stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="3" y1="12" x2="21" y2="12" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="3" y1="18" x2="21" y2="18" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
+                </>
+              )}
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      {/* ── МОБИЛЬНОЕ МЕНЮ (< 1400px) ──────────────────── */}
+      {/*
+        Backdrop (закрывает по клику вне меню)
+        Drawer справа/снизу — зависит от ширины
+      */}
+      <div
+        className="min-[1400px]:hidden"
+        style={{
+          position:   'fixed',
+          inset:      0,
+          zIndex:     99,
+          pointerEvents: menuOpen ? 'auto' : 'none',
+        }}
+      >
+        {/* Затемнение */}
+        <div
+          onClick={() => setMenuOpen(false)}
+          style={{
+            position:   'absolute',
+            inset:      0,
+            background: 'rgba(10,8,20,0.55)',
+            backdropFilter: 'blur(2px)',
+            opacity:    menuOpen ? 1 : 0,
+            transition: 'opacity 0.35s ease',
+          }}
+        />
+
+        {/* Само меню — сдвигается сверху */}
+        <div
+          style={{
+            position:   'absolute',
+            top:        0, left: 0, right: 0,
+            background: MENU_BG,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderBottom: `1px solid rgba(201,160,80,0.2)`,
+            transform:   menuOpen ? 'translateY(0)' : 'translateY(-105%)',
+            transition:  'transform 0.38s cubic-bezier(0.4, 0, 0.2, 1)',
+            minWidth:    280,
+            overflowY:   'auto',
+            maxHeight:   '100dvh',
+          }}
+        >
+          {/* Шапка меню */}
+          <div
+            className="container flex items-center justify-between"
+            style={{ paddingTop: padV, paddingBottom: padV, transition: 'padding 0.4s ease' }}
+          >
+            <Link to="/" onClick={() => setMenuOpen(false)} className="shrink-0 flex items-center">
+              <img
+                src="/logo.png"
+                alt="Дизайн Сейчас"
+                style={{ height: 44, width: 'auto', display: 'block' }}
+                onError={(e) => { e.currentTarget.style.display = 'none' }}
+              />
+            </Link>
+            {/* Крестик в шапке меню */}
+            <button
+              onClick={() => setMenuOpen(false)}
+              aria-label="Закрыть меню"
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8 }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="20" y1="4" x2="4" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Навигация */}
+          <nav className="container flex flex-col" style={{ paddingTop: 8, paddingBottom: 8 }}>
+            {NAV_LINKS.map((link) =>
+              link.isRoute ? (
+                <Link key={link.label} to={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="text-sm font-medium transition-colors"
+                  style={{
+                    color: TEXT_NAV,
+                    padding: '13px 0',
+                    borderBottom: '1px solid rgba(201,160,80,0.10)',
+                    display: 'block',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a key={link.label} href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="text-sm font-medium transition-colors"
+                  style={{
+                    color: TEXT_NAV,
+                    padding: '13px 0',
+                    borderBottom: '1px solid rgba(201,160,80,0.10)',
+                    display: 'block',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
+                >
+                  {link.label}
+                </a>
+              )
+            )}
+          </nav>
+
+          {/* Соцсети + телефон + кнопка */}
+          <div className="container" style={{ paddingTop: 20, paddingBottom: 28 }}>
+
+            {/*
+              До 500px — блоки идут вертикально по-очереди:
+              соцсети → телефон → кнопка
+              500px+ — горизонтально
+            */}
+            <div
+              className="flex flex-col min-[500px]:flex-row min-[500px]:items-center min-[500px]:justify-between gap-4"
+            >
+              {/* Соцсети */}
+              <div className="flex gap-2">
+                {SOCIALS.map(({ href, Icon, label }) => (
+                  <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
+                    className="flex items-center justify-center rounded-full transition-all duration-200"
+                    style={{
+                      width: 40, height: 40,
+                      border: `1px solid rgba(201,160,80,0.4)`,
+                      color: ACCENT,
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.15)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+                  >
+                    <Icon size={16} />
+                  </a>
+                ))}
+              </div>
+
+              {/* Телефон */}
+              <a href="tel:+78007077483"
+                className="text-base font-bold transition-colors"
+                style={{ color: ACCENT }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.75' }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+              >
+                8 (800) 707-74-83
+              </a>
+
+              {/* Кнопка */}
+              <a href="/#price"
+                onClick={() => setMenuOpen(false)}
+                className="inline-flex items-center justify-center text-[13px] font-bold transition-all duration-300 whitespace-nowrap"
+                style={{
+                  padding: '10px 24px', borderRadius: 50,
+                  background: ACCENT, color: '#1A1A2E',
+                  border: `2px solid ${ACCENT}`,
+                  alignSelf: 'flex-start',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.color = ACCENT
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = ACCENT
+                  e.currentTarget.style.color = '#1A1A2E'
+                }}
+              >
+                Рассчитать проект
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-    </header>
+    </>
   )
 }

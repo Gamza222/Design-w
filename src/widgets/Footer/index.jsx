@@ -15,7 +15,7 @@ export default function Footer() {
           {/* Бренд */}
           <div>
             <img
-              src="/лого для сайта дизайн сейчас.png"
+              src="/logo.png"
               alt="Дизайн Сейчас"
               className="h-12 w-auto mb-4"
               onError={(e) => {

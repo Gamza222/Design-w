@@ -2,147 +2,211 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ======================================================
+   ДИЗАЙН 12 МАЯ — точное воспроизведение в Tailwind
+   Palette: #1A1A2E + #C9A050 (тёмно-фиолетовый + тёплое золото)
+   Капсульные кнопки, белые карточки, underline на hover
+====================================================== */
+
 @layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  :root {
+    --dark:   #1A1A2E;
+    --dark2:  #16213E;
+    --accent: #C9A050;
+    --accent-d: #A8832E;
+    --accent-l: #E8C98A;
+    --light:  #E8E4DC;
+    --light2: #F2EFE9;
+    --text:   #E8E4DC;
+    --text-muted: rgba(232,228,220,0.6);
+    --tr: 0.28s ease;
+    --r: 12px;
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; min-width: 280px; }
 
   body {
     font-family: 'Inter', sans-serif;
-    background-color: #F7F4EF;
-    color: #1C2340;
+    color: var(--dark);
+    background: var(--dark);
     line-height: 1.6;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    min-width: 280px;
   }
+
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; display: block; }
 }
 
 @layer components {
-  /* Контейнер */
+
+  /* ─── КОНТЕЙНЕР ─────────────────────────────────── */
   .container {
-    @apply max-w-7xl mx-auto px-4 md:px-8;
+    @apply max-w-[1280px] mx-auto px-6;
+    min-width: 0;
   }
 
-  /* ===== КНОПКИ ===== */
+  /* ─── ДЕСКТОПНЫЕ НАВЛИНКИ ───────────────────────── */
+  .nav-link-desktop {
+    @apply relative text-[13px] font-medium px-3 py-2 whitespace-nowrap
+           transition-colors duration-200 rounded;
+  }
+  .nav-link-desktop::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 12px; right: 12px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
+    border-radius: 1px;
+  }
+  .nav-link-desktop:hover::after { transform: scaleX(1); }
+
+  /* ─── КНОПКИ — капсульный стиль 12 мая ──────────── */
   .btn-gold {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3
-           bg-gradient-to-r from-[#C9A97A] to-[#B8852E]
-           text-[#1C2340] font-semibold text-sm rounded-lg
-           hover:from-[#D4B896] hover:to-[#C9A97A]
-           transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg
-           active:translate-y-0 cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2
+           px-8 py-[14px] rounded-full text-[15px] font-bold
+           cursor-pointer whitespace-nowrap
+           border-2 transition-all duration-300;
+    background: var(--accent);
+    color: var(--dark);
+    border-color: var(--accent);
+  }
+  .btn-gold:hover {
+    background: transparent;
+    color: var(--accent);
+    transform: translateY(-2px);
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3
-           border border-[rgba(201,169,122,0.4)] text-[#C9A97A]
-           font-semibold text-sm rounded-lg
-           hover:bg-[rgba(201,169,122,0.08)] hover:border-[#C9A97A]
-           transition-all duration-300 cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2
+           px-8 py-[14px] rounded-full text-[15px] font-semibold
+           cursor-pointer whitespace-nowrap
+           border-2 transition-all duration-300;
+    background: transparent;
+    color: var(--light);
+    border-color: rgba(255,255,255,0.5);
+  }
+  .btn-outline:hover {
+    background: white;
+    color: var(--dark);
   }
 
   .btn-dark {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3
-           bg-[#1C2340] text-[#E8E4DC] font-semibold text-sm rounded-lg
-           hover:bg-[#243050] transition-all duration-300 cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2
+           px-6 py-3 rounded-full text-sm font-semibold
+           cursor-pointer whitespace-nowrap transition-all duration-300;
+    background: var(--dark);
+    color: var(--light);
+    border: 2px solid rgba(201,160,80,0.3);
+  }
+  .btn-dark:hover {
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
-  /* ===== ТЕГИ СЕКЦИЙ — тёмный фон ===== */
+  /* ─── ТЕГИ И ЗАГОЛОВКИ СЕКЦИЙ ────────────────────── */
   .section-tag {
-    @apply text-[#C9A97A] font-semibold text-sm uppercase tracking-widest mb-3 block;
+    @apply inline-block text-[11px] font-bold tracking-[0.14em] uppercase mb-2.5 block;
+    color: var(--accent);
   }
-
   .section-title {
-    @apply text-2xl md:text-4xl font-bold text-[#E8E4DC] leading-tight;
+    @apply text-[clamp(24px,3.5vw,38px)] font-extrabold leading-tight;
+    color: var(--light);
   }
-
   .section-sub {
-    @apply text-[rgba(232,228,220,0.65)] mt-3 text-base;
+    @apply text-base mt-3 max-w-2xl;
+    color: var(--text-muted);
   }
 
-  /* ===== ТЕГИ СЕКЦИЙ — светлый фон ===== */
-  .section-tag-dark {
-    @apply text-[#B8852E] font-semibold text-sm uppercase tracking-widest mb-3 block;
-  }
-
+  /* Для светлых секций */
+  .section-tag-dark { @apply section-tag; }
   .section-title-dark {
-    @apply text-2xl md:text-4xl font-bold text-[#1C2340] leading-tight;
+    @apply text-[clamp(24px,3.5vw,38px)] font-extrabold leading-tight;
+    color: var(--dark);
   }
-
   .section-sub-dark {
-    @apply text-[rgba(28,35,64,0.6)] mt-3 text-base;
+    @apply text-base mt-3 max-w-2xl;
+    color: #6B6060;
   }
 
-  /* ===== КАРТОЧКИ УСЛУГ — тёмный фон ===== */
+  /* ─── КАРТОЧКИ УСЛУГ ─────────────────────────────── */
   .service-card {
-    @apply bg-[#1E2240] border border-[rgba(201,169,122,0.15)] rounded-2xl p-6
-           cursor-pointer hover:border-[rgba(201,169,122,0.5)] hover:-translate-y-1
-           transition-all duration-300 hover:shadow-[0_8px_32px_rgba(201,169,122,0.1)];
+    @apply rounded-[12px] p-8 transition-all duration-300 cursor-pointer;
+    background: white;
+    border: 1.5px solid #EBEBEB;
   }
-
-  /* ===== КАРТОЧКИ УСЛУГ — светлый фон ===== */
-  .service-card-light {
-    @apply bg-white border border-[rgba(201,169,122,0.2)] rounded-2xl p-6
-           cursor-pointer hover:border-[rgba(201,169,122,0.5)] hover:-translate-y-1
-           transition-all duration-300 hover:shadow-md;
+  .service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(201,160,80,0.15);
+    border-color: var(--accent);
   }
+  .service-card-light { @apply service-card; }
 
-  /* ===== ФОРМЫ — тёмный фон ===== */
-  .form-input {
-    @apply w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(201,169,122,0.2)]
-           rounded-xl px-4 py-3 text-[#E8E4DC] text-sm outline-none
-           focus:border-[#C9A97A] focus:bg-[rgba(201,169,122,0.05)]
-           transition-all duration-200 placeholder:text-[rgba(232,228,220,0.35)];
-  }
-
+  /* ─── ФОРМЫ (тёмный фон) ─────────────────────────── */
   .form-label {
-    @apply block text-[rgba(232,228,220,0.75)] text-xs font-medium mb-1.5 uppercase tracking-wide;
+    @apply block text-xs font-semibold mb-1.5 uppercase tracking-wider;
+    color: rgba(232,228,220,0.6);
   }
+  .form-input {
+    @apply w-full rounded-xl px-4 py-3 text-white text-sm
+           focus:outline-none
+           transition-all duration-200;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(201,160,80,0.2);
+  }
+  .form-input::placeholder { color: rgba(232,228,220,0.35); }
+  .form-input:focus {
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.10);
+  }
+  select.form-input option { background: var(--dark); color: white; }
 
-  /* ===== ФОРМЫ — светлый фон ===== */
   .form-input-light {
-    @apply w-full bg-[#F7F4EF] border border-[rgba(201,169,122,0.25)]
-           rounded-xl px-4 py-3 text-[#1C2340] text-sm outline-none
-           focus:border-[#C9A97A] focus:bg-white
-           transition-all duration-200 placeholder:text-[rgba(28,35,64,0.35)];
+    @apply w-full bg-white rounded-xl px-4 py-3 text-[#1A1A2E] text-sm
+           focus:outline-none transition-all duration-200;
+    border: 1.5px solid #E0DADA;
   }
+  .form-input-light::placeholder { color: rgba(26,26,46,0.35); }
+  .form-input-light:focus { border-color: var(--accent); }
 }
 
-/* ===== МОДАЛЬНЫЕ ОКНА ===== */
+/* ======================================================
+   МОДАЛЬНОЕ ОКНО
+====================================================== */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.82);
-  backdrop-filter: blur(8px);
+  background: rgba(10, 8, 20, 0.88);
+  backdrop-filter: blur(10px);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.22s ease;
 }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* ===== СЛАЙДЕР ОТЗЫВОВ ===== */
+/* ======================================================
+   СЛАЙДЕР ОТЗЫВОВ
+====================================================== */
 .reviews-track {
   display: flex;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ===== ЛАЙТБОКС ===== */
+/* ======================================================
+   ЛАЙТБОКС
+====================================================== */
 .lightbox-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.95);
+  background: rgba(0, 0, 0, 0.96);
   z-index: 2000;
   display: flex;
   align-items: center;
@@ -150,43 +214,35 @@
   animation: fadeIn 0.2s ease;
 }
 
-/* ===== АНИМАЦИИ САМОЛЁТОВ ===== */
-@keyframes fly1 {
-  0% { offset-distance: 0%; opacity: 0; }
-  5% { opacity: 1; }
-  95% { opacity: 1; }
-  100% { offset-distance: 100%; opacity: 0; }
-}
-
-/* ===== СКРЫТЬ СКРОЛЛБАР В СЛАЙДЕРЕ ГРАМОТ ===== */
-.hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* ===== DETAILS/SUMMARY FAQ ===== */
+/* ======================================================
+   FAQ — скрыть маркер
+====================================================== */
 details summary::-webkit-details-marker { display: none; }
 
-/* ===== ЭФФЕКТ ГЛУБИНЫ СЕКЦИЙ ===== */
-main > section {
-  position: relative;
-  z-index: 1;
-  isolation: isolate;
+/* ======================================================
+   ХЕДЕР
+====================================================== */
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  transition: background var(--tr), box-shadow var(--tr), padding var(--tr);
 }
 
+/* ======================================================
+   СКРОЛЛБАР
+====================================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--dark2); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+/* ======================================================
+   СЕКЦИИ — тени между секциями
+====================================================== */
+main > section { position: relative; }
 main > section:nth-child(odd) {
   box-shadow:
-    inset 0 18px 36px -12px rgba(0, 0, 0, 0.25),
-    inset 0 -18px 36px -12px rgba(0, 0, 0, 0.18);
-  z-index: 1;
+    inset 0 16px 32px -10px rgba(0,0,0,0.3),
+    inset 0 -16px 32px -10px rgba(0,0,0,0.2);
 }
-
-main > section:nth-child(even) {
-  box-shadow:
-    0 -8px 28px -6px rgba(0, 0, 0, 0.12),
-    0 8px 28px -6px rgba(0, 0, 0, 0.1);
-  z-index: 2;
-}
-
-main > section:first-child {
-  box-shadow: none;
-  z-index: 3;
-}
+main > section:first-child { box-shadow: none; }

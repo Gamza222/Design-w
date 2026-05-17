@@ -1,19 +1,27 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FaTelegramPlane, FaVk, FaWhatsapp } from 'react-icons/fa'
 
 /* ─────────────────────────────────────────────────────────────────
-   HEADER — все требования:
-   • Новое лого /logo.png
-   • Плавный scroll-эффект через инлайн-стиль (без className-скачков)
-   • Цвет навигации ВСЕГДА белый/светлый (не меняется при скролле)
-   • Бургер с 1400px (кастомный breakpoint)
-   • Меню открыто → хедер всегда цвета меню
-   • В мобильном меню: навигация → соцсети → телефон → кнопка
-   • До 500px блоки идут по-очереди вертикально
-   • Минимальная ширина сайта 280px
-   • Крестик правильный, золотой
-───────────────────────────────────────────────────────────────── */
+   HEADER — финальные требования:
+
+   ЛОГИКА ФОНА:
+   • scrollY = 0          → полностью прозрачный (всегда)
+   • scrollY > 0          → плавно появляется голубоватый фон + blur
+   • мобильное меню открыто → фон меню (только если реально мобилка < 1400px)
+   • десктоп/мобилка НЕ зависят друг от друга по состояниям
+
+   РАЗМЕРЫ:
+   • Лого: 2.125rem (= 34px при 16px base) — динамичная единица
+   • Бургер: height = 2.125rem (= лого) — задаётся через CSS var
+
+   РЕСЕТ:
+   • При ресайзе через 1400px порог — мобильное меню закрывается
+   • Overflow body сбрасывается при переходе на десктоп
+
+   ШРИФТЫ:
+   • Везде rem-единицы
+────────────────────────────────────────────────────────────────── */
 
 const NAV_LINKS = [
   { href: '/#services',     label: 'Дизайн-проект' },
@@ -30,22 +38,32 @@ const SOCIALS = [
   { href: 'https://wa.me/78007077483',  Icon: FaWhatsapp,      label: 'WhatsApp' },
 ]
 
-const MENU_BG   = 'rgba(22, 22, 42, 0.98)'
-const ACCENT    = '#C9A050'
-const TEXT_NAV  = 'rgba(232,228,220,0.90)'   // всегда такой — не меняем при скролле
+const DESKTOP_BP  = 1400        // px, порог бургера
+const LOGO_H      = '2.125rem'  // = 34px при 16px root
+const MENU_BG     = 'rgba(20, 20, 40, 0.98)'
+const ACCENT      = '#C9A050'
+const TEXT_NAV    = 'rgba(232,228,220,0.92)'
+
+// Голубоватый фон при скролле
+const SCROLL_BG   = (a) => `rgba(22, 26, 52, ${a})`  // чуть теплее navy
 
 export default function Header() {
-  const [scrollY, setScrollY]   = useState(0)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [scrollY,   setScrollY]   = useState(0)
+  const [menuOpen,  setMenuOpen]  = useState(false)
+  const [isMobile,  setIsMobile]  = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < DESKTOP_BP : false
+  )
   const location = useLocation()
   const rafRef   = useRef(null)
 
-  /* Плавный scroll через requestAnimationFrame */
+  /* ── Плавный scroll (rAF) ─────────────────────────── */
   useEffect(() => {
     const onScroll = () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       rafRef.current = requestAnimationFrame(() => setScrollY(window.scrollY))
     }
+    // Инициализируем сразу
+    setScrollY(window.scrollY)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       window.removeEventListener('scroll', onScroll)
@@ -53,66 +71,108 @@ export default function Header() {
     }
   }, [])
 
-  /* Закрываем меню при смене роута */
+  /* ── Ресайз: сброс мобильного меню при переходе на десктоп ── */
+  useEffect(() => {
+    let prev = window.innerWidth < DESKTOP_BP
+    const onResize = () => {
+      const curr = window.innerWidth < DESKTOP_BP
+      // Пересекли порог в любую сторону — сбрасываем меню
+      if (prev !== curr) {
+        setMenuOpen(false)
+        setIsMobile(curr)
+        document.body.style.overflow = ''
+        prev = curr
+      }
+    }
+    window.addEventListener('resize', onResize, { passive: true })
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  /* ── Закрываем меню при смене роута ─────────────────── */
   useEffect(() => { setMenuOpen(false) }, [location.pathname])
 
-  /* Блокируем скролл пока меню открыто */
+  /* ── Блокируем скролл только на мобилке с меню ─────── */
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    // Блокируем ТОЛЬКО если мы реально на мобилке
+    document.body.style.overflow = (menuOpen && isMobile) ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [menuOpen])
+  }, [menuOpen, isMobile])
 
-  /* ─── Фон хедера ───
-     Всегда прозрачный.
-     ТОЛЬКО если мобильное меню открыто → цвет меню.
-     (скролл-цвет добавим позже по скрину от пользователя)
+  /* ── Фон хедера ──────────────────────────────────────
+     scrollY = 0 → прозрачный
+     scrollY > 0 → голубоватый + blur
+     мобилка + меню → цвет меню
   */
-  const headerBg = menuOpen ? MENU_BG : 'transparent'
-  const blur     = menuOpen ? 20 : 0
-  const border   = menuOpen ? 0.2 : 0
-  const padV     = 14   // фиксированный — без прыжков
+  const t = Math.min(scrollY / 60, 1)   // 0…1 за 60px
+
+  // Если мобилка с открытым меню — специальный фон
+  const isMobileMenuActive = menuOpen && isMobile
+
+  const bgColor = isMobileMenuActive
+    ? MENU_BG
+    : scrollY > 0
+      ? SCROLL_BG(0.65 + 0.25 * t)      // 0.65 → 0.90 плавно
+      : 'transparent'
+
+  const blurPx = isMobileMenuActive
+    ? 20
+    : Math.round(t * 18)                 // 0 → 18px
+
+  const borderA = isMobileMenuActive
+    ? 0.2
+    : t * 0.18                           // 0 → 0.18
 
   return (
     <>
-      {/* ── ХЕДЕР ──────────────────────────────────────── */}
+      {/* ─────────── ХЕДЕР ─────────── */}
       <header
         id="header"
-      style={{
+        style={{
           position:             'fixed',
-          top:                  0, left: 0, right: 0,
+          top: 0, left: 0, right: 0,
           zIndex:               100,
-          background:           headerBg,
-          backdropFilter:       blur > 0 ? `blur(${blur}px)` : 'none',
-          WebkitBackdropFilter: blur > 0 ? `blur(${blur}px)` : 'none',
-          borderBottom:         border > 0 ? `1px solid rgba(201,160,80,${border})` : '1px solid transparent',
-          transition:           'background 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease',
-          minWidth:             280,
+          minWidth:             '280px',
+          background:           bgColor,
+          backdropFilter:       blurPx > 0 ? `blur(${blurPx}px)` : 'none',
+          WebkitBackdropFilter: blurPx > 0 ? `blur(${blurPx}px)` : 'none',
+          borderBottom:         `1px solid rgba(201,160,80,${borderA})`,
+          transition:           [
+            'background 0.38s ease',
+            'backdrop-filter 0.38s ease',
+            'border-color 0.38s ease',
+          ].join(', '),
         }}
       >
-        {/* Внутренняя строка */}
-        <div
-        className="container flex items-center justify-between gap-3"
-          style={{ paddingTop: padV, paddingBottom: padV }}
-        >
+        <div className="container" style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '0.75rem',
+          padding: '0.875rem 1.5rem',    /* 14px 24px — rem */
+        }}>
 
           {/* ЛОГО */}
-          <Link to="/" className="shrink-0 flex items-center">
+          <Link to="/" style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
             <img
               src="/logo.png"
               alt="Дизайн Сейчас"
-              style={{ height: 34, width: 'auto', display: 'block' }}
+              style={{ height: LOGO_H, width: 'auto', display: 'block' }}
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
                 if (e.currentTarget.parentElement) {
                   e.currentTarget.parentElement.innerHTML =
-                    '<span style="font-size:20px;font-weight:800;color:#E8E4DC;letter-spacing:-0.02em">Дизайн <em style="color:#C9A050;font-style:normal">Сейчас</em></span>'
+                    `<span style="font-size:1.25rem;font-weight:800;color:#E8E4DC;letter-spacing:-0.02em">
+                      Дизайн <em style="color:${ACCENT};font-style:normal">Сейчас</em>
+                    </span>`
                 }
               }}
             />
           </Link>
 
           {/* ── ДЕСКТОП НАВИГАЦИЯ (≥ 1400px) ── */}
-          <nav className="hidden min-[1400px]:flex items-center gap-0.5">
+          <nav style={{ display: 'none' }} className="min-[1400px]:flex items-center gap-0.5"
+            // React не любит смешение — используем className для display
+          >
             {NAV_LINKS.map((link) =>
               link.isRoute ? (
                 <Link key={link.label} to={link.href}
@@ -136,43 +196,52 @@ export default function Header() {
             )}
           </nav>
 
-          {/* ── ПРАВАЯ ЧАСТЬ ДЕСКТОП (≥ 1400px) ── */}
+          {/* ── ПРАВАЯ ЧАСТЬ ДЕСКТОП ── */}
           <div className="hidden min-[1400px]:flex items-center gap-3">
             {/* Соцсети */}
-            <div className="flex gap-1.5">
-              {SOCIALS.map(({ href, Icon, label }) => (
-                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                  className="w-8 h-8 flex items-center justify-center rounded-full transition-all duration-200"
-                  style={{ border: `1px solid rgba(201,160,80,0.35)`, color: ACCENT }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.15)' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
-                >
-                  <Icon size={14} />
-                </a>
-              ))}
-            </div>
+            {SOCIALS.map(({ href, Icon, label }) => (
+              <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
+                style={{
+                  width: '2rem', height: '2rem',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  borderRadius: '50%',
+                  border: `1px solid rgba(201,160,80,0.35)`,
+                  color: ACCENT,
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.14)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+              >
+                <Icon size={14} />
+              </a>
+            ))}
 
             {/* Разделитель */}
-            <div style={{ width: 1, height: 20, background: 'rgba(201,160,80,0.3)', transform: 'rotate(15deg)', flexShrink: 0 }} />
+            <div style={{ width: 1, height: '1.25rem', background: 'rgba(201,160,80,0.3)', transform: 'rotate(15deg)', flexShrink: 0 }} />
 
             {/* Телефон */}
             <a href="tel:+78007077483"
-              className="text-[13px] font-semibold whitespace-nowrap transition-colors"
-              style={{ color: TEXT_NAV }}
+              style={{ fontSize: '0.8125rem', fontWeight: 600, color: TEXT_NAV, whiteSpace: 'nowrap' }}
               onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
               onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
             >
               8 (800) 707-74-83
             </a>
-            <span className="text-xs whitespace-nowrap" style={{ color: 'rgba(232,228,220,0.40)' }}>10:00–19:00</span>
+            <span style={{ fontSize: '0.75rem', color: 'rgba(232,228,220,0.38)', whiteSpace: 'nowrap' }}>
+              10:00–19:00
+            </span>
 
             {/* CTA */}
             <a href="/#price"
-              className="inline-flex items-center text-[13px] font-bold whitespace-nowrap transition-all duration-300"
               style={{
-                padding: '9px 22px', borderRadius: 50,
+                display: 'inline-flex', alignItems: 'center',
+                padding: '0.5625rem 1.375rem',   /* 9px 22px */
+                borderRadius: '3rem',
+                fontSize: '0.8125rem', fontWeight: 700,
                 background: ACCENT, color: '#1A1A2E',
                 border: `2px solid ${ACCENT}`,
+                whiteSpace: 'nowrap',
+                transition: 'background 0.25s, color 0.25s',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'transparent'
@@ -187,26 +256,36 @@ export default function Header() {
             </a>
           </div>
 
-          {/* ── БУРГЕР (< 1400px) ── */}
+          {/* ── БУРГЕР (< 1400px) — высота = лого ── */}
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
-            className="min-[1400px]:hidden flex items-center justify-center"
+            className="min-[1400px]:hidden"
             style={{
-              width: 34, height: 34, background: 'transparent',
-              border: 'none', cursor: 'pointer', padding: 0, flexShrink: 0,
+              width:      LOGO_H,   /* 2.125rem — = высота лого */
+              height:     LOGO_H,
+              flexShrink: 0,
+              background: 'transparent',
+              border:     'none',
+              cursor:     'pointer',
+              padding:    0,
+              display:    'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            {/* Кастомный SVG крестик/бургер */}
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <svg
+              width="22" height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              style={{ overflow: 'visible' }}
+            >
               {menuOpen ? (
-                /* Крестик — правильный, золотой */
                 <>
                   <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
-                  <line x1="20" y1="4" x2="4" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="20" y1="4" x2="4"  y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
                 </>
               ) : (
-                /* Три полоски */
                 <>
                   <line x1="3" y1="6"  x2="21" y2="6"  stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
                   <line x1="3" y1="12" x2="21" y2="12" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
@@ -218,88 +297,100 @@ export default function Header() {
         </div>
       </header>
 
-      {/* ── МОБИЛЬНОЕ МЕНЮ (< 1400px) ──────────────────── */}
+      {/* ─────────── МОБИЛЬНОЕ МЕНЮ (< 1400px) ─────────── */}
       {/*
-        Backdrop (закрывает по клику вне меню)
-        Drawer справа/снизу — зависит от ширины
+        Независимо от десктопа.
+        Сдвигается translateY вниз из-под хедера.
       */}
       <div
         className="min-[1400px]:hidden"
         style={{
-          position:   'fixed',
-          inset:      0,
-          zIndex:     99,
+          position:      'fixed',
+          inset:         0,
+          zIndex:        99,
           pointerEvents: menuOpen ? 'auto' : 'none',
         }}
       >
-        {/* Затемнение */}
+        {/* Backdrop */}
         <div
           onClick={() => setMenuOpen(false)}
           style={{
             position:   'absolute',
             inset:      0,
-            background: 'rgba(10,8,20,0.55)',
+            background: 'rgba(8, 8, 20, 0.6)',
             backdropFilter: 'blur(2px)',
             opacity:    menuOpen ? 1 : 0,
-            transition: 'opacity 0.35s ease',
+            transition: 'opacity 0.3s ease',
           }}
         />
 
-        {/* Само меню — сдвигается сверху */}
+        {/* Панель меню */}
         <div
           style={{
-            position:   'absolute',
-            top:        0, left: 0, right: 0,
-            background: MENU_BG,
-            backdropFilter: 'blur(20px)',
+            position:        'absolute',
+            top:             0, left: 0, right: 0,
+            background:      MENU_BG,
+            backdropFilter:  'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: `1px solid rgba(201,160,80,0.2)`,
-            transform:   menuOpen ? 'translateY(0)' : 'translateY(-105%)',
-            transition:  'transform 0.38s cubic-bezier(0.4, 0, 0.2, 1)',
-            minWidth:    280,
-            overflowY:   'auto',
-            maxHeight:   '100dvh',
+            borderBottom:    '1px solid rgba(201,160,80,0.2)',
+            transform:       menuOpen ? 'translateY(0)' : 'translateY(-105%)',
+            transition:      'transform 0.36s cubic-bezier(0.4,0,0.2,1)',
+            minWidth:        '280px',
+            overflowY:       'auto',
+            maxHeight:       '100dvh',
           }}
         >
           {/* Шапка меню */}
-          <div
-            className="container flex items-center justify-between"
-            style={{ paddingTop: padV, paddingBottom: padV, transition: 'padding 0.4s ease' }}
-          >
-            <Link to="/" onClick={() => setMenuOpen(false)} className="shrink-0 flex items-center">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.875rem 1.5rem',
+          }}>
+            <Link to="/" onClick={() => setMenuOpen(false)}
+              style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
               <img
                 src="/logo.png"
                 alt="Дизайн Сейчас"
-                style={{ height: 34, width: 'auto', display: 'block' }}
+                style={{ height: LOGO_H, width: 'auto', display: 'block' }}
                 onError={(e) => { e.currentTarget.style.display = 'none' }}
               />
             </Link>
-            {/* Крестик в шапке меню */}
+            {/* Крестик */}
             <button
               onClick={() => setMenuOpen(false)}
               aria-label="Закрыть меню"
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 8 }}
+              style={{
+                width: LOGO_H, height: LOGO_H,
+                background: 'transparent', border: 'none',
+                cursor: 'pointer', padding: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="20" y1="4" x2="4" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="20" y1="4" x2="4"  y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </button>
           </div>
 
           {/* Навигация */}
-          <nav className="container flex flex-col" style={{ paddingTop: 8, paddingBottom: 8 }}>
-            {NAV_LINKS.map((link) =>
-              link.isRoute ? (
+          <nav style={{ padding: '0.25rem 1.5rem 0.5rem' }}>
+            {NAV_LINKS.map((link) => {
+              const style = {
+                display: 'block',
+                padding: '0.8125rem 0',
+                fontSize: '0.9375rem',
+                fontWeight: 500,
+                color: TEXT_NAV,
+                borderBottom: '1px solid rgba(201,160,80,0.09)',
+                transition: 'color 0.2s',
+              }
+              return link.isRoute ? (
                 <Link key={link.label} to={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="text-sm font-medium transition-colors"
-                  style={{
-                    color: TEXT_NAV,
-                    padding: '13px 0',
-                    borderBottom: '1px solid rgba(201,160,80,0.10)',
-                    display: 'block',
-                  }}
+                  style={style}
                   onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
                   onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
                 >
@@ -308,83 +399,77 @@ export default function Header() {
               ) : (
                 <a key={link.label} href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="text-sm font-medium transition-colors"
-                  style={{
-                    color: TEXT_NAV,
-                    padding: '13px 0',
-                    borderBottom: '1px solid rgba(201,160,80,0.10)',
-                    display: 'block',
-                  }}
+                  style={style}
                   onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
                   onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
                 >
                   {link.label}
                 </a>
               )
-            )}
+            })}
           </nav>
 
-          {/* Соцсети + телефон + кнопка */}
-          <div className="container" style={{ paddingTop: 20, paddingBottom: 28 }}>
-
-            {/*
-              До 500px — блоки идут вертикально по-очереди:
-              соцсети → телефон → кнопка
-              500px+ — горизонтально
-            */}
-            <div
-              className="flex flex-col min-[500px]:flex-row min-[500px]:items-center min-[500px]:justify-between gap-4"
-            >
-              {/* Соцсети */}
-              <div className="flex gap-2">
-                {SOCIALS.map(({ href, Icon, label }) => (
-                  <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                    className="flex items-center justify-center rounded-full transition-all duration-200"
-                    style={{
-                      width: 40, height: 40,
-                      border: `1px solid rgba(201,160,80,0.4)`,
-                      color: ACCENT,
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.15)' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
-                  >
-                    <Icon size={16} />
-                  </a>
-                ))}
-              </div>
-
-              {/* Телефон */}
-              <a href="tel:+78007077483"
-                className="text-base font-bold transition-colors"
-                style={{ color: ACCENT }}
-                onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.75' }}
-                onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
-              >
-                8 (800) 707-74-83
-              </a>
-
-              {/* Кнопка */}
-              <a href="/#price"
-                onClick={() => setMenuOpen(false)}
-                className="inline-flex items-center justify-center text-[13px] font-bold transition-all duration-300 whitespace-nowrap"
-                style={{
-                  padding: '10px 24px', borderRadius: 50,
-                  background: ACCENT, color: '#1A1A2E',
-                  border: `2px solid ${ACCENT}`,
-                  alignSelf: 'flex-start',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = ACCENT
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = ACCENT
-                  e.currentTarget.style.color = '#1A1A2E'
-                }}
-              >
-                Рассчитать проект
-              </a>
+          {/* Соцсети → Телефон → Кнопка */}
+          <div style={{ padding: '1.25rem 1.5rem 1.75rem' }}>
+            {/* Соцсети */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+              {SOCIALS.map(({ href, Icon, label }) => (
+                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
+                  style={{
+                    width: '2.5rem', height: '2.5rem',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    borderRadius: '50%',
+                    border: '1px solid rgba(201,160,80,0.4)',
+                    color: ACCENT,
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.14)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+                >
+                  <Icon size={16} />
+                </a>
+              ))}
             </div>
+
+            {/* Телефон */}
+            <a href="tel:+78007077483"
+              style={{
+                display: 'block',
+                fontSize: '1.0625rem', fontWeight: 700,
+                color: ACCENT,
+                marginBottom: '1rem',
+                transition: 'opacity 0.2s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.7' }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+            >
+              8 (800) 707-74-83
+            </a>
+
+            {/* Кнопка */}
+            <a href="/#price"
+              onClick={() => setMenuOpen(false)}
+              style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                padding: '0.6875rem 1.75rem',
+                borderRadius: '3rem',
+                fontSize: '0.875rem', fontWeight: 700,
+                background: ACCENT, color: '#1A1A2E',
+                border: `2px solid ${ACCENT}`,
+                whiteSpace: 'nowrap',
+                transition: 'background 0.25s, color 0.25s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'transparent'
+                e.currentTarget.style.color = ACCENT
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = ACCENT
+                e.currentTarget.style.color = '#1A1A2E'
+              }}
+            >
+              Рассчитать проект
+            </a>
           </div>
         </div>
       </div>

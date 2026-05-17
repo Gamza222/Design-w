@@ -83,7 +83,7 @@ export default function Reviews() {
           <button
             onClick={() => goTo(current - 1)}
             disabled={current === 0}
-            className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-[rgba(26,26,46,0.9)] border border-[rgba(201,169,122,0.2)] text-[#C9A97A] hover:bg-[rgba(201,169,122,0.1)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-[rgba(26,26,46,0.9)] border border-[rgba(254,193,4,0.2)] text-[#FEC104] hover:bg-[rgba(254,193,4,0.1)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -99,7 +99,7 @@ export default function Reviews() {
               {reviews.map((r, i) => (
                 <div
                   key={r.id}
-                  className="shrink-0 rounded-2xl overflow-hidden cursor-zoom-in border border-[rgba(201,169,122,0.1)] hover:border-[rgba(201,169,122,0.3)] transition-all inline-flex"
+                  className="shrink-0 rounded-2xl overflow-hidden cursor-zoom-in border border-[rgba(254,193,4,0.1)] hover:border-[rgba(254,193,4,0.3)] transition-all inline-flex"
                   style={{ width: `calc((100% - ${(perView - 1) * 18}px) / ${perView})` }}
                   onClick={() => openLightbox(i)}
                 >
@@ -117,7 +117,7 @@ export default function Reviews() {
           <button
             onClick={() => goTo(current + 1)}
             disabled={current >= max}
-            className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-[rgba(26,26,46,0.9)] border border-[rgba(201,169,122,0.2)] text-[#C9A97A] hover:bg-[rgba(201,169,122,0.1)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-[rgba(26,26,46,0.9)] border border-[rgba(254,193,4,0.2)] text-[#FEC104] hover:bg-[rgba(254,193,4,0.1)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -132,7 +132,7 @@ export default function Reviews() {
               key={i}
               onClick={() => goTo(i)}
               className={`rounded-full transition-all duration-300 ${
-                i === current ? 'w-6 h-2 bg-[#C9A97A]' : 'w-2 h-2 bg-[rgba(201,169,122,0.3)]'
+                i === current ? 'w-6 h-2 bg-[#FEC104]' : 'w-2 h-2 bg-[rgba(254,193,4,0.3)]'
               }`}
               aria-label={`Отзыв ${i + 1}`}
             />

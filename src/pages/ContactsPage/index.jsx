@@ -53,9 +53,9 @@ export default function ContactsPage() {
 
         {/* Хлебные крошки */}
         <div className="flex items-center gap-2 text-sm mb-8" style={{ color: 'rgba(232,228,220,0.4)' }}>
-          <Link to="/" className="hover:text-[#C9A050] transition-colors">Главная</Link>
+          <Link to="/" className="hover:text-[#FEC104] transition-colors">Главная</Link>
           <span>/</span>
-          <span style={{ color: '#C9A050' }}>Контакты</span>
+          <span style={{ color: '#FEC104' }}>Контакты</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
@@ -65,7 +65,7 @@ export default function ContactsPage() {
             <h1 className="section-title mb-6">Просто напишите нам</h1>
 
             <a href="tel:+78007077483" className="block text-3xl font-bold mb-1 transition-colors hover:opacity-80"
-              style={{ color: '#C9A050' }}>8 (800) 707-74-83</a>
+              style={{ color: '#FEC104' }}>8 (800) 707-74-83</a>
             <p className="text-sm mb-8" style={{ color: 'rgba(232,228,220,0.5)' }}>Бесплатно по России</p>
 
             <div className="flex flex-wrap gap-3 mb-6">
@@ -78,7 +78,7 @@ export default function ContactsPage() {
               ))}
             </div>
 
-            <a href="mailto:dizain.seichas@yandex.ru" className="text-sm transition-colors hover:text-[#C9A050]"
+            <a href="mailto:dizain.seichas@yandex.ru" className="text-sm transition-colors hover:text-[#FEC104]"
               style={{ color: 'rgba(232,228,220,0.5)' }}>
               dizain.seichas@yandex.ru
             </a>
@@ -98,16 +98,16 @@ export default function ContactsPage() {
 
           {/* Форма */}
           <FadeInView delay={0.1}>
-            <div className="rounded-3xl p-7 md:p-9" style={{ background: '#1E2240', border: '1px solid rgba(201,160,80,0.15)' }}>
+            <div className="rounded-3xl p-7 md:p-9" style={{ background: '#1E2240', border: '1px solid rgba(254,193,4,0.15)' }}>
               <h2 className="font-bold text-xl mb-6" style={{ color: '#E8E4DC' }}>Оставьте заявку</h2>
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="form-label">Имя <span style={{ color: '#C9A050' }}>*</span></label>
+                    <label className="form-label">Имя <span style={{ color: '#FEC104' }}>*</span></label>
                     <input className="form-input" type="text" placeholder="Как вас зовут?" value={form.name} onChange={set('name')} required />
                   </div>
                   <div>
-                    <label className="form-label">Телефон <span style={{ color: '#C9A050' }}>*</span></label>
+                    <label className="form-label">Телефон <span style={{ color: '#FEC104' }}>*</span></label>
                     <input className="form-input" type="tel" placeholder="+7 (___) ___-__-__" value={form.phone} onChange={set('phone')} required />
                   </div>
                 </div>
@@ -143,9 +143,9 @@ export default function ContactsPage() {
                 </div>
                 <label className="flex items-center gap-2 text-xs cursor-pointer" style={{ color: 'rgba(232,228,220,0.5)' }}>
                   <input type="checkbox" required checked={form.agree}
-                    onChange={(e) => setForm({ ...form, agree: e.target.checked })} className="accent-[#C9A050]" />
+                    onChange={(e) => setForm({ ...form, agree: e.target.checked })} className="accent-[#FEC104]" />
                   Я даю согласие на обработку{' '}
-                  <a href="#" className="underline" style={{ color: '#C9A050' }}>персональных данных</a>{' '}согласно ФЗ-152
+                  <a href="#" className="underline" style={{ color: '#FEC104' }}>персональных данных</a>{' '}согласно ФЗ-152
                 </label>
                 <button type="submit" className="btn-gold justify-center" disabled={status === 'loading'}>
                   {status === 'loading' ? 'Отправляем...' : 'Отправить заявку'}

@@ -47,7 +47,7 @@ export default function Fears() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {fears.map((f, i) => (
             <FadeInView key={f.title} delay={i * 0.08}>
-              <div className="bg-white border border-[rgba(201,169,122,0.15)] rounded-2xl p-6 hover:border-[rgba(201,169,122,0.4)] hover:shadow-md transition-all duration-300 hover:-translate-y-1 h-full">
+              <div className="bg-white border border-[rgba(254,193,4,0.15)] rounded-2xl p-6 hover:border-[rgba(254,193,4,0.4)] hover:shadow-md transition-all duration-300 hover:-translate-y-1 h-full">
                 <div className="text-3xl mb-4">{f.icon}</div>
                 <h3 className="text-base font-semibold text-[#1C2340] mb-3 leading-snug">{f.title}</h3>
                 <p className="text-[rgba(28,35,64,0.6)] text-sm leading-relaxed">{f.text}</p>
@@ -57,7 +57,7 @@ export default function Fears() {
 
           {/* CTA карточка */}
           <FadeInView delay={5 * 0.08}>
-            <div className="bg-gradient-to-br from-[#C9A97A] to-[#B8852E] rounded-2xl p-6 flex flex-col justify-between h-full">
+            <div className="bg-gradient-to-br from-[#FEC104] to-[#C5920B] rounded-2xl p-6 flex flex-col justify-between h-full">
               <div>
                 <h3 className="text-base font-semibold text-[#1C2340] mb-3">Остались вопросы?</h3>
                 <p className="text-[rgba(28,35,64,0.7)] text-sm mb-6 leading-relaxed">

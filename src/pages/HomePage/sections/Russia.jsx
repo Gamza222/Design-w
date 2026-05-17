@@ -75,9 +75,9 @@ export default function Russia() {
           {stats.map((s) => (
             <div
               key={s.num}
-              className="bg-[rgba(26,26,46,0.85)] backdrop-blur-md border border-[rgba(201,169,122,0.2)] rounded-xl px-4 py-3 text-center min-w-[120px]"
+              className="bg-[rgba(26,26,46,0.85)] backdrop-blur-md border border-[rgba(254,193,4,0.2)] rounded-xl px-4 py-3 text-center min-w-[120px]"
             >
-              <div className="text-xl font-bold text-[#C9A97A]">{s.num}</div>
+              <div className="text-xl font-bold text-[#FEC104]">{s.num}</div>
               <div className="text-[rgba(232,228,220,0.65)] text-xs mt-0.5">{s.label}</div>
             </div>
           ))}

@@ -107,7 +107,7 @@ export default function Calculator() {
           </div>
         </FadeInView>
 
-        <div className="bg-[#1E2240] border border-[rgba(201,169,122,0.15)] rounded-3xl p-6 md:p-10">
+        <div className="bg-[#1E2240] border border-[rgba(254,193,4,0.15)] rounded-3xl p-6 md:p-10">
           
           {/* ТАРИФЫ */}
           <div className="mb-8">
@@ -123,8 +123,8 @@ export default function Calculator() {
                     key={t.id}
                     className={`relative flex flex-col p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${
                       isActive
-                        ? 'border-[#C9A97A] bg-[rgba(201,169,122,0.1)] shadow-[0_0_0_1px_rgba(201,169,122,0.4)]'
-                        : 'border-[rgba(201,169,122,0.12)] hover:border-[rgba(201,169,122,0.35)]'
+                        ? 'border-[#FEC104] bg-[rgba(254,193,4,0.1)] shadow-[0_0_0_1px_rgba(254,193,4,0.4)]'
+                        : 'border-[rgba(254,193,4,0.12)] hover:border-[rgba(254,193,4,0.35)]'
                     }`}
                   >
                     <input
@@ -136,9 +136,9 @@ export default function Calculator() {
                       className="sr-only"
                     />
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <span className="text-[rgba(201,169,122,0.4)] text-xl font-bold leading-none">{t.num}</span>
+                      <span className="text-[rgba(254,193,4,0.4)] text-xl font-bold leading-none">{t.num}</span>
                       {isActive && (
-                        <span className="w-5 h-5 rounded-full bg-[#C9A97A] flex items-center justify-center shrink-0">
+                        <span className="w-5 h-5 rounded-full bg-[#FEC104] flex items-center justify-center shrink-0">
                           <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
                             <path d="M1 4l2.5 2.5L9 1" stroke="#1C2340" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
@@ -146,9 +146,9 @@ export default function Calculator() {
                       )}
                     </div>
                     <span className="text-[#E8E4DC] text-sm font-semibold mb-1">{t.title}</span>
-                    <span className="text-[#C9A97A] text-xs">{t.priceLabel}</span>
+                    <span className="text-[#FEC104] text-xs">{t.priceLabel}</span>
                     {t.includes3D && (
-                      <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#C9A97A] bg-[rgba(201,169,122,0.1)] px-2 py-0.5 rounded-full w-fit">
+                      <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#FEC104] bg-[rgba(254,193,4,0.1)] px-2 py-0.5 rounded-full w-fit">
                         ✦ 3D включено
                       </span>
                     )}
@@ -173,10 +173,10 @@ export default function Calculator() {
                     key={ex.id}
                     className={`relative flex items-start gap-3 p-4 rounded-xl border transition-all duration-200 ${
                       isBlocked
-                        ? 'border-[rgba(201,169,122,0.08)] opacity-60 cursor-not-allowed'
+                        ? 'border-[rgba(254,193,4,0.08)] opacity-60 cursor-not-allowed'
                         : isChecked
-                        ? 'border-[#C9A97A] bg-[rgba(201,169,122,0.08)] cursor-pointer'
-                        : 'border-[rgba(201,169,122,0.12)] hover:border-[rgba(201,169,122,0.3)] cursor-pointer'
+                        ? 'border-[#FEC104] bg-[rgba(254,193,4,0.08)] cursor-pointer'
+                        : 'border-[rgba(254,193,4,0.12)] hover:border-[rgba(254,193,4,0.3)] cursor-pointer'
                     }`}
                   >
                     <input
@@ -184,18 +184,18 @@ export default function Calculator() {
                       checked={isChecked && !isBlocked}
                       disabled={isBlocked}
                       onChange={() => toggleExtra(ex)}
-                      className="accent-[#C9A97A] shrink-0 mt-0.5"
+                      className="accent-[#FEC104] shrink-0 mt-0.5"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-[#E8E4DC] text-xs font-medium">{ex.title}</span>
                         {isBlocked && (
-                          <span className="text-[10px] font-semibold text-[#C9A97A] bg-[rgba(201,169,122,0.15)] px-2 py-0.5 rounded-full">
+                          <span className="text-[10px] font-semibold text-[#FEC104] bg-[rgba(254,193,4,0.15)] px-2 py-0.5 rounded-full">
                             ✦ Уже включено
                           </span>
                         )}
                       </div>
-                      <span className="text-[#C9A97A] text-xs">{ex.priceLabel}</span>
+                      <span className="text-[#FEC104] text-xs">{ex.priceLabel}</span>
                     </div>
                   </label>
                 )
@@ -217,9 +217,9 @@ export default function Calculator() {
                 onChange={(e) => setArea(Number(e.target.value))}
               />
             </div>
-            <div className="bg-[rgba(201,169,122,0.05)] border border-[rgba(201,169,122,0.2)] rounded-2xl p-5">
+            <div className="bg-[rgba(254,193,4,0.05)] border border-[rgba(254,193,4,0.2)] rounded-2xl p-5">
               <label className="form-label">Итоговая стоимость</label>
-              <div className="text-2xl font-bold text-[#C9A97A] mt-2 mb-3">{priceText}</div>
+              <div className="text-2xl font-bold text-[#FEC104] mt-2 mb-3">{priceText}</div>
               {priceHint && (
                 <pre className="text-[rgba(232,228,220,0.5)] text-xs whitespace-pre-wrap font-sans leading-relaxed">
                   {priceHint}
@@ -229,7 +229,7 @@ export default function Calculator() {
           </div>
 
           {/* ФОРМА */}
-          <form onSubmit={handleSubmit} className="border-t border-[rgba(201,169,122,0.1)] pt-8">
+          <form onSubmit={handleSubmit} className="border-t border-[rgba(254,193,4,0.1)] pt-8">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
               <div>
                 <label className="form-label">Ваше имя</label>
@@ -251,9 +251,9 @@ export default function Calculator() {
               <label className="flex items-center gap-2 text-[rgba(232,228,220,0.5)] text-xs cursor-pointer">
                 <input type="checkbox" required checked={form.agree}
                   onChange={(e) => setForm({ ...form, agree: e.target.checked })}
-                  className="accent-[#C9A97A]" />
+                  className="accent-[#FEC104]" />
                 Я соглашаюсь с{' '}
-                <a href="#" className="text-[#C9A97A] underline">политикой конфиденциальности</a>
+                <a href="#" className="text-[#FEC104] underline">политикой конфиденциальности</a>
               </label>
               <button type="submit" className="btn-gold whitespace-nowrap" disabled={status === 'loading'}>
                 {status === 'loading' ? 'Отправляем...' : 'Узнать точную стоимость'}

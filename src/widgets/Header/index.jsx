@@ -34,7 +34,7 @@ const SOCIALS = [
 
 const BP       = 1400
 const LOGO_H   = '2.125rem'   // 34px при 16px root — используется и для бургера
-const ACCENT   = '#C9A050'
+const ACCENT   = '#FEC104'
 const TEXT_NAV = 'rgba(232,228,220,0.92)'
 const MENU_BG  = 'rgba(18, 18, 38, 0.98)'
 
@@ -97,13 +97,13 @@ export default function Header() {
   const forceScrolled = !isHome
 
   const bgStyle = mobileMenuActive
-    ? { background: MENU_BG, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(201,160,80,0.2)' }
+    ? { background: MENU_BG, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(254,193,4,0.2)' }
     : (scrollY > 0 || forceScrolled)
       ? {
           background:           `rgba(22, 26, 52, ${forceScrolled ? '0.97' : (0.65 + 0.25 * t).toFixed(2)})`,
           backdropFilter:       `blur(${forceScrolled ? 18 : Math.round(t * 18)}px)`,
           WebkitBackdropFilter: `blur(${forceScrolled ? 18 : Math.round(t * 18)}px)`,
-          borderBottom:         `1px solid rgba(201,160,80,${forceScrolled ? '0.15' : (t * 0.18).toFixed(3)})`,
+          borderBottom:         `1px solid rgba(254,193,4,${forceScrolled ? '0.15' : (t * 0.18).toFixed(3)})`,
         }
       : { background: 'transparent', backdropFilter: 'none', WebkitBackdropFilter: 'none', borderBottom: '1px solid transparent' }
 
@@ -171,15 +171,15 @@ export default function Header() {
             {/* Соцсети */}
             {SOCIALS.map(({ href, Icon, label }) => (
               <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                style={{ width: '2rem', height: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(201,160,80,0.7)', color: ACCENT, background: 'rgba(201,160,80,0.08)', transition: 'background 0.2s, border-color 0.2s', flexShrink: 0 }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.22)'; e.currentTarget.style.borderColor = ACCENT }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.08)'; e.currentTarget.style.borderColor = 'rgba(201,160,80,0.7)' }}
+                style={{ width: '2rem', height: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(254,193,4,0.7)', color: ACCENT, background: 'rgba(254,193,4,0.08)', transition: 'background 0.2s, border-color 0.2s', flexShrink: 0 }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(254,193,4,0.22)'; e.currentTarget.style.borderColor = ACCENT }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(254,193,4,0.08)'; e.currentTarget.style.borderColor = 'rgba(254,193,4,0.7)' }}
               >
                 <Icon size={15} />
               </a>
             ))}
 
-            <div style={{ width: 1, height: '1.25rem', background: 'rgba(201,160,80,0.3)', transform: 'rotate(15deg)', flexShrink: 0 }} />
+            <div style={{ width: 1, height: '1.25rem', background: 'rgba(254,193,4,0.3)', transform: 'rotate(15deg)', flexShrink: 0 }} />
 
             {/* Телефон + часы работы */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem', flexShrink: 0 }}>
@@ -276,7 +276,7 @@ export default function Header() {
             background: MENU_BG,
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(201,160,80,0.2)',
+            borderBottom: '1px solid rgba(254,193,4,0.2)',
             transform: menuOpen ? 'translateY(0)' : 'translateY(-105%)',
             transition: 'transform 0.36s cubic-bezier(0.4,0,0.2,1)',
             minWidth: 280,
@@ -303,7 +303,7 @@ export default function Header() {
           {/* Ссылки */}
           <nav style={{ padding: '0.25rem 1.5rem 0.5rem' }}>
             {NAV_LINKS.map((link) => {
-              const s = { display: 'block', padding: '0.8125rem 0', fontSize: '0.9375rem', fontWeight: 500, color: TEXT_NAV, borderBottom: '1px solid rgba(201,160,80,0.09)', transition: 'color 0.2s' }
+              const s = { display: 'block', padding: '0.8125rem 0', fontSize: '0.9375rem', fontWeight: 500, color: TEXT_NAV, borderBottom: '1px solid rgba(254,193,4,0.09)', transition: 'color 0.2s' }
               const enter = (e) => { e.currentTarget.style.color = ACCENT }
               const leave = (e) => { e.currentTarget.style.color = TEXT_NAV }
               return link.isRoute
@@ -318,8 +318,8 @@ export default function Header() {
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               {SOCIALS.map(({ href, Icon, label }) => (
                 <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                  style={{ width: '2.5rem', height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(201,160,80,0.4)', color: ACCENT, transition: 'background 0.2s' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.14)' }}
+                  style={{ width: '2.5rem', height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(254,193,4,0.4)', color: ACCENT, transition: 'background 0.2s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(254,193,4,0.14)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
                 >
                   <Icon size={16} />

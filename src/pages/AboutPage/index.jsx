@@ -43,9 +43,9 @@ export default function AboutPage() {
         <div className="container">
           {/* Хлебные крошки */}
           <div className="flex items-center gap-2 text-sm mb-8" style={{ color: 'rgba(28,35,64,0.4)' }}>
-            <Link to="/" className="hover:text-[#C9A050] transition-colors">Главная</Link>
+            <Link to="/" className="hover:text-[#FEC104] transition-colors">Главная</Link>
             <span>/</span>
-            <span style={{ color: '#C9A050' }}>О нас</span>
+            <span style={{ color: '#FEC104' }}>О нас</span>
           </div>
 
           <FadeInView>
@@ -61,9 +61,9 @@ export default function AboutPage() {
             {stats.map((s, i) => (
               <FadeInView key={s.num} delay={i * 0.07}>
                 <div className="bg-white rounded-2xl p-6 text-center hover:-translate-y-1 hover:shadow-md transition-all duration-300"
-                  style={{ border: '1.5px solid rgba(201,160,80,0.18)' }}>
+                  style={{ border: '1.5px solid rgba(254,193,4,0.18)' }}>
                   <div className="text-3xl font-extrabold mb-1"
-                    style={{ background: 'linear-gradient(135deg,#C9A050,#B8852E)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    style={{ background: 'linear-gradient(135deg,#FEC104,#C5920B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     {s.num}
                   </div>
                   <p className="text-sm" style={{ color: 'rgba(28,35,64,0.55)' }}>{s.label}</p>
@@ -78,7 +78,7 @@ export default function AboutPage() {
             {principles.map((p, i) => (
               <FadeInView key={p.title} delay={i * 0.06}>
                 <div className="bg-white rounded-2xl p-6 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
-                  style={{ border: '1.5px solid rgba(201,160,80,0.15)' }}>
+                  style={{ border: '1.5px solid rgba(254,193,4,0.15)' }}>
                   <div className="text-3xl mb-3">{p.icon}</div>
                   <h3 className="font-bold text-base mb-2" style={{ color: '#1C2340' }}>{p.title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: 'rgba(28,35,64,0.6)' }}>{p.desc}</p>
@@ -94,12 +94,12 @@ export default function AboutPage() {
               <FadeInView key={m.name} delay={i * 0.06}>
                 <div className="text-center">
                   <div className={`w-full aspect-square rounded-2xl bg-gradient-to-br ${grads[i]} mb-3 flex items-center justify-center`}>
-                    <span className="text-2xl font-black" style={{ color: 'rgba(201,160,80,0.3)' }}>
+                    <span className="text-2xl font-black" style={{ color: 'rgba(254,193,4,0.3)' }}>
                       {m.name.split(' ').map(w => w[0]).join('')}
                     </span>
                   </div>
                   <p className="font-semibold text-sm" style={{ color: '#1C2340' }}>{m.name}</p>
-                  <p className="text-xs mt-0.5" style={{ color: '#C9A050' }}>{m.role}</p>
+                  <p className="text-xs mt-0.5" style={{ color: '#FEC104' }}>{m.role}</p>
                   <p className="text-xs mt-0.5" style={{ color: 'rgba(28,35,64,0.45)' }}>{m.exp} опыта</p>
                 </div>
               </FadeInView>
@@ -120,21 +120,21 @@ export default function AboutPage() {
           </FadeInView>
           <div className="flex items-center gap-3 justify-center">
             <button onClick={() => scroll(-1)} className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full transition-all"
-              style={{ background: 'rgba(201,160,80,0.1)', color: '#C9A050' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.22)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.1)' }}>←</button>
+              style={{ background: 'rgba(254,193,4,0.1)', color: '#FEC104' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(254,193,4,0.22)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(254,193,4,0.1)' }}>←</button>
             <div ref={trackRef} className="flex gap-5 overflow-x-auto" style={{ scrollbarWidth: 'none', maxWidth: 900 }}>
               {['/gramota1.jpg', '/gramota2.jpg'].map((src, i) => (
                 <div key={i} className="shrink-0 rounded-2xl overflow-hidden"
-                  style={{ flex: '0 0 calc(50% - 10px)', minWidth: 260, maxWidth: 420, border: '1px solid rgba(201,160,80,0.2)' }}>
+                  style={{ flex: '0 0 calc(50% - 10px)', minWidth: 260, maxWidth: 420, border: '1px solid rgba(254,193,4,0.2)' }}>
                   <img src={src} alt={`Грамота ${i + 1}`} className="w-full h-auto block" loading="lazy" />
                 </div>
               ))}
             </div>
             <button onClick={() => scroll(1)} className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full transition-all"
-              style={{ background: 'rgba(201,160,80,0.1)', color: '#C9A050' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.22)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.1)' }}>→</button>
+              style={{ background: 'rgba(254,193,4,0.1)', color: '#FEC104' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(254,193,4,0.22)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(254,193,4,0.1)' }}>→</button>
           </div>
         </div>
       </div>
@@ -144,7 +144,7 @@ export default function AboutPage() {
         <div className="container">
           <FadeInView>
             <div className="bg-white rounded-3xl p-10 text-center max-w-xl mx-auto shadow-sm"
-              style={{ border: '1.5px solid rgba(201,160,80,0.2)' }}>
+              style={{ border: '1.5px solid rgba(254,193,4,0.2)' }}>
               <h2 className="text-2xl font-bold mb-3" style={{ color: '#1C2340' }}>Готовы обсудить ваш проект?</h2>
               <p className="text-sm mb-7" style={{ color: 'rgba(28,35,64,0.6)' }}>
                 Рассчитаем стоимость и расскажем, что подойдёт именно вам.

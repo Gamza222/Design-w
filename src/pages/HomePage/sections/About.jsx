@@ -53,7 +53,7 @@ export default function About() {
               <ul className="space-y-3 mb-8">
                 {aboutList.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[rgba(28,35,64,0.8)]">
-                    <span className="text-[#C9A97A] font-bold shrink-0 mt-0.5">✓</span>
+                    <span className="text-[#FEC104] font-bold shrink-0 mt-0.5">✓</span>
                     {item}
                   </li>
                 ))}
@@ -65,9 +65,9 @@ export default function About() {
               {numCards.map((c) => (
                 <div
                   key={c.num}
-                  className="bg-white border border-[rgba(201,169,122,0.2)] rounded-2xl p-6 text-center hover:border-[rgba(201,169,122,0.5)] hover:shadow-md transition-all duration-300"
+                  className="bg-white border border-[rgba(254,193,4,0.2)] rounded-2xl p-6 text-center hover:border-[rgba(254,193,4,0.5)] hover:shadow-md transition-all duration-300"
                 >
-                  <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#C9A97A] to-[#B8852E] bg-clip-text text-transparent mb-1">
+                  <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#FEC104] to-[#C5920B] bg-clip-text text-transparent mb-1">
                     {c.num}
                   </div>
                   <p className="text-[rgba(28,35,64,0.6)] text-sm">{c.label}</p>
@@ -86,7 +86,7 @@ export default function About() {
           <div className="relative flex items-center gap-3 justify-center">
             <button
               onClick={() => scrollAwards(-1)}
-              className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[rgba(201,169,122,0.12)] hover:bg-[rgba(201,169,122,0.25)] text-[#C9A97A] transition-all"
+              className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[rgba(254,193,4,0.12)] hover:bg-[rgba(254,193,4,0.25)] text-[#FEC104] transition-all"
             >
               ←
             </button>
@@ -103,7 +103,7 @@ export default function About() {
               {['/gramota1.jpg', '/gramota2.jpg'].map((src, i) => (
                 <div
                   key={i}
-                  className="shrink-0 rounded-2xl overflow-hidden border border-[rgba(201,169,122,0.2)] hover:border-[rgba(201,169,122,0.5)] transition-all shadow-sm"
+                  className="shrink-0 rounded-2xl overflow-hidden border border-[rgba(254,193,4,0.2)] hover:border-[rgba(254,193,4,0.5)] transition-all shadow-sm"
                   style={{ flex: '0 0 calc(50% - 10px)', maxWidth: '420px', minWidth: '260px' }}
                 >
                   <img
@@ -118,7 +118,7 @@ export default function About() {
 
             <button
               onClick={() => scrollAwards(1)}
-              className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[rgba(201,169,122,0.12)] hover:bg-[rgba(201,169,122,0.25)] text-[#C9A97A] transition-all"
+              className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[rgba(254,193,4,0.12)] hover:bg-[rgba(254,193,4,0.25)] text-[#FEC104] transition-all"
             >
               →
             </button>

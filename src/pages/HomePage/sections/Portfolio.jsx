@@ -36,14 +36,14 @@ export default function Portfolio() {
 
         {/* Табы */}
         <FadeInView delay={0.1}>
-          <div className="flex gap-2 mb-8 border-b border-[rgba(201,169,122,0.15)] pb-0">
+          <div className="flex gap-2 mb-8 border-b border-[rgba(254,193,4,0.15)] pb-0">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={`px-5 py-3 text-sm font-medium rounded-t-xl transition-all duration-200 border-b-2 ${
                   activeTab === tab.key
-                    ? 'text-[#C9A97A] border-[#C9A97A] bg-[rgba(201,169,122,0.08)]'
+                    ? 'text-[#FEC104] border-[#FEC104] bg-[rgba(254,193,4,0.08)]'
                     : 'text-[rgba(232,228,220,0.5)] border-transparent hover:text-[#E8E4DC]'
                 }`}
               >
@@ -57,14 +57,14 @@ export default function Portfolio() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {current.items.map((item, i) => (
             <FadeInView key={i} delay={i * 0.08}>
-              <div className="group rounded-2xl overflow-hidden border border-[rgba(201,169,122,0.1)] hover:border-[rgba(201,169,122,0.3)] transition-all duration-300 h-full">
+              <div className="group rounded-2xl overflow-hidden border border-[rgba(254,193,4,0.1)] hover:border-[rgba(254,193,4,0.3)] transition-all duration-300 h-full">
                 <div className={`h-52 bg-gradient-to-br ${placeholderColors[i % placeholderColors.length]} relative overflow-hidden`}>
                   <div className="absolute inset-0 opacity-20 bg-[url('/hero-bg.jpg')] bg-cover bg-center group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 p-4">
-                    <span className="text-[rgba(201,169,122,0.3)] text-4xl font-bold">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="text-[rgba(254,193,4,0.3)] text-4xl font-bold">{String(i + 1).padStart(2, '0')}</span>
                   </div>
                   {item.style && (
-                    <span className="absolute top-3 left-3 text-[10px] font-semibold text-[#C9A97A] bg-[rgba(26,26,46,0.85)] px-2 py-1 rounded-full">
+                    <span className="absolute top-3 left-3 text-[10px] font-semibold text-[#FEC104] bg-[rgba(26,26,46,0.85)] px-2 py-1 rounded-full">
                       {item.style}
                     </span>
                   )}

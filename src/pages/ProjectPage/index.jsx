@@ -33,17 +33,17 @@ export default function ProjectPage() {
 
         {/* Хлебные крошки */}
         <div className="flex items-center gap-2 text-sm mb-6 flex-wrap" style={{ color: 'rgba(232,228,220,0.4)' }}>
-          <Link to="/" className="hover:text-[#C9A050] transition-colors">Главная</Link>
+          <Link to="/" className="hover:text-[#FEC104] transition-colors">Главная</Link>
           <span>/</span>
-          <Link to="/portfolio" className="hover:text-[#C9A050] transition-colors">Портфолио</Link>
+          <Link to="/portfolio" className="hover:text-[#FEC104] transition-colors">Портфолио</Link>
           <span>/</span>
-          <span className="truncate max-w-[200px]" style={{ color: '#C9A050' }}>{project.title}</span>
+          <span className="truncate max-w-[200px]" style={{ color: '#FEC104' }}>{project.title}</span>
         </div>
 
         {/* Назад */}
         <Link to="/portfolio"
           className="inline-flex items-center gap-2 text-sm font-semibold mb-8 transition-all hover:gap-3"
-          style={{ color: '#C9A050' }}>
+          style={{ color: '#FEC104' }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -58,7 +58,7 @@ export default function ProjectPage() {
               style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)' }}>
               {project.style && (
                 <span className="text-xs font-semibold px-3 py-1 rounded-full mb-4"
-                  style={{ background: 'rgba(201,160,80,0.9)', color: '#1A1A2E' }}>
+                  style={{ background: 'rgba(254,193,4,0.9)', color: '#1A1A2E' }}>
                   {project.style}
                 </span>
               )}
@@ -71,7 +71,7 @@ export default function ProjectPage() {
             </div>
             {/* Декоративный номер */}
             <div className="absolute top-8 right-8 text-8xl font-black select-none"
-              style={{ color: 'rgba(201,160,80,0.08)' }}>
+              style={{ color: 'rgba(254,193,4,0.08)' }}>
               {String(idx + 1).padStart(2, '0')}
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function ProjectPage() {
             <p className="text-base leading-relaxed" style={{ color: 'rgba(232,228,220,0.65)' }}>{project.desc}</p>
           </FadeInView>
           <FadeInView delay={0.1}>
-            <div className="rounded-2xl p-6 space-y-4" style={{ background: '#1E2240', border: '1px solid rgba(201,160,80,0.15)' }}>
+            <div className="rounded-2xl p-6 space-y-4" style={{ background: '#1E2240', border: '1px solid rgba(254,193,4,0.15)' }}>
               {[
                 { label: 'Площадь', value: project.area },
                 { label: 'Город', value: project.city },
@@ -110,7 +110,7 @@ export default function ProjectPage() {
               {project.rooms.map((room, i) => (
                 <FadeInView key={room} delay={i * 0.05}>
                   <div className={`rounded-2xl overflow-hidden bg-gradient-to-br ${grads[(idx + i + 1) % grads.length]}`}
-                    style={{ border: '1px solid rgba(201,160,80,0.12)' }}>
+                    style={{ border: '1px solid rgba(254,193,4,0.12)' }}>
                     <div className="aspect-[4/3] flex flex-col items-center justify-center gap-2 p-4">
                       <span className="text-3xl">{roomIcons[room] || '🏠'}</span>
                       <p className="text-xs font-medium text-center" style={{ color: 'rgba(232,228,220,0.8)' }}>{room}</p>
@@ -124,7 +124,7 @@ export default function ProjectPage() {
 
         {/* CTA */}
         <FadeInView>
-          <div className="rounded-3xl p-10 text-center mb-16" style={{ background: '#1E2240', border: '1px solid rgba(201,160,80,0.2)' }}>
+          <div className="rounded-3xl p-10 text-center mb-16" style={{ background: '#1E2240', border: '1px solid rgba(254,193,4,0.2)' }}>
             <h2 className="text-2xl font-bold mb-3" style={{ color: '#E8E4DC' }}>Хотите похожий проект?</h2>
             <p className="text-sm mb-7" style={{ color: 'rgba(232,228,220,0.6)' }}>
               Расскажите о вашей квартире — рассчитаем стоимость за 30 минут.
@@ -146,22 +146,22 @@ export default function ProjectPage() {
                   <FadeInView key={other.slug} delay={i * 0.07}>
                     <Link to={`/portfolio/${other.slug}`}
                       className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
-                      style={{ border: '1px solid rgba(201,160,80,0.1)' }}>
+                      style={{ border: '1px solid rgba(254,193,4,0.1)' }}>
                       <div className={`h-40 bg-gradient-to-br ${grads[oi % grads.length]} relative overflow-hidden`}>
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-4xl font-black" style={{ color: 'rgba(201,160,80,0.15)' }}>
+                          <span className="text-4xl font-black" style={{ color: 'rgba(254,193,4,0.15)' }}>
                             {String(oi + 1).padStart(2, '0')}
                           </span>
                         </div>
                         {other.style && (
                           <span className="absolute top-3 left-3 text-[10px] font-semibold px-2 py-1 rounded-full"
-                            style={{ color: '#C9A050', background: 'rgba(26,26,46,0.85)' }}>
+                            style={{ color: '#FEC104', background: 'rgba(26,26,46,0.85)' }}>
                             {other.style}
                           </span>
                         )}
                       </div>
                       <div className="p-4" style={{ background: '#1E2240' }}>
-                        <h3 className="text-sm font-medium mb-1 group-hover:text-[#C9A050] transition-colors"
+                        <h3 className="text-sm font-medium mb-1 group-hover:text-[#FEC104] transition-colors"
                           style={{ color: '#E8E4DC' }}>{other.title}</h3>
                         <p className="text-xs" style={{ color: 'rgba(232,228,220,0.4)' }}>{other.area} · {other.city}</p>
                       </div>

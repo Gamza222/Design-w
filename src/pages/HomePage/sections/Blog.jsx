@@ -28,16 +28,16 @@ export default function Blog() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {displayPosts.map((post, i) => (
             <FadeInView key={post.id} delay={i * 0.1}>
-              <article className="bg-[#1E2240] border border-[rgba(201,169,122,0.1)] rounded-2xl overflow-hidden hover:border-[rgba(201,169,122,0.3)] hover:-translate-y-1 transition-all duration-300 group flex flex-col">
+              <article className="bg-[#1E2240] border border-[rgba(254,193,4,0.1)] rounded-2xl overflow-hidden hover:border-[rgba(254,193,4,0.3)] hover:-translate-y-1 transition-all duration-300 group flex flex-col">
                 {/* Изображение-заглушка */}
                 <Link to={`/blog/${post.slug}`} className="block relative h-44 overflow-hidden shrink-0">
                   <div className="absolute inset-0 bg-gradient-to-br from-[#2A3560] to-[#1E2240]" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-5xl font-bold text-[rgba(201,169,122,0.15)]">
+                    <span className="text-5xl font-bold text-[rgba(254,193,4,0.15)]">
                       {String(post.id).padStart(2, '0')}
                     </span>
                   </div>
-                  <span className="absolute top-3 left-3 z-20 text-[10px] font-semibold text-[#C9A97A] bg-[rgba(26,26,46,0.85)] backdrop-blur-sm px-3 py-1 rounded-full border border-[rgba(201,169,122,0.2)]">
+                  <span className="absolute top-3 left-3 z-20 text-[10px] font-semibold text-[#FEC104] bg-[rgba(26,26,46,0.85)] backdrop-blur-sm px-3 py-1 rounded-full border border-[rgba(254,193,4,0.2)]">
                     {post.tag}
                   </span>
                 </Link>
@@ -49,7 +49,7 @@ export default function Blog() {
                     <span>·</span>
                     <span>{post.readTime}</span>
                   </div>
-                  <h3 className="text-[#E8E4DC] font-semibold text-sm mb-2 leading-snug group-hover:text-[#C9A97A] transition-colors">
+                  <h3 className="text-[#E8E4DC] font-semibold text-sm mb-2 leading-snug group-hover:text-[#FEC104] transition-colors">
                     {post.title}
                   </h3>
                   <p className="text-[rgba(232,228,220,0.55)] text-xs leading-relaxed mb-4 flex-1">
@@ -57,7 +57,7 @@ export default function Blog() {
                   </p>
                   <Link
                     to={`/blog/${post.slug}`}
-                    className="flex items-center gap-1.5 text-[#C9A97A] text-xs font-medium hover:text-[#F5B800] transition-colors mt-auto"
+                    className="flex items-center gap-1.5 text-[#FEC104] text-xs font-medium hover:text-[#F5B800] transition-colors mt-auto"
                   >
                     Читать статью
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none">

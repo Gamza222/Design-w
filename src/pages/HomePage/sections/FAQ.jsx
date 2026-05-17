@@ -37,14 +37,14 @@ export default function FAQ() {
         <div className="max-w-3xl mx-auto space-y-4">
           {faqItems.map((item, i) => (
             <FadeInView key={i} delay={i * 0.07}>
-              <details className="group bg-white border border-[rgba(201,169,122,0.15)] rounded-2xl overflow-hidden hover:border-[rgba(201,169,122,0.35)] transition-all duration-300">
+              <details className="group bg-white border border-[rgba(254,193,4,0.15)] rounded-2xl overflow-hidden hover:border-[rgba(254,193,4,0.35)] transition-all duration-300">
                 <summary className="flex items-center justify-between px-6 py-5 cursor-pointer list-none select-none">
                   <span className="text-[#1C2340] font-semibold text-sm pr-4">{item.q}</span>
-                  <span className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-[rgba(201,169,122,0.1)] text-[#C9A97A] transition-transform duration-300 group-open:rotate-45 text-lg font-light">
+                  <span className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full bg-[rgba(254,193,4,0.1)] text-[#FEC104] transition-transform duration-300 group-open:rotate-45 text-lg font-light">
                     +
                   </span>
                 </summary>
-                <div className="px-6 pb-5 text-[rgba(28,35,64,0.65)] text-sm leading-relaxed border-t border-[rgba(201,169,122,0.08)] pt-4">
+                <div className="px-6 pb-5 text-[rgba(28,35,64,0.65)] text-sm leading-relaxed border-t border-[rgba(254,193,4,0.08)] pt-4">
                   {item.a}
                 </div>
               </details>

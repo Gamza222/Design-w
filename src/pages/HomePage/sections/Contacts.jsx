@@ -52,7 +52,7 @@ export default function Contacts() {
               <p className="section-tag">Контакты</p>
               <h2 className="section-title mb-6">Просто напишите нам. Мы рады помочь.</h2>
 
-              <a href="tel:+78007077483" className="block text-3xl font-bold text-[#C9A97A] hover:text-[#F5B800] transition-colors mb-1">
+              <a href="tel:+78007077483" className="block text-3xl font-bold text-[#FEC104] hover:text-[#F5B800] transition-colors mb-1">
                 8 (800) 707-74-83
               </a>
               <p className="text-[rgba(232,228,220,0.5)] text-sm mb-8">Бесплатно по России</p>
@@ -76,7 +76,7 @@ export default function Contacts() {
                 ))}
               </div>
 
-              <a href="mailto:dizain.seichas@yandex.ru" className="text-[rgba(232,228,220,0.6)] hover:text-[#C9A97A] transition-colors text-sm">
+              <a href="mailto:dizain.seichas@yandex.ru" className="text-[rgba(232,228,220,0.6)] hover:text-[#FEC104] transition-colors text-sm">
                 dizain.seichas@yandex.ru
               </a>
 
@@ -99,16 +99,16 @@ export default function Contacts() {
             </div>
 
             {/* Форма */}
-            <div className="bg-[#1E2240] border border-[rgba(201,169,122,0.15)] rounded-3xl p-7 md:p-9">
+            <div className="bg-[#1E2240] border border-[rgba(254,193,4,0.15)] rounded-3xl p-7 md:p-9">
               <h3 className="text-[#E8E4DC] font-bold text-xl mb-6">Оставьте заявку</h3>
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="form-label">Имя <span className="text-[#C9A97A]">*</span></label>
+                    <label className="form-label">Имя <span className="text-[#FEC104]">*</span></label>
                     <input className="form-input" type="text" placeholder="Как вас зовут?" value={form.name} onChange={set('name')} required />
                   </div>
                   <div>
-                    <label className="form-label">Телефон <span className="text-[#C9A97A]">*</span></label>
+                    <label className="form-label">Телефон <span className="text-[#FEC104]">*</span></label>
                     <input className="form-input" type="tel" placeholder="+7 (___) ___-__-__" value={form.phone} onChange={set('phone')} required />
                   </div>
                 </div>
@@ -148,10 +148,10 @@ export default function Contacts() {
                     required
                     checked={form.agree}
                     onChange={(e) => setForm({ ...form, agree: e.target.checked })}
-                    className="accent-[#C9A97A]"
+                    className="accent-[#FEC104]"
                   />
                   Я даю согласие на обработку{' '}
-                  <a href="#" className="text-[#C9A97A] underline">персональных данных</a>
+                  <a href="#" className="text-[#FEC104] underline">персональных данных</a>
                   {' '}согласно ФЗ-152
                 </label>
                 <button type="submit" className="btn-gold justify-center" disabled={status === 'loading'}>

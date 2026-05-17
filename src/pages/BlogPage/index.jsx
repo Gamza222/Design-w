@@ -16,9 +16,9 @@ export default function BlogPage() {
       <div className="container">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-[rgba(28,35,64,0.4)] mb-8">
-          <Link to="/" className="hover:text-[#C9A97A] transition-colors">Главная</Link>
+          <Link to="/" className="hover:text-[#FEC104] transition-colors">Главная</Link>
           <span>/</span>
-          <span className="text-[#C9A97A]">Блог</span>
+          <span className="text-[#FEC104]">Блог</span>
         </div>
 
         <FadeInView>
@@ -32,15 +32,15 @@ export default function BlogPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogPosts.map((post, i) => (
             <FadeInView key={post.id} delay={i * 0.07}>
-              <article className="bg-white border border-[rgba(201,169,122,0.15)] rounded-2xl overflow-hidden hover:border-[rgba(201,169,122,0.4)] hover:-translate-y-1 hover:shadow-md transition-all duration-300 group flex flex-col">
+              <article className="bg-white border border-[rgba(254,193,4,0.15)] rounded-2xl overflow-hidden hover:border-[rgba(254,193,4,0.4)] hover:-translate-y-1 hover:shadow-md transition-all duration-300 group flex flex-col">
                 {/* Обложка */}
                 <Link to={`/blog/${post.slug}`} className="block relative h-44 overflow-hidden bg-gradient-to-br from-[#2A3560] to-[#1E2240] shrink-0">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-5xl font-bold text-[rgba(201,169,122,0.2)]">
+                    <span className="text-5xl font-bold text-[rgba(254,193,4,0.2)]">
                       {String(post.id).padStart(2, '0')}
                     </span>
                   </div>
-                  <span className={`absolute top-3 left-3 text-[10px] font-semibold px-2.5 py-1 rounded-full ${tagColors[post.tag] || 'text-[#C9A97A] bg-[rgba(201,169,122,0.1)]'}`}>
+                  <span className={`absolute top-3 left-3 text-[10px] font-semibold px-2.5 py-1 rounded-full ${tagColors[post.tag] || 'text-[#FEC104] bg-[rgba(254,193,4,0.1)]'}`}>
                     {post.tag}
                   </span>
                 </Link>
@@ -51,7 +51,7 @@ export default function BlogPage() {
                     <span>·</span>
                     <span>{post.readTime} чтения</span>
                   </div>
-                  <h2 className="text-[#1C2340] font-semibold text-sm mb-2 leading-snug group-hover:text-[#C9A97A] transition-colors">
+                  <h2 className="text-[#1C2340] font-semibold text-sm mb-2 leading-snug group-hover:text-[#FEC104] transition-colors">
                     {post.title}
                   </h2>
                   <p className="text-[rgba(28,35,64,0.55)] text-xs leading-relaxed mb-4 flex-1">
@@ -59,7 +59,7 @@ export default function BlogPage() {
                   </p>
                   <Link
                     to={`/blog/${post.slug}`}
-                    className="flex items-center gap-1.5 text-[#C9A97A] text-xs font-semibold hover:text-[#B8852E] transition-colors mt-auto"
+                    className="flex items-center gap-1.5 text-[#FEC104] text-xs font-semibold hover:text-[#C5920B] transition-colors mt-auto"
                   >
                     Читать статью
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -74,7 +74,7 @@ export default function BlogPage() {
 
         {/* CTA */}
         <FadeInView delay={0.4} className="text-center mt-16">
-          <div className="bg-white border border-[rgba(201,169,122,0.2)] rounded-3xl p-10 max-w-xl mx-auto shadow-sm">
+          <div className="bg-white border border-[rgba(254,193,4,0.2)] rounded-3xl p-10 max-w-xl mx-auto shadow-sm">
             <h2 className="text-xl font-bold text-[#1C2340] mb-3">Готовы обсудить ваш проект?</h2>
             <p className="text-[rgba(28,35,64,0.6)] text-sm mb-6">
               Рассчитаем стоимость и расскажем, что подойдёт именно вам.

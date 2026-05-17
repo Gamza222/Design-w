@@ -13,17 +13,17 @@ export default function ArticlePage() {
         <div className="max-w-3xl mx-auto">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-[rgba(28,35,64,0.4)] mb-8">
-            <Link to="/" className="hover:text-[#C9A97A] transition-colors">Главная</Link>
+            <Link to="/" className="hover:text-[#FEC104] transition-colors">Главная</Link>
             <span>/</span>
-            <Link to="/blog" className="hover:text-[#C9A97A] transition-colors">Блог</Link>
+            <Link to="/blog" className="hover:text-[#FEC104] transition-colors">Блог</Link>
             <span>/</span>
-            <span className="text-[#C9A97A] truncate max-w-[200px]">{post.title}</span>
+            <span className="text-[#FEC104] truncate max-w-[200px]">{post.title}</span>
           </div>
 
           {/* Назад */}
           <Link
             to="/blog"
-            className="inline-flex items-center gap-2 text-[#C9A97A] font-semibold text-sm hover:gap-3 transition-all mb-8"
+            className="inline-flex items-center gap-2 text-[#FEC104] font-semibold text-sm hover:gap-3 transition-all mb-8"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -33,7 +33,7 @@ export default function ArticlePage() {
 
           {/* Тег и мета */}
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-xs font-semibold text-[#C9A97A] bg-[rgba(201,169,122,0.1)] px-3 py-1 rounded-full">
+            <span className="text-xs font-semibold text-[#FEC104] bg-[rgba(254,193,4,0.1)] px-3 py-1 rounded-full">
               {post.tag}
             </span>
             <span className="text-[rgba(28,35,64,0.4)] text-sm">{post.date}</span>
@@ -48,7 +48,7 @@ export default function ArticlePage() {
 
           {/* Обложка-заглушка */}
           <div className="rounded-2xl overflow-hidden mb-10 aspect-[16/7] bg-gradient-to-br from-[#2A3560] to-[#1E2240] flex items-center justify-center">
-            <span className="text-8xl font-bold text-[rgba(201,169,122,0.12)]">
+            <span className="text-8xl font-bold text-[rgba(254,193,4,0.12)]">
               {String(post.id).padStart(2, '0')}
             </span>
           </div>
@@ -67,7 +67,7 @@ export default function ArticlePage() {
                 </h2>
               )
               if (block.type === 'conclusion') return (
-                <div key={i} className="bg-[rgba(201,169,122,0.08)] border-l-4 border-[#C9A97A] rounded-r-2xl px-6 py-5 mt-8 mb-4">
+                <div key={i} className="bg-[rgba(254,193,4,0.08)] border-l-4 border-[#FEC104] rounded-r-2xl px-6 py-5 mt-8 mb-4">
                   <p className="text-[rgba(28,35,64,0.75)] text-base leading-relaxed">
                     <strong className="text-[#1C2340]">Вывод: </strong>{block.text}
                   </p>
@@ -78,7 +78,7 @@ export default function ArticlePage() {
           </div>
 
           {/* CTA */}
-          <div className="mt-12 bg-white border border-[rgba(201,169,122,0.2)] rounded-2xl p-8 text-center shadow-sm">
+          <div className="mt-12 bg-white border border-[rgba(254,193,4,0.2)] rounded-2xl p-8 text-center shadow-sm">
             <h3 className="text-lg font-bold text-[#1C2340] mb-3">Хотите обсудить ваш проект?</h3>
             <p className="text-[rgba(28,35,64,0.6)] text-sm mb-5">
               Рассчитаем стоимость и расскажем, что подойдёт именно вам.
@@ -97,14 +97,14 @@ export default function ArticlePage() {
                   <Link
                     key={other.id}
                     to={`/blog/${other.slug}`}
-                    className="flex gap-4 bg-white border border-[rgba(201,169,122,0.12)] rounded-xl p-4 hover:border-[rgba(201,169,122,0.35)] hover:shadow-sm transition-all group"
+                    className="flex gap-4 bg-white border border-[rgba(254,193,4,0.12)] rounded-xl p-4 hover:border-[rgba(254,193,4,0.35)] hover:shadow-sm transition-all group"
                   >
                     <div className="shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br from-[#2A3560] to-[#1E2240] flex items-center justify-center">
-                      <span className="text-lg font-bold text-[rgba(201,169,122,0.3)]">{String(other.id).padStart(2, '0')}</span>
+                      <span className="text-lg font-bold text-[rgba(254,193,4,0.3)]">{String(other.id).padStart(2, '0')}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] font-semibold text-[#C9A97A] mb-1 block">{other.tag}</span>
-                      <h4 className="text-[#1C2340] text-xs font-medium leading-snug group-hover:text-[#C9A97A] transition-colors">
+                      <span className="text-[10px] font-semibold text-[#FEC104] mb-1 block">{other.tag}</span>
+                      <h4 className="text-[#1C2340] text-xs font-medium leading-snug group-hover:text-[#FEC104] transition-colors">
                         {other.title}
                       </h4>
                     </div>

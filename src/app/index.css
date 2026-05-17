@@ -4,7 +4,7 @@
 
 /* ======================================================
    ДИЗАЙН 12 МАЯ — точное воспроизведение в Tailwind
-   Palette: #1A1A2E + #C9A050 (тёмно-фиолетовый + тёплое золото)
+   Palette: #1A1A2E + #FEC104 (тёмно-фиолетовый + тёплое золото)
    Капсульные кнопки, белые карточки, underline на hover
 ====================================================== */
 
@@ -12,9 +12,9 @@
   :root {
     --dark:   #1A1A2E;
     --dark2:  #16213E;
-    --accent: #C9A050;
-    --accent-d: #A8832E;
-    --accent-l: #E8C98A;
+    --accent: #FEC104;
+    --accent-d: #C5920B;
+    --accent-l: #FFD966;
     --light:  #E8E4DC;
     --light2: #F2EFE9;
     --text:   #E8E4DC;
@@ -102,7 +102,7 @@
            cursor-pointer whitespace-nowrap transition-all duration-300;
     background: var(--dark);
     color: var(--light);
-    border: 2px solid rgba(201,160,80,0.3);
+    border: 2px solid rgba(254,193,4,0.3);
   }
   .btn-dark:hover {
     border-color: var(--accent);
@@ -142,7 +142,7 @@
   }
   .service-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(201,160,80,0.15);
+    box-shadow: 0 20px 50px rgba(254,193,4,0.15);
     border-color: var(--accent);
   }
   .service-card-light { @apply service-card; }
@@ -157,7 +157,7 @@
            focus:outline-none
            transition-all duration-200;
     background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(201,160,80,0.2);
+    border: 1px solid rgba(254,193,4,0.2);
   }
   .form-input::placeholder { color: rgba(232,228,220,0.35); }
   .form-input:focus {

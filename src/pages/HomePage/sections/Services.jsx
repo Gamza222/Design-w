@@ -57,12 +57,12 @@ export default function Services() {
                 className="service-card-light h-full"
                 onClick={() => setActiveModal(s.id)}
               >
-                <span className="text-4xl font-bold text-[rgba(201,169,122,0.35)] block mb-3">{s.num}</span>
+                <span className="text-4xl font-bold text-[rgba(254,193,4,0.35)] block mb-3">{s.num}</span>
                 <h3 className="text-base font-semibold text-[#1C2340] mb-2">{s.title}</h3>
                 <p className="text-[rgba(28,35,64,0.6)] text-sm leading-relaxed mb-4">{s.short}</p>
-                <div className="flex items-center justify-between mt-auto pt-3 border-t border-[rgba(201,169,122,0.2)]">
-                  <span className="text-[#B8852E] font-semibold text-sm">{s.price}</span>
-                  <span className="text-[rgba(28,35,64,0.45)] text-xs hover:text-[#C9A97A] transition-colors">
+                <div className="flex items-center justify-between mt-auto pt-3 border-t border-[rgba(254,193,4,0.2)]">
+                  <span className="text-[#C5920B] font-semibold text-sm">{s.price}</span>
+                  <span className="text-[rgba(28,35,64,0.45)] text-xs hover:text-[#FEC104] transition-colors">
                     Что входит →
                   </span>
                 </div>
@@ -73,7 +73,7 @@ export default function Services() {
 
         {/* CTA */}
         <FadeInView delay={0.2} className="mt-16">
-          <div className="bg-white border border-[rgba(201,169,122,0.25)] rounded-3xl p-8 md:p-12 text-center max-w-2xl mx-auto shadow-sm">
+          <div className="bg-white border border-[rgba(254,193,4,0.25)] rounded-3xl p-8 md:p-12 text-center max-w-2xl mx-auto shadow-sm">
             <h3 className="text-xl font-bold text-[#1C2340] mb-2">Не знаете, что выбрать?</h3>
             <p className="text-[rgba(28,35,64,0.6)] mb-6">
               Просто оставьте номер. Дизайнер позвонит и поможет разобраться.
@@ -102,10 +102,10 @@ export default function Services() {
                   type="checkbox"
                   checked={leadAgree}
                   onChange={(e) => setLeadAgree(e.target.checked)}
-                  className="accent-[#C9A97A]"
+                  className="accent-[#FEC104]"
                 />
                 Я даю согласие на обработку{' '}
-                <a href="#" className="text-[#C9A97A] underline">персональных данных</a>
+                <a href="#" className="text-[#FEC104] underline">персональных данных</a>
                 {' '}согласно ФЗ-152
               </label>
               <button type="submit" className="btn-gold justify-center" disabled={leadStatus === 'loading'}>

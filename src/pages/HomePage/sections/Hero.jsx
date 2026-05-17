@@ -35,7 +35,7 @@ export default function Hero() {
       {/* Декоративные блики */}
       <div
         className="absolute top-1/3 right-[-120px] w-[500px] h-[500px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(201,160,80,0.08) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(254,193,4,0.08) 0%, transparent 70%)' }}
       />
 
       {/* Контент */}
@@ -45,9 +45,9 @@ export default function Hero() {
         <motion.div
           className="inline-flex items-center mb-6"
           style={{
-            background: 'rgba(201,160,80,0.12)',
-            border: '1px solid rgba(201,160,80,0.35)',
-            color: '#C9A050',
+            background: 'rgba(254,193,4,0.12)',
+            border: '1px solid rgba(254,193,4,0.35)',
+            color: '#FEC104',
             fontSize: 12, fontWeight: 600,
             padding: '8px 18px',
             borderRadius: 50,
@@ -97,7 +97,7 @@ export default function Hero() {
                 lineHeight: 1.1,
                 verticalAlign: 'middle',
                 whiteSpace: 'nowrap',
-                background: 'linear-gradient(90deg, #C9A050 0%, #F0D898 50%, #C9A050 100%)',
+                background: 'linear-gradient(90deg, #FEC104 0%, #F0D898 50%, #FEC104 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -153,7 +153,7 @@ export default function Hero() {
             >
               <span
                 className="text-[30px] font-extrabold leading-none"
-                style={{ color: '#C9A050' }}
+                style={{ color: '#FEC104' }}
               >
                 {s.num}
               </span>
@@ -172,7 +172,7 @@ export default function Hero() {
       >
         <motion.div
           className="w-[1px] h-10 rounded-full"
-          style={{ background: 'linear-gradient(to bottom, rgba(201,160,80,0.7), transparent)' }}
+          style={{ background: 'linear-gradient(to bottom, rgba(254,193,4,0.7), transparent)' }}
           animate={{ scaleY: [1, 0.3, 1], opacity: [0.7, 1, 0.7] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
         />

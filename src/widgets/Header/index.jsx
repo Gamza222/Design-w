@@ -18,12 +18,12 @@ import { FaTelegramPlane, FaVk, FaWhatsapp } from 'react-icons/fa'
 ────────────────────────────────────────────────────────────────── */
 
 const NAV_LINKS = [
-  { href: '/#services',     label: 'Дизайн-проект' },
-  { href: '/#about',        label: 'О нас' },
-  { href: '/portfolio',     label: 'Портфолио', isRoute: true },
-  { href: '/#achievements', label: 'Достижения' },
-  { href: '/blog',          label: 'Блог', isRoute: true },
-  { href: '/#contacts',     label: 'Контакты' },
+  { href: '/services',  label: 'Дизайн-проект', isRoute: true },
+  { href: '/about',     label: 'О нас',          isRoute: true },
+  { href: '/portfolio', label: 'Портфолио',      isRoute: true },
+  { href: '/about#achievements', label: 'Достижения', isRoute: true },
+  { href: '/blog',      label: 'Блог',           isRoute: true },
+  { href: '/contacts',  label: 'Контакты',       isRoute: true },
 ]
 
 const SOCIALS = [
@@ -87,20 +87,23 @@ export default function Header() {
   }, [menuOpen, isMobile])
 
   /* ── Цвет хедера ───────────────────────────────────
-     0…60px скролла: прозрачный → голубоватый + blur
+     • Главная (/)  → 0…60px: прозрачный → тёмный + blur
+     • Все остальные страницы → всегда тёмный (не прозрачный)
      Мобилка + меню: цвет меню
   */
-  const t = Math.min(scrollY / 60, 1)          // 0 → 1 за первые 60px
+  const t = Math.min(scrollY / 60, 1)
   const mobileMenuActive = menuOpen && isMobile
+  const isHome = location.pathname === '/'
+  const forceScrolled = !isHome
 
   const bgStyle = mobileMenuActive
     ? { background: MENU_BG, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(201,160,80,0.2)' }
-    : scrollY > 0
+    : (scrollY > 0 || forceScrolled)
       ? {
-          background:           `rgba(22, 26, 52, ${(0.65 + 0.25 * t).toFixed(2)})`,
-          backdropFilter:       `blur(${Math.round(t * 18)}px)`,
-          WebkitBackdropFilter: `blur(${Math.round(t * 18)}px)`,
-          borderBottom:         `1px solid rgba(201,160,80,${(t * 0.18).toFixed(3)})`,
+          background:           `rgba(22, 26, 52, ${forceScrolled ? '0.97' : (0.65 + 0.25 * t).toFixed(2)})`,
+          backdropFilter:       `blur(${forceScrolled ? 18 : Math.round(t * 18)}px)`,
+          WebkitBackdropFilter: `blur(${forceScrolled ? 18 : Math.round(t * 18)}px)`,
+          borderBottom:         `1px solid rgba(201,160,80,${forceScrolled ? '0.15' : (t * 0.18).toFixed(3)})`,
         }
       : { background: 'transparent', backdropFilter: 'none', WebkitBackdropFilter: 'none', borderBottom: '1px solid transparent' }
 

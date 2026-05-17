@@ -4,8 +4,12 @@ import Footer from '../widgets/Footer'
 import CookieBanner from '../widgets/CookieBanner'
 import HomePage from '../pages/HomePage'
 import PortfolioPage from '../pages/PortfolioPage'
+import ProjectPage from '../pages/ProjectPage'
 import BlogPage from '../pages/BlogPage'
 import ArticlePage from '../pages/ArticlePage'
+import ServicesPage from '../pages/ServicesPage'
+import AboutPage from '../pages/AboutPage'
+import ContactsPage from '../pages/ContactsPage'
 
 export default function App() {
   return (
@@ -13,12 +17,16 @@ export default function App() {
       <Header />
       <main>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/portfolio" element={<PortfolioPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:id" element={<ArticlePage />} />
-          {/* Fallback — 404 redirect to home */}
-          <Route path="*" element={<HomePage />} />
+          <Route path="/"                  element={<HomePage />} />
+          <Route path="/services"          element={<ServicesPage />} />
+          <Route path="/about"             element={<AboutPage />} />
+          <Route path="/portfolio"         element={<PortfolioPage />} />
+          <Route path="/portfolio/:slug"   element={<ProjectPage />} />
+          <Route path="/blog"              element={<BlogPage />} />
+          <Route path="/blog/:id"          element={<ArticlePage />} />
+          <Route path="/contacts"          element={<ContactsPage />} />
+          {/* Fallback */}
+          <Route path="*"                  element={<HomePage />} />
         </Routes>
       </main>
       <Footer />

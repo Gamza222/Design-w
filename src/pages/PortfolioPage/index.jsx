@@ -62,7 +62,13 @@ export default function PortfolioPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {current.items.map((item, i) => (
             <FadeInView key={i} delay={i * 0.06}>
-              <div className="group rounded-2xl overflow-hidden border border-[rgba(201,169,122,0.1)] hover:border-[rgba(201,169,122,0.35)] transition-all duration-300">
+              <Link
+                to={`/portfolio/${item.slug}`}
+                className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                style={{ border: '1px solid rgba(201,169,122,0.1)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(201,169,122,0.35)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(201,169,122,0.1)' }}
+              >
                 <div className={`h-56 bg-gradient-to-br ${gradients[i % gradients.length]} relative overflow-hidden`}>
                   <div className="absolute inset-0 opacity-20 bg-[url('/hero-bg.jpg')] bg-cover bg-center group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -75,12 +81,18 @@ export default function PortfolioPage() {
                       {item.style}
                     </span>
                   )}
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: 'rgba(201,160,80,0.12)' }}>
+                    <span className="text-xs font-bold px-4 py-2 rounded-full"
+                      style={{ background: '#C9A050', color: '#1A1A2E' }}>Смотреть проект</span>
+                  </div>
                 </div>
                 <div className="bg-[#1E2240] p-4">
-                  <h3 className="text-[#E8E4DC] text-sm font-medium mb-1">{item.title}</h3>
+                  <h3 className="text-[#E8E4DC] text-sm font-medium mb-1 group-hover:text-[#C9A050] transition-colors">{item.title}</h3>
                   <p className="text-[rgba(232,228,220,0.4)] text-xs">{item.area} · {item.city}</p>
                 </div>
-              </div>
+              </Link>
             </FadeInView>
           ))}
         </div>

@@ -25,3 +25,4 @@ npm-debug.log*
 
 # Gemini/Antigravity local data
 .gemini/
+.vercel

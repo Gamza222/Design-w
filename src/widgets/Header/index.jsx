@@ -207,7 +207,7 @@ export default function Header() {
             className="flex min-[1400px]:hidden items-center justify-center"
             style={{ width: LOGO_H, height: LOGO_H, flexShrink: 0, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
               {menuOpen ? (
                 <>
                   <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
@@ -263,7 +263,7 @@ export default function Header() {
             <button onClick={() => setMenuOpen(false)} aria-label="Закрыть"
               style={{ width: LOGO_H, height: LOGO_H, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
                 <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
                 <line x1="20" y1="4" x2="4"  y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
               </svg>
@@ -308,7 +308,7 @@ export default function Header() {
 
             {/* Кнопка */}
             <a href="/#price" onClick={() => setMenuOpen(false)}
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '0.6875rem 1.75rem', borderRadius: '3rem', fontSize: '0.875rem', fontWeight: 700, background: ACCENT, color: '#1A1A2E', border: `2px solid ${ACCENT}`, whiteSpace: 'nowrap', transition: 'background 0.25s, color 0.25s', alignSelf: 'flex-start' }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '0.75rem 1.75rem', borderRadius: '3rem', fontSize: '0.875rem', fontWeight: 700, background: ACCENT, color: '#1A1A2E', border: `2px solid ${ACCENT}`, whiteSpace: 'nowrap', transition: 'background 0.25s, color 0.25s', boxSizing: 'border-box' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = ACCENT }}
               onMouseLeave={(e) => { e.currentTarget.style.background = ACCENT; e.currentTarget.style.color = '#1A1A2E' }}
             >

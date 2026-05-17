@@ -62,39 +62,37 @@ export default function Header() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
-  /* ─── Плавное изменение фона хедера ─── */
-  // 0px → 0, 80px → 1 (полный эффект)
-  const t        = Math.min(scrollY / 80, 1)
-  const bgAlpha  = menuOpen ? 0.98 : 0.72 + 0.20 * t          // 0.72 → 0.92
-  const blur     = menuOpen ? 20   : 8  + 12  * t              // 8px → 20px
-  const border   = menuOpen ? 0.2  : 0.05 + 0.15 * t          // почти нет → видимая
-  const padV     = menuOpen ? 12   : 18  - 6  * t              // 18px → 12px (плавно)
-
-  const headerBg = menuOpen
-    ? MENU_BG
-    : `rgba(26, 26, 46, ${bgAlpha})`
+  /* ─── Фон хедера ───
+     Всегда прозрачный.
+     ТОЛЬКО если мобильное меню открыто → цвет меню.
+     (скролл-цвет добавим позже по скрину от пользователя)
+  */
+  const headerBg = menuOpen ? MENU_BG : 'transparent'
+  const blur     = menuOpen ? 20 : 0
+  const border   = menuOpen ? 0.2 : 0
+  const padV     = 14   // фиксированный — без прыжков
 
   return (
     <>
       {/* ── ХЕДЕР ──────────────────────────────────────── */}
       <header
         id="header"
-        style={{
-          position:        'fixed',
-          top:             0, left: 0, right: 0,
-          zIndex:          100,
-          background:      headerBg,
-          backdropFilter:  `blur(${blur}px)`,
-          WebkitBackdropFilter: `blur(${blur}px)`,
-          borderBottom:    `1px solid rgba(201,160,80,${border})`,
-          transition:      'background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease',
-          minWidth:        280,
+      style={{
+          position:             'fixed',
+          top:                  0, left: 0, right: 0,
+          zIndex:               100,
+          background:           headerBg,
+          backdropFilter:       blur > 0 ? `blur(${blur}px)` : 'none',
+          WebkitBackdropFilter: blur > 0 ? `blur(${blur}px)` : 'none',
+          borderBottom:         border > 0 ? `1px solid rgba(201,160,80,${border})` : '1px solid transparent',
+          transition:           'background 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease',
+          minWidth:             280,
         }}
       >
         {/* Внутренняя строка */}
         <div
-          className="container flex items-center justify-between gap-3"
-          style={{ paddingTop: padV, paddingBottom: padV, transition: 'padding 0.4s ease' }}
+        className="container flex items-center justify-between gap-3"
+          style={{ paddingTop: padV, paddingBottom: padV }}
         >
 
           {/* ЛОГО */}
@@ -102,7 +100,7 @@ export default function Header() {
             <img
               src="/logo.png"
               alt="Дизайн Сейчас"
-              style={{ height: 44, width: 'auto', display: 'block' }}
+              style={{ height: 34, width: 'auto', display: 'block' }}
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
                 if (e.currentTarget.parentElement) {
@@ -195,7 +193,7 @@ export default function Header() {
             aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
             className="min-[1400px]:hidden flex items-center justify-center"
             style={{
-              width: 40, height: 40, background: 'transparent',
+              width: 34, height: 34, background: 'transparent',
               border: 'none', cursor: 'pointer', padding: 0, flexShrink: 0,
             }}
           >
@@ -272,7 +270,7 @@ export default function Header() {
               <img
                 src="/logo.png"
                 alt="Дизайн Сейчас"
-                style={{ height: 44, width: 'auto', display: 'block' }}
+                style={{ height: 34, width: 'auto', display: 'block' }}
                 onError={(e) => { e.currentTarget.style.display = 'none' }}
               />
             </Link>

@@ -1,26 +1,20 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FaTelegramPlane, FaVk, FaWhatsapp } from 'react-icons/fa'
 
 /* ─────────────────────────────────────────────────────────────────
-   HEADER — финальные требования:
+   HEADER
+   < 1400px  →  лого + бургер
+   ≥ 1400px  →  лого + nav + соцсети + телефон + кнопка
 
-   ЛОГИКА ФОНА:
-   • scrollY = 0          → полностью прозрачный (всегда)
-   • scrollY > 0          → плавно появляется голубоватый фон + blur
-   • мобильное меню открыто → фон меню (только если реально мобилка < 1400px)
-   • десктоп/мобилка НЕ зависят друг от друга по состояниям
+   Фон:
+   • scrollY = 0        → transparent
+   • scrollY > 0        → голубоватый + blur (плавно)
+   • мобилка + меню     → цвет меню (только если < 1400px)
 
-   РАЗМЕРЫ:
-   • Лого: 2.125rem (= 34px при 16px base) — динамичная единица
-   • Бургер: height = 2.125rem (= лого) — задаётся через CSS var
-
-   РЕСЕТ:
-   • При ресайзе через 1400px порог — мобильное меню закрывается
-   • Overflow body сбрасывается при переходе на десктоп
-
-   ШРИФТЫ:
-   • Везде rem-единицы
+   Моб/десктоп независимы:
+   • состояние menuOpen влияет на bg только если window.innerWidth < 1400
+   • при ресайзе через 1400px — меню закрывается
 ────────────────────────────────────────────────────────────────── */
 
 const NAV_LINKS = [
@@ -38,141 +32,114 @@ const SOCIALS = [
   { href: 'https://wa.me/78007077483',  Icon: FaWhatsapp,      label: 'WhatsApp' },
 ]
 
-const DESKTOP_BP  = 1400        // px, порог бургера
-const LOGO_H      = '2.125rem'  // = 34px при 16px root
-const MENU_BG     = 'rgba(20, 20, 40, 0.98)'
-const ACCENT      = '#C9A050'
-const TEXT_NAV    = 'rgba(232,228,220,0.92)'
-
-// Голубоватый фон при скролле
-const SCROLL_BG   = (a) => `rgba(22, 26, 52, ${a})`  // чуть теплее navy
+const BP       = 1400
+const LOGO_H   = '2.125rem'   // 34px при 16px root — используется и для бургера
+const ACCENT   = '#C9A050'
+const TEXT_NAV = 'rgba(232,228,220,0.92)'
+const MENU_BG  = 'rgba(18, 18, 38, 0.98)'
 
 export default function Header() {
-  const [scrollY,   setScrollY]   = useState(0)
-  const [menuOpen,  setMenuOpen]  = useState(false)
-  const [isMobile,  setIsMobile]  = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth < DESKTOP_BP : false
+  const [scrollY,  setScrollY]  = useState(0)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < BP : false
   )
   const location = useLocation()
-  const rafRef   = useRef(null)
+  const raf = useRef(null)
 
-  /* ── Плавный scroll (rAF) ─────────────────────────── */
+  /* Скролл — rAF для плавности */
   useEffect(() => {
-    const onScroll = () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
-      rafRef.current = requestAnimationFrame(() => setScrollY(window.scrollY))
+    const handler = () => {
+      if (raf.current) cancelAnimationFrame(raf.current)
+      raf.current = requestAnimationFrame(() => setScrollY(window.scrollY))
     }
-    // Инициализируем сразу
     setScrollY(window.scrollY)
-    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('scroll', handler, { passive: true })
     return () => {
-      window.removeEventListener('scroll', onScroll)
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      window.removeEventListener('scroll', handler)
+      if (raf.current) cancelAnimationFrame(raf.current)
     }
   }, [])
 
-  /* ── Ресайз: сброс мобильного меню при переходе на десктоп ── */
+  /* Ресайз — сброс меню при пересечении порога */
   useEffect(() => {
-    let prev = window.innerWidth < DESKTOP_BP
-    const onResize = () => {
-      const curr = window.innerWidth < DESKTOP_BP
-      // Пересекли порог в любую сторону — сбрасываем меню
-      if (prev !== curr) {
+    let wasMobile = window.innerWidth < BP
+    const handler = () => {
+      const nowMobile = window.innerWidth < BP
+      if (wasMobile !== nowMobile) {
+        wasMobile = nowMobile
+        setIsMobile(nowMobile)
         setMenuOpen(false)
-        setIsMobile(curr)
         document.body.style.overflow = ''
-        prev = curr
       }
     }
-    window.addEventListener('resize', onResize, { passive: true })
-    return () => window.removeEventListener('resize', onResize)
+    window.addEventListener('resize', handler, { passive: true })
+    return () => window.removeEventListener('resize', handler)
   }, [])
 
-  /* ── Закрываем меню при смене роута ─────────────────── */
+  /* Роут — закрыть меню */
   useEffect(() => { setMenuOpen(false) }, [location.pathname])
 
-  /* ── Блокируем скролл только на мобилке с меню ─────── */
+  /* overflow body — только на мобилке */
   useEffect(() => {
-    // Блокируем ТОЛЬКО если мы реально на мобилке
     document.body.style.overflow = (menuOpen && isMobile) ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [menuOpen, isMobile])
 
-  /* ── Фон хедера ──────────────────────────────────────
-     scrollY = 0 → прозрачный
-     scrollY > 0 → голубоватый + blur
-     мобилка + меню → цвет меню
+  /* ── Цвет хедера ───────────────────────────────────
+     0…60px скролла: прозрачный → голубоватый + blur
+     Мобилка + меню: цвет меню
   */
-  const t = Math.min(scrollY / 60, 1)   // 0…1 за 60px
+  const t = Math.min(scrollY / 60, 1)          // 0 → 1 за первые 60px
+  const mobileMenuActive = menuOpen && isMobile
 
-  // Если мобилка с открытым меню — специальный фон
-  const isMobileMenuActive = menuOpen && isMobile
-
-  const bgColor = isMobileMenuActive
-    ? MENU_BG
+  const bgStyle = mobileMenuActive
+    ? { background: MENU_BG, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(201,160,80,0.2)' }
     : scrollY > 0
-      ? SCROLL_BG(0.65 + 0.25 * t)      // 0.65 → 0.90 плавно
-      : 'transparent'
-
-  const blurPx = isMobileMenuActive
-    ? 20
-    : Math.round(t * 18)                 // 0 → 18px
-
-  const borderA = isMobileMenuActive
-    ? 0.2
-    : t * 0.18                           // 0 → 0.18
+      ? {
+          background:           `rgba(22, 26, 52, ${(0.65 + 0.25 * t).toFixed(2)})`,
+          backdropFilter:       `blur(${Math.round(t * 18)}px)`,
+          WebkitBackdropFilter: `blur(${Math.round(t * 18)}px)`,
+          borderBottom:         `1px solid rgba(201,160,80,${(t * 0.18).toFixed(3)})`,
+        }
+      : { background: 'transparent', backdropFilter: 'none', WebkitBackdropFilter: 'none', borderBottom: '1px solid transparent' }
 
   return (
     <>
-      {/* ─────────── ХЕДЕР ─────────── */}
+      {/* ══════════════ ХЕДЕР ══════════════ */}
       <header
         id="header"
         style={{
-          position:             'fixed',
+          position: 'fixed',
           top: 0, left: 0, right: 0,
-          zIndex:               100,
-          minWidth:             '280px',
-          background:           bgColor,
-          backdropFilter:       blurPx > 0 ? `blur(${blurPx}px)` : 'none',
-          WebkitBackdropFilter: blurPx > 0 ? `blur(${blurPx}px)` : 'none',
-          borderBottom:         `1px solid rgba(201,160,80,${borderA})`,
-          transition:           [
-            'background 0.38s ease',
-            'backdrop-filter 0.38s ease',
-            'border-color 0.38s ease',
-          ].join(', '),
+          zIndex: 100,
+          minWidth: 280,
+          transition: 'background 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease',
+          ...bgStyle,
         }}
       >
-        <div className="container" style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '0.75rem',
-          padding: '0.875rem 1.5rem',    /* 14px 24px — rem */
-        }}>
+        <div
+          className="container"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', padding: '0.875rem 1.5rem' }}
+        >
 
-          {/* ЛОГО */}
-          <Link to="/" style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+          {/* ЛОГО — всегда видно */}
+          <Link to="/" style={{ flexShrink: 0, lineHeight: 0 }}>
             <img
               src="/logo.png"
               alt="Дизайн Сейчас"
               style={{ height: LOGO_H, width: 'auto', display: 'block' }}
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
-                if (e.currentTarget.parentElement) {
+                if (e.currentTarget.parentElement)
                   e.currentTarget.parentElement.innerHTML =
-                    `<span style="font-size:1.25rem;font-weight:800;color:#E8E4DC;letter-spacing:-0.02em">
-                      Дизайн <em style="color:${ACCENT};font-style:normal">Сейчас</em>
-                    </span>`
-                }
+                    `<span style="font-size:1.25rem;font-weight:800;color:#E8E4DC;letter-spacing:-0.02em">Дизайн&nbsp;<em style="color:${ACCENT};font-style:normal">Сейчас</em></span>`
               }}
             />
           </Link>
 
-          {/* ── ДЕСКТОП НАВИГАЦИЯ (≥ 1400px) ── */}
-          <nav style={{ display: 'none' }} className="min-[1400px]:flex items-center gap-0.5"
-            // React не любит смешение — используем className для display
-          >
+          {/* ── НАВИГАЦИЯ ДЕСКТОП ≥ 1400px ── */}
+          <nav className="hidden min-[1400px]:flex items-center gap-1">
             {NAV_LINKS.map((link) =>
               link.isRoute ? (
                 <Link key={link.label} to={link.href}
@@ -196,19 +163,12 @@ export default function Header() {
             )}
           </nav>
 
-          {/* ── ПРАВАЯ ЧАСТЬ ДЕСКТОП ── */}
-          <div className="hidden min-[1400px]:flex items-center gap-3">
+          {/* ── ПРАВАЯ ПАНЕЛЬ ДЕСКТОП ≥ 1400px ── */}
+          <div className="hidden min-[1400px]:flex items-center gap-3" style={{ flexShrink: 0 }}>
             {/* Соцсети */}
             {SOCIALS.map(({ href, Icon, label }) => (
               <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                style={{
-                  width: '2rem', height: '2rem',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  borderRadius: '50%',
-                  border: `1px solid rgba(201,160,80,0.35)`,
-                  color: ACCENT,
-                  transition: 'background 0.2s',
-                }}
+                style={{ width: '2rem', height: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(201,160,80,0.35)', color: ACCENT, transition: 'background 0.2s', flexShrink: 0 }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.14)' }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
               >
@@ -216,7 +176,6 @@ export default function Header() {
               </a>
             ))}
 
-            {/* Разделитель */}
             <div style={{ width: 1, height: '1.25rem', background: 'rgba(201,160,80,0.3)', transform: 'rotate(15deg)', flexShrink: 0 }} />
 
             {/* Телефон */}
@@ -233,53 +192,22 @@ export default function Header() {
 
             {/* CTA */}
             <a href="/#price"
-              style={{
-                display: 'inline-flex', alignItems: 'center',
-                padding: '0.5625rem 1.375rem',   /* 9px 22px */
-                borderRadius: '3rem',
-                fontSize: '0.8125rem', fontWeight: 700,
-                background: ACCENT, color: '#1A1A2E',
-                border: `2px solid ${ACCENT}`,
-                whiteSpace: 'nowrap',
-                transition: 'background 0.25s, color 0.25s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'transparent'
-                e.currentTarget.style.color = ACCENT
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = ACCENT
-                e.currentTarget.style.color = '#1A1A2E'
-              }}
+              style={{ display: 'inline-flex', alignItems: 'center', padding: '0.5625rem 1.375rem', borderRadius: '3rem', fontSize: '0.8125rem', fontWeight: 700, background: ACCENT, color: '#1A1A2E', border: `2px solid ${ACCENT}`, whiteSpace: 'nowrap', transition: 'background 0.25s, color 0.25s', flexShrink: 0 }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = ACCENT }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = ACCENT; e.currentTarget.style.color = '#1A1A2E' }}
             >
               Рассчитать проект
             </a>
           </div>
 
-          {/* ── БУРГЕР (< 1400px) — высота = лого ── */}
+          {/* ── БУРГЕР < 1400px ── (высота = LOGO_H) */}
           <button
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
-            className="min-[1400px]:hidden"
-            style={{
-              width:      LOGO_H,   /* 2.125rem — = высота лого */
-              height:     LOGO_H,
-              flexShrink: 0,
-              background: 'transparent',
-              border:     'none',
-              cursor:     'pointer',
-              padding:    0,
-              display:    'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="flex min-[1400px]:hidden items-center justify-center"
+            style={{ width: LOGO_H, height: LOGO_H, flexShrink: 0, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
           >
-            <svg
-              width="22" height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              style={{ overflow: 'visible' }}
-            >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               {menuOpen ? (
                 <>
                   <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
@@ -294,79 +222,46 @@ export default function Header() {
               )}
             </svg>
           </button>
+
         </div>
       </header>
 
-      {/* ─────────── МОБИЛЬНОЕ МЕНЮ (< 1400px) ─────────── */}
-      {/*
-        Независимо от десктопа.
-        Сдвигается translateY вниз из-под хедера.
-      */}
+      {/* ══════════════ МОБИЛЬНОЕ МЕНЮ < 1400px ══════════════ */}
+      {/* Только рендерится / работает на мобилке (pointer-events) */}
       <div
         className="min-[1400px]:hidden"
-        style={{
-          position:      'fixed',
-          inset:         0,
-          zIndex:        99,
-          pointerEvents: menuOpen ? 'auto' : 'none',
-        }}
+        style={{ position: 'fixed', inset: 0, zIndex: 99, pointerEvents: menuOpen ? 'auto' : 'none' }}
       >
-        {/* Backdrop */}
+        {/* Затемнение */}
         <div
           onClick={() => setMenuOpen(false)}
-          style={{
-            position:   'absolute',
-            inset:      0,
-            background: 'rgba(8, 8, 20, 0.6)',
-            backdropFilter: 'blur(2px)',
-            opacity:    menuOpen ? 1 : 0,
-            transition: 'opacity 0.3s ease',
-          }}
+          style={{ position: 'absolute', inset: 0, background: 'rgba(8,8,20,0.6)', backdropFilter: 'blur(2px)', opacity: menuOpen ? 1 : 0, transition: 'opacity 0.3s ease' }}
         />
 
-        {/* Панель меню */}
+        {/* Панель меню — сдвигается сверху */}
         <div
           style={{
-            position:        'absolute',
-            top:             0, left: 0, right: 0,
-            background:      MENU_BG,
-            backdropFilter:  'blur(20px)',
+            position: 'absolute',
+            top: 0, left: 0, right: 0,
+            background: MENU_BG,
+            backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            borderBottom:    '1px solid rgba(201,160,80,0.2)',
-            transform:       menuOpen ? 'translateY(0)' : 'translateY(-105%)',
-            transition:      'transform 0.36s cubic-bezier(0.4,0,0.2,1)',
-            minWidth:        '280px',
-            overflowY:       'auto',
-            maxHeight:       '100dvh',
+            borderBottom: '1px solid rgba(201,160,80,0.2)',
+            transform: menuOpen ? 'translateY(0)' : 'translateY(-105%)',
+            transition: 'transform 0.36s cubic-bezier(0.4,0,0.2,1)',
+            minWidth: 280,
+            overflowY: 'auto',
+            maxHeight: '100dvh',
           }}
         >
-          {/* Шапка меню */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0.875rem 1.5rem',
-          }}>
-            <Link to="/" onClick={() => setMenuOpen(false)}
-              style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-              <img
-                src="/logo.png"
-                alt="Дизайн Сейчас"
-                style={{ height: LOGO_H, width: 'auto', display: 'block' }}
-                onError={(e) => { e.currentTarget.style.display = 'none' }}
-              />
+          {/* Шапка с лого + крестик */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.875rem 1.5rem' }}>
+            <Link to="/" onClick={() => setMenuOpen(false)} style={{ lineHeight: 0 }}>
+              <img src="/logo.png" alt="Дизайн Сейчас" style={{ height: LOGO_H, width: 'auto' }}
+                onError={(e) => { e.currentTarget.style.display = 'none' }} />
             </Link>
-            {/* Крестик */}
-            <button
-              onClick={() => setMenuOpen(false)}
-              aria-label="Закрыть меню"
-              style={{
-                width: LOGO_H, height: LOGO_H,
-                background: 'transparent', border: 'none',
-                cursor: 'pointer', padding: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0,
-              }}
+            <button onClick={() => setMenuOpen(false)} aria-label="Закрыть"
+              style={{ width: LOGO_H, height: LOGO_H, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
@@ -375,54 +270,25 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Навигация */}
+          {/* Ссылки */}
           <nav style={{ padding: '0.25rem 1.5rem 0.5rem' }}>
             {NAV_LINKS.map((link) => {
-              const style = {
-                display: 'block',
-                padding: '0.8125rem 0',
-                fontSize: '0.9375rem',
-                fontWeight: 500,
-                color: TEXT_NAV,
-                borderBottom: '1px solid rgba(201,160,80,0.09)',
-                transition: 'color 0.2s',
-              }
-              return link.isRoute ? (
-                <Link key={link.label} to={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  style={style}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <a key={link.label} href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  style={style}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
-                >
-                  {link.label}
-                </a>
-              )
+              const s = { display: 'block', padding: '0.8125rem 0', fontSize: '0.9375rem', fontWeight: 500, color: TEXT_NAV, borderBottom: '1px solid rgba(201,160,80,0.09)', transition: 'color 0.2s' }
+              const enter = (e) => { e.currentTarget.style.color = ACCENT }
+              const leave = (e) => { e.currentTarget.style.color = TEXT_NAV }
+              return link.isRoute
+                ? <Link key={link.label} to={link.href} onClick={() => setMenuOpen(false)} style={s} onMouseEnter={enter} onMouseLeave={leave}>{link.label}</Link>
+                : <a    key={link.label} href={link.href} onClick={() => setMenuOpen(false)} style={s} onMouseEnter={enter} onMouseLeave={leave}>{link.label}</a>
             })}
           </nav>
 
           {/* Соцсети → Телефон → Кнопка */}
-          <div style={{ padding: '1.25rem 1.5rem 1.75rem' }}>
+          <div style={{ padding: '1.25rem 1.5rem 1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {/* Соцсети */}
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               {SOCIALS.map(({ href, Icon, label }) => (
                 <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                  style={{
-                    width: '2.5rem', height: '2.5rem',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    borderRadius: '50%',
-                    border: '1px solid rgba(201,160,80,0.4)',
-                    color: ACCENT,
-                    transition: 'background 0.2s',
-                  }}
+                  style={{ width: '2.5rem', height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(201,160,80,0.4)', color: ACCENT, transition: 'background 0.2s' }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.14)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
                 >
@@ -433,13 +299,7 @@ export default function Header() {
 
             {/* Телефон */}
             <a href="tel:+78007077483"
-              style={{
-                display: 'block',
-                fontSize: '1.0625rem', fontWeight: 700,
-                color: ACCENT,
-                marginBottom: '1rem',
-                transition: 'opacity 0.2s',
-              }}
+              style={{ fontSize: '1.0625rem', fontWeight: 700, color: ACCENT, transition: 'opacity 0.2s' }}
               onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.7' }}
               onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
             >
@@ -447,26 +307,10 @@ export default function Header() {
             </a>
 
             {/* Кнопка */}
-            <a href="/#price"
-              onClick={() => setMenuOpen(false)}
-              style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                padding: '0.6875rem 1.75rem',
-                borderRadius: '3rem',
-                fontSize: '0.875rem', fontWeight: 700,
-                background: ACCENT, color: '#1A1A2E',
-                border: `2px solid ${ACCENT}`,
-                whiteSpace: 'nowrap',
-                transition: 'background 0.25s, color 0.25s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'transparent'
-                e.currentTarget.style.color = ACCENT
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = ACCENT
-                e.currentTarget.style.color = '#1A1A2E'
-              }}
+            <a href="/#price" onClick={() => setMenuOpen(false)}
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '0.6875rem 1.75rem', borderRadius: '3rem', fontSize: '0.875rem', fontWeight: 700, background: ACCENT, color: '#1A1A2E', border: `2px solid ${ACCENT}`, whiteSpace: 'nowrap', transition: 'background 0.25s, color 0.25s', alignSelf: 'flex-start' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = ACCENT }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = ACCENT; e.currentTarget.style.color = '#1A1A2E' }}
             >
               Рассчитать проект
             </a>

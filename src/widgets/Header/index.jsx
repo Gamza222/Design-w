@@ -168,27 +168,30 @@ export default function Header() {
             {/* Соцсети */}
             {SOCIALS.map(({ href, Icon, label }) => (
               <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                style={{ width: '2rem', height: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(201,160,80,0.35)', color: ACCENT, transition: 'background 0.2s', flexShrink: 0 }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.14)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+                style={{ width: '2rem', height: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(201,160,80,0.7)', color: ACCENT, background: 'rgba(201,160,80,0.08)', transition: 'background 0.2s, border-color 0.2s', flexShrink: 0 }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.22)'; e.currentTarget.style.borderColor = ACCENT }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(201,160,80,0.08)'; e.currentTarget.style.borderColor = 'rgba(201,160,80,0.7)' }}
               >
-                <Icon size={14} />
+                <Icon size={15} />
               </a>
             ))}
 
             <div style={{ width: 1, height: '1.25rem', background: 'rgba(201,160,80,0.3)', transform: 'rotate(15deg)', flexShrink: 0 }} />
 
-            {/* Телефон */}
-            <a href="tel:+78007077483"
-              style={{ fontSize: '0.8125rem', fontWeight: 600, color: TEXT_NAV, whiteSpace: 'nowrap' }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
-            >
-              8 (800) 707-74-83
-            </a>
-            <span style={{ fontSize: '0.75rem', color: 'rgba(232,228,220,0.38)', whiteSpace: 'nowrap' }}>
-              10:00–19:00
-            </span>
+            {/* Телефон + часы работы */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem', flexShrink: 0 }}>
+              <a href="tel:+78007077483"
+                style={{ fontSize: '0.8125rem', fontWeight: 600, color: TEXT_NAV, whiteSpace: 'nowrap', lineHeight: 1.2 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = ACCENT }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = TEXT_NAV }}
+              >
+                8 (800) 707-74-83
+              </a>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', whiteSpace: 'nowrap' }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', flexShrink: 0, boxShadow: '0 0 5px rgba(74,222,128,0.7)' }} />
+                <span style={{ fontSize: '0.6875rem', color: 'rgba(232,228,220,0.6)', letterSpacing: '0.01em' }}>10:00–19:00</span>
+              </span>
+            </div>
 
             {/* CTA */}
             <a href="/#price"

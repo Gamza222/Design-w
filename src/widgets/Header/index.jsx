@@ -207,20 +207,44 @@ export default function Header() {
             className="flex min-[1400px]:hidden items-center justify-center"
             style={{ width: LOGO_H, height: LOGO_H, flexShrink: 0, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
           >
-            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-              {menuOpen ? (
-                <>
-                  <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
-                  <line x1="20" y1="4" x2="4"  y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
-                </>
-              ) : (
-                <>
-                  <line x1="3" y1="6"  x2="21" y2="6"  stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
-                  <line x1="3" y1="12" x2="21" y2="12" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
-                  <line x1="3" y1="18" x2="21" y2="18" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
-                </>
-              )}
-            </svg>
+            {/*
+              Контейнер: 26×18px — три линии по 2.5px, зазор 6.75px.
+              Анимация ТОЛЬКО через transform (translateY + rotate) — никакого reflow.
+              Задержка 0.05s на rotate чтобы сначала линии сдвинулись, потом повернулись.
+            */}
+            <span style={{
+              display: 'block',
+              position: 'relative',
+              width: 26,
+              height: 18,
+              flexShrink: 0,
+            }}>
+              {/* Верхняя: translateY(7.75px) + rotate(45deg) */}
+              <span style={{
+                position: 'absolute', left: 0, right: 0,
+                height: 2.5, borderRadius: 2, background: ACCENT,
+                top: 0,
+                transform: menuOpen ? 'translateY(7.75px) rotate(45deg)' : 'translateY(0) rotate(0deg)',
+                transition: 'transform 0.32s cubic-bezier(0.4,0,0.2,1)',
+              }} />
+              {/* Средняя: fade + shrink */}
+              <span style={{
+                position: 'absolute', left: 0, right: 0,
+                height: 2.5, borderRadius: 2, background: ACCENT,
+                top: '50%', marginTop: -1.25,
+                opacity: menuOpen ? 0 : 1,
+                transform: menuOpen ? 'scaleX(0.4)' : 'scaleX(1)',
+                transition: 'opacity 0.22s ease, transform 0.22s ease',
+              }} />
+              {/* Нижняя: translateY(-7.75px) + rotate(-45deg) */}
+              <span style={{
+                position: 'absolute', left: 0, right: 0,
+                height: 2.5, borderRadius: 2, background: ACCENT,
+                bottom: 0,
+                transform: menuOpen ? 'translateY(-7.75px) rotate(-45deg)' : 'translateY(0) rotate(0deg)',
+                transition: 'transform 0.32s cubic-bezier(0.4,0,0.2,1)',
+              }} />
+            </span>
           </button>
 
         </div>

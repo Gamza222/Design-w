@@ -62,25 +62,62 @@ export default function Hero() {
 
         {/* Заголовок */}
         <motion.h1
-          className="text-[clamp(32px,5.5vw,64px)] font-extrabold text-white leading-[1.1] mb-5 max-w-4xl"
+          className="mb-7 max-w-4xl"
+          style={{
+            fontFamily: 'Inter, sans-serif',
+            fontWeight: 800,
+            lineHeight: 1.2,
+            color: '#ffffff',
+            letterSpacing: '-0.01em',
+          }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          Создаём интерьер,{' '}
+          {/* Строка 1 — никогда не переносится */}
           <span style={{
-            background: 'linear-gradient(90deg, #C9A050, #E8C98A)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
+            display: 'block',
+            whiteSpace: 'nowrap',
+            fontSize: 'clamp(24px, 4.6vw, 62px)',
           }}>
-            в котором удобно жить
+            Создаём и реализуем
+          </span>
+
+          {/* Строка 2 — интерьер + вашей мечты */}
+          <span style={{
+            display: 'block',
+            fontSize: 'clamp(24px, 4.6vw, 62px)',
+          }}>
+            интерьер{' '}
+            <span
+              style={{
+                fontFamily: "'Great Vibes', cursive",
+                fontWeight: 400,
+                fontSize: 'clamp(48px, 8.2vw, 110px)',
+                lineHeight: 1.1,
+                verticalAlign: 'middle',
+                whiteSpace: 'nowrap',
+                background: 'linear-gradient(90deg, #C9A050 0%, #F0D898 50%, #C9A050 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              вашей мечты
+            </span>
           </span>
         </motion.h1>
 
         {/* Подзаголовок */}
         <motion.p
-          className="text-[18px] text-white/70 max-w-[560px] mb-9 leading-[1.7]"
+          style={{
+            fontSize: 'clamp(14px, 1.5vw, 18px)',
+            color: 'rgba(255,255,255,0.58)',
+            maxWidth: 520,
+            marginBottom: '2.25rem',
+            lineHeight: 1.75,
+            fontWeight: 400,
+          }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}

@@ -257,52 +257,73 @@ export default function Header() {
       </header>
 
       {/* ══════════════ МОБИЛЬНОЕ МЕНЮ < 1400px ══════════════ */}
-      {/* Только рендерится / работает на мобилке (pointer-events) */}
       <div
         className="min-[1400px]:hidden"
-        style={{ position: 'fixed', inset: 0, zIndex: 99, pointerEvents: menuOpen ? 'auto' : 'none' }}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 99,
+          pointerEvents: menuOpen ? 'auto' : 'none',
+          overflow: 'hidden',   /* ← КЛЮЧ: клипает панель при translateY(-100%) */
+          isolation: 'isolate', /* ← предотвращает утечку backdrop-filter */
+        }}
       >
-        {/* Затемнение — клик вне меню закрывает */}
+        {/* Затемнение */}
         <div
           onClick={() => setMenuOpen(false)}
-          style={{ position: 'absolute', inset: 0, background: 'rgba(8,8,20,0.6)', backdropFilter: 'blur(2px)', opacity: menuOpen ? 1 : 0, transition: 'opacity 0.3s ease' }}
+          style={{
+            position: 'absolute', inset: 0,
+            background: 'rgba(8,8,20,0.6)',
+            backdropFilter: 'blur(2px)',
+            WebkitBackdropFilter: 'blur(2px)',
+            opacity: menuOpen ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+          }}
         />
 
-        {/* Панель меню — выезжает из-под хедера, не перекрывает его */}
+        {/* Панель — top:0 + translateY(-100%) = абсолютно надёжное скрытие */}
         <div
           style={{
             position: 'absolute',
-            top: '60px', left: 0, right: 0,
+            top: 0, left: 0, right: 0,
             background: MENU_BG,
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(254,193,4,0.2)',
-            transform: menuOpen ? 'translateY(0)' : 'translateY(-110%)',
+            borderBottom: '1px solid rgba(254,193,4,0.18)',
+            transform: menuOpen ? 'translateY(0)' : 'translateY(-100%)',
             transition: 'transform 0.36s cubic-bezier(0.4,0,0.2,1)',
-            minWidth: 280,
+            willChange: 'transform',
+            maxHeight: '100dvh',
             overflowY: 'auto',
-            maxHeight: 'calc(100dvh - 60px)',
           }}
         >
+          {/* Спейсер — освобождает место под хедер (60px) */}
+          <div style={{ height: 60, flexShrink: 0 }} />
+
           {/* Ссылки */}
-          <nav style={{ padding: '0.75rem 1.5rem 0.5rem' }}>
+          <nav style={{ padding: '0.25rem 1.5rem 0.5rem' }}>
             {NAV_LINKS.map((link) => {
-              const s = { display: 'block', padding: '0.8125rem 0', fontSize: '0.9375rem', fontWeight: 500, color: TEXT_NAV, borderBottom: '1px solid rgba(254,193,4,0.09)', transition: 'color 0.2s' }
+              const s = {
+                display: 'block', padding: '0.8125rem 0',
+                fontSize: '0.9375rem', fontWeight: 500,
+                color: TEXT_NAV,
+                borderBottom: '1px solid rgba(254,193,4,0.08)',
+                transition: 'color 0.2s',
+              }
               const enter = (e) => { e.currentTarget.style.color = ACCENT }
               const leave = (e) => { e.currentTarget.style.color = TEXT_NAV }
               return link.isRoute
                 ? <Link key={link.label} to={link.href} onClick={() => setMenuOpen(false)} style={s} onMouseEnter={enter} onMouseLeave={leave}>{link.label}</Link>
-                : <a    key={link.label} href={link.href} onClick={() => setMenuOpen(false)} style={s} onMouseEnter={enter} onMouseLeave={leave}>{link.label}</a>
+                : <a    key={link.label} href={link.href}  onClick={() => setMenuOpen(false)} style={s} onMouseEnter={enter} onMouseLeave={leave}>{link.label}</a>
             })}
           </nav>
 
-          {/* Соцсети → Телефон → Кнопка */}
-          <div style={{ padding: '1.25rem 1.5rem 1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {/* Соцсети */}
+          {/* Соцсети + телефон + кнопка */}
+          <div style={{ padding: '1.25rem 1.5rem 2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               {SOCIALS.map(({ href, Icon, label }) => (
                 <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label}
-                  style={{ width: '2.5rem', height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(254,193,4,0.4)', color: ACCENT, transition: 'background 0.2s' }}
+                  style={{ width: '2.5rem', height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: '1px solid rgba(254,193,4,0.4)', color: ACCENT, transition: 'background 0.2s', flexShrink: 0 }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(254,193,4,0.14)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
                 >
@@ -311,7 +332,6 @@ export default function Header() {
               ))}
             </div>
 
-            {/* Телефон */}
             <a href="tel:+78007077483"
               style={{ fontSize: '1.0625rem', fontWeight: 700, color: ACCENT, transition: 'opacity 0.2s' }}
               onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.7' }}
@@ -320,7 +340,6 @@ export default function Header() {
               8 (800) 707-74-83
             </a>
 
-            {/* Кнопка */}
             <a href="/#price" onClick={() => setMenuOpen(false)}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '0.75rem 1.75rem', borderRadius: '3rem', fontSize: '0.875rem', fontWeight: 700, background: ACCENT, color: '#1A1A2E', border: `2px solid ${ACCENT}`, whiteSpace: 'nowrap', transition: 'background 0.25s, color 0.25s', boxSizing: 'border-box' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = ACCENT }}
@@ -334,3 +353,4 @@ export default function Header() {
     </>
   )
 }
+

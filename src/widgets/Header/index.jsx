@@ -262,46 +262,30 @@ export default function Header() {
         className="min-[1400px]:hidden"
         style={{ position: 'fixed', inset: 0, zIndex: 99, pointerEvents: menuOpen ? 'auto' : 'none' }}
       >
-        {/* Затемнение */}
+        {/* Затемнение — клик вне меню закрывает */}
         <div
           onClick={() => setMenuOpen(false)}
           style={{ position: 'absolute', inset: 0, background: 'rgba(8,8,20,0.6)', backdropFilter: 'blur(2px)', opacity: menuOpen ? 1 : 0, transition: 'opacity 0.3s ease' }}
         />
 
-        {/* Панель меню — сдвигается сверху */}
+        {/* Панель меню — выезжает из-под хедера, не перекрывает его */}
         <div
           style={{
             position: 'absolute',
-            top: 0, left: 0, right: 0,
+            top: '60px', left: 0, right: 0,
             background: MENU_BG,
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             borderBottom: '1px solid rgba(254,193,4,0.2)',
-            transform: menuOpen ? 'translateY(0)' : 'translateY(-105%)',
+            transform: menuOpen ? 'translateY(0)' : 'translateY(-110%)',
             transition: 'transform 0.36s cubic-bezier(0.4,0,0.2,1)',
             minWidth: 280,
             overflowY: 'auto',
-            maxHeight: '100dvh',
+            maxHeight: 'calc(100dvh - 60px)',
           }}
         >
-          {/* Шапка с лого + крестик */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.875rem 1.5rem' }}>
-            <Link to="/" onClick={() => setMenuOpen(false)} style={{ lineHeight: 0 }}>
-              <img src="/logo.png" alt="Дизайн Сейчас" style={{ height: LOGO_H, width: 'auto' }}
-                onError={(e) => { e.currentTarget.style.display = 'none' }} />
-            </Link>
-            <button onClick={() => setMenuOpen(false)} aria-label="Закрыть"
-              style={{ width: LOGO_H, height: LOGO_H, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
-            >
-              <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-                <line x1="4" y1="4" x2="20" y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="20" y1="4" x2="4"  y2="20" stroke={ACCENT} strokeWidth="2.5" strokeLinecap="round" />
-              </svg>
-            </button>
-          </div>
-
           {/* Ссылки */}
-          <nav style={{ padding: '0.25rem 1.5rem 0.5rem' }}>
+          <nav style={{ padding: '0.75rem 1.5rem 0.5rem' }}>
             {NAV_LINKS.map((link) => {
               const s = { display: 'block', padding: '0.8125rem 0', fontSize: '0.9375rem', fontWeight: 500, color: TEXT_NAV, borderBottom: '1px solid rgba(254,193,4,0.09)', transition: 'color 0.2s' }
               const enter = (e) => { e.currentTarget.style.color = ACCENT }

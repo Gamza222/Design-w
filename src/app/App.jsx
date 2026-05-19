@@ -10,6 +10,7 @@ import ArticlePage from '../pages/ArticlePage'
 import ServicesPage from '../pages/ServicesPage'
 import AboutPage from '../pages/AboutPage'
 import ContactsPage from '../pages/ContactsPage'
+import ReviewsPage from '../pages/ReviewsPage'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/blog"              element={<BlogPage />} />
           <Route path="/blog/:id"          element={<ArticlePage />} />
           <Route path="/contacts"          element={<ContactsPage />} />
+          <Route path="/reviews"           element={<ReviewsPage />} />
           {/* Fallback */}
           <Route path="*"                  element={<HomePage />} />
         </Routes>

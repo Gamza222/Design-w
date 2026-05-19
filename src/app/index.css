@@ -201,19 +201,66 @@
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ======================================================
-   СЛАЙДЕР ОТЗЫВОВ
+   MASONRY ОТЗЫВОВ
 ====================================================== */
-.reviews-track {
-  display: flex;
-  align-items: flex-start; /* карточки прижаты вверх, высота по контенту */
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+/* Обёртка — ограничивает высоту с плавным раскрытием */
+.reviews-masonry-wrap {
+  position: relative;
+  overflow: hidden;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Обёртка слайдера — занимает высоту по самому высокому слайду */
-.reviews-viewport {
+/* Градиент‑затемнение внизу в свёрнутом состоянии */
+.reviews-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  background: linear-gradient(
+    to bottom,
+    rgba(36, 48, 80, 0) 0%,
+    rgba(36, 48, 80, 0.85) 60%,
+    #243050 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Masonry grid — flexbox columns */
+.reviews-masonry {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.reviews-masonry-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* Карточка отзыва */
+.reviews-card {
+  border-radius: 14px;
   overflow: hidden;
-  /* высота будет управляться через JS — max высота всех слайдов */
-  transition: height 0.4s ease;
+  cursor: zoom-in;
+  border: 1px solid rgba(254, 193, 4, 0.1);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  background: #1E2240;
+}
+.reviews-card:hover {
+  border-color: rgba(254, 193, 4, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+.reviews-card img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* ======================================================

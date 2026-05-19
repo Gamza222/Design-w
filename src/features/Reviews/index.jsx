@@ -1,96 +1,38 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { reviews } from '../../shared/data/reviews'
 import FadeInView from '../../shared/ui/FadeInView'
 
+/* ────────────────────────────────────────────
+   Masonry‑колонки для отзывов (homepage — ПРЕВЬЮ)
+   – жёстко зафиксированные 3 колонки с конкретными отзывами
+   – Колонка 1: review1, review4, review7  (3 шт)
+   – Колонка 2: review3, review6           (2 шт — из бывшей 3-й колонки)
+   – Колонка 3: review2, review5, review8, review11 (4 шт — из бывшей 2-й)
+   – градиент-fade снизу
+   – кнопка ведёт на /reviews в новой вкладке
+──────────────────────────────────────────── */
+
+/* ── Жёстко зафиксированные колонки превью ── */
+const PREVIEW_COLUMNS = [
+  // Колонка 1: review1, review4, review7
+  [0, 3, 6],
+  // Колонка 2: review3, review6 (из бывшей 3-й колонки)
+  [2, 5],
+  // Колонка 3: review2, review5, review8, review11 (из бывшей 2-й колонки)
+  [1, 4, 7, 10],
+]
+
 export default function Reviews() {
-  const [current, setCurrent] = useState(0)
-  const [perView, setPerView] = useState(3)
   const [lightbox, setLightbox] = useState(null)
-  const [trackHeight, setTrackHeight] = useState('auto')
-  const trackRef = useRef(null)
-  const autoRef = useRef(null)
 
   const total = reviews.length
-  const max = Math.max(0, total - perView)
-  // Количество точек = количество позиций слайдера
-  const dotsCount = max + 1
 
-  useEffect(() => {
-    const calc = () => {
-      if (window.innerWidth < 500) setPerView(1)
-      else if (window.innerWidth < 768) setPerView(2)
-      else setPerView(3)
-    }
-    calc()
-    window.addEventListener('resize', calc)
-    return () => window.removeEventListener('resize', calc)
-  }, [])
+  /* ── Собираем колонки из зафиксированных индексов ── */
+  const columns = PREVIEW_COLUMNS.map((indices) =>
+    indices.map((i) => ({ ...reviews[i], globalIndex: i }))
+  )
 
-  // Зацикленная навигация
-  const goTo = useCallback((idx) => {
-    if (idx < 0) setCurrent(max)
-    else if (idx > max) setCurrent(0)
-    else setCurrent(idx)
-  }, [max])
-
-  const startAuto = useCallback(() => {
-    autoRef.current = setInterval(() => {
-      setCurrent((c) => (c < max ? c + 1 : 0))
-    }, 4000)
-  }, [max])
-
-  const stopAuto = () => clearInterval(autoRef.current)
-
-  useEffect(() => {
-    startAuto()
-    return stopAuto
-  }, [startAuto])
-
-  // Сдвиг трека
-  useEffect(() => {
-    if (!trackRef.current) return
-    const slide = trackRef.current.children[0]
-    if (!slide) return
-    const slideW = slide.offsetWidth + 18
-    trackRef.current.style.transform = `translateX(-${current * slideW}px)`
-  }, [current, perView])
-
-  // Высота viewport = max высота среди всех слайдов
-  useEffect(() => {
-    if (!trackRef.current) return
-
-    const measureMax = () => {
-      if (!trackRef.current) return
-      const children = Array.from(trackRef.current.children)
-      if (!children.length) return
-      const maxH = children.reduce((acc, el) => Math.max(acc, el.scrollHeight), 0)
-      if (maxH > 0) setTrackHeight(maxH)
-    }
-
-    const imgs = trackRef.current.querySelectorAll('img')
-    let loaded = 0
-    const onLoad = () => {
-      loaded++
-      if (loaded >= imgs.length) measureMax()
-    }
-
-    if (imgs.length === 0) {
-      measureMax()
-    } else {
-      imgs.forEach((img) => {
-        if (img.complete) {
-          onLoad()
-        } else {
-          img.addEventListener('load', onLoad)
-          img.addEventListener('error', onLoad)
-        }
-      })
-    }
-
-    window.addEventListener('resize', measureMax)
-    return () => window.removeEventListener('resize', measureMax)
-  }, [perView, total])
-
+  /* ── Lightbox ──────────────────────────── */
   const openLightbox = (idx) => {
     setLightbox(idx)
     document.body.style.overflow = 'hidden'
@@ -118,79 +60,56 @@ export default function Reviews() {
           <div className="text-center mb-10">
             <p className="section-tag">Отзывы</p>
             <h2 className="section-title">Что говорят наши клиенты</h2>
+            <p className="section-sub mt-3">
+              Реальные впечатления тех, с кем мы уже работали
+            </p>
           </div>
         </FadeInView>
 
-        <div className="relative" onMouseEnter={stopAuto} onMouseLeave={startAuto}>
-          {/* Стрелка влево — зациклена */}
-          <button
-            onClick={() => goTo(current - 1)}
-            className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-[rgba(26,26,46,0.9)] border border-[rgba(254,193,4,0.2)] text-[#FEC104] hover:bg-[rgba(254,193,4,0.1)] transition-all"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </button>
-
-          {/* Viewport — фиксированная высота по самому высокому слайду */}
-          <div
-            className="reviews-viewport mx-4"
-            style={{
-              height: trackHeight !== 'auto' ? trackHeight : undefined,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <div
-              ref={trackRef}
-              className="reviews-track w-full"
-              style={{ gap: 18, alignItems: 'center' }}
-            >
-              {reviews.map((r, i) => (
-                <div
-                  key={r.id}
-                  className="shrink-0 rounded-2xl overflow-hidden cursor-zoom-in border border-[rgba(254,193,4,0.1)] hover:border-[rgba(254,193,4,0.3)] transition-all"
-                  style={{ width: `calc((100% - ${(perView - 1) * 18}px) / ${perView})` }}
-                  onClick={() => openLightbox(i)}
-                >
-                  <img
-                    src={r.src}
-                    alt={r.alt}
-                    loading="lazy"
-                    className="w-full h-auto object-contain bg-[#1E2240] block"
-                  />
-                </div>
-              ))}
-            </div>
+        {/* ── Masonry Grid — зафиксированное превью ── */}
+        <div className="reviews-masonry-wrap">
+          <div className="reviews-masonry">
+            {columns.map((col, colIdx) => (
+              <div key={colIdx} className="reviews-masonry-col">
+                {col.map((r) => (
+                  <div
+                    key={r.id}
+                    className="reviews-card"
+                    onClick={() => openLightbox(r.globalIndex)}
+                  >
+                    <img
+                      src={r.src}
+                      alt={r.alt}
+                      loading="lazy"
+                      className="w-full h-auto block"
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
 
-          {/* Стрелка вправо — зациклена */}
-          <button
-            onClick={() => goTo(current + 1)}
-            className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-[rgba(26,26,46,0.9)] border border-[rgba(254,193,4,0.2)] text-[#FEC104] hover:bg-[rgba(254,193,4,0.1)] transition-all"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </button>
+          {/* Gradient fade at bottom — всегда виден */}
+          <div className="reviews-fade" />
         </div>
 
-        {/* Точки — ровно столько, сколько позиций слайдера (max+1) */}
-        <div className="flex justify-center gap-2 mt-6">
-          {Array.from({ length: dotsCount }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              className={`rounded-full transition-all duration-300 ${
-                i === current ? 'w-6 h-2 bg-[#FEC104]' : 'w-2 h-2 bg-[rgba(254,193,4,0.3)]'
-              }`}
-              aria-label={`Слайд ${i + 1}`}
-            />
-          ))}
+        {/* ── Link to full reviews page (new tab) ── */}
+        <div className="flex justify-center mt-6">
+          <a
+            href="/reviews"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-dark"
+          >
+            Показать все отзывы
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
         </div>
       </div>
 
-      {/* Лайтбокс */}
+      {/* ── Lightbox ─────────────────────────── */}
       {lightbox !== null && (
         <div className="lightbox-overlay" onClick={closeLightbox}>
           <button

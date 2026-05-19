@@ -80,7 +80,7 @@ export default function About() {
         {/* Достижения */}
         <div id="achievements">
           <p className="text-[rgba(28,35,64,0.5)] text-sm text-center mb-6">
-            Достижения — грамоты от Сообщества дизайнеров интерьера России
+            Грамоты от Сообщества дизайнеров интерьера России
           </p>
 
           <div className="relative flex items-center gap-3 justify-center">
@@ -104,12 +104,12 @@ export default function About() {
                 <div
                   key={i}
                   className="shrink-0 rounded-2xl overflow-hidden border border-[rgba(254,193,4,0.2)] hover:border-[rgba(254,193,4,0.5)] transition-all shadow-sm"
-                  style={{ flex: '0 0 calc(50% - 10px)', maxWidth: '420px', minWidth: '260px' }}
+                  style={{ flex: '0 0 calc(50% - 10px)', maxWidth: '420px', minWidth: '260px', aspectRatio: '3/4' }}
                 >
                   <img
                     src={src}
                     alt={`Грамота ${i + 1}`}
-                    className="w-full h-auto object-cover block"
+                    className="w-full h-full object-cover block"
                     loading="lazy"
                   />
                 </div>

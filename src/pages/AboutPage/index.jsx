@@ -112,7 +112,7 @@ export default function AboutPage() {
       <div id="achievements" style={{ background: '#1C2340', padding: '5rem 0' }}>
         <div className="container">
           <FadeInView>
-            <p className="section-tag" style={{ textAlign: 'center', display: 'block' }}>Признание</p>
+            <p className="section-tag-on-dark" style={{ textAlign: 'center', display: 'block' }}>Признание</p>
             <h2 className="section-title mb-3" style={{ textAlign: 'center' }}>Достижения студии</h2>
             <p className="text-sm mb-10" style={{ color: 'rgba(232,228,220,0.5)', textAlign: 'center' }}>
               Грамоты от Сообщества дизайнеров интерьера России
@@ -126,8 +126,8 @@ export default function AboutPage() {
             <div ref={trackRef} className="flex gap-5 overflow-x-auto" style={{ scrollbarWidth: 'none', maxWidth: 900 }}>
               {['/gramota1.jpg', '/gramota2.jpg'].map((src, i) => (
                 <div key={i} className="shrink-0 rounded-2xl overflow-hidden"
-                  style={{ flex: '0 0 calc(50% - 10px)', minWidth: 260, maxWidth: 420, border: '1px solid rgba(254,193,4,0.2)' }}>
-                  <img src={src} alt={`Грамота ${i + 1}`} className="w-full h-auto block" loading="lazy" />
+                  style={{ flex: '0 0 calc(50% - 10px)', minWidth: 260, maxWidth: 420, aspectRatio: '3/4', border: '1px solid rgba(254,193,4,0.2)' }}>
+                  <img src={src} alt={`Грамота ${i + 1}`} className="w-full h-full object-cover block" loading="lazy" />
                 </div>
               ))}
             </div>

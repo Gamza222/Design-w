@@ -21,6 +21,8 @@
     --text-muted: rgba(232,228,220,0.6);
     --tr: 0.28s ease;
     --r: 12px;
+    /* Цвет тега (section-tag) когда он находится на тёмном/тёмно-синем фоне */
+    --tag-on-dark: #E8E0CC;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,6 +136,12 @@
     color: #6B6060;
   }
 
+  /* Тег на тёмном/насыщенном фоне — не жёлтый, а нежно-бежевый */
+  .section-tag-on-dark {
+    @apply block text-[11px] font-bold tracking-[0.14em] uppercase mb-2.5;
+    color: var(--tag-on-dark);
+  }
+
   /* ─── КАРТОЧКИ УСЛУГ ─────────────────────────────── */
   .service-card {
     @apply rounded-[12px] p-8 transition-all duration-300 cursor-pointer;
@@ -197,7 +205,15 @@
 ====================================================== */
 .reviews-track {
   display: flex;
+  align-items: flex-start; /* карточки прижаты вверх, высота по контенту */
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Обёртка слайдера — занимает высоту по самому высокому слайду */
+.reviews-viewport {
+  overflow: hidden;
+  /* высота будет управляться через JS — max высота всех слайдов */
+  transition: height 0.4s ease;
 }
 
 /* ======================================================

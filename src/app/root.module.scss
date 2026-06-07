@@ -1,0 +1,17 @@
+.main {
+  min-height: 100vh;
+  padding-top: var(--header-h);
+}
+
+.errorPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100vh;
+  padding: var(--space-8);
+
+  text-align: center;
+}

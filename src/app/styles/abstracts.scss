@@ -1,0 +1,72 @@
+// =============================================================================
+// ABSTRACTS — чистые SCSS-инструменты (без CSS-вывода): брейкпоинты, миксины.
+// Подключайте из любого модуля: `@use 'app/styles/abstracts' as *;`
+// (loadPaths: ['src'] настроен в vite.config.ts)
+// =============================================================================
+
+@use 'sass:map';
+
+// Брейкпоинты нельзя задать CSS-переменными (не работают в @media),
+// поэтому держим их здесь как SCSS-значения.
+$bp-sm: 480px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+$breakpoints: (
+  sm: $bp-sm,
+  md: $bp-md,
+  lg: $bp-lg,
+  xl: $bp-xl,
+);
+
+/// Медиа-запрос «от и выше»: `@include up(md) { ... }`
+@mixin up($name) {
+  $size: map.get($breakpoints, $name);
+
+  @if not $size {
+    @error "Unknown breakpoint: #{$name}";
+  }
+
+  @media (min-width: $size) {
+    @content;
+  }
+}
+
+/// Медиа-запрос «до» (исключительно): `@include down(md) { ... }`
+@mixin down($name) {
+  $size: map.get($breakpoints, $name);
+
+  @if not $size {
+    @error "Unknown breakpoint: #{$name}";
+  }
+
+  @media (max-width: ($size - 0.02px)) {
+    @content;
+  }
+}
+
+/// Скрыть визуально, но оставить доступным для скринридеров.
+@mixin visually-hidden {
+  position: absolute;
+
+  overflow: hidden;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+
+  white-space: nowrap;
+
+  clip-path: inset(50%);
+}
+
+/// Обрезка текста в N строк.
+@mixin line-clamp($lines: 2) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  line-clamp: $lines;
+}

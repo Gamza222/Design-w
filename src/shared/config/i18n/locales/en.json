@@ -1,0 +1,67 @@
+{
+  "brand": "TheDesignNow",
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "about": "Studio",
+    "contact": "Contact"
+  },
+  "cta": {
+    "request": "Request a quote",
+    "discuss": "Discuss a project",
+    "viewAll": "View all",
+    "readMore": "Read more",
+    "viewProject": "View project"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Interior design studio",
+      "title": "We design spaces you'll love to live in",
+      "subtitle": "Turnkey design for apartments and homes — from concept and estimate to author supervision.",
+      "scroll": "Scroll down"
+    },
+    "services": { "title": "What we do" },
+    "portfolio": { "title": "Selected projects" },
+    "blog": { "title": "Journal" }
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "A full cycle of work — we handle everything from idea to delivery."
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Completed apartment and house projects.",
+    "meta": { "area": "Area", "year": "Year", "location": "Location", "style": "Style" }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Ideas, trends and useful notes on interior design."
+  },
+  "about": {
+    "title": "About the studio",
+    "subtitle": "We are a team in love with details and meaningful spaces.",
+    "story": [
+      "TheDesignNow is an interior design studio. We craft apartment and home projects where form and comfort work together.",
+      "Every project starts with understanding how a person lives. Then come layout, materials, light and a precise estimate, so the result matches expectations."
+    ]
+  },
+  "contact": {
+    "title": "Get in touch",
+    "subtitle": "Tell us about your project — we'll prepare an estimate and a solution.",
+    "formSoon": "The request form will appear here soon.",
+    "email": "hello@thedesignnow.com",
+    "phone": "+7 (700) 000-00-00",
+    "address": "Almaty, Kazakhstan"
+  },
+  "footer": {
+    "tagline": "Interior design for apartments and homes.",
+    "rights": "All rights reserved."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "subtitle": "Looks like this page doesn't exist.",
+    "back": "Back home"
+  }
+}

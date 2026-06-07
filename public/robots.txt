@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Update with the production domain once configured.
+Sitemap: https://thedesignnow.vercel.app/sitemap.xml

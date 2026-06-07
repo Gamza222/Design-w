@@ -1,0 +1,38 @@
+@use 'app/styles/abstracts' as *;
+
+.hero {
+  display: flex;
+  align-items: center;
+  min-height: 88vh;
+  padding-block: var(--space-24);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.eyebrow {
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.title {
+  max-width: 16ch;
+}
+
+.subtitle {
+  max-width: 52ch;
+  font-size: var(--fs-lg);
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}

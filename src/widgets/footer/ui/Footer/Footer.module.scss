@@ -1,0 +1,66 @@
+@use 'app/styles/abstracts' as *;
+
+.footer {
+  padding-block: var(--space-16);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-muted-bg);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+
+  @include up(md) {
+    grid-template-columns: 1.5fr 1fr;
+    align-items: start;
+  }
+}
+
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tagline {
+  max-width: 36ch;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+
+  @include up(md) {
+    justify-content: flex-end;
+  }
+}
+
+.link {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+.copy {
+  grid-column: 1 / -1;
+
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}

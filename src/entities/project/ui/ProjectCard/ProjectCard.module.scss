@@ -1,0 +1,34 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  &:hover .cover {
+    transform: scale(1.04);
+  }
+}
+
+.media {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.cover {
+  width: 100%;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.title {
+  font-size: var(--fs-xl);
+}
+
+.meta {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}

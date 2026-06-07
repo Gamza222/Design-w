@@ -1,0 +1,132 @@
+@use 'app/styles/abstracts' as *;
+
+.header {
+  position: fixed;
+  z-index: var(--z-header);
+  inset: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  height: var(--header-h);
+  border-bottom: 1px solid var(--color-border);
+
+  background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.inner {
+  display: flex;
+  gap: var(--space-6);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-6);
+
+  @include down(md) {
+    position: fixed;
+    inset: var(--header-h) 0 auto 0;
+    transform: translateY(-120%);
+
+    flex-direction: column;
+
+    padding: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+
+    background: var(--color-surface);
+
+    transition: transform var(--transition-base);
+  }
+}
+
+.navOpen {
+  @include down(md) {
+    transform: translateY(0);
+  }
+}
+
+.link {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.burger {
+  position: relative;
+  display: none;
+  width: 24px;
+  height: 24px;
+
+  @include down(md) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.burgerLine {
+  position: relative;
+
+  width: 20px;
+  height: 2px;
+
+  background: var(--color-text);
+
+  transition: background var(--transition-base);
+
+  &::before,
+  &::after {
+    content: '';
+
+    position: absolute;
+    left: 0;
+
+    width: 20px;
+    height: 2px;
+
+    background: var(--color-text);
+
+    transition: transform var(--transition-base);
+  }
+
+  &::before {
+    top: -6px;
+  }
+
+  &::after {
+    top: 6px;
+  }
+}
+
+.burgerLineOpen {
+  background: transparent;
+
+  &::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+}

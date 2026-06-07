@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Minimal loft">
+  <rect width="800" height="1000" fill="#e4ded3" />
+  <rect x="0" y="0" width="800" height="1000" fill="none" stroke="#b08968" stroke-width="3" />
+  <rect x="120" y="200" width="560" height="360" fill="#d8cab1" />
+  <rect x="120" y="600" width="260" height="220" fill="#cbb99c" />
+  <text x="400" y="900" font-family="Georgia, 'Times New Roman', serif" font-size="48" fill="#1c1a17" text-anchor="middle">Minimal Loft</text>
+</svg>

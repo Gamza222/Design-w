@@ -1,0 +1,75 @@
+// =============================================================================
+// DESIGN TOKENS — единственный источник палитры и базовых величин.
+// Чтобы сменить палитру сайта — меняйте значения ТОЛЬКО в этом файле.
+// Все значения — CSS custom properties, поэтому доступны в рантайме и темах.
+// (Брейкпоинты живут в abstracts.scss — их нельзя задать через CSS-переменные.)
+// =============================================================================
+
+:root {
+  // --- Палитра (сырые цвета) -------------------------------------------------
+  --clr-ink: #1c1a17; // тёплый почти-чёрный
+  --clr-ink-soft: #6b655d; // приглушённый текст
+  --clr-paper: #f6f4f0; // тёплый фон
+  --clr-surface: #fff; // карточки/панели
+  --clr-line: #e3ded6; // границы
+  --clr-clay: #b08968; // акцент (глина/тауп)
+  --clr-clay-strong: #98714f; // акцент при наведении
+  --clr-sand: #ece6dc; // мягкая заливка
+
+  // --- Семантические токены (используйте ИХ в компонентах) --------------------
+  --color-bg: var(--clr-paper);
+  --color-surface: var(--clr-surface);
+  --color-text: var(--clr-ink);
+  --color-text-muted: var(--clr-ink-soft);
+  --color-border: var(--clr-line);
+  --color-accent: var(--clr-clay);
+  --color-accent-hover: var(--clr-clay-strong);
+  --color-muted-bg: var(--clr-sand);
+  --color-on-accent: #fff;
+
+  // --- Типографика -----------------------------------------------------------
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --fs-xs: 0.8125rem; // 13
+  --fs-sm: 0.9375rem; // 15
+  --fs-base: 1.0625rem; // 17
+  --fs-lg: 1.25rem; // 20
+  --fs-xl: 1.625rem; // 26
+  --fs-2xl: 2.25rem; // 36
+  --fs-3xl: 3.25rem; // 52
+  --fs-4xl: clamp(2.75rem, 6vw, 5rem);
+  --lh-tight: 1.1;
+  --lh-snug: 1.3;
+  --lh-normal: 1.6;
+
+  // --- Спейсинг (8pt шкала) --------------------------------------------------
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  // --- Радиусы / тени / геометрия --------------------------------------------
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+  --shadow-sm: 0 1px 2px rgb(28 26 23 / 6%);
+  --shadow-md: 0 12px 32px rgb(28 26 23 / 10%);
+  --container-max: 1280px;
+  --container-pad: var(--space-6);
+
+  // --- Прочее ----------------------------------------------------------------
+  --transition-base: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  --header-h: 72px;
+
+  // --- Z-index слои ----------------------------------------------------------
+  --z-header: 100;
+  --z-overlay: 900;
+  --z-preloader: 1000;
+}

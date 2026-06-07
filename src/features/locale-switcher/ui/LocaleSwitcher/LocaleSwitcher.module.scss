@@ -1,0 +1,25 @@
+.switcher {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.option {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+.active {
+  color: var(--color-accent);
+}

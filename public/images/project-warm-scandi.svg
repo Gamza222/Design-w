@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Warm scandinavian">
+  <rect width="800" height="1000" fill="#efe7da" />
+  <rect x="0" y="0" width="800" height="1000" fill="none" stroke="#98714f" stroke-width="3" />
+  <circle cx="400" cy="380" r="170" fill="#e2c9a6" />
+  <rect x="200" y="640" width="400" height="180" fill="#d3c2a4" />
+  <text x="400" y="900" font-family="Georgia, 'Times New Roman', serif" font-size="46" fill="#1c1a17" text-anchor="middle">Warm Scandi</text>
+</svg>

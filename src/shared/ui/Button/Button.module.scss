@@ -1,0 +1,42 @@
+.button {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base),
+    border-color var(--transition-base),
+    transform var(--transition-base);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.primary {
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+
+  &:hover {
+    background-color: var(--color-accent-hover);
+  }
+}
+
+.ghost {
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+}

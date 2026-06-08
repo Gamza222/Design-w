@@ -1,25 +1,79 @@
 .switcher {
-  display: inline-flex;
-  gap: var(--space-1);
+  position: relative;
+  display: flex;
   align-items: center;
 }
 
-.option {
-  padding: var(--space-1) var(--space-2);
+.trigger {
+  display: inline-flex;
+  gap: 0.3em;
+  align-items: center;
+
+  padding: 0.45rem 0.75rem;
+
+  border: 1px solid color-mix(in srgb, var(--clr-light) 22%, transparent);
   border-radius: var(--radius-sm);
 
   font-size: var(--fs-xs);
-  font-weight: 500;
-  color: var(--color-text-muted);
-  letter-spacing: 0.04em;
+  font-weight: 600;
+  color: var(--clr-light);
+  letter-spacing: 0.1em;
 
-  transition: color var(--transition-base);
+  transition:
+    border-color var(--transition-base),
+    color var(--transition-base);
 
-  &:hover {
-    color: var(--color-text);
+  &:hover,
+  &[aria-expanded='true'] {
+    border-color: var(--clr-accent);
+    color: var(--clr-accent);
   }
 }
 
-.active {
-  color: var(--color-accent);
+.chevron {
+  width: 0.55em;
+  height: 0.55em;
+  transition: transform var(--transition-base);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  min-width: 100%;
+  border: 1px solid color-mix(in srgb, var(--clr-light) 18%, transparent);
+  border-radius: var(--radius-sm);
+
+  background-color: var(--clr-dark);
+  backdrop-filter: blur(12px);
+}
+
+.option {
+  padding: 0.4rem 0.75rem;
+
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--clr-light);
+  text-align: center;
+  letter-spacing: 0.1em;
+
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base);
+
+  &:hover {
+    color: var(--clr-accent);
+    background-color: color-mix(in srgb, var(--clr-light) 6%, transparent);
+  }
 }

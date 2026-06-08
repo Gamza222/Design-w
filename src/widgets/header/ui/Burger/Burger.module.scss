@@ -1,0 +1,62 @@
+@use 'app/styles/abstracts' as *;
+
+.burger {
+  position: relative;
+  display: none;
+  width: 2rem;
+  height: 2rem;
+
+  @include down(xl) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.line {
+  position: relative;
+
+  width: 1.75rem;
+  height: 0.125rem;
+
+  background: var(--clr-accent);
+
+  transition: background var(--transition-base);
+
+  &::before,
+  &::after {
+    content: '';
+
+    position: absolute;
+    left: 0;
+
+    width: 1.75rem;
+    height: 0.125rem;
+
+    background: var(--clr-accent);
+
+    transition: transform var(--transition-base);
+  }
+
+  &::before {
+    top: -0.5rem;
+  }
+
+  &::after {
+    top: 0.5rem;
+  }
+}
+
+.lineOpen {
+  background: transparent;
+
+  &::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+}

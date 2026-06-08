@@ -1,14 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run:*)",
-      "Bash(npm ci:*)",
-      "Bash(npm install:*)",
-      "Bash(npm test:*)",
-      "Bash(git:*)",
-      "Bash(gh pr:*)",
-      "Bash(npx steiger:*)",
-      "Bash(npx playwright:*)"
+      "Bash"
     ],
     "deny": [
       "Bash(rm -rf:*)",

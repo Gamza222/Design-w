@@ -2,18 +2,25 @@
   "brand": "TheDesignNow",
   "nav": {
     "home": "Home",
-    "services": "Services",
+    "services": "Design project",
     "portfolio": "Portfolio",
+    "achievements": "Achievements",
     "blog": "Blog",
-    "about": "Studio",
+    "about": "About us",
     "contact": "Contact"
   },
   "cta": {
     "request": "Request a quote",
     "discuss": "Discuss a project",
+    "calculate": "Get an estimate",
     "viewAll": "View all",
     "readMore": "Read more",
     "viewProject": "View project"
+  },
+  "header": {
+    "hours": "10:00–19:00",
+    "menu": "Menu",
+    "online": "Online now"
   },
   "home": {
     "hero": {
@@ -38,6 +45,10 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Ideas, trends and useful notes on interior design."
+  },
+  "achievements": {
+    "title": "Achievements",
+    "subtitle": "Awards, publications and results of our projects."
   },
   "about": {
     "title": "About the studio",

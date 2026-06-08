@@ -8,125 +8,113 @@
   display: flex;
   align-items: center;
 
+  // Капаем бар хедера так же, как контент: fixed + left:0/right:0 + margin:auto
+  // центрирует его по вьюпорту, ширина совпадает со светлой колонкой body.
+  max-width: var(--site-max);
   height: var(--header-h);
-  border-bottom: 1px solid var(--color-border);
+  margin-inline: auto;
 
-  background: color-mix(in srgb, var(--color-bg) 82%, transparent);
-  backdrop-filter: blur(10px);
+  background-color: transparent;
+
+  transition: background-color var(--transition-base);
+}
+
+// Прозрачный у самого верха → плавно темнеет на скролле (и когда открыто мобильное меню).
+.scrolled {
+  background-color: var(--clr-dark);
 }
 
 .inner {
+  // Хедер шире секций: переопределяем токены ТОЛЬКО для этого инстанса Container.
+  // Глобальный --container-max (1280) у остальных секций не трогаем.
+  --container-max: var(--site-max);
+  --container-pad: var(--header-gutter);
+
   display: flex;
-  gap: var(--space-6);
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 
 .brand {
-  font-family: var(--font-display);
-  font-size: var(--fs-lg);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  display: inline-flex;
+  flex-shrink: 0;
 }
 
-.nav {
+// Десктоп: обёртка nav + actions занимает остаток строки.
+// < xl: превращается в выпадающую мобильную панель.
+.menu {
   display: flex;
-  gap: var(--space-6);
+  flex: 1;
+  align-items: center;
 
-  @include down(md) {
+  @include down(xl) {
     position: fixed;
-    inset: var(--header-h) 0 auto 0;
+    inset: var(--header-h) 0 auto;
     transform: translateY(-120%);
 
     flex-direction: column;
+    gap: var(--space-8);
+    align-items: flex-start;
 
-    padding: var(--space-6);
-    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-8) var(--container-pad);
 
-    background: var(--color-surface);
+    background-color: var(--clr-dark);
 
     transition: transform var(--transition-base);
   }
 }
 
-.navOpen {
-  @include down(md) {
+.menuOpen {
+  @include down(xl) {
     transform: translateY(0);
   }
 }
 
-.link {
-  font-size: var(--fs-sm);
-  color: var(--color-text-muted);
+.nav {
+  flex-shrink: 0;
 
-  &:hover {
-    color: var(--color-accent);
+  // Адаптивный зазор лого ↔ навигация: растёт с шириной, но rem уже флюиден.
+  margin-inline-start: clamp(var(--space-8), 5%, var(--space-12));
+
+  @include down(xl) {
+    margin-inline-start: 0;
   }
 }
 
+// Правый кластер прижимается к краю через auto-margin (а не space-between),
+// поэтому при нехватке места элементы не наезжают друг на друга.
 .actions {
   display: flex;
-  gap: var(--space-4);
+  flex-shrink: 0;
+  gap: var(--space-8);
+  align-items: center;
+
+  margin-inline-start: auto;
+
+  @include down(xl) {
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: flex-start;
+    margin-inline-start: 0;
+  }
+}
+
+.lang {
+  --color-text-muted: var(--clr-light);
+  --color-text: var(--clr-accent);
+
+  display: flex;
   align-items: center;
 }
 
-.burger {
-  position: relative;
-  display: none;
-  width: 24px;
-  height: 24px;
+.cta {
+  align-self: stretch; // та же высота, что у самого высокого элемента в .actions
+  padding-block: 0;
+  white-space: nowrap;
 
-  @include down(md) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-.burgerLine {
-  position: relative;
-
-  width: 20px;
-  height: 2px;
-
-  background: var(--color-text);
-
-  transition: background var(--transition-base);
-
-  &::before,
-  &::after {
-    content: '';
-
-    position: absolute;
-    left: 0;
-
-    width: 20px;
-    height: 2px;
-
-    background: var(--color-text);
-
-    transition: transform var(--transition-base);
-  }
-
-  &::before {
-    top: -6px;
-  }
-
-  &::after {
-    top: 6px;
-  }
-}
-
-.burgerLineOpen {
-  background: transparent;
-
-  &::before {
-    top: 0;
-    transform: rotate(45deg);
-  }
-
-  &::after {
-    top: 0;
-    transform: rotate(-45deg);
+  @include down(xl) {
+    align-self: auto;
+    padding-block: var(--btn-padding-block);
   }
 }

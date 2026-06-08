@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
+import { FaChevronDown } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router';
 
 import {
@@ -11,27 +13,57 @@ import { cn } from '@shared/lib';
 
 import styles from './LocaleSwitcher.module.scss';
 
-/** RU/EN switch — navigates to the equivalent path in the chosen locale. */
+/** Дропдаун выбора языка — показывает текущую локаль, по клику раскрывает список. */
 export function LocaleSwitcher() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
   const { pathname, search, hash } = useLocation();
   const navigate = useNavigate();
 
   const current = getLocaleFromPath(pathname);
   const canonical = stripLocale(pathname);
+  const others = LOCALES.filter((l) => l !== current);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
+  }, [open]);
 
   return (
-    <div className={styles.switcher} role="group" aria-label="Language">
-      {LOCALES.map((locale) => (
-        <button
-          key={locale}
-          type="button"
-          className={cn(styles.option, locale === current && styles.active)}
-          aria-current={locale === current ? 'true' : undefined}
-          onClick={() => navigate(localizePath(canonical, locale) + search + hash)}
-        >
-          {LOCALE_LABELS[locale]}
-        </button>
-      ))}
+    <div ref={ref} className={styles.switcher}>
+      <button
+        type="button"
+        className={styles.trigger}
+        aria-expanded={open}
+        aria-label="Language"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {LOCALE_LABELS[current]}
+        <FaChevronDown className={cn(styles.chevron, open && styles.chevronOpen)} aria-hidden />
+      </button>
+
+      {open && (
+        <div className={styles.dropdown} role="menu">
+          {others.map((locale) => (
+            <button
+              key={locale}
+              type="button"
+              role="menuitem"
+              className={styles.option}
+              onClick={() => {
+                navigate(localizePath(canonical, locale) + search + hash);
+                setOpen(false);
+              }}
+            >
+              {LOCALE_LABELS[locale]}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

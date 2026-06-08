@@ -7,29 +7,26 @@
 
 :root {
   // --- Палитра (сырые цвета) -------------------------------------------------
-  --clr-ink: #1c1a17; // тёплый почти-чёрный
-  --clr-ink-soft: #6b655d; // приглушённый текст
-  --clr-paper: #f6f4f0; // тёплый фон
-  --clr-surface: #fff; // карточки/панели
-  --clr-line: #e3ded6; // границы
-  --clr-clay: #b08968; // акцент (глина/тауп)
-  --clr-clay-strong: #98714f; // акцент при наведении
-  --clr-sand: #ece6dc; // мягкая заливка
+  --clr-dark: #081125; // основной тёмный — фон и текст на светлом
+  --clr-light: #faf8f7; // основной светлый — фон и текст на тёмном
+  --clr-accent: #febc04; // акцент — кнопки, заголовки
+  --clr-gray: #a6a2a1; // вспомогательный текст на любом фоне
+  --clr-green: #24ca74; // дополнительный (успех/доп. акцент)
 
   // --- Семантические токены (используйте ИХ в компонентах) --------------------
-  --color-bg: var(--clr-paper);
-  --color-surface: var(--clr-surface);
-  --color-text: var(--clr-ink);
-  --color-text-muted: var(--clr-ink-soft);
-  --color-border: var(--clr-line);
-  --color-accent: var(--clr-clay);
-  --color-accent-hover: var(--clr-clay-strong);
-  --color-muted-bg: var(--clr-sand);
-  --color-on-accent: #fff;
+  --color-bg: var(--clr-light);
+  --color-surface: var(--clr-light);
+  --color-text: var(--clr-dark);
+  --color-text-muted: var(--clr-gray);
+  --color-border: var(--clr-gray);
+  --color-accent: var(--clr-accent);
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 88%, var(--clr-dark)); // затемнение при наведении
+  --color-muted-bg: var(--clr-light);
+  --color-on-accent: var(--clr-dark); // тёмный текст на жёлтом акценте
 
   // --- Типографика -----------------------------------------------------------
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
-  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-sans: 'Google Sans', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
+  --font-display: 'Google Sans', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
   --fs-xs: 0.8125rem; // 13
   --fs-sm: 0.9375rem; // 15
   --fs-base: 1.0625rem; // 17
@@ -59,14 +56,22 @@
   --radius-md: 10px;
   --radius-lg: 20px;
   --radius-full: 999px;
-  --shadow-sm: 0 1px 2px rgb(28 26 23 / 6%);
-  --shadow-md: 0 12px 32px rgb(28 26 23 / 10%);
+  --shadow-sm: 0 1px 2px rgb(8 17 37 / 6%);
+  --shadow-md: 0 12px 32px rgb(8 17 37 / 10%);
   --container-max: 1280px;
   --container-pad: var(--space-6);
+  --site-max: 4000px; // кап ширины контента; дальше — тёмный фон (= $site-max-width в abstracts.scss)
+  --header-gutter: 9%; // боковой отступ хедера в % от ширины колонки → контент ~82%, как в макете
+                       // (% от body, а тот капнут на --site-max → за 4000px гаттер замирает)
+
+  // --- Кнопки (переиспользуемые размеры) -------------------------------------
+  --btn-padding-block: var(--space-2); // компактная высота (верх/низ)
+  --btn-padding-inline: var(--space-6);
+  --btn-font-size: var(--fs-sm);
 
   // --- Прочее ----------------------------------------------------------------
   --transition-base: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  --header-h: 72px;
+  --header-h: 4.5rem; // = 72px на базе; в rem, чтобы масштабироваться вместе с корнем
 
   // --- Z-index слои ----------------------------------------------------------
   --z-header: 100;

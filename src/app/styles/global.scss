@@ -1,13 +1,25 @@
 // Global stylesheet — imported once from the app root.
 // Order matters: tokens (CSS vars) → reset → base element styles.
 
+@use 'app/styles/fonts'; // self-hosted @font-face (Google Sans)
 @use 'app/styles/tokens';
 @use 'app/styles/reset';
 
+// Тёмные поля за пределами капнутого контента (когда вьюпорт шире --site-max).
+html {
+  background-color: var(--clr-dark);
+}
+
 body {
+  // Светлая колонка контента, центрированная и ограниченная по ширине.
+  // Шире --site-max по краям видно тёмный html.
+  max-width: var(--site-max);
+  margin-inline: auto;
+
   font-family: var(--font-sans);
   font-size: var(--fs-base);
   color: var(--color-text);
+
   background-color: var(--color-bg);
 }
 

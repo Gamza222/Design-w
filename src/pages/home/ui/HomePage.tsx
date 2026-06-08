@@ -24,7 +24,6 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-
       <Section>
         <ServicesList title={t('home.services.title')} />
       </Section>

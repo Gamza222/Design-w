@@ -1,5 +1,7 @@
 // Modern, minimal CSS reset.
 
+@use 'app/styles/abstracts' as *;
+
 *,
 *::before,
 *::after {
@@ -12,6 +14,11 @@
 
 html {
   scroll-behavior: smooth;
+
+  // Флюидный корень: 1rem = 16px на $site-base-width (1920), плавно растёт
+  // до 33.33px на 4000px, не опускается ниже 14px на узких ширинах.
+  // Весь rem-дизайн масштабируется отсюда. Px-медиазапросы ($bp-*) на это НЕ реагируют.
+  font-size: clamp(#{$site-fs-min}px, #{$site-fs-vw}vw, #{$site-fs-max}px);
   text-size-adjust: 100%;
 }
 

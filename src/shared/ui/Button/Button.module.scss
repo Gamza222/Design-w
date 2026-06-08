@@ -4,11 +4,12 @@
   align-items: center;
   justify-content: center;
 
-  padding: var(--space-3) var(--space-6);
+  padding: var(--btn-padding-block) var(--btn-padding-inline);
   border-radius: var(--radius-full);
 
-  font-size: var(--fs-sm);
+  font-size: var(--btn-font-size);
   font-weight: 500;
+  line-height: var(--lh-tight);
   letter-spacing: 0.02em;
 
   transition:
@@ -18,7 +19,7 @@
     transform var(--transition-base);
 
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
   }
 }
 

@@ -1,6 +1,8 @@
 @use 'app/styles/abstracts' as *;
 
 .card {
+  position: relative; // иконка-калькулятор — абсолютом в правом нижнем углу
+
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -10,11 +12,16 @@
   border-radius: var(--radius-md);
 
   background-color: var(--color-muted-bg);
+  box-shadow: var(--shadow-md);
 }
 
 .icon {
-  font-size: var(--fs-3xl); // 1em → крупная иконка калькулятора
-  color: var(--color-accent);
+  position: absolute;
+  right: var(--space-6);
+  bottom: var(--space-6);
+
+  font-size: var(--fs-2xl); // крупная иконка в углу
+  color: var(--color-text); // цвета заголовка, не золотой
 }
 
 .title {
@@ -23,11 +30,12 @@
 }
 
 .description {
+  max-width: 26ch; // не заезжает под иконку в углу
   font-size: var(--fs-sm);
   color: var(--color-text-muted);
 }
 
 .button {
   align-self: flex-start;
-  margin-top: auto; // прижать кнопку к низу
+  margin-top: auto;
 }

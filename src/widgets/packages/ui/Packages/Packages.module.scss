@@ -1,32 +1,22 @@
 @use 'app/styles/abstracts' as *;
 
+// Тёмная секция, примыкающая к Hero (без светлого зазора) → ощущение продолжения.
 .packages {
   position: relative;
   z-index: 1;
-  margin-top: var(--space-16); // самостоятельная секция под Hero (без наезда)
-
-  @include down(md) {
-    margin-top: var(--space-12);
-  }
+  padding-block: clamp(var(--space-16), 7vw, var(--space-32));
 }
 
 .inner {
   --container-max: var(--site-max); // full-bleed до гаттера, как Hero/хедер
 }
 
-// Тёмный слаб (data-tone="dark" в разметке) на светлой странице: голова сверху по центру,
-// карточки — ниже. Глубокий navy-фон, карточки внутри светлее → выразительно выделяются.
+// Раскладка: голова сверху по центру, сетка карточек ниже. Фон даёт сама тёмная секция.
 .card {
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
   align-items: center;
-
-  padding: clamp(var(--space-8), 4vw, var(--space-24));
-  border-radius: var(--radius-lg);
-
-  background-color: var(--color-bg);
-  box-shadow: var(--shadow-md);
 }
 
 .head {
@@ -54,18 +44,23 @@
   margin-top: var(--space-2);
 }
 
-// Максимум 2 карточки в ряд (по просьбе: «по 2» читается, «4» — тесно).
-// Кап ширины + центрирование → карточки остаются комфортно широкими на любом экране.
+// Ширина капается в rem (масштабируется флюидом). На больших экранах — всё в один ряд;
+// в 2 ряда складываемся пораньше, чтобы карточки не были тесными.
 .grid {
   display: grid;
-  grid-template-columns: 1fr; // мобайл — одна широкая карточка в ряд
+  grid-template-columns: 1fr; // мобайл — 1 в ряд
   gap: var(--space-6);
 
   width: 100%;
-  max-width: 72rem;
+  max-width: 84rem;
   margin-inline: auto;
 
   @include up(md) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr)); // планшет/средний десктоп — 2×2
+  }
+
+  // Только на действительно широких экранах — один ряд (3 пакета + расчёт).
+  @media (width >= 1440px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }

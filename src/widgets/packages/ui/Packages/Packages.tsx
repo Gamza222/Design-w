@@ -34,9 +34,10 @@ export function Packages() {
   );
 
   return (
-    <section className={styles.packages} ref={root}>
+    // Тёмная секция = продолжение Hero (самый задний фон navy). Карточки внутри — светлые (контраст).
+    <section className={styles.packages} ref={root} data-tone="dark">
       <Container className={styles.inner}>
-        <div className={styles.card} data-tone="dark">
+        <div className={styles.card}>
           <div className={styles.head}>
             <h2 className={styles.title}>{t('home.packages.title')}</h2>
             <p className={styles.description}>{t('home.packages.description')}</p>
@@ -45,7 +46,7 @@ export function Packages() {
             </Button>
           </div>
 
-          <div className={styles.grid}>
+          <div className={styles.grid} data-tone="light">
             {PACKAGES.map((pkg) => (
               <PackageCard key={pkg.id} pkg={pkg} />
             ))}

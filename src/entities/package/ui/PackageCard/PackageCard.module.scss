@@ -10,9 +10,9 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 
-  // Поверхность на ступень светлее слаба → карточки выделяются, не сливаются.
+  // Светлая поверхность на тёмной секции → высокий контраст, карточки чётко выделяются.
   background-color: var(--color-muted-bg);
-  box-shadow: var(--shadow-glass);
+  box-shadow: var(--shadow-md);
 
   @include down(sm) {
     flex-direction: column;
@@ -96,13 +96,27 @@
   align-items: start;
 
   font-size: var(--fs-sm);
-  color: var(--color-text); // светлый, как заголовок (раньше приглушённый — сливался)
+  color: var(--color-text); // контрастный текст, как заголовок
 }
 
+// Галочка — золотой чип с тёмной галкой: не сливается ни на светлом, ни на тёмном.
 .check {
-  margin-top: 0.1em;
-  font-size: var(--fs-lg); // крупнее → галочка не теряется
-  color: var(--color-accent);
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 1.4em;
+  height: 1.4em;
+  margin-top: 0.05em;
+  border-radius: var(--radius-full);
+
+  background-color: var(--color-accent);
+}
+
+.checkIcon {
+  font-size: 0.82em;
+  color: var(--color-on-accent);
 }
 
 // Фото справа: абсолютом, к краям карточки (внутри бордера), скруглено по правым углам.

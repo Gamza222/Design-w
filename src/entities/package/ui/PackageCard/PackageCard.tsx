@@ -27,7 +27,9 @@ export function PackageCard({ pkg }: PackageCardProps) {
         <ul className={styles.features}>
           {pkg.featureKeys.map((key) => (
             <li key={key} className={styles.feature}>
-              <IconCheck className={styles.check} />
+              <span className={styles.check}>
+                <IconCheck className={styles.checkIcon} />
+              </span>
               {t(`home.packages.features.${key}`)}
             </li>
           ))}

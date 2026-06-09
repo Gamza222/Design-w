@@ -36,9 +36,7 @@
 
   // --- Типографика -----------------------------------------------------------
   --font-sans: 'Google Sans', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
-
-  // Заголовки — элегантный serif (self-hosted, кириллица+латиница); тело остаётся на --font-sans.
-  --font-display: 'Playfair Display', georgia, 'Times New Roman', serif;
+  --font-display: 'Google Sans', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
   --fs-xs: 0.8125rem; // 13
   --fs-sm: 0.9375rem; // 15
   --fs-base: 1.0625rem; // 17

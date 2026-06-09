@@ -2,8 +2,7 @@
 // Order matters: tokens (CSS vars) → reset → base element styles.
 
 @use 'app/styles/abstracts' as *; // миксины up()/down() для адаптивных шагов
-@use 'app/styles/fonts'; // self-hosted @font-face (Google Sans — тело)
-@use 'app/styles/fonts-playfair'; // self-hosted @font-face (Playfair Display — заголовки)
+@use 'app/styles/fonts'; // self-hosted @font-face (Google Sans)
 @use 'app/styles/tokens';
 @use 'app/styles/reset';
 
@@ -29,10 +28,10 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-display); // Playfair Display (serif)
+  font-family: var(--font-display);
   font-weight: 500;
   line-height: var(--lh-tight);
-  letter-spacing: -0.005em; // у высококонтрастного serif трекинг ближе к нейтральному
+  letter-spacing: -0.01em;
 }
 
 h1 {

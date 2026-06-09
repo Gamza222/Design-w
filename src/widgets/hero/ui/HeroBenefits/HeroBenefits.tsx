@@ -15,7 +15,7 @@ export function HeroBenefits({ className }: HeroBenefitsProps) {
   const { t } = useTranslation();
 
   return (
-    <GlassPanel className={cn(styles.panel, className)}>
+    <GlassPanel bordered={false} withLine={false} className={cn(styles.panel, className)}>
       <p className={styles.heading}>{t('home.hero.benefitsTitle')}</p>
       <ul className={styles.list}>
         {HERO_BENEFITS.map(({ id, icon: Icon, titleKey, descKey }) => (

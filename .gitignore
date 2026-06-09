@@ -38,3 +38,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# исходный ТЗ-PDF (тяжёлый бинарь; мокапы извлечены в docs/tz-refs/)
+*.pdf

@@ -2,9 +2,9 @@
 
 .hero {
   isolation: isolate; // локальный stacking-контекст: фон в z-index -2/-1, контент над ним
-  overflow: hidden; // клипируем .bg с inset:-16% чтобы parallax-оверсcan не вылезал за секцию
   position: relative;
 
+  overflow: hidden; // клипируем .bg с inset:-16% чтобы parallax-оверсcan не вылезал за секцию
   display: flex;
   align-items: center;
 
@@ -130,10 +130,12 @@
   font-size: calc(var(--fs-xs) * 1.12); // +12% (локально; глобальный --fs-xs не трогаем)
   font-weight: 500;
   color: var(--color-accent);
-  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 
-  // Заливка тем же accent-цветом, что и бордер, но полупрозрачная.
+  // Заливка тем же accent-цветом, что и бордер, но полупрозрачная + мягкое золотое свечение.
   background-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  box-shadow: var(--glow-accent);
 }
 
 .title {
@@ -155,9 +157,7 @@
 }
 
 .actions {
-  // На тёмном Hero ghost-кнопка («Смотреть примеры работ») — светлым текстом.
-  --btn-ghost-color: var(--clr-light);
-
+  // Ghost-кнопка на тёмном Hero берёт светлый текст из data-tone="dark" (--btn-ghost-color).
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
@@ -179,7 +179,8 @@
   margin-block: var(--space-2);
   border: 0;
 
-  background-color: rgb(250 248 247 / 18%);
+  // Тонкая линия с затуханием к краям — в одном языке со стеклянной золотой линией.
+  background: linear-gradient(90deg, transparent, rgb(250 248 247 / 24%), transparent);
 }
 
 .bullets {

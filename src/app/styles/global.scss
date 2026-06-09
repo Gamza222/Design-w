@@ -1,7 +1,9 @@
 // Global stylesheet — imported once from the app root.
 // Order matters: tokens (CSS vars) → reset → base element styles.
 
-@use 'app/styles/fonts'; // self-hosted @font-face (Google Sans)
+@use 'app/styles/abstracts' as *; // миксины up()/down() для адаптивных шагов
+@use 'app/styles/fonts'; // self-hosted @font-face (Google Sans — тело)
+@use 'app/styles/fonts-playfair'; // self-hosted @font-face (Playfair Display — заголовки)
 @use 'app/styles/tokens';
 @use 'app/styles/reset';
 
@@ -27,14 +29,29 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-display);
+  font-family: var(--font-display); // Playfair Display (serif)
   font-weight: 500;
   line-height: var(--lh-tight);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em; // у высококонтрастного serif трекинг ближе к нейтральному
 }
 
 h1 {
   font-size: var(--fs-4xl);
+}
+
+// Телефоны: корневой font-size зафиксирован на 14px (≤~1680px), флюид rem h1 уже не уменьшает,
+// поэтому плоский 5rem (≈70px) переполнил бы 375px. Даём стабильные px-шаги, переопределяя токен,
+// чтобы Hero `.title { calc(var(--fs-4xl) * 0.9) }` ехал следом без правок Hero.
+@include down(md) {
+  :root {
+    --fs-4xl: 3rem; // ≤768px → 42px (Hero .title ≈ 37.8px)
+  }
+}
+
+@include down(sm) {
+  :root {
+    --fs-4xl: 2.7rem; // ≤480px → 37.8px (Hero .title ≈ 34px), безопасно на 375px
+  }
 }
 
 h2 {
@@ -52,6 +69,61 @@ a {
 ::selection {
   color: var(--color-on-accent);
   background: var(--color-accent);
+}
+
+// =============================================================================
+// ТОНАЛЬНОСТЬ СЕКЦИЙ — переопределяем СЕМАНТИЧЕСКИЕ токены для поддерева.
+// Любой элемент с data-tone получает свою палитру; компоненты внутри читают
+// только --color-* и автоматически перекрашиваются. Сырьё (--clr-*) не трогаем.
+// =============================================================================
+
+// Тёмная секция (navy): процесс, портфолио, география, калькулятор, FAQ, отзывы, финальный CTA, footer.
+[data-tone='dark'] {
+  --color-bg: var(--clr-dark);
+  --color-surface: var(--clr-dark-surface);
+  --color-text: var(--clr-light);
+  --color-text-muted: var(--clr-dark-muted);
+  --color-border: var(--clr-dark-border);
+  --color-muted-bg: var(--clr-dark-elevated);
+  --color-strong: var(--clr-light);
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white); // на тёмном hover осветляем
+  --btn-ghost-color: var(--clr-light); // ghost-кнопка на тёмном — светлый текст
+
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+// Светлая секция — реассерт базовой палитры (светлый блок, вложенный в тёмный контекст).
+[data-tone='light'] {
+  --color-bg: var(--clr-light);
+  --color-surface: var(--clr-light);
+  --color-text: var(--clr-dark);
+  --color-text-muted: var(--clr-gray);
+  --color-border: var(--clr-gray);
+  --color-muted-bg: var(--clr-light);
+  --color-strong: var(--clr-black);
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 88%, var(--clr-dark));
+  --btn-ghost-color: var(--color-text);
+
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+// Стеклянная секция = тёмная база + стеклянная поверхность/бордер. Обычно glass — на карточках
+// (<GlassPanel>), а секция dark; tone="glass" — для редкого случая цельной стеклянной полосы.
+[data-tone='glass'] {
+  --color-bg: var(--clr-dark);
+  --color-surface: var(--glass-bg);
+  --color-text: var(--clr-light);
+  --color-text-muted: var(--clr-dark-muted);
+  --color-border: var(--glass-border);
+  --color-muted-bg: var(--clr-dark-elevated);
+  --color-strong: var(--clr-light);
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white);
+  --btn-ghost-color: var(--clr-light);
+
+  color: var(--color-text);
+  background-color: var(--color-bg);
 }
 
 // ScrollSmoother wrappers — keep them in normal flow before JS enhances them.

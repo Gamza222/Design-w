@@ -6,6 +6,14 @@ import { defineConfig } from 'vitest/config';
 // full app/server build) does not run inside the test runner.
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Как в vite.config.ts: SCSS-модули могут делать `@use 'app/styles/abstracts' as *;`.
+        loadPaths: ['src'],
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,

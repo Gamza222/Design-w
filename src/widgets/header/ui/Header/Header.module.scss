@@ -19,9 +19,17 @@
   transition: background-color var(--transition-base);
 }
 
-// Прозрачный у самого верха → плавно темнеет на скролле (и когда открыто мобильное меню).
+// Прозрачный у самого верха → морозное стекло на скролле (и когда открыто мобильное меню):
+// полупрозрачный navy + blur + тонкая золотая нижняя линия.
 .scrolled {
-  background-color: var(--clr-dark);
+  border-bottom: 1px solid var(--glass-border);
+  background-color: color-mix(in srgb, var(--clr-dark) 72%, transparent);
+  backdrop-filter: var(--glass-blur);
+
+  // Фолбэк без backdrop-filter — сплошной navy (читаемость над контентом).
+  @supports not (backdrop-filter: blur(1px)) {
+    background-color: var(--clr-dark);
+  }
 }
 
 .inner {

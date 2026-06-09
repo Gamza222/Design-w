@@ -4,10 +4,11 @@
   align-items: center;
   justify-content: center;
 
-  padding: var(--btn-padding-block) var(--btn-padding-inline);
+  padding: var(--_btn-pad-block, var(--btn-padding-block))
+    var(--_btn-pad-inline, var(--btn-padding-inline));
   border-radius: var(--radius-full);
 
-  font-size: var(--btn-font-size);
+  font-size: var(--_btn-font, var(--btn-font-size));
   font-weight: 500;
   line-height: var(--lh-tight);
   letter-spacing: 0.02em;
@@ -21,6 +22,25 @@
   &:hover {
     transform: translateY(-0.125rem);
   }
+}
+
+// Размеры управляют только паддингами и кеглем через локальные --_btn-* (из --btn-*-токенов).
+.md {
+  --_btn-pad-block: var(--btn-padding-block);
+  --_btn-pad-inline: var(--btn-padding-inline);
+  --_btn-font: var(--btn-font-size);
+}
+
+.sm {
+  --_btn-pad-block: var(--btn-padding-block-sm);
+  --_btn-pad-inline: var(--btn-padding-inline-sm);
+  --_btn-font: var(--btn-font-size-sm);
+}
+
+.lg {
+  --_btn-pad-block: var(--btn-padding-block-lg);
+  --_btn-pad-inline: var(--btn-padding-inline-lg);
+  --_btn-font: var(--btn-font-size-lg);
 }
 
 .primary {

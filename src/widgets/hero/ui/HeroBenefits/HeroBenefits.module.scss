@@ -1,16 +1,11 @@
 @use 'app/styles/abstracts' as *;
 
+// Поверхность (blur/бордер/линия) рисует GlassPanel; здесь — только раскладка и крупный паддинг.
 .panel {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
-
   padding: var(--space-8);
-  border: 1px solid rgb(250 248 247 / 12%);
-  border-radius: var(--radius-lg);
-
-  background-color: rgb(30 27 23 / 52%); // тёплый графит (в тон оверлею), не синий
-  backdrop-filter: blur(10px);
 
   @include down(sm) {
     gap: var(--space-6);
@@ -57,5 +52,5 @@
 
   font-size: calc(var(--fs-sm) * 1.07); // +7%
   line-height: var(--lh-snug);
-  color: rgb(250 248 247 / 72%);
+  color: color-mix(in srgb, var(--color-text) 75%, transparent); // theme-agnostic приглушённый
 }

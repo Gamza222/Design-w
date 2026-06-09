@@ -13,6 +13,13 @@
   --clr-accent: #febc04; // акцент — кнопки, заголовки
   --clr-gray: #a6a2a1; // вспомогательный текст на любом фоне
   --clr-green: #24ca74; // дополнительный (успех/доп. акцент)
+  --clr-danger: #e5564b; // ошибки форм — тёплый, читаемый на светлом и тёмном
+
+  // Тёмные поверхности (производные от --clr-dark) — для tone="dark"/"glass".
+  --clr-dark-surface: #0d1730; // карточка на тёмном (на ступень светлее --clr-dark)
+  --clr-dark-elevated: #122144; // приподнятая поверхность (hover/active, чипы)
+  --clr-dark-border: #26324f; // hairline-бордер на тёмном (холодный, чуть светлее поверхности)
+  --clr-dark-muted: #9aa6c0; // приглушённый текст на тёмном (контраст к --clr-dark ≥7:1)
 
   // --- Семантические токены (используйте ИХ в компонентах) --------------------
   --color-bg: var(--clr-light);
@@ -25,10 +32,13 @@
   --color-muted-bg: var(--clr-light);
   --color-on-accent: var(--clr-dark); // тёмный текст на жёлтом акценте
   --color-strong: var(--clr-black); // насыщенный тёмный для акцентного текста/бордеров (пакеты)
+  --color-danger: var(--clr-danger); // текст/бордер ошибок (формы)
 
   // --- Типографика -----------------------------------------------------------
   --font-sans: 'Google Sans', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
-  --font-display: 'Google Sans', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
+
+  // Заголовки — элегантный serif (self-hosted, кириллица+латиница); тело остаётся на --font-sans.
+  --font-display: 'Playfair Display', georgia, 'Times New Roman', serif;
   --fs-xs: 0.8125rem; // 13
   --fs-sm: 0.9375rem; // 15
   --fs-base: 1.0625rem; // 17
@@ -36,7 +46,9 @@
   --fs-xl: 1.625rem; // 26
   --fs-2xl: 2.25rem; // 36
   --fs-3xl: 3.25rem; // 52
-  --fs-4xl: clamp(2.75rem, 6vw, 5rem);
+  // Плоский rem (без vw): масштабируется ТОЛЬКО через корневой font-size, как остальной дизайн.
+  // На базе 1920 = 80px. Шаги для телефонов — в global.scss (root зафиксирован на 14px ≤1680px).
+  --fs-4xl: 5rem;
   --lh-tight: 1.1;
   --lh-snug: 1.3;
   --lh-normal: 1.6;
@@ -60,6 +72,10 @@
   --radius-full: 999px;
   --shadow-sm: 0 1px 2px rgb(8 17 37 / 6%);
   --shadow-md: 0 12px 32px rgb(8 17 37 / 10%);
+  --shadow-glass: 0 16px 48px rgb(0 0 0 / 28%); // мягкая глубина под стеклянными картами
+  // Подсветка active-состояний (pill/select/инпут-фокус) — кольцо + ореол акцента.
+  --glow-accent: 0 0 0 1px color-mix(in srgb, var(--clr-accent) 40%, transparent),
+    0 0 24px color-mix(in srgb, var(--clr-accent) 28%, transparent);
   --container-max: 1280px; // кап читабельности контентных секций (Hero/Пакеты переопределяют на --site-max)
   --container-pad: var(--page-gutter); // боковой отступ контейнера = единый гаттер
   --site-max: 4000px; // кап ширины контента; дальше — тёмный фон (= $site-max-width в abstracts.scss)
@@ -68,10 +84,30 @@
   // экранах (в отличие от прежних константных 9%).
   --page-gutter: clamp(1.25rem, 6vw, 7.5rem);
 
+  // --- Стекло (glass) — ЕДИНСТВЕННОЕ исключение: читается напрямую в GlassPanel --
+  --glass-bg: rgb(13 23 48 / 55%); // полупрозрачный navy (в тон --clr-dark-surface)
+  --glass-border: rgb(254 188 4 / 22%); // hairline золотой бордер (из --clr-accent)
+  --glass-line: linear-gradient(90deg, transparent, var(--clr-accent), transparent); // верхняя золотая линия
+  --glass-blur: blur(14px); // frosted glass
+  --glass-radius: var(--radius-lg);
+
+  // --- Ритм секций (вертикальный шаг + внутренние зазоры) ---------------------
+  --section-pad-y: var(--space-24); // дефолтный вертикальный паддинг секции
+  --section-pad-y-compact: var(--space-16); // компактный
+  --section-gap: var(--space-12); // зазор «шапка секции ↔ контент»
+  --section-header-gap: var(--space-3); // зазор «eyebrow ↔ title ↔ subtitle»
+
   // --- Кнопки (переиспользуемые размеры) -------------------------------------
+  // md (дефолт) = базовые значения; sm/lg переопределяют паддинги и кегль.
   --btn-padding-block: 0.65rem; // чуть выше кнопки (было var(--space-2)/0.5rem)
   --btn-padding-inline: var(--space-6);
   --btn-font-size: calc(var(--fs-sm) * 1.12); // +12% к тексту кнопок (флюид сохраняется — rem)
+  --btn-padding-block-sm: 0.45rem;
+  --btn-padding-inline-sm: var(--space-4);
+  --btn-font-size-sm: var(--fs-sm);
+  --btn-padding-block-lg: 0.85rem;
+  --btn-padding-inline-lg: var(--space-8);
+  --btn-font-size-lg: calc(var(--fs-base) * 1.06);
 
   // --- Прочее ----------------------------------------------------------------
   --transition-base: 0.4s cubic-bezier(0.22, 1, 0.36, 1);

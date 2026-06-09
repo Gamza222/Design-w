@@ -68,6 +68,7 @@ export function Hero() {
     <section
       className={styles.hero}
       ref={root}
+      data-tone="dark"
       style={{ '--hero-bg': `url(${heroImages.background})` } as CSSProperties}
     >
       <div className={styles.bg} ref={bgRef} aria-hidden="true" />
@@ -82,8 +83,10 @@ export function Hero() {
             <p className={cn(styles.subtitle, styles.reveal)}>{t('home.hero.subtitle')}</p>
 
             <div className={cn(styles.actions, styles.reveal)}>
-              <Button to={ROUTES.contact}>{t('cta.calculate')}</Button>
-              <Button to={ROUTES.portfolio} variant="ghost">
+              <Button to={ROUTES.contact} size="lg">
+                {t('cta.calculate')}
+              </Button>
+              <Button to={ROUTES.portfolio} variant="ghost" size="lg">
                 {t('home.hero.ctaExamples')}
               </Button>
             </div>

@@ -42,9 +42,23 @@
         "support": { "title": "Estimate and support", "desc": "We help you understand the budget and avoid buying excess." }
       }
     },
-    "services": { "title": "What we do" },
-    "portfolio": { "title": "Selected projects" },
-    "blog": { "title": "Journal" },
+    "services": {
+      "eyebrow": "Our services",
+      "title": "What we do",
+      "subtitle": "We help create an interior that is thought through to the detail and gets built without trouble."
+    },
+    "portfolio": {
+      "eyebrow": "Portfolio",
+      "title": "Examples of our work",
+      "subtitle": "Real interiors, not stock images from the internet.",
+      "cta": "View portfolio"
+    },
+    "blog": {
+      "eyebrow": "Blog & insights",
+      "title": "We share experience and inspiration",
+      "subtitle": "Useful articles about interior design, renovation and creating a comfortable space.",
+      "cta": "View all articles"
+    },
     "packages": {
       "title": "Design project packages",
       "description": "Choose a suitable package or get a personal estimate in Telegram.",
@@ -66,6 +80,257 @@
         "title": "Need an estimate?",
         "description": "Answer a few questions and get a preliminary project cost.",
         "cta": "Calculate"
+      }
+    },
+    "process": {
+      "eyebrow": "How we work",
+      "title": "We design the interior before the renovation begins",
+      "subtitle": "A clear process, understandable stages and a predictable result. You always know which stage the project is at.",
+      "steps": [
+        {
+          "title": "Intro & brief",
+          "desc": "We discuss your apartment, lifestyle, goals and renovation budget. We understand what result matters to you.",
+          "duration": "1 day"
+        },
+        {
+          "title": "Layout solution",
+          "desc": "We create a layout where everything is convenient: storage, passages, furniture, light and ease of movement.",
+          "duration": "3–5 days"
+        },
+        {
+          "title": "Interior concept",
+          "desc": "We pick materials, furniture, color and the mood of the future interior. You see it in 3D and collages.",
+          "duration": "7–14 days"
+        },
+        {
+          "title": "Project handover",
+          "desc": "You receive concept schemes, visualizations and recommendations for implementation.",
+          "duration": "14–25 days"
+        }
+      ],
+      "perks": [
+        "We work under a contract",
+        "Remotely across Russia",
+        "Support in Telegram",
+        "We help you avoid renovation mistakes"
+      ],
+      "ctaTitle": "Want a process this clear?",
+      "ctaText": "Let's discuss your project and estimate the cost in 30 minutes.",
+      "cta": "Discuss a project"
+    },
+    "geography": {
+      "eyebrow": "Geography",
+      "title": "We deliver design projects remotely across Russia",
+      "subtitle": "You don't need to come to the office. Measurements, brief, edits and handover all happen online.",
+      "remoteTitle": "We work from anywhere",
+      "remoteText": "All you need is the internet and your phone to create a convenient, beautiful interior.",
+      "caseLabel": "Project in Moscow",
+      "caseTitle": "Apartment 64 m²",
+      "caseCity": "Moscow",
+      "caseCta": "View case",
+      "stats": [
+        { "value": "50+", "label": "cities in Russia and the CIS — we work online" },
+        { "value": "30 minutes", "label": "preliminary estimate during business hours" },
+        { "value": "24/7", "label": "Telegram chat — reach us at any moment" },
+        { "value": "0 ₽", "label": "first consultation, no obligations" }
+      ],
+      "howTitle": "How online work goes",
+      "howSteps": [
+        {
+          "title": "You send the layout and photos of the apartment",
+          "desc": "We discuss goals, wishes, style and budget."
+        },
+        {
+          "title": "We discuss the task in Telegram or by call",
+          "desc": "We propose layouts and concepts and agree on the details."
+        },
+        {
+          "title": "We hand over the project as a PDF and support edits online",
+          "desc": "You receive a complete set and our support."
+        }
+      ],
+      "ctaTitle": "Estimate your project online",
+      "ctaText": "We'll reply within 30 minutes during business hours.",
+      "cta": "Estimate your project online"
+    },
+    "fears": {
+      "eyebrow": "We understand your concerns",
+      "title": "A renovation shouldn't turn into stress",
+      "subtitle": "We discuss the important details in advance so that you're confident in the result and don't waste nerves, time and money.",
+      "missionTitle": "Our mission",
+      "missionText": "To make the process clear, predictable and comfortable for you at every stage of work.",
+      "cta": "Discuss your apartment",
+      "ctaNote": "We'll reply personally, with no scripts or pressure.",
+      "guarantee": "We work under a contract. We fix the project scope, timeline and cost before work begins.",
+      "items": [
+        {
+          "fear": "I'm afraid of going over budget",
+          "answer": "We help choose solutions that fit the real renovation cost and discuss priorities in advance."
+        },
+        {
+          "fear": "I'm afraid the interior will be inconvenient",
+          "answer": "We think through storage, passages, light and your family's living scenarios at the layout stage."
+        },
+        {
+          "fear": "I don't understand how to hand the project to builders",
+          "answer": "We prepare clear materials for implementation and stay in touch after the handover."
+        },
+        {
+          "fear": "I'm afraid no one will answer after the project",
+          "answer": "We support the client and help you calmly get through the implementation stage."
+        },
+        {
+          "fear": "What if I need to change something",
+          "answer": "Adjustments are discussed calmly and recorded — without chaos or endless reworks."
+        }
+      ]
+    },
+    "calculator": {
+      "eyebrow": "Cost calculator",
+      "title": "Estimate a project for your apartment",
+      "subtitle": "Answer a few questions and get the exact cost of a design project for your specific interior.",
+      "steps": {
+        "format": "Project format",
+        "addons": "Add-ons",
+        "area": "Area",
+        "total": "Cost"
+      },
+      "formatTitle": "1. Choose the project format",
+      "formats": [
+        {
+          "name": "Layout",
+          "price": "from 2,500 ₽/m²",
+          "desc": "Project planning and furniture arrangement. A convenient, functional plan for you."
+        },
+        {
+          "name": "Layout + collages",
+          "price": "from 3,900 ₽/m²",
+          "desc": "A layout solution and style collages with a selection of materials and furniture."
+        },
+        {
+          "name": "Layout + 3D visualization",
+          "price": "from 5,000 ₽/m²",
+          "desc": "Plan, concept and a realistic 3D visualization of the future interior."
+        },
+        {
+          "name": "Full project",
+          "price": "from 5,000 ₽/m²",
+          "desc": "Everything included: layout, visualizations, concept plans and design supervision."
+        }
+      ],
+      "addonsTitle": "2. Add extra services",
+      "addons": [
+        { "name": "3D visualization", "price": "+ 1,000 ₽/m²" },
+        { "name": "Design supervision", "price": "+ 20,000 ₽" },
+        { "name": "Furnishing & procurement", "price": "+ 10,000 ₽" },
+        { "name": "Electrical plan", "price": "+ 300 ₽/m²" },
+        { "name": "Ergonomics consultation", "price": "+ 20,000 ₽" },
+        { "name": "Designer site visit", "price": "+ 5,000 ₽" }
+      ],
+      "areaTitle": "3. Enter the area",
+      "areaUnit": "m²",
+      "areaHint": "If you don't know the exact area, enter an approximate one — we'll clarify during the estimate.",
+      "resultTitle": "Your project",
+      "resultEdit": "Reset",
+      "resultFormatLabel": "Selected format",
+      "resultAreaLabel": "Area",
+      "resultAddonsLabel": "Extra services",
+      "resultAddonsEmpty": "none selected",
+      "resultTermLabel": "Development time",
+      "resultTerm": "from 21 days",
+      "resultTotalLabel": "Total cost",
+      "resultNote": "An approximate project cost. We'll confirm the exact amount after a consultation.",
+      "cta": "Get the exact cost",
+      "trust": [
+        "No pressure",
+        "A designer will answer, not a call center",
+        "Exact cost after a short conversation"
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "The questions we get asked most",
+      "subtitle": "We answer the important questions about work, timelines and the process.",
+      "items": [
+        {
+          "q": "Do I need to come to your office?",
+          "a": "No. We do most projects entirely online: we have calls, discuss the layout, send materials and agree on decisions remotely."
+        },
+        {
+          "q": "Do you work with small apartments?",
+          "a": "Yes. For small apartments a thoughtful layout matters even more — we help you use every square meter."
+        },
+        {
+          "q": "How long does a design project take?",
+          "a": "On average from 14 to 25 days depending on the format and area. The exact timeline is fixed in the contract."
+        },
+        {
+          "q": "Can I order just the layout without visualization?",
+          "a": "Yes, the \"Layout\" format is a separate package. Visualization can be added later."
+        },
+        {
+          "q": "What does design supervision include?",
+          "a": "Support during implementation: advising the contractor, checking compliance with the project and answering questions as the renovation goes."
+        },
+        {
+          "q": "How is the project paid for?",
+          "a": "We work under a contract. Payment is split into stages — without full prepayment at the start."
+        },
+        {
+          "q": "What if I don't like the result?",
+          "a": "We agree on the concept step by step: you see and approve decisions before the finale, so there are no surprises."
+        }
+      ]
+    },
+    "reviews": {
+      "eyebrow": "Reviews",
+      "title": "What our clients say",
+      "subtitle": "Real impressions from the people we've already worked with.",
+      "ratingValue": "4.9",
+      "ratingLabel": "based on 500+ projects",
+      "ratingCta": "All reviews",
+      "items": [
+        {
+          "name": "Olga & Mikhail",
+          "city": "Moscow, Sever complex",
+          "rating": 5,
+          "text": "We're very grateful to the studio for their professionalism! They took all our wishes into account, and the layout turned out convenient and well thought through. We got a cozy, modern interior that's a pleasure to be in. Special thanks for the approach and support at every stage — it was calm and clear all the way."
+        },
+        {
+          "name": "Andrey",
+          "city": "Kazan, 64 m²",
+          "rating": 5,
+          "text": "I came to the studio for a design project of a 64 m² apartment in a new building. The budget was limited, but the result exceeded expectations. Everything was clear, to the point, no fluff."
+        },
+        {
+          "name": "Tatyana",
+          "city": "Saint Petersburg",
+          "rating": 5,
+          "text": "The designers suggested a few non-obvious solutions, and now the apartment looks more expensive than its size. Very happy with the result — highly recommend!"
+        }
+      ]
+    },
+    "contactCta": {
+      "eyebrow": "Contact",
+      "title": "Let's discuss your project",
+      "subtitle": "No pressure. We'll suggest options, tell you what suits you, and give you a sense of the cost.",
+      "checks": [
+        "A designer will answer",
+        "Online across Russia",
+        "We usually reply in 15–30 minutes"
+      ],
+      "socialsTitle": "Message us however is convenient",
+      "form": {
+        "name": { "label": "Your name", "placeholder": "How should we address you?" },
+        "phone": { "label": "Phone", "placeholder": "+7 (___) ___-__-__" },
+        "area": { "label": "Area (m²)", "placeholder": "For example, 72" },
+        "comment": { "label": "Comment (optional)", "placeholder": "Briefly about the task" },
+        "consent": "I agree to the processing of personal data",
+        "submit": "Discuss a project",
+        "privacy": "Your data is not shared with third parties.",
+        "success": "Thank you! We'll get in touch with you shortly.",
+        "errorRequired": "Please fill in this field",
+        "errorPhone": "Please enter a valid phone number"
       }
     }
   },
@@ -103,8 +368,113 @@
     "address": "Almaty, Kazakhstan"
   },
   "footer": {
-    "tagline": "Interior design for apartments and homes.",
-    "rights": "All rights reserved."
+    "tagline": "We create interiors that are comfortable to live in every day.",
+    "rights": "All rights reserved.",
+    "navTitle": "Navigation",
+    "nav": [
+      { "label": "Services", "to": "/services" },
+      { "label": "Portfolio", "to": "/portfolio" },
+      { "label": "Blog & insights", "to": "/blog" },
+      { "label": "About us", "to": "/about" },
+      { "label": "Contact", "to": "/contact" }
+    ],
+    "contactsTitle": "Contacts",
+    "documentsTitle": "Documents",
+    "documents": [
+      { "label": "Privacy policy", "to": "/privacy" },
+      { "label": "Public offer", "to": "/offer" },
+      { "label": "Company details", "to": "/requisites" },
+      { "label": "Consent to data processing", "to": "/consent" }
+    ]
+  },
+  "servicePages": {
+    "planirovka": {
+      "slug": "planirovka-kvartiry",
+      "h1": "Apartment layout",
+      "subtitle": "A convenient layout where everything is in its place — the foundation of a comfortable renovation.",
+      "intro": "The layout solution is the foundation of the project. We think through furniture arrangement, zoning, storage and your family's living scenarios.",
+      "includesTitle": "What's included",
+      "includes": [
+        "Measurement plan and apartment analysis",
+        "Several layout options",
+        "Furniture arrangement and zoning",
+        "A dimensioned plan for the renovation"
+      ],
+      "priceLabel": "Cost",
+      "price": "from 2,500 ₽/m²",
+      "termLabel": "Timeline",
+      "term": "3–5 days",
+      "faqTitle": "FAQ",
+      "faq": [
+        {
+          "q": "How is a layout different from a full project?",
+          "a": "The layout solves function and arrangement. A full project adds visualizations, materials and concept plans."
+        },
+        {
+          "q": "Can visualization be added later?",
+          "a": "Yes, visualization and other services can be added as a separate stage."
+        }
+      ],
+      "cta": "Estimate a layout"
+    },
+    "viz3d": {
+      "slug": "3d-vizualizaciya-interera",
+      "h1": "Interior 3D visualization",
+      "subtitle": "See the future interior before the renovation begins — in photorealistic 3D visualizations.",
+      "intro": "Visualization shows how your interior will look: materials, light, furniture and color in volume. It removes doubts and saves budget.",
+      "includesTitle": "What's included",
+      "includes": [
+        "Photorealistic angles of each room",
+        "Selection of materials and furniture",
+        "Work on lighting and color",
+        "Edits until the concept is approved"
+      ],
+      "priceLabel": "Cost",
+      "price": "from 5,000 ₽/m²",
+      "termLabel": "Timeline",
+      "term": "7–14 days",
+      "faqTitle": "FAQ",
+      "faq": [
+        {
+          "q": "How closely will the visualization match the result?",
+          "a": "We pick real materials and furniture, so the result is as close to the visualization as possible."
+        },
+        {
+          "q": "How many angles do you make?",
+          "a": "Usually 2–3 angles per key room; the count is discussed per project."
+        }
+      ],
+      "cta": "Order visualization"
+    },
+    "sketch": {
+      "slug": "eskiznyj-dizajn-proekt",
+      "h1": "Concept design project",
+      "subtitle": "The ideal format to start a renovation without overpaying: layout, concept and key schemes.",
+      "intro": "A concept project gives you everything for a confident renovation: a thoughtful layout, a visual concept and concept plans for furniture, light and sockets.",
+      "includesTitle": "What's included",
+      "includes": [
+        "Layout solution",
+        "Visual concept and collages",
+        "Concept plans (furniture, light, sockets)",
+        "Recommendations for implementation"
+      ],
+      "priceLabel": "Cost",
+      "price": "from 3,900 ₽/m²",
+      "termLabel": "Timeline",
+      "term": "14–25 days",
+      "faqTitle": "FAQ",
+      "faq": [
+        {
+          "q": "Is a concept project enough for contractors?",
+          "a": "Yes, the concept plans are enough for the crew to understand the key project decisions."
+        },
+        {
+          "q": "How is a concept project different from a working one?",
+          "a": "The concept project fixes the concept and key schemes; working documentation is more detailed drawings for complex solutions."
+        }
+      ],
+      "cta": "Estimate a concept project"
+    }
   },
   "notFound": {
     "title": "Page not found",

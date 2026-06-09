@@ -1,0 +1,29 @@
+.panel {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: var(--space-6);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-glass);
+
+  // Фолбэк: если backdrop-filter не поддержан → непрозрачная поверхность (контраст текста).
+  @supports not (backdrop-filter: blur(1px)) {
+    background-color: var(--clr-dark-surface);
+  }
+}
+
+.lined::before {
+  content: '';
+
+  position: absolute;
+  inset: 0 0 auto;
+
+  height: 1px;
+
+  background: var(--glass-line);
+}

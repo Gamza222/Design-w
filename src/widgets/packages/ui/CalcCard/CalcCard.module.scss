@@ -1,12 +1,12 @@
 @use 'app/styles/abstracts' as *;
 
+// Карточка-действие «Нужен расчёт?» — та же геометрия, что у пакетов (равная высота в ряду).
 .card {
-  position: relative; // иконка-калькулятор — абсолютом в правом нижнем углу
-
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 
+  height: 100%;
   padding: var(--space-6);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -15,27 +15,37 @@
   box-shadow: var(--shadow-md);
 }
 
-.icon {
-  position: absolute;
-  right: var(--space-6);
-  bottom: var(--space-6);
+// Золотой чип-иконка вверху — акцент «действия», перекликается с CTA.
+.iconBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  font-size: var(--fs-2xl); // крупная иконка в углу
-  color: var(--color-text); // цвета заголовка, не золотой
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-full);
+
+  color: var(--color-on-accent);
+
+  background-color: var(--color-accent);
+}
+
+.icon {
+  font-size: var(--fs-lg);
 }
 
 .title {
   font-size: var(--fs-lg);
   font-weight: 600;
+  color: var(--color-strong);
 }
 
 .description {
-  max-width: 26ch; // не заезжает под иконку в углу
   font-size: var(--fs-sm);
   color: var(--color-text-muted);
 }
 
 .button {
   align-self: flex-start;
-  margin-top: auto;
+  margin-top: auto; // CTA — у нижнего края, ровно с пакетами
 }

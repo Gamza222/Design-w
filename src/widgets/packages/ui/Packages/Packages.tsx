@@ -10,7 +10,8 @@ import { Button, Container } from '@shared/ui';
 import { CalcCard } from '../CalcCard/CalcCard';
 import styles from './Packages.module.scss';
 
-/** Секция «Пакеты дизайн-проекта» — светлая карточка, наезжающая на низ Hero. */
+/** Секция «Пакеты дизайн-проекта» — горизонтальная лента (шапка слева, карточки справа).
+ *  Тёмная панель-продолжение Hero со светлыми карточками и одной тёмной «популярной». */
 export function Packages() {
   const { t } = useTranslation();
   const root = useRef<HTMLElement>(null);
@@ -37,11 +38,11 @@ export function Packages() {
     // Тёмная секция = продолжение Hero (самый задний фон navy). Карточки внутри — светлые (контраст).
     <section className={styles.packages} ref={root} data-tone="dark">
       <Container className={styles.inner}>
-        <div className={styles.card}>
+        <div className={styles.band}>
           <div className={styles.head}>
             <h2 className={styles.title}>{t('home.packages.title')}</h2>
             <p className={styles.description}>{t('home.packages.description')}</p>
-            <Button to={ROUTES.contact} className={styles.cta}>
+            <Button to={ROUTES.contact} size="lg" className={styles.cta}>
               {t('home.packages.cta')}
             </Button>
           </div>

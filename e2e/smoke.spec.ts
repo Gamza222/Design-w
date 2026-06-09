@@ -11,6 +11,8 @@ test('home renders and navigates to portfolio', async ({ page }) => {
 
 test('language switch navigates to the /en home', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'EN' }).click();
+  // Переключатель языка — дропдаун: открыть триггер «Language», затем выбрать EN.
+  await page.getByRole('button', { name: 'Language' }).click();
+  await page.getByRole('menuitem', { name: 'EN' }).click();
   await expect(page).toHaveURL(/\/en$/);
 });

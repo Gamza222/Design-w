@@ -24,14 +24,50 @@
   },
   "home": {
     "hero": {
-      "eyebrow": "Interior design studio",
-      "title": "We design spaces you'll love to live in",
-      "subtitle": "Turnkey design for apartments and homes — from concept and estimate to author supervision.",
-      "scroll": "Scroll down"
+      "eyebrow": "Concept apartment design projects across Russia",
+      "titleLead": "A concept apartment design project",
+      "titleAccent": "for a renovation without overpaying",
+      "subtitle": "Layout, visual concept and implementation guidance. Get your estimate right on the site.",
+      "ctaExamples": "See example works",
+      "bullets": {
+        "consult": "30-minute consultation",
+        "contract": "We work under a contract",
+        "remote": "Remotely across Russia"
+      },
+      "benefitsTitle": "What you get",
+      "benefits": {
+        "planning": { "title": "Layout solution", "desc": "A convenient layout where everything is in its place." },
+        "concept": { "title": "Visual concept", "desc": "We pick the style, colors, materials and furniture for your lifestyle." },
+        "sketches": { "title": "Concept plans", "desc": "Schemes for furniture, lighting, sockets and key decisions." },
+        "support": { "title": "Estimate and support", "desc": "We help you understand the budget and avoid buying excess." }
+      }
     },
     "services": { "title": "What we do" },
     "portfolio": { "title": "Selected projects" },
-    "blog": { "title": "Journal" }
+    "blog": { "title": "Journal" },
+    "packages": {
+      "title": "Design project packages",
+      "description": "Choose a suitable package or get a personal estimate in Telegram.",
+      "cta": "Choose a package",
+      "popular": "Popular",
+      "features": {
+        "planning": "Layout",
+        "collages": "Collages",
+        "viz3d": "3D visualizations",
+        "sketchPlans": "Concept plans",
+        "materials": "Materials and furniture selection"
+      },
+      "items": {
+        "start": { "name": "Start", "price": "from 1,500 ₽/m²" },
+        "comfort": { "name": "Comfort", "price": "from 2,500 ₽/m²" },
+        "full": { "name": "Full", "price": "from 3,900 ₽/m²" }
+      },
+      "calc": {
+        "title": "Need an estimate?",
+        "description": "Answer a few questions and get a preliminary project cost.",
+        "cta": "Calculate"
+      }
+    }
   },
   "services": {
     "title": "Services",

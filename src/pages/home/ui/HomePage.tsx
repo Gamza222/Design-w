@@ -7,6 +7,7 @@ import { buildMeta, localeDict, useLocale, type RouteMetaArgs } from '@shared/li
 import { Button, Container, Section } from '@shared/ui';
 import { BlogList } from '@widgets/blog-list';
 import { Hero } from '@widgets/hero';
+import { Packages } from '@widgets/packages';
 import { PortfolioGrid } from '@widgets/portfolio-grid';
 import { ServicesList } from '@widgets/services-list';
 
@@ -24,6 +25,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <Packages />
       <Section>
         <ServicesList title={t('home.services.title')} />
       </Section>

@@ -1,0 +1,33 @@
+@use 'app/styles/abstracts' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  padding: var(--space-6);
+  border: 1px solid color-mix(in srgb, var(--clr-gray) 28%, transparent);
+  border-radius: var(--radius-md);
+
+  background-color: var(--color-muted-bg);
+}
+
+.icon {
+  font-size: var(--fs-3xl); // 1em → крупная иконка калькулятора
+  color: var(--color-accent);
+}
+
+.title {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+
+.description {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.button {
+  align-self: flex-start;
+  margin-top: auto; // прижать кнопку к низу
+}

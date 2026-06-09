@@ -13,7 +13,7 @@
 }
 
 .link {
-  font-size: calc(var(--fs-sm) * 1.25); // +25% от fs-sm; rem → флюидное масштабирование
+  font-size: calc(var(--fs-sm) * 1.065); // ~−15% от прежнего 1.25; rem → флюидное масштабирование
   color: var(--clr-light);
   white-space: nowrap;
   transition: color var(--transition-base);

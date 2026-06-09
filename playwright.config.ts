@@ -12,6 +12,9 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     trace: 'on-first-retry',
+    // Входные GSAP-анимации (хедер/Hero/пакеты) уважают prefers-reduced-motion и
+    // отрисовывают контент сразу — так e2e не гоняется с анимацией появления.
+    contextOptions: { reducedMotion: 'reduce' },
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {

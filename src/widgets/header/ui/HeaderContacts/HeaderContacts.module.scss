@@ -22,7 +22,8 @@
   align-items: center;
 
   font-size: 0.6875rem; // fs-xs × 0.85
-  color: var(--clr-gray);
+  color: color-mix(in srgb, var(--clr-light) 68%, transparent);
+  text-shadow: 0 1px 4px rgb(8 17 37 / 55%);
 }
 
 .dot {

@@ -8,5 +8,6 @@
       "Bash(git push --force:*)",
       "Bash(git push -f:*)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true
 }

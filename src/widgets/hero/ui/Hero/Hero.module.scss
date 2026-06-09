@@ -1,38 +1,218 @@
 @use 'app/styles/abstracts' as *;
 
 .hero {
+  isolation: isolate; // локальный stacking-контекст: фон в z-index -2/-1, контент над ним
+  overflow: hidden; // клипируем .bg с inset:-16% чтобы parallax-оверсcan не вылезал за секцию
+  position: relative;
+
   display: flex;
   align-items: center;
-  min-height: 88vh;
-  padding-block: var(--space-24);
+
+  min-height: 100svh;
+
+  // Втягиваем под прозрачный fixed-хедер: фон Hero начинается у самого верха сайта.
+  // .main даёт padding-top: var(--header-h) для прочих страниц — здесь компенсируем его.
+  margin-top: calc(-1 * var(--header-h));
+
+  // верх — под фиксированный хедер; низ — умеренный (Hero — самостоятельная секция ≈100vh)
+  padding-block: calc(var(--header-h) + var(--space-16)) var(--space-16);
+
+  color: var(--clr-light);
+
+  // Фон вынесен в отдельный слой .bg (для parallax). Сам бокс фон не рисует.
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  // Слой 1: тёмно-синий (--clr-dark) — диагональ слева под текст + лёгкая вертикаль.
+  // Минимум 22% на правом краю — оверлей покрывает всю картинку без пустых участков.
+  &::before {
+    z-index: -2;
+    background:
+      linear-gradient(
+        100deg,
+        color-mix(in srgb, var(--clr-dark) 90%, transparent) 0%,
+        color-mix(in srgb, var(--clr-dark) 62%, transparent) 42%,
+        color-mix(in srgb, var(--clr-dark) 26%, transparent) 72%,
+        color-mix(in srgb, var(--clr-dark) 22%, transparent) 100%
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--clr-dark) 46%, transparent) 0%,
+        color-mix(in srgb, var(--clr-dark) 0%, transparent) 26%,
+        color-mix(in srgb, var(--clr-dark) 0%, transparent) 62%,
+        color-mix(in srgb, var(--clr-dark) 70%, transparent) 100%
+      );
+  }
+
+  // Слой 2: мягкая виньетка + базовый тинт 8% в центре — картинка закрыта везде.
+  &::after {
+    z-index: -1;
+    background: radial-gradient(
+      125% 80% at 48% 32%,
+      color-mix(in srgb, var(--clr-dark) 8%, transparent) 52%,
+      color-mix(in srgb, var(--clr-dark) 38%, transparent) 100%
+    );
+  }
+
+  @include down(lg) {
+    min-height: auto;
+    padding-block: calc(var(--header-h) + var(--space-12)) var(--space-16);
+
+    // на узких контент и панель уходят в стек → затемняем равномернее
+    &::before {
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--clr-dark) 76%, transparent) 0%,
+        color-mix(in srgb, var(--clr-dark) 56%, transparent) 45%,
+        color-mix(in srgb, var(--clr-dark) 84%, transparent) 100%
+      );
+    }
+  }
+}
+
+// Фон-слой: отдельный элемент, чтобы ScrollSmoother.effects() мог двигать его (parallax).
+// Лежит ПОД оверлеями (::before -2, ::after -1). Overscan -8% покрывает parallax-сдвиг при speed 0.94.
+// Статичен и полностью покрывает секцию без JS (prerender / reduced-motion).
+.bg {
+  will-change: transform;
+
+  position: absolute;
+  z-index: -3;
+  inset: -16% 0; // overscan по вертикали — запас под parallax-сдвиг (yPercent ±8), края не оголяются
+
+  background: var(--hero-bg, none) center / cover no-repeat;
 }
 
 .inner {
+  --container-max: var(--site-max); // full-bleed до гаттера, как у хедера
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-12);
+  width: 100%;
+
+  @include up(lg) {
+    // Левая колонка (заголовок) шире, правая (панель) уже — пункты переносятся в 3 строки.
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+    gap: var(--space-16);
+    align-items: center;
+  }
+}
+
+.content {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+  align-items: flex-start;
+
+  max-width: 42rem;
+
+  @include up(lg) {
+    max-width: none;
+  }
 }
 
 .eyebrow {
-  font-size: var(--fs-sm);
+  display: inline-flex;
+  align-items: center;
+
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-full);
+
+  font-size: calc(var(--fs-xs) * 1.12); // +12% (локально; глобальный --fs-xs не трогаем)
+  font-weight: 500;
   color: var(--color-accent);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.03em;
+
+  // Заливка тем же accent-цветом, что и бордер, но полупрозрачная.
+  background-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
 
 .title {
-  max-width: 16ch;
+  max-width: 20ch;
+  font-size: calc(var(--fs-4xl) * 0.9); // −10% к главному заголовку (на всех экранах)
+  font-weight: 600;
+  line-height: var(--lh-tight);
+}
+
+.accent {
+  color: var(--color-accent);
 }
 
 .subtitle {
-  max-width: 52ch;
+  max-width: 46ch;
   font-size: var(--fs-lg);
-  color: var(--color-text-muted);
+  line-height: var(--lh-snug);
+  color: rgb(250 248 247 / 82%);
 }
 
 .actions {
+  // На тёмном Hero ghost-кнопка («Смотреть примеры работ») — светлым текстом.
+  --btn-ghost-color: var(--clr-light);
+
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
-  margin-top: var(--space-4);
+  margin-top: var(--space-2);
+
+  @include down(sm) {
+    width: 100%;
+
+    > * {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+.divider {
+  width: 100%;
+  max-width: 34rem;
+  height: 1px;
+  margin-block: var(--space-2);
+  border: 0;
+
+  background-color: rgb(250 248 247 / 18%);
+}
+
+.bullets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-8);
+  list-style: none;
+
+  @include down(sm) {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+}
+
+.bullet {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  font-size: var(--fs-sm);
+  color: rgb(250 248 247 / 90%);
+}
+
+.bulletIcon {
+  flex-shrink: 0;
+  font-size: var(--fs-xl); // 1em → размер иконки
+  color: var(--color-accent);
+}
+
+.panel {
+  @include up(lg) {
+    justify-self: end;
+    width: 100%;
+    max-width: 28rem; // уже прежнего (34rem) — пункты «Что вы получите» переносятся в 3 строки
+  }
 }

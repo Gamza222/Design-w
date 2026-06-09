@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -22,6 +22,16 @@ export function Header() {
 
   const close = () => setOpen(false);
 
+  // Закрываем мобильное меню при клике вне хедера
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: PointerEvent) => {
+      if (root.current && !root.current.contains(e.target as Node)) close();
+    };
+    document.addEventListener('pointerdown', handler);
+    return () => document.removeEventListener('pointerdown', handler);
+  }, [open]);
+
   // Входная анимация после прелоадера — тот же приём, что в Hero: useGSAP = layout-effect
   // (до первого пейнта), prerendered HTML сохраняет разметку → SEO/гидрация не страдают.
   // Анимируем сам <header> (не .inner): остаточный transform от GSAP делает элемент
@@ -30,6 +40,8 @@ export function Header() {
   useGSAP(
     () => {
       if (!root.current) return;
+      // Уважаем prefers-reduced-motion: без анимации хедер сразу видим и стабилен.
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       gsap.from(root.current, {
         y: -20,
         autoAlpha: 0,

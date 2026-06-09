@@ -1,0 +1,61 @@
+@use 'app/styles/abstracts' as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+
+  padding: var(--space-8);
+  border: 1px solid rgb(250 248 247 / 12%);
+  border-radius: var(--radius-lg);
+
+  background-color: rgb(30 27 23 / 52%); // тёплый графит (в тон оверлею), не синий
+  backdrop-filter: blur(10px);
+
+  @include down(sm) {
+    gap: var(--space-6);
+    padding: var(--space-6);
+  }
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-4);
+  align-items: center; // крупная иконка по центру высоты пункта
+}
+
+.icon {
+  flex-shrink: 0;
+  font-size: 2.5rem; // крупнее (было --fs-2xl/36px); 1em → масштабируется с rem
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.title {
+  font-size: calc(var(--fs-base) * 1.07); // +7%
+  font-weight: 600;
+}
+
+.desc {
+  // Резерв под 2 строки описания → пункт стабильно ~3 строки (заголовок 1 + описание 2).
+  min-height: 2lh;
+  margin-top: var(--space-1);
+
+  font-size: calc(var(--fs-sm) * 1.07); // +7%
+  line-height: var(--lh-snug);
+  color: rgb(250 248 247 / 72%);
+}

@@ -7,3 +7,4 @@ export { Logo } from './Logo/Logo';
 export { PageHeader } from './PageHeader/PageHeader';
 export { Prose } from './Prose/Prose';
 export { SocialLinks } from './SocialLinks/SocialLinks';
+export * from './icons';

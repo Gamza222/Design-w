@@ -14,7 +14,8 @@
   --container-max: var(--site-max); // full-bleed до гаттера, как Hero/хедер
 }
 
-// Светлая карточка-слаб; голова сверху по центру, карточки — ниже, по центру.
+// Тёмный слаб (data-tone="dark" в разметке) на светлой странице: голова сверху по центру,
+// карточки — ниже. Глубокий navy-фон, карточки внутри светлее → выразительно выделяются.
 .card {
   display: flex;
   flex-direction: column;
@@ -24,7 +25,7 @@
   padding: clamp(var(--space-8), 4vw, var(--space-24));
   border-radius: var(--radius-lg);
 
-  background-color: var(--color-surface);
+  background-color: var(--color-bg);
   box-shadow: var(--shadow-md);
 }
 

@@ -36,7 +36,7 @@ export function Packages() {
   return (
     <section className={styles.packages} ref={root}>
       <Container className={styles.inner}>
-        <div className={styles.card}>
+        <div className={styles.card} data-tone="dark">
           <div className={styles.head}>
             <h2 className={styles.title}>{t('home.packages.title')}</h2>
             <p className={styles.description}>{t('home.packages.description')}</p>

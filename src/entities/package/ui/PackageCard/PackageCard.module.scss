@@ -7,10 +7,12 @@
 
   min-height: 12rem;
   padding: var(--space-4);
-  border: 1px solid color-mix(in srgb, var(--color-strong) 16%, transparent); // чёткий near-black бордер
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 
-  background-color: var(--color-bg);
+  // Поверхность на ступень светлее слаба → карточки выделяются, не сливаются.
+  background-color: var(--color-muted-bg);
+  box-shadow: var(--shadow-glass);
 
   @include down(sm) {
     flex-direction: column;
@@ -18,10 +20,10 @@
   }
 }
 
-// Популярный пакет — ярче: accent-бордер + тень.
+// Популярный пакет — ярче: accent-бордер + золотое свечение.
 .popular {
   border-color: var(--color-accent);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--glow-accent);
 }
 
 .badge {
@@ -90,16 +92,16 @@
 .feature {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--space-2);
+  gap: var(--space-3);
   align-items: start;
 
   font-size: var(--fs-sm);
-  color: var(--color-text-muted);
+  color: var(--color-text); // светлый, как заголовок (раньше приглушённый — сливался)
 }
 
 .check {
-  margin-top: 0.15em;
-  font-size: var(--fs-base); // 1em → размер галочки
+  margin-top: 0.1em;
+  font-size: var(--fs-lg); // крупнее → галочка не теряется
   color: var(--color-accent);
 }
 
@@ -122,11 +124,11 @@
     background:
       linear-gradient(
         to right,
-        var(--color-bg) 0%,
-        color-mix(in srgb, var(--color-bg) 35%, transparent) 44%,
+        var(--color-muted-bg) 0%,
+        color-mix(in srgb, var(--color-muted-bg) 35%, transparent) 44%,
         transparent 80%
       ),
-      linear-gradient(to bottom, transparent 78%, var(--color-bg));
+      linear-gradient(to bottom, transparent 78%, var(--color-muted-bg));
   }
 
   @include down(sm) {
@@ -139,7 +141,7 @@
 
     // В стопке фейд сверху — фото перетекает в текст над ним.
     &::after {
-      background: linear-gradient(to bottom, var(--color-bg) 0%, transparent 42%);
+      background: linear-gradient(to bottom, var(--color-muted-bg) 0%, transparent 42%);
     }
   }
 }

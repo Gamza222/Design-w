@@ -23,9 +23,9 @@
     linear-gradient(
       180deg,
       var(--color-muted-bg) 0%,
-      var(--color-muted-bg) 40%,
-      color-mix(in srgb, var(--color-muted-bg) 84%, transparent) 70%,
-      color-mix(in srgb, var(--color-muted-bg) 56%, transparent) 100%
+      var(--color-muted-bg) 36%,
+      color-mix(in srgb, var(--color-muted-bg) 68%, transparent) 62%,
+      color-mix(in srgb, var(--color-muted-bg) 24%, transparent) 100%
     ),
     var(--pkg-photo, none);
   background-repeat: no-repeat;

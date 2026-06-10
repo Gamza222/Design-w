@@ -1,33 +1,46 @@
 @use 'app/styles/abstracts' as *;
 
-// Компактная вертикальная карточка пакета (лента на главной). Светлая по умолчанию
-// (наследует tone="light" от ряда), популярная — тёмная инверсия с золотым свечением.
+// Карточка пакета: фоновое фото + wash из семантической поверхности (адаптируется к tone) —
+// плотный сверху (текст читаем), к низу проявляется снимок. Контент прижат кверху.
+// Светлая по умолчанию (наследует tone="light" ряда); популярная — тёмная инверсия.
 .card {
-  position: relative; // бейдж — над верхним краем
+  isolation: isolate;
+  position: relative;
+  z-index: 0;
 
+  overflow: hidden; // фон-фото клипится по радиусу
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 
-  height: 100%; // равная высота карточек в ряду
+  min-height: clamp(19rem, 23vw, 23rem);
   padding: var(--space-6);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 
-  // Поверхность из семантического токена: на light-ряду — светлая, на dark-карте — приподнятая тёмная.
-  background-color: var(--color-muted-bg);
+  background-color: var(--color-muted-bg); // фолбэк до загрузки фото
+  background-image:
+    linear-gradient(
+      180deg,
+      var(--color-muted-bg) 0%,
+      var(--color-muted-bg) 40%,
+      color-mix(in srgb, var(--color-muted-bg) 84%, transparent) 70%,
+      color-mix(in srgb, var(--color-muted-bg) 56%, transparent) 100%
+    ),
+    var(--pkg-photo, none);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
   box-shadow: var(--shadow-md);
 }
 
-// Популярный — тёмная карточка среди светлых: максимальный контраст + золотое свечение.
-// Перебиваем фон от [data-tone='dark'] (повышенная специфичность .card.popular).
+// Популярный — accent-бордер + золотое свечение (фон-фото остаётся тёмным от tone="dark").
 .card.popular {
   border-color: var(--color-accent);
-  background-color: var(--color-muted-bg); // dark-elevated
   box-shadow: var(--glow-accent);
 }
 
-// Лёгкий подъём при наведении — только если пользователь не просил уменьшить движение.
+// Лёгкий подъём при наведении — только без prefers-reduced-motion.
 @media (prefers-reduced-motion: no-preference) {
   .card {
     transition: transform var(--transition-base), box-shadow var(--transition-base);
@@ -43,12 +56,9 @@
   }
 }
 
+// Бейдж — потоковая пилюля сверху (не абсолют): не наезжает на заголовок на узких карточках.
 .badge {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  right: var(--space-6);
-  transform: translateY(-50%); // седлает верхний край карточки
+  align-self: flex-start;
 
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-full);
@@ -87,10 +97,7 @@
 .features {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-
-  margin-top: auto; // прижимаем чек-лист книзу → ровный низ у разновысоких карточек
-
+  gap: var(--space-3);
   list-style: none;
 }
 
@@ -98,28 +105,30 @@
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--space-3);
-  align-items: start;
+  align-items: start; // галочка — на верхней строке (корректно при переносе в 2–3 строки)
 
   font-size: var(--fs-sm);
+  font-weight: 500;
+  line-height: var(--lh-snug);
   color: var(--color-text);
 }
 
-// Галочка — золотой чип с тёмной галкой: не сливается ни на светлом, ни на тёмном.
+// Галочка — крупный золотой чип с жирной тёмной галкой: высокий контраст на любом фоне.
 .check {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
 
-  width: 1.4em;
-  height: 1.4em;
-  margin-top: 0.05em;
+  width: 1.5em;
+  height: 1.5em;
   border-radius: var(--radius-full);
+
+  color: var(--color-on-accent);
 
   background-color: var(--color-accent);
 }
 
 .checkIcon {
-  font-size: 0.82em;
-  color: var(--color-on-accent);
+  font-size: 1em;
 }

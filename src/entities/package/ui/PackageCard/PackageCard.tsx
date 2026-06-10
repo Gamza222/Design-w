@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { cn } from '@shared/lib';
@@ -10,8 +11,8 @@ interface PackageCardProps {
   pkg: Package;
 }
 
-/** Компактная карточка пакета для ленты: название, цена, чек-лист фич.
- *  Популярный — тёмная инверсия (data-tone="dark") для контраста среди светлых. */
+/** Карточка пакета: фоновое фото с washем (контент поверх, снимок проявляется к низу),
+ *  название, цена, чек-лист фич. Популярный — тёмная инверсия (data-tone="dark"). */
 export function PackageCard({ pkg }: PackageCardProps) {
   const { t } = useTranslation();
 
@@ -19,6 +20,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
     <article
       data-tone={pkg.popular ? 'dark' : undefined}
       className={cn(styles.card, pkg.popular && styles.popular)}
+      style={pkg.image ? ({ '--pkg-photo': `url(${pkg.image})` } as CSSProperties) : undefined}
     >
       {pkg.popular && <span className={styles.badge}>{t('home.packages.popular')}</span>}
 
@@ -31,7 +33,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
         {pkg.featureKeys.map((key) => (
           <li key={key} className={styles.feature}>
             <span className={styles.check}>
-              <IconCheck className={styles.checkIcon} />
+              <IconCheck className={styles.checkIcon} strokeWidth={2.6} />
             </span>
             {t(`home.packages.features.${key}`)}
           </li>

@@ -1,18 +1,38 @@
 @use 'app/styles/abstracts' as *;
 
-// Тёмная секция, примыкающая к Hero (без светлого зазора) → ощущение продолжения.
+// Тёмная секция. На десктопе лента наезжает на низ Hero (премиальный слой, без пустого navy).
 .packages {
   position: relative;
-  z-index: 1;
-  padding-block: clamp(var(--space-16), 6vw, var(--space-24));
+  z-index: 2;
+  padding-block: clamp(var(--space-12), 5vw, var(--space-16)) clamp(var(--space-16), 6vw, var(--space-24));
+
+  @include up(lg) {
+    --pkg-overlap: clamp(5rem, 7vw, 9rem);
+
+    margin-top: calc(-1 * var(--pkg-overlap)); // втягиваем секцию вверх, на низ Hero
+    padding-top: 0;
+  }
+}
+
+// Верх секции прозрачен над overlap (просвечивает фото Hero), ниже — фон тона.
+// .packages[data-tone] спецификой перебивает background-color правила тональности.
+.packages[data-tone] {
+  @include up(lg) {
+    background: linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent var(--pkg-overlap),
+      var(--color-bg) var(--pkg-overlap)
+    );
+  }
 }
 
 .inner {
   --container-max: var(--site-max); // full-bleed до гаттера, как Hero/хедер
 }
 
-// Лента: тёмная приподнятая панель. На десктопе — шапка слева, карточки справа;
-// на узких — стопкой (шапка сверху). Панель группирует блок → нет «островов» в пустоте.
+// Лента: тёмная приподнятая панель. На широком десктопе — шапка слева, карточки справа;
+// ниже xl — стопкой (шапка сверху). Панель группирует блок → нет «островов» в пустоте.
 .band {
   display: grid;
   gap: var(--space-8);
@@ -24,14 +44,14 @@
   background-color: var(--color-surface); // dark-surface на тёмной секции
   box-shadow: var(--shadow-glass);
 
-  @include up(lg) {
-    grid-template-columns: minmax(0, 18rem) 1fr;
+  @include up(xl) {
+    grid-template-columns: minmax(0, 20rem) 1fr;
     gap: clamp(var(--space-8), 3vw, var(--space-16));
-    align-items: center; // шапка по центру высоты ряда карточек → без вертикальной пустоты
+    align-items: stretch; // колонка-шапка на всю высоту → CTA прижимается к низу
   }
 }
 
-// Шапка (левая колонка): заголовок + описание + CTA. Светлый текст на тёмной панели.
+// Шапка (левая колонка/верх): заголовок липнет кверху, описание, CTA. Светлый текст на панели.
 .head {
   display: flex;
   flex-direction: column;
@@ -52,6 +72,10 @@
 .cta {
   align-self: flex-start;
   margin-top: var(--space-2);
+
+  @include up(xl) {
+    margin-top: auto; // заголовок вверху, кнопка — у низа колонки (вровень с низом карточек)
+  }
 }
 
 // Ряд карточек. Контейнер прозрачный (повышенная специфичность перебивает фон tone="light"):
@@ -66,7 +90,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr)); // 2×2
   }
 
-  @include up(xl) {
-    grid-template-columns: repeat(4, minmax(0, 1fr)); // широкий десктоп — один ряд (3 пакета + расчёт)
+  @include up(lg) {
+    grid-template-columns: repeat(4, minmax(0, 1fr)); // один ряд (3 пакета + расчёт)
   }
 }

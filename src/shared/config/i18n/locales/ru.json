@@ -62,8 +62,10 @@
     "packages": {
       "title": "Пакеты дизайн-проекта",
       "description": "Выберите подходящий пакет или получите персональный расчёт в Telegram.",
-      "cta": "Подобрать пакет",
+      "select": "Выбрать",
       "popular": "Популярный",
+      "priceFrom": "от",
+      "priceUnit": "₽/м²",
       "features": {
         "planning": "Планировка",
         "collages": "Коллажи",
@@ -72,9 +74,9 @@
         "materials": "Подбор материалов и мебели"
       },
       "items": {
-        "start": { "name": "Старт", "price": "от 1 500 ₽/м²" },
-        "comfort": { "name": "Комфорт", "price": "от 2 500 ₽/м²" },
-        "full": { "name": "Полный", "price": "от 3 900 ₽/м²" }
+        "start": { "name": "Старт", "priceValue": "1 500", "tagline": "Старт ремонта без ошибок" },
+        "comfort": { "name": "Комфорт", "priceValue": "2 500", "tagline": "Баланс цены и детализации" },
+        "full": { "name": "Полный", "priceValue": "3 900", "tagline": "Сопровождение под ключ" }
       },
       "calc": {
         "title": "Нужен расчёт?",

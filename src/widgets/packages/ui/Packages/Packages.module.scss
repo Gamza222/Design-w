@@ -5,50 +5,49 @@
   padding-block: clamp(var(--space-16), 7vw, var(--space-24));
 }
 
-// Шапка: текст слева, CTA справа (десктоп) → стопкой на мобайле. Заполняет строку без пустот.
-.head {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-6);
-  align-items: flex-end;
-  justify-content: space-between;
-
-  margin-bottom: var(--section-gap);
+.inner {
+  --container-max: var(--site-max); // края ряда карточек совпадают с гаттером навбара (как Hero)
 }
 
-.headText {
+// Шапка: заголовок + описание, слева.
+.head {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+
   max-width: 44rem;
+
+  // Ближе к карточкам: прежний флюид −20% (расстояние подзаголовок ↔ тарифы).
+  margin-bottom: calc(clamp(var(--space-3), 1.25vw, var(--space-4)) * 0.8);
 }
 
 .title {
-  font-size: var(--fs-2xl);
+  // Переиспользуемый кегль заголовка секции (флюид через корневой font-size).
+  font-size: var(--section-title-size);
   font-weight: 600;
   line-height: var(--lh-tight);
 }
 
 .description {
-  font-size: var(--fs-base);
-  color: var(--color-text-muted);
+  // Переиспользуемые токены подзаголовка: кегль (−15%), плотная строка, приглушённый цвет.
+  font-size: var(--section-subtitle-size);
+  line-height: var(--section-subtitle-line);
+  color: var(--section-subtitle-color);
 }
 
-.cta {
-  flex-shrink: 0;
-}
-
-// Ряд карточек: 1 → 2×2 → 4 в ряд. Карточки заполняют ширину контейнера.
+// Ряд карточек: 1 → 2 (≥md) → 4 (≥1600px). Ступени «3» НЕТ намеренно — чтобы никогда не было
+// «3 в первом ряду + 1 во втором». 4-в-ряд включаем только когда карточки остаются широкими;
+// на ноутбуках/планшетах — 2 широкие карточки. Равная высота — за счёт grid-stretch + min-height.
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-6);
+  gap: clamp(var(--space-4), 1.5vw, var(--space-6));
 
-  @include up(sm) {
+  @include up(md) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @include up(lg) {
+  @media (width >= 1600px) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }

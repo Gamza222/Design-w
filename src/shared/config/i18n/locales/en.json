@@ -62,8 +62,10 @@
     "packages": {
       "title": "Design project packages",
       "description": "Choose a suitable package or get a personal estimate in Telegram.",
-      "cta": "Choose a package",
+      "select": "Choose",
       "popular": "Popular",
+      "priceFrom": "from",
+      "priceUnit": "₽/m²",
       "features": {
         "planning": "Layout",
         "collages": "Collages",
@@ -72,9 +74,9 @@
         "materials": "Materials and furniture selection"
       },
       "items": {
-        "start": { "name": "Start", "price": "from 1,500 ₽/m²" },
-        "comfort": { "name": "Comfort", "price": "from 2,500 ₽/m²" },
-        "full": { "name": "Full", "price": "from 3,900 ₽/m²" }
+        "start": { "name": "Start", "priceValue": "1,500", "tagline": "A confident renovation start" },
+        "comfort": { "name": "Comfort", "priceValue": "2,500", "tagline": "Balance of price and detail" },
+        "full": { "name": "Full", "priceValue": "3,900", "tagline": "Full turnkey support" }
       },
       "calc": {
         "title": "Need an estimate?",

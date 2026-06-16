@@ -51,7 +51,9 @@
       "eyebrow": "Portfolio",
       "title": "Examples of our work",
       "subtitle": "Real interiors, not stock images from the internet.",
-      "cta": "View portfolio"
+      "cta": "See all works",
+      "more": "More",
+      "areaUnit": "m²"
     },
     "blog": {
       "eyebrow": "Blog & insights",
@@ -62,6 +64,7 @@
     "packages": {
       "title": "Design project packages",
       "description": "Choose a suitable package or get a personal estimate in Telegram.",
+      "pick": "Choose a package",
       "select": "Choose",
       "popular": "Popular",
       "priceFrom": "from",
@@ -86,28 +89,32 @@
     },
     "process": {
       "eyebrow": "How we work",
-      "title": "We design the interior before the renovation begins",
+      "title": "How the project goes",
       "subtitle": "A clear process, understandable stages and a predictable result. You always know which stage the project is at.",
       "steps": [
         {
-          "title": "Intro & brief",
-          "desc": "We discuss your apartment, lifestyle, goals and renovation budget. We understand what result matters to you.",
-          "duration": "1 day"
+          "title": "Request",
+          "desc": "You leave a request on the website or via Telegram."
         },
         {
-          "title": "Layout solution",
-          "desc": "We create a layout where everything is convenient: storage, passages, furniture, light and ease of movement.",
-          "duration": "3–5 days"
+          "title": "Discuss the task",
+          "desc": "We learn your wishes, needs and budget."
         },
         {
-          "title": "Interior concept",
-          "desc": "We pick materials, furniture, color and the mood of the future interior. You see it in 3D and collages.",
-          "duration": "7–14 days"
+          "title": "Estimate the cost",
+          "desc": "We calculate the project cost and timeline."
         },
         {
-          "title": "Project handover",
-          "desc": "You receive concept schemes, visualizations and recommendations for implementation.",
-          "duration": "14–25 days"
+          "title": "Layout",
+          "desc": "We propose space-planning options."
+        },
+        {
+          "title": "Concept",
+          "desc": "We select the style, colors, materials and furniture."
+        },
+        {
+          "title": "Handover",
+          "desc": "You receive the sketch project and recommendations."
         }
       ],
       "perks": [
@@ -119,6 +126,45 @@
       "ctaTitle": "Want a process this clear?",
       "ctaText": "Let's discuss your project and estimate the cost in 30 minutes.",
       "cta": "Discuss a project"
+    },
+    "achievements": {
+      "eyebrow": "Achievements",
+      "title": "Projects trusted across Russia",
+      "subtitle": "Numbers and client reviews — people for whom we've already created a clear, comfortable interior.",
+      "stats": [
+        { "value": "500+", "label": "completed design projects" },
+        { "value": "5 years", "label": "of interior design experience" },
+        { "value": "50+", "label": "cities across Russia & CIS" },
+        { "value": "4.9", "label": "average client rating", "rating": 4.9 }
+      ],
+      "reviewsTitle": "Client reviews",
+      "prevReview": "Previous review",
+      "nextReview": "Next review",
+      "reviews": [
+        {
+          "text": "We got a clear project with no fluff. The layout was reworked around our lifestyle — the renovation went calmly and predictably.",
+          "author": "Anna & Dmitry",
+          "role": "Apartment 64 m², Moscow",
+          "rating": 5
+        },
+        {
+          "text": "We did everything remotely from another city and never regretted it. They were always in touch and helped us stay on budget.",
+          "author": "Ekaterina",
+          "role": "Studio 38 m², Kazan",
+          "rating": 5
+        },
+        {
+          "text": "I liked that all the details were discussed in advance. The interior turned out convenient, and the builders worked from clear schemes.",
+          "author": "Sergey",
+          "role": "House 120 m², Krasnodar",
+          "rating": 5
+        }
+      ],
+      "team": {
+        "title": "Our team",
+        "text": "Architects and designers who see your project through to the result.",
+        "cta": "About the studio"
+      }
     },
     "geography": {
       "eyebrow": "Geography",
@@ -163,7 +209,8 @@
       "missionText": "To make the process clear, predictable and comfortable for you at every stage of work.",
       "cta": "Discuss your apartment",
       "ctaNote": "We'll reply personally, with no scripts or pressure.",
-      "guarantee": "We work under a contract. We fix the project scope, timeline and cost before work begins.",
+      "guaranteeLead": "We work under a contract.",
+      "guarantee": "We fix the project scope, timeline and cost before work begins.",
       "items": [
         {
           "fear": "I'm afraid of going over budget",

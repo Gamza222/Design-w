@@ -39,8 +39,8 @@ h1 {
 }
 
 // Телефоны: корневой font-size зафиксирован на 14px (≤~1680px), флюид rem h1 уже не уменьшает,
-// поэтому плоский 5rem (≈70px) переполнил бы 375px. Даём стабильные px-шаги, переопределяя токен,
-// чтобы Hero `.title { calc(var(--fs-4xl) * 0.9) }` ехал следом без правок Hero.
+// поэтому плоский 5rem (≈70px) переполнил бы 375px. Даём стабильные px-шаги для глобального h1
+// (страницы поста/проекта/404, PageHeader). У Hero .title — собственные мобильные шаги в его модуле.
 @include down(md) {
   :root {
     --fs-4xl: 3rem; // ≤768px → 42px (Hero .title ≈ 37.8px)
@@ -85,8 +85,11 @@ a {
   --color-border: var(--clr-dark-border);
   --color-muted-bg: var(--clr-dark-elevated);
   --color-strong: var(--clr-light);
+  --color-hairline: var(--clr-dark-border); // hairline на тёмном — холодный бордер вместо светлого
   --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white); // на тёмном hover осветляем
   --btn-ghost-color: var(--clr-light); // ghost-кнопка на тёмном — светлый текст
+  --btn-ghost-bg: var(--clr-dark-elevated); // вторичная кнопка на тёмном — заполненная графитовая пилюля
+  --btn-ghost-border: transparent; // без видимой рамки (как в макете 01)
 
   color: var(--color-text);
   background-color: var(--color-bg);
@@ -97,7 +100,7 @@ a {
   --color-bg: var(--clr-light);
   --color-surface: var(--clr-light);
   --color-text: var(--clr-dark);
-  --color-text-muted: var(--clr-gray);
+  --color-text-muted: var(--clr-muted); // читаемый приглушённый текст (контраст ≈6:1)
   --color-border: var(--clr-gray);
   --color-muted-bg: var(--clr-light);
   --color-strong: var(--clr-black);

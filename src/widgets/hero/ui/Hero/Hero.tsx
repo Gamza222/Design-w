@@ -1,4 +1,4 @@
-import { type CSSProperties, useRef } from 'react';
+import { type CSSProperties, type ReactNode, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -15,7 +15,12 @@ import { HERO_BULLETS } from '../../lib/bullets';
 import { HeroBenefits } from '../HeroBenefits/HeroBenefits';
 import styles from './Hero.module.scss';
 
-export function Hero() {
+interface HeroProps {
+  /** Нижняя полоса первого экрана (ряд пакетов), лежащая на фото Hero. Композиция — на уровне страницы. */
+  bottomSlot?: ReactNode;
+}
+
+export function Hero({ bottomSlot }: HeroProps) {
   const { t } = useTranslation();
   const root = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -91,8 +96,6 @@ export function Hero() {
               </Button>
             </div>
 
-            <hr className={cn(styles.divider, styles.reveal)} />
-
             <ul className={cn(styles.bullets, styles.reveal)}>
               {HERO_BULLETS.map(({ id, icon: Icon, labelKey }) => (
                 <li key={id} className={styles.bullet}>
@@ -105,6 +108,8 @@ export function Hero() {
 
           <HeroBenefits className={cn(styles.panel, styles.reveal)} />
         </div>
+
+        {bottomSlot && <div className={styles.bottom}>{bottomSlot}</div>}
       </Container>
     </section>
   );

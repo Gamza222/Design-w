@@ -4,12 +4,16 @@ import { getPosts } from '@entities/post';
 import { getProjects } from '@entities/project';
 import { ROUTES } from '@shared/config';
 import { buildMeta, localeDict, useLocale, type RouteMetaArgs } from '@shared/lib';
-import { Button, Container, Section } from '@shared/ui';
+import { Button, Container, Section, SectionHeader } from '@shared/ui';
+import { Achievements } from '@widgets/achievements';
 import { BlogList } from '@widgets/blog-list';
+import { Fears } from '@widgets/fears';
 import { Hero } from '@widgets/hero';
 import { Packages } from '@widgets/packages';
-import { PortfolioGrid } from '@widgets/portfolio-grid';
-import { ServicesList } from '@widgets/services-list';
+import { Process } from '@widgets/process';
+import { Projects } from '@widgets/projects';
+
+import styles from './HomePage.module.scss';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
@@ -19,32 +23,36 @@ export function meta({ location }: RouteMetaArgs) {
 export default function HomePage() {
   const { t } = useTranslation();
   const locale = useLocale();
-  const projects = getProjects(locale).slice(0, 3);
+  const projects = getProjects(locale).slice(0, 6);
   const posts = getPosts(locale).slice(0, 3);
 
+  // Поток главной по макету 01: первый экран = Hero с рядом пакетов на фото, далее плотно
+  // Процесс → Проекты(тёмные) → Достижения → Страхи → Блог → финальный CTA.
   return (
     <>
-      <Hero />
-      <Packages />
-      <Section>
-        <ServicesList title={t('home.services.title')} />
-      </Section>
-
-      {projects.length > 0 && (
-        <Section>
-          <PortfolioGrid projects={projects} title={t('home.portfolio.title')} />
-        </Section>
-      )}
+      <Hero bottomSlot={<Packages />} />
+      <Process />
+      <Projects projects={projects} />
+      <Achievements />
+      <Fears />
 
       {posts.length > 0 && (
-        <Section>
+        <Section compact>
           <BlogList posts={posts} title={t('home.blog.title')} />
         </Section>
       )}
 
-      <Section>
-        <Container>
-          <Button to={ROUTES.contact}>{t('cta.discuss')}</Button>
+      <Section compact tone="dark">
+        <Container className={styles.cta}>
+          <SectionHeader
+            eyebrow={t('home.contactCta.eyebrow')}
+            title={t('home.contactCta.title')}
+            subtitle={t('home.contactCta.subtitle')}
+            align="center"
+          />
+          <Button to={ROUTES.contact} size="lg">
+            {t('cta.discuss')}
+          </Button>
         </Container>
       </Section>
     </>

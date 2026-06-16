@@ -1,136 +1,44 @@
 @use 'app/styles/abstracts' as *;
 
-// Карточка-действие «Нужен расчёт?» — отдельная плита: интерьерное фото + тёмно-золотой оверлей,
-// чтобы читалась как акцентное действие рядом с матовыми тарифами. Та же геометрия (радиус/бордер).
-.card {
-  isolation: isolate;
-  position: relative;
-  z-index: 0;
-
-  overflow: hidden; // фото клипится по радиусу
+// «Нужен расчёт?» — карточка-действие в одном ряду с тарифами (макет 01): белая, рамка-hairline
+// как у тарифов, иконка-калькулятор ведёт карточку сверху (в потоке), контурная кнопка — снизу.
+.calc {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 
-  // Та же геометрия, что у тарифов: общая высота ряда + флюидный паддинг → 4 карточки ровные.
-  min-height: 22rem;
-  padding: clamp(var(--space-6), 2.4vw, var(--space-8));
-  border: 1px solid rgb(254 188 4 / 32%);
-  border-radius: var(--radius-lg);
+  height: 100%;
+  min-height: var(--card-min-h);
+  padding: var(--card-pad);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
 
-  color: var(--clr-light);
-
-  @include up(md) {
-    min-height: 24rem;
-  }
-
-  box-shadow:
-    var(--shadow-glass),
-    inset 0 1px 0 rgb(250 248 247 / 10%);
-
-  // Фото-подложка.
-  &::before {
-    content: '';
-
-    position: absolute;
-    z-index: -2;
-    inset: 0;
-
-    background: var(--calc-photo, none) center / cover no-repeat;
-  }
-
-  // Тёмно-золотой оверлей: тёмный для контраста текста + золотое свечение из верхнего угла.
-  &::after {
-    content: '';
-
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-
-    background:
-      radial-gradient(
-        120% 90% at 100% 0%,
-        color-mix(in srgb, var(--clr-accent) 30%, transparent) 0%,
-        transparent 55%
-      ),
-      linear-gradient(
-        160deg,
-        color-mix(in srgb, var(--clr-dark) 72%, transparent) 0%,
-        color-mix(in srgb, var(--clr-dark) 90%, transparent) 100%
-      );
-  }
+  background: var(--clr-light);
+  box-shadow: var(--shadow-card);
 }
 
-// Золотой чип-иконка вверху.
-.iconBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: var(--radius-full);
-
-  color: var(--color-on-accent);
-
-  background: var(--color-accent);
-}
-
+// Иконка-калькулятор: обычная, цвет как текст, без рамки/подложки.
 .icon {
-  font-size: var(--fs-lg);
+  font-size: 2rem; // 1em → масштабируется с rem
+  line-height: 1;
+  color: var(--color-strong);
 }
 
 .title {
   font-family: var(--font-display);
   font-size: var(--fs-xl);
-  font-weight: 600;
-  color: var(--clr-light);
+  font-weight: 700;
+  color: var(--color-strong);
 }
 
-.description {
-  font-size: var(--fs-base);
+.text {
+  font-size: var(--fs-sm);
   line-height: var(--lh-snug);
-  color: rgb(250 248 247 / 88%);
+  color: var(--color-strong);
 }
 
-// CTA — золотая (акцентное действие), прижата к низу (вровень с CTA тарифов).
+// Контурная кнопка прижата к низу, во всю ширину карточки (как CTA тарифной карты).
 .cta {
-  width: 100%;
+  align-self: stretch;
   margin-top: auto;
-}
-
-.ctaLabel {
-  margin-right: auto;
-}
-
-.ctaArrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: var(--radius-full);
-
-  font-size: var(--fs-base);
-
-  background: color-mix(in srgb, currentcolor 14%, transparent);
-
-  transition: transform var(--transition-base);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .card {
-    transition:
-      transform var(--transition-base),
-      box-shadow var(--transition-base);
-
-    &:hover {
-      transform: translateY(-4px);
-    }
-
-    &:hover .ctaArrow {
-      transform: translateX(3px);
-    }
-  }
 }

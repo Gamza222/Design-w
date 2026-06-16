@@ -1,30 +1,31 @@
 @use 'app/styles/abstracts' as *;
 
-// Карточка тарифа — светлая плита с интерьерным фото-фоном (макет tariff-example.jpg):
-// фото залито на всю карточку, слева — кремовый скрим (текст читаем, контраст AA),
-// справа проглядывает интерьер. Заголовок + цена + золотые галочки. Популярный — кольцо + бейдж.
+// Компактная карточка тарифа (макет 01): белый скрим слева под текст, интерьерное фото справа.
+// Палитра явная (--clr-*) — карточка лежит на светлой панели пакетов.
 .card {
+  // --card-pad / --card-min-h — общие токены (tokens.scss): тарифы и карточка расчёта совпадают.
   isolation: isolate;
   position: relative;
   z-index: 0;
 
-  overflow: hidden; // фото клипится по радиусу
+  overflow: hidden;
   display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 
-  min-height: 22rem;
-  border: 1px solid rgb(8 17 37 / 8%);
-  border-radius: var(--radius-lg);
+  height: 100%;
+  min-height: var(--card-min-h);
+  padding: var(--card-pad);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
 
-  color: var(--color-text);
+  color: var(--clr-dark);
 
-  background: var(--color-surface);
-  box-shadow: var(--shadow-md);
+  // Белая карточка с мягкой премиальной тенью — приподнята над светлой панелью, без «грубой» тени.
+  background: var(--clr-light);
+  box-shadow: var(--shadow-card);
 
-  @include up(md) {
-    min-height: 24rem;
-  }
-
-  // Фото-подложка на всю карточку (с индивидуальным кадрированием через --card-photo-pos).
+  // Фото-подложка (правая часть карточки).
   &::before {
     content: '';
 
@@ -35,8 +36,7 @@
     background: var(--card-photo, none) var(--card-photo-pos, center) / cover no-repeat;
   }
 
-  // Кремовый скрим слева → прозрачно вправо: левая половина держится плотно (текст контрастен),
-  // справа проглядывает интерьер. Плотный участок шире, чтобы крупный тёмный текст читался на всех ширинах.
+  // Кремовый скрим: слева плотно (текст читаем), справа проглядывает интерьер.
   &::after {
     content: '';
 
@@ -47,30 +47,29 @@
     background: linear-gradient(
       100deg,
       var(--clr-light) 0%,
-      var(--clr-light) 52%,
-      color-mix(in srgb, var(--clr-light) 84%, transparent) 70%,
-      color-mix(in srgb, var(--clr-light) 22%, transparent) 88%,
+      var(--clr-light) 46%,
+      color-mix(in srgb, var(--clr-light) 80%, transparent) 64%,
+      color-mix(in srgb, var(--clr-light) 18%, transparent) 84%,
       transparent 100%
     );
   }
 }
 
-// Популярный: золотое кольцо + ореол (без сдвига — ряд остаётся ровным по высоте).
+// Популярный (макет 01): та же светлая карточка, выделение — только золотой бейдж сверху.
+// Доп. отступ сверху освобождает место под бейдж, текст не заезжает.
 .popular {
-  border-color: color-mix(in srgb, var(--clr-accent) 55%, transparent);
-  box-shadow:
-    var(--glow-accent),
-    var(--shadow-md);
+  padding-top: calc(var(--card-pad) + var(--space-5));
 }
 
-// Золотой бейдж «Популярный» в верхнем правом углу (единственная сплошная золотая заливка).
+// Золотой бейдж «Популярный» — пилюля в правом верхнем углу, целиком внутри карточки
+// (overflow:hidden у .card обрезал бы страдл-бейдж; держим его в безопасной зоне).
 .badge {
   position: absolute;
   z-index: 2;
-  top: var(--space-4);
-  right: var(--space-4);
+  top: var(--space-3);
+  right: var(--card-pad);
 
-  padding: 0.25rem var(--space-3);
+  padding: 0.18rem var(--space-3);
   border-radius: var(--radius-full);
 
   font-size: var(--fs-xs);
@@ -80,155 +79,89 @@
   letter-spacing: 0.04em;
   white-space: nowrap;
 
-  background: var(--color-accent);
+  background: var(--clr-accent);
   box-shadow: var(--shadow-sm);
-}
-
-// Контент — в потоке, слева; CTA прижат к низу. Паддинг флюидный.
-.body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-4); // ритм между заголовком, ценой и пунктами
-
-  padding: clamp(var(--space-6), 2.4vw, var(--space-8));
 }
 
 .head {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  max-width: 24ch; // текст держится слева над плотным скримом, не наезжает на фото
+  gap: var(--space-1);
 }
 
 .name {
   font-family: var(--font-display);
-  font-size: calc(var(--fs-xl) * 1.1);
+  font-size: var(--fs-lg);
   font-weight: 700;
   line-height: var(--lh-tight);
-  color: var(--color-strong);
+  color: var(--clr-black);
   text-transform: uppercase;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
 }
 
-// Подзаголовок — крупнее и контрастнее (тёмный слейт, непрозрачный → читаем и над фото).
-.tagline {
-  font-size: var(--fs-base);
-  line-height: var(--lh-snug);
-  color: color-mix(in srgb, var(--clr-dark) 80%, var(--clr-light));
-}
-
-// Цена — главный элемент: «от 1 500 ₽/м²».
+// Цена — тёмная (как в макете): «от 1 500 ₽/м²».
 .price {
-  display: flex;
-  gap: var(--space-2);
+  display: inline-flex;
+  gap: 0.3em;
   align-items: baseline;
   white-space: nowrap;
 }
 
 .priceFrom {
-  font-size: var(--fs-sm);
-  color: var(--color-text-muted);
+  font-size: var(--fs-xs);
+  color: var(--clr-gray);
 }
 
 .priceValue {
-  font-size: var(--fs-2xl);
+  font-size: var(--fs-xl);
   font-weight: 700;
-
-  // Цифры тарифов оптически выровнены по ряду.
   font-variant-numeric: tabular-nums;
-  color: var(--color-strong);
+  color: var(--clr-black);
   letter-spacing: -0.01em;
 }
 
 .priceUnit {
-  font-size: var(--fs-base);
-  font-weight: 500;
-  color: var(--color-text);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--clr-black);
 }
 
+// Буллеты-точки (как в макете) — золотой маркер.
 .features {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
 
-  max-width: 26ch;
+  max-width: 22ch;
+  margin: 0;
+  padding: 0;
 
-  // Увеличенный зазор между пунктами и кнопкой (поверх gap .body и auto-margin CTA).
-  margin-bottom: var(--space-6);
+  list-style: none;
 }
 
-// Пункты — крупнее, темнее и чуть жирнее (максимальный контраст на кремовом скриме).
 .feature {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-3);
-  align-items: start; // галочка пинится к первой строке при переносе
+  position: relative;
 
-  font-size: var(--fs-base);
-  font-weight: 500;
+  padding-left: var(--space-4);
+
+  font-size: var(--fs-sm);
   line-height: var(--lh-snug);
-  color: var(--color-strong);
-}
+  color: color-mix(in srgb, var(--clr-dark) 86%, var(--clr-light));
 
-// Галочка — крупнее и темнее (глубокий янтарь) → контрастна на светлом, не «выцветает».
-.check {
-  flex-shrink: 0;
+  &::before {
+    content: '';
 
-  width: 1.35em;
-  height: 1.35em;
-  margin-top: 0.05em; // оптическое выравнивание к первой строке
+    position: absolute;
 
-  color: color-mix(in srgb, var(--clr-accent) 82%, var(--clr-dark));
-}
+    // По центру первой строки: (высота строки 1.3em − точка 0.4em) / 2 = 0.45em от верха.
+    top: 0.45em;
+    left: 0;
 
-// CTA — прижата к низу, выровнена влево над скримом.
-.cta {
-  align-self: flex-start;
-  margin-top: auto;
-}
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: var(--radius-full);
 
-.ctaLabel {
-  margin-right: var(--space-1);
-}
-
-// Стрелка в собственном круглом «островке», сдвигается на hover.
-.ctaArrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: var(--radius-full);
-
-  font-size: var(--fs-base);
-
-  background: color-mix(in srgb, currentcolor 14%, transparent);
-
-  transition: transform var(--transition-base);
-}
-
-// Hover-микрофизика — только без prefers-reduced-motion; transform/box-shadow (GPU).
-@media (prefers-reduced-motion: no-preference) {
-  .card {
-    transition:
-      transform var(--transition-base),
-      box-shadow var(--transition-base);
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 24px 48px rgb(8 17 37 / 16%);
-    }
-
-    &:hover .ctaArrow {
-      transform: translateX(3px);
-    }
-  }
-
-  .popular:hover {
-    box-shadow:
-      var(--glow-accent),
-      0 24px 48px rgb(8 17 37 / 16%);
+    background: color-mix(in srgb, var(--clr-accent) 82%, var(--clr-dark));
   }
 }

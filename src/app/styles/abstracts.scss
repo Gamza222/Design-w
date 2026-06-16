@@ -13,11 +13,15 @@ $bp-sm: 480px;
 $bp-md: 768px;
 $bp-lg: 1024px;
 $bp-xl: 1280px;
+$bp-xxl: 1440px; // точка «5-в-ряд» у пакетов ⇄ Hero держит 100vh ⇄ лента проектов в 6 колонок
+$bp-wide: 1600px; // большие десктопы: заголовок секции уходит ВЛЕВО (процесс/портфолио), ниже — сверху
 $breakpoints: (
   sm: $bp-sm,
   md: $bp-md,
   lg: $bp-lg,
   xl: $bp-xl,
+  xxl: $bp-xxl,
+  wide: $bp-wide,
 );
 
 // =============================================================================
@@ -56,6 +60,20 @@ $site-fs-max: math.div($site-fs-base, $site-base-width) * $site-max-width; // �
   }
 
   @media (max-width: ($size - 0.02px)) {
+    @content;
+  }
+}
+
+/// Медиа-запрос «в диапазоне [$from, $to)»: `@include between(sm, xxl) { ... }`
+@mixin between($from, $to) {
+  $min: map.get($breakpoints, $from);
+  $max: map.get($breakpoints, $to);
+
+  @if not $min or not $max {
+    @error "Unknown breakpoint in between(): #{$from} / #{$to}";
+  }
+
+  @media (min-width: $min) and (max-width: ($max - 0.02px)) {
     @content;
   }
 }

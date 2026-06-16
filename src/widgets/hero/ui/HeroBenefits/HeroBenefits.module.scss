@@ -4,12 +4,19 @@
 .panel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
-  padding: var(--space-8);
+  gap: var(--space-5);
+  padding: var(--panel-pad); // комфортные внутренние отступы (контент не липнет к краям)
+
+  // Стадия «5-в-ряд» (≥$bp-xxl): первый экран держит 100svh, поэтому панель чуть компактнее,
+  // чтобы лента пакетов влезала целиком на ноутбуках с невысоким вьюпортом.
+  @include up(xxl) {
+    gap: var(--space-4);
+    padding: clamp(var(--space-4), 1.4vw, var(--space-6));
+  }
 
   @include down(sm) {
-    gap: var(--space-6);
-    padding: var(--space-6);
+    gap: var(--space-4);
+    padding: var(--space-5);
   }
 }
 
@@ -22,35 +29,33 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-4);
   list-style: none;
 }
 
 .item {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--space-4);
-  align-items: center; // крупная иконка по центру высоты пункта
+  gap: var(--space-3);
+  align-items: center; // иконка по центру высоты пункта
 }
 
+// Обычная контурная иконка пункта (без чипа-подложки) — крупная, акцентная.
 .icon {
   flex-shrink: 0;
-  font-size: 2.5rem; // крупнее (было --fs-2xl/36px); 1em → масштабируется с rem
+  font-size: 2rem; // 1em → масштабируется с rem
   line-height: 1;
   color: var(--color-accent);
 }
 
 .title {
-  font-size: calc(var(--fs-base) * 1.07); // +7%
+  font-size: var(--fs-base);
   font-weight: 600;
 }
 
 .desc {
-  // Резерв под 2 строки описания → пункт стабильно ~3 строки (заголовок 1 + описание 2).
-  min-height: 2lh;
-  margin-top: var(--space-1);
-
-  font-size: calc(var(--fs-sm) * 1.07); // +7%
+  margin-top: 0.125rem;
+  font-size: var(--fs-sm);
   line-height: var(--lh-snug);
   color: color-mix(in srgb, var(--color-text) 75%, transparent); // theme-agnostic приглушённый
 }

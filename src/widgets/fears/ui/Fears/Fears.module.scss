@@ -1,0 +1,221 @@
+@use 'app/styles/abstracts' as *;
+
+// Секция «Страхи» — светлая (макет 07). Тонкий светлый hairline-шов сверху отделяет от соседней
+// светлой секции. На ≥lg — якорь для фото, выходящего из левого края страницы.
+.fears {
+  position: relative;
+  padding-block: var(--section-pad-y-dense);
+  border-top: 1px solid var(--color-hairline);
+
+  @include up(lg) {
+    --fears-photo-w: clamp(20rem, 31%, 30rem);
+
+    overflow: hidden; // клип фото, растворяющегося у краёв
+  }
+}
+
+// Контент. Мобайл: стек (фото → текст → список). ≥lg: текст | список; слева — место под выходящее фото.
+.inner {
+  --container-max: var(--site-max);
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-8), 4vw, var(--space-12));
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+    column-gap: clamp(var(--space-8), 4vw, var(--space-16));
+    align-items: start; // текст и список выровнены по верху (компактно, как в макете)
+    padding-left: calc(var(--fears-photo-w) + clamp(var(--space-6), 3vw, var(--space-12)));
+  }
+}
+
+// Фото. Мобайл: блок сверху, скруглённый, мягкая тень. ≥lg: выходит из левого края страницы (left:0),
+// на всю высоту блока; правый и верх/низ края растворяются в фоне через mask («затуманены»).
+.photo {
+  min-height: 17rem;
+  border-radius: var(--radius-lg);
+  background: center / cover no-repeat;
+  box-shadow: var(--shadow-card);
+
+  @include up(lg) {
+    position: absolute;
+    z-index: 0;
+    inset-block: 0;
+    left: 0;
+
+    width: var(--fears-photo-w);
+    min-height: 0;
+    border-radius: 0;
+
+    box-shadow: none;
+
+    // Растворяем правый и верх/низ края в фоне. mask-image + mask-composite:intersect — современные
+    // браузеры (вкл. Safari 15.4+) понимают без префикса; старый -webkit- не пишем (stylelint его не любит).
+    mask-image:
+      linear-gradient(to right, #000 38%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 13%, #000 87%, transparent 100%);
+    mask-composite: intersect;
+  }
+}
+
+// Текстовый блок (шапка + задача + CTA) — над фото.
+.introText {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.head {
+  // Заголовок секции — компактнее глобального h2, помещается в колонку без переносов посреди слова.
+  h2 {
+    font-size: var(--fs-2xl);
+    text-wrap: balance;
+  }
+}
+
+// Блок «Наша задача» — мелкая золотая метка + текст-обещание.
+.mission {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.missionTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.missionText {
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  color: color-mix(in srgb, var(--color-text) 88%, transparent);
+}
+
+.cta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.ctaBtn {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  svg {
+    font-size: 1.1em;
+  }
+}
+
+.ctaNote {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+// Правая колонка — список «опасение → ответ» + гарантия. Над фото.
+.items {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-5), 2.5vw, var(--space-8));
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+// Между пунктами — тонкий hairline-разделитель (как в макете 07).
+.item {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding-block: clamp(var(--space-4), 1.8vw, var(--space-6));
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  & + & {
+    border-top: 1px solid var(--color-hairline);
+  }
+}
+
+// Чип иконки страха (макет 07): мягкая тёплая «капля» с едва заметным кольцом; иконка двутоновая
+// (navy-база = currentColor + оранжевые акценты). Селектор `.item .itemIcon` (специфичность 0-2-0)
+// гарантированно перебивает color у IconBadge `.surface` независимо от порядка стилей.
+.item .itemIcon {
+  flex-shrink: 0;
+  border-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  color: var(--clr-dark);
+  background-color: color-mix(in srgb, var(--color-accent) 9%, var(--color-surface));
+}
+
+.itemBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.fear {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  line-height: var(--lh-snug);
+  color: var(--color-strong);
+}
+
+.answer {
+  max-width: 48ch;
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  color: var(--color-text-muted);
+}
+
+// Плашка-гарантия снизу (макет 07): щит + сдержанный нейтральный бар (не золотистый), жирный
+// зачин navy + остальной текст приглушённым.
+.guarantee {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+
+  padding: clamp(var(--space-4), 2vw, var(--space-5));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  font-size: var(--fs-base);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+
+  background-color: color-mix(in srgb, var(--color-text) 4%, var(--color-surface));
+}
+
+.guaranteeLead {
+  font-weight: 700;
+  color: var(--color-strong);
+}
+
+.guaranteeIcon {
+  flex-shrink: 0;
+  font-size: var(--fs-2xl);
+  color: var(--color-accent);
+}

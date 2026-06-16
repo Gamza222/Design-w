@@ -1,0 +1,292 @@
+@use 'app/styles/abstracts' as *;
+
+// Секция «Достижения» — светлая (макет 01): одна полоса в 3 зоны (цифры | отзывы | команда),
+// без крупного заголовка. Тянется до бокового гаттера (full-bleed), как лента портфолио выше.
+.achievements {
+  padding-block: var(--section-pad-y-dense);
+}
+
+.inner {
+  --container-max: var(--site-max);
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-8), 3vw, var(--space-12));
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 0.95fr);
+    align-items: stretch;
+  }
+}
+
+// --- Зона 1: цифры (2×2 → 4 в ряд на очень широком) -----------------------
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(var(--space-5), 2vw, var(--space-8));
+  align-content: center;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  @include up(xxl) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
+}
+
+// Контурная золотая иконка над цифрой (макет 01).
+.statIcon {
+  margin-bottom: var(--space-1);
+  font-size: 1.9rem;
+  color: var(--color-accent);
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: calc(var(--fs-2xl) * 1.22);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  color: var(--color-text);
+}
+
+.label {
+  max-width: 18ch;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+// --- Зона 2: отзывы (карусель) --------------------------------------------
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  @include up(lg) {
+    padding-left: clamp(var(--space-6), 2vw, var(--space-12));
+    border-left: 1px solid var(--color-hairline);
+  }
+}
+
+.reviewsTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+// Фиксированная высота карточки отзыва — при перелистывании контент не «прыгает». Длинный текст
+// скроллится внутри (overflow на .reviewText).
+.review {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  height: clamp(13rem, 14vw, 15.5rem);
+  margin: 0;
+  padding: clamp(var(--space-4), 1.5vw, var(--space-5));
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.reviewText {
+  scrollbar-width: thin;
+
+  overflow-y: auto;
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  color: color-mix(in srgb, var(--color-text) 88%, transparent);
+}
+
+.reviewFoot {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-hairline);
+}
+
+// Аватарка-инициалы — золотистый круг в премиум-стиле (фото у отзывов нет).
+.avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 28%, transparent);
+  border-radius: var(--radius-full);
+
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-accent);
+
+  background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+}
+
+.reviewMeta {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.author {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+// Иконка соцсети (Telegram) — небольшая, в акцентном цвете, чтобы было понятно источник отзыва.
+.reviewSocial {
+  flex-shrink: 0;
+  font-size: var(--fs-base);
+  color: var(--color-accent);
+}
+
+.role {
+  margin-top: 0.125rem;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.reviewRating {
+  flex-shrink: 0;
+  font-size: var(--fs-sm);
+}
+
+.reviewNav {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.navBtn {
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+
+  color: var(--color-text);
+
+  background: transparent;
+
+  transition: color var(--transition-base), background-color var(--transition-base),
+    border-color var(--transition-base);
+
+  svg {
+    font-size: var(--fs-base);
+  }
+
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-on-accent);
+    background-color: var(--color-accent);
+  }
+}
+
+.navCounter {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+// --- Зона 3: карточка «Наша команда» — тёмная плита: текст на нави + блок фото снизу ----
+.team {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  min-height: 14rem;
+  border-radius: var(--radius-lg);
+
+  color: var(--clr-light);
+
+  background-color: var(--clr-dark-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.teamBody {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  padding: clamp(var(--space-5), 2vw, var(--space-6));
+}
+
+// Блок фото команды — заполняет остаток карточки; мягкий fade сверху сводит его с тёмным текст-блоком.
+.teamPhoto {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 9rem;
+  background: var(--team-photo) center / cover no-repeat;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      var(--clr-dark-surface) 0%,
+      color-mix(in srgb, var(--clr-dark-surface) 0%, transparent) 22%
+    );
+  }
+}
+
+.teamTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 600;
+}
+
+.teamText {
+  max-width: 30ch;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-soft-on-dark);
+}
+
+.teamCta {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  margin-top: var(--space-2);
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-accent);
+
+  transition: gap var(--transition-base);
+
+  &:hover {
+    gap: var(--space-3);
+  }
+}

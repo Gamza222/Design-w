@@ -11,8 +11,11 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
  * `true`, когда страница прокручена ниже порога (px). Header — fixed-сосед ВНЕ
  * `#smooth-content`, скролл проксирует ScrollSmoother, поэтому ловим позицию через
  * ScrollTrigger (числовой `start`), а не через `window.scrollY`.
+ *
+ * Порог маленький (10px): фон хедера меняется сразу при начале скролла вниз, а не «поздно».
+ * Небольшой буфер (не 0) защищает от дребезга у самого верха при сабпиксельном скролле.
  */
-export function useHeaderScroll(threshold = 80): boolean {
+export function useHeaderScroll(threshold = 10): boolean {
   const [scrolled, setScrolled] = useState(false);
 
   useGSAP(() => {

@@ -6,7 +6,7 @@
 
   overflow: hidden; // клипируем .bg с inset:-16% чтобы parallax-оверсcan не вылезал за секцию
   display: flex;
-  align-items: center;
+  flex-direction: column; // верх — контент Hero, низ — слот пакетов (на фото)
 
   min-height: 100svh;
 
@@ -14,8 +14,8 @@
   // .main даёт padding-top: var(--header-h) для прочих страниц — здесь компенсируем его.
   margin-top: calc(-1 * var(--header-h));
 
-  // верх — под фиксированный хедер; низ — умеренный (Hero — самостоятельная секция ≈100vh)
-  padding-block: calc(var(--header-h) + var(--space-16)) var(--space-16);
+  // верх — под фиксированный хедер; низ — умеренный (ряд пакетов добавляет свой отступ снизу)
+  padding-block: calc(var(--header-h) + var(--space-8)) var(--space-8);
 
   color: var(--clr-light);
 
@@ -29,38 +29,50 @@
   }
 
   // Слой 1: тёмно-синий (--clr-dark) — диагональ слева под текст + лёгкая вертикаль.
-  // Минимум 22% на правом краю — оверлей покрывает всю картинку без пустых участков.
+  // Правый край держим глубоким (≥56%) — даже светлое фото читается как тёмный нави, как в макете 01.
   &::before {
     z-index: -2;
     background:
       linear-gradient(
         100deg,
-        color-mix(in srgb, var(--clr-dark) 90%, transparent) 0%,
-        color-mix(in srgb, var(--clr-dark) 62%, transparent) 42%,
-        color-mix(in srgb, var(--clr-dark) 26%, transparent) 72%,
-        color-mix(in srgb, var(--clr-dark) 22%, transparent) 100%
+        color-mix(in srgb, var(--clr-dark) 93%, transparent) 0%,
+        color-mix(in srgb, var(--clr-dark) 76%, transparent) 42%,
+        color-mix(in srgb, var(--clr-dark) 62%, transparent) 72%,
+        color-mix(in srgb, var(--clr-dark) 56%, transparent) 100%
       ),
       linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--clr-dark) 46%, transparent) 0%,
-        color-mix(in srgb, var(--clr-dark) 0%, transparent) 26%,
-        color-mix(in srgb, var(--clr-dark) 0%, transparent) 62%,
-        color-mix(in srgb, var(--clr-dark) 70%, transparent) 100%
+        color-mix(in srgb, var(--clr-dark) 50%, transparent) 0%,
+        color-mix(in srgb, var(--clr-dark) 8%, transparent) 26%,
+        color-mix(in srgb, var(--clr-dark) 8%, transparent) 62%,
+        color-mix(in srgb, var(--clr-dark) 72%, transparent) 100%
       );
   }
 
-  // Слой 2: мягкая виньетка + базовый тинт 8% в центре — картинка закрыта везде.
+  // Слой 2: мягкая виньетка + базовый тинт в центре — картинка дотемняется до moody-нави везде.
   &::after {
     z-index: -1;
     background: radial-gradient(
       125% 80% at 48% 32%,
-      color-mix(in srgb, var(--clr-dark) 8%, transparent) 52%,
-      color-mix(in srgb, var(--clr-dark) 38%, transparent) 100%
+      color-mix(in srgb, var(--clr-dark) 24%, transparent) 50%,
+      color-mix(in srgb, var(--clr-dark) 46%, transparent) 100%
     );
   }
 
-  @include down(lg) {
+  // На стадии «5-в-ряд» (≥$bp-xxl) первый экран держит 100svh и обязан вместить ленту целиком,
+  // поэтому верхний воздух поджимаем — иначе нижняя кромка (кнопка «Подобрать пакет») уезжает под
+  // браузерный хром на ноутбуках 1440×810/900.
+  @include up(xxl) {
+    padding-block: calc(var(--header-h) + var(--space-4)) var(--space-8);
+  }
+
+  // Ниже точки перестройки ряда пакетов (5-в-ряд → интро-шапка + 2×2, $bp-xxl) Hero отпускает
+  // 100vh и растёт по контенту: панель пакетов уезжает ниже сгиба, первый экран листается (Vision 1).
+  @include down(xxl) {
     min-height: auto;
+  }
+
+  @include down(lg) {
     padding-block: calc(var(--header-h) + var(--space-12)) var(--space-16);
 
     // на узких контент и панель уходят в стек → затемняем равномернее
@@ -85,31 +97,64 @@
   z-index: -3;
   inset: -16% 0; // overscan по вертикали — запас под parallax-сдвиг (yPercent ±8), края не оголяются
 
-  background: var(--hero-bg, none) center / cover no-repeat;
+  // Тёмная «юбка» у низа слоя ЗАПЕЧЕНА в сам .bg (а не в ::before/::after Hero). Зачем: .bg —
+  // композитный слой (transform параллакса) и под overflow:hidden Hero его текстура «подтекает» на
+  // ~1px за клип на стыке с Process → тонкая светлая линия (сырое фото без затемняющих оверлеев,
+  // которые лежат в ДРУГОМ слое). Затемняя текстуру самого .bg у низа, делаем подтекающий край тёмным.
+  // Полностью тёмно к 72% высоты слоя: низ Hero маппится в 80–96% слоя при любом yPercent параллакса —
+  // покрытие гарантировано. Видимо незаметно: эта зона и так под панелью пакетов / затемнена ::before.
+  background:
+    linear-gradient(to bottom, transparent 46%, var(--clr-dark) 72%),
+    var(--hero-bg, none) center / cover no-repeat;
 }
 
 .inner {
   --container-max: var(--site-max); // full-bleed до гаттера, как у хедера
+
+  // Заполняем высоту Hero: контент и ряд пакетов прижаты к верху, фото дышит снизу.
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-12);
+  gap: var(--space-8);
   width: 100%;
 
   @include up(lg) {
     // Левая колонка (заголовок) шире, правая (панель) уже — пункты переносятся в 3 строки.
-    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
-    gap: var(--space-16);
-    align-items: center;
+    grid-template-columns: minmax(0, 1.2fr) minmax(18.75rem, 0.8fr); // rem → колонка зумится с корнем
+    gap: var(--space-12);
+    align-items: start; // колонки выровнены по верху: панель «Что вы получите» на уровне заголовка
+  }
+
+  // Стадия «5-в-ряд» (≥xxl, Hero = 100svh): свободную высоту делим поровну между «над контентом» и
+  // «под контентом» — оба, .grid и .bottom, держат margin-top:auto. Блок опускается к центру, пустота
+  // в середине больше не копится в одном месте. Доля пропорциональна излишку: на тесных 1440×810 сдвиг
+  // ≈0 (пакеты остаются видны целиком), на высоких экранах — заметный, как и просили.
+  @include up(xxl) {
+    margin-top: auto;
+  }
+}
+
+// Нижняя полоса первого экрана: ряд пакетов на фото Hero. Следует за контентом (grid без flex:1).
+// Зазор height-aware (vh) и умеренный — на коротких экранах лента не уезжает под сгиб, на высоких дышит.
+.bottom {
+  margin-top: clamp(var(--space-3), 3vh, var(--space-8));
+
+  // Стадия «5-в-ряд» (Hero = 100svh): прижимаем ленту к низу первого экрана, свободное место
+  // (фото интерьера) уходит МЕЖДУ Hero-контентом и лентой — как в макете 01, без пустой полосы снизу.
+  @include up(xxl) {
+    margin-top: auto;
   }
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-4);
   align-items: flex-start;
 
   max-width: 42rem;
@@ -119,45 +164,58 @@
   }
 }
 
+// Eyebrow — pill (как в макете): золотой бордер + лёгкая золотая заливка, обычный регистр.
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
+  align-self: flex-start; // плашка по ширине текста, не на всю колонку
 
-  padding: var(--space-2) var(--space-4);
-  border: 1px solid var(--color-accent);
+  padding: 0.4rem var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--clr-accent) 55%, transparent);
   border-radius: var(--radius-full);
 
-  font-size: calc(var(--fs-xs) * 1.12); // +12% (локально; глобальный --fs-xs не трогаем)
+  font-size: var(--fs-sm);
   font-weight: 500;
   color: var(--color-accent);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.01em;
 
-  // Заливка тем же accent-цветом, что и бордер, но полупрозрачная + мягкое золотое свечение.
-  background-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
-  box-shadow: var(--glow-accent);
+  background: color-mix(in srgb, var(--clr-accent) 12%, transparent);
 }
 
+// Заголовок в 2 строки: лид — строка 1, акцент (.accent — block) — строка 2.
+// Плоский rem → масштабируется корневым font-size. Корень капнут на 14px ≤1680px, поэтому на
+// узких добавляем собственные шаги (глобальные шаги --fs-4xl обслуживают h1 контентных страниц).
 .title {
-  max-width: 20ch;
-  font-size: calc(var(--fs-4xl) * 0.9); // −10% к главному заголовку (на всех экранах)
+  font-size: 2.9rem;
   font-weight: 600;
-  line-height: var(--lh-tight);
+  line-height: 1.14;
+
+  @include down(md) {
+    font-size: 2.6rem;
+  }
+
+  @include down(sm) {
+    font-size: 2.4rem;
+  }
 }
 
 .accent {
+  display: block;
   color: var(--color-accent);
 }
 
 .subtitle {
-  max-width: 46ch;
-  font-size: var(--fs-lg);
+  max-width: 48ch;
+  font-size: var(--fs-base);
   line-height: var(--lh-snug);
-  color: rgb(250 248 247 / 82%);
+  color: var(--color-text-soft-on-dark);
 }
 
 .actions {
-  // Ghost-кнопка на тёмном Hero берёт светлый текст из data-tone="dark" (--btn-ghost-color).
+  // Ghost-кнопка «Смотреть примеры работ» на тёмном Hero: прозрачный фон + рамка под цвет текста
+  // (currentcolor следует за --btn-ghost-color — светлым из data-tone="dark", на hover → акцент).
+  // Перекрываем заполненную графитовую пилюлю из [data-tone="dark"] только в рамках Hero.
+  --btn-ghost-bg: transparent;
+  --btn-ghost-border: currentcolor;
+
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
@@ -172,21 +230,15 @@
   }
 }
 
-.divider {
-  width: 100%;
-  max-width: 34rem;
-  height: 1px;
-  margin-block: var(--space-2);
-  border: 0;
-
-  // Тонкая линия с затуханием к краям — в одном языке со стеклянной золотой линией.
-  background: linear-gradient(90deg, transparent, rgb(250 248 247 / 24%), transparent);
-}
-
+// Строка преимуществ под кнопками (макет 01): иконки в круглых золотых чипах + подпись,
+// без горизонтального разделителя. Умеренный отступ от кнопок.
 .bullets {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4) var(--space-8);
+  gap: var(--space-4) var(--space-6);
+
+  margin-top: var(--space-4);
+
   list-style: none;
 
   @include down(sm) {
@@ -197,16 +249,23 @@
 
 .bullet {
   display: inline-flex;
-  gap: var(--space-2);
+  gap: var(--space-3);
   align-items: center;
 
   font-size: var(--fs-sm);
-  color: rgb(250 248 247 / 90%);
+  color: var(--color-text-soft-on-dark);
 }
 
+// Круглый золотой чип вокруг иконки (как в макете): прозрачная подложка + золотое кольцо.
 .bulletIcon {
   flex-shrink: 0;
-  font-size: var(--fs-xl); // 1em → размер иконки
+
+  box-sizing: content-box;
+  padding: 0.5em;
+  border: 1px solid color-mix(in srgb, var(--clr-accent) 40%, transparent);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-base); // 1em → размер глифа внутри чипа
   color: var(--color-accent);
 }
 

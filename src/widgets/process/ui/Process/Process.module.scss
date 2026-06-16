@@ -1,0 +1,120 @@
+@use 'app/styles/abstracts' as *;
+
+// Секция «Как проходит проект» — тёмная (navy), компактная. Лента из 6 этапов во всю ширину.
+.process {
+  padding-block: var(--section-pad-y-dense);
+}
+
+// Container тянется до бокового гаттера (как Hero). Фазы заголовка:
+//  • ≥wide (1600) — заголовок СЛЕВА, лента из 6 этапов справа;
+//  • <wide — заголовок СВЕРХУ-слева (даёт ленте всю ширину, без «ужатия»), лента ниже.
+.inner {
+  --container-max: var(--site-max);
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--section-gap-dense);
+
+  @include up(wide) {
+    grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+    gap: clamp(var(--space-8), 4vw, var(--space-12));
+    align-items: center;
+  }
+}
+
+.title {
+  font-size: var(--section-title-size);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+}
+
+// Лента этапов: 1 → 2 (≥sm) → 3 (≥md) → 6 (≥xl). 6-в-ряд только с xl(1280), чтобы этапы не
+// ужимались на 1024–1280 (там 3 в ряд, по 2 ряда). Между колонками ленты — пунктирный коннектор.
+.steps {
+  // Центр иконки-чипа IconBadge md (сторона 2.75em при font-size --fs-lg) — для уровня коннектора.
+  --step-line-y: calc(2.75 * var(--fs-lg) / 2);
+  --steps-gap: clamp(var(--space-4), 2vw, var(--space-6));
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  @include up(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include up(xl) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--steps-gap);
+  }
+}
+
+.step {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+// Пунктирный коннектор к следующему этапу (на уровне центра иконки). Виден только в одной ленте (≥xl).
+.step::after {
+  content: '';
+
+  position: absolute;
+  top: var(--step-line-y);
+
+  height: 0;
+  border-top: 1px dashed color-mix(in srgb, var(--color-accent) 40%, transparent);
+
+  opacity: 0;
+}
+
+@include up(xl) {
+  .step:not(:last-child)::after {
+    right: calc(var(--steps-gap) * -1);
+    width: var(--steps-gap);
+    opacity: 1;
+  }
+}
+
+.stepTop {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+// Круглый контурный чип этапа (макет): тёмная «дыра» + золотое кольцо + контурная иконка.
+.stepBadge {
+  border-radius: var(--radius-full);
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.stepTitle {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  line-height: var(--lh-snug);
+}
+
+.stepDesc {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}

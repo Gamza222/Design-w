@@ -41,3 +41,8 @@ yarn-error.log*
 
 # исходный ТЗ-PDF (тяжёлый бинарь; мокапы извлечены в docs/tz-refs/)
 *.pdf
+
+# рабочие скриншоты для сверки с мокапами (регенерируются scripts/shot.mjs; в репо не нужны)
+docs/tz-refs/.review/
+docs/tz-refs/.current/
+docs/tz-refs/.after/

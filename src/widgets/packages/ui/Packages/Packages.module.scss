@@ -1,53 +1,71 @@
 @use 'app/styles/abstracts' as *;
 
-// Светлая секция «Пакеты» — чистый, лёгкий переход от тёмного Hero (тёмное → светлое).
 .packages {
-  padding-block: clamp(var(--space-16), 7vw, var(--space-24));
+  width: 100%;
 }
 
-.inner {
-  --container-max: var(--site-max); // края ряда карточек совпадают с гаттером навбара (как Hero)
+// Светлая панель-контейнер ряда пакетов — наезжает на фото Hero. Тёплый off-white фон; тарифы
+// внутри — чуть белее (--clr-light) + тень, поэтому читаются как приподнятые карточки.
+// Re-assert светлой палитры БЕЗ [data-tone] (тот форс-красит фон) — чтобы intro/calc/кнопки
+// внутри тёмного Hero взяли тёмный текст и контурную кнопку.
+.panel {
+  --color-text: var(--clr-dark);
+  --color-text-muted: var(--clr-gray);
+  --color-strong: var(--clr-black);
+  --color-border: color-mix(in srgb, var(--clr-dark) 22%, transparent);
+
+  // Светлый остров внутри тёмного Hero: возвращаем «светлые» hairline и контурную ghost-кнопку
+  // (иначе унаследуются тёмные --color-hairline / заполненная --btn-ghost-bg из data-tone="dark").
+  --color-hairline: color-mix(in srgb, var(--clr-dark) 8%, transparent);
+  --btn-ghost-color: var(--clr-dark);
+  --btn-ghost-bg: transparent;
+  --btn-ghost-border: currentcolor;
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 88%, var(--clr-dark));
+
+  padding: var(--panel-pad); // карточки не упираются в края панели
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+
+  color: var(--color-text);
+
+  // Светлый тёплый off-white (лишь 5% near-black) — чистая палитра, высокий контраст. Карточки
+  // тарифов приподняты над панелью премиальной многослойной тенью (--shadow-card), а не затемнением фона.
+  background: color-mix(in srgb, var(--clr-light) 95%, var(--clr-black));
+  box-shadow: var(--shadow-glass);
+
+  // Стадия «5-в-ряд» (≥$bp-xxl) держит 100svh — поджимаем внутренний паддинг панели и карточек
+  // (через токен --card-pad, который читают тарифы и карточка расчёта), чтобы лента влезала под хром.
+  @include up(xxl) {
+    --card-pad: clamp(var(--space-4), 1.4vw, var(--space-5));
+
+    padding: clamp(var(--space-4), 1.4vw, var(--space-6));
+  }
 }
 
-// Шапка: заголовок + описание, слева.
-.head {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-
-  max-width: 44rem;
-
-  // Ближе к карточкам: прежний флюид −20% (расстояние подзаголовок ↔ тарифы).
-  margin-bottom: calc(clamp(var(--space-3), 1.25vw, var(--space-4)) * 0.8);
-}
-
-.title {
-  // Переиспользуемый кегль заголовка секции (флюид через корневой font-size).
-  font-size: var(--section-title-size);
-  font-weight: 600;
-  line-height: var(--lh-tight);
-}
-
-.description {
-  // Переиспользуемые токены подзаголовка: кегль (−15%), плотная строка, приглушённый цвет.
-  font-size: var(--section-subtitle-size);
-  line-height: var(--section-subtitle-line);
-  color: var(--section-subtitle-color);
-}
-
-// Ряд карточек: 1 → 2 (≥md) → 4 (≥1600px). Ступени «3» НЕТ намеренно — чтобы никогда не было
-// «3 в первом ряду + 1 во втором». 4-в-ряд включаем только когда карточки остаются широкими;
-// на ноутбуках/планшетах — 2 широкие карточки. Равная высота — за счёт grid-stretch + min-height.
-.grid {
+// Раскладка ряда (без слайдера). По умолчанию — интро-шапка сверху во всю ширину + карточки 2×2.
+// На больших (≥$bp-xxl) — всё в один ряд (макет 01). На телефонах (<$bp-sm) — по 1 карточке в ряд.
+.row {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(var(--space-4), 1.5vw, var(--space-6));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(var(--space-4), 1.6vw, var(--space-6));
+  margin: 0;
 
-  @include up(md) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  // Интро-заголовок секции уезжает наверх, занимая всю ширину панели.
+  > :first-child {
+    grid-column: 1 / -1;
   }
 
-  @media (width >= 1600px) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  // Большие экраны ($bp-xxl): ровный ряд 5-в-ряд (интро и «расчёт» чуть у́же тарифов). Hero держит 100vh.
+  @include up(xxl) {
+    grid-template-columns: minmax(0, 0.95fr) repeat(3, minmax(0, 1.1fr)) minmax(0, 0.95fr);
+
+    > :first-child {
+      grid-column: auto; // интро возвращается в первую колонку ряда
+    }
+  }
+
+  // Телефоны: одна колонка — каждая карточка во всю ширину.
+  @include down(sm) {
+    grid-template-columns: 1fr;
   }
 }

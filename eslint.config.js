@@ -17,12 +17,13 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    // Служебные Node-скрипты (генерация ассетов и т.п.).
+    // Служебные Node-скрипты (генерация ассетов, скриншоты Playwright). browser-глобалы — для
+    // колбэков page.evaluate(), которые исполняются в контексте страницы (window/document).
     files: ['scripts/**/*.{js,mjs}'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
-      globals: { ...globals.node, fetch: 'readonly' },
+      globals: { ...globals.node, ...globals.browser, fetch: 'readonly' },
     },
   },
   {

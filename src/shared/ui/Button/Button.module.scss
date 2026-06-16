@@ -53,14 +53,17 @@
 }
 
 .ghost {
-  // Рамка под цвет шрифта (currentcolor) — следует за --btn-ghost-color.
-  border: 1px solid currentcolor;
+  // Рамка под цвет шрифта (currentcolor) — следует за --btn-ghost-color. На тёмных секциях
+  // контекст переопределяет --btn-ghost-border: transparent + --btn-ghost-bg → заполненная пилюля (макет 01).
+  border: 1px solid var(--btn-ghost-border, currentcolor);
 
   // По умолчанию тёмный (для светлого фона, напр. CalcCard); контекст может переопределить
   // --btn-ghost-color (в Hero — светлый, чтобы текст читался на тёмном фоне).
   color: var(--btn-ghost-color, var(--color-text));
+  background-color: var(--btn-ghost-bg, transparent);
 
   &:hover {
+    border-color: var(--btn-ghost-border, currentcolor);
     color: var(--color-accent);
   }
 }

@@ -7,7 +7,7 @@ interface IconBadgeProps {
   /** Элемент иконки (Icon* из shared/ui/icons). */
   icon: ReactNode;
   size?: 'sm' | 'md' | 'lg';
-  tone?: 'accent' | 'surface';
+  tone?: 'accent' | 'surface' | 'outline';
   className?: string;
 }
 

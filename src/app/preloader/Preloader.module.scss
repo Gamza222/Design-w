@@ -1,6 +1,7 @@
+// Стартовая шторка в стиле сайта (тёмный navy + золото). Вся хореография — на CSS, чтобы шторка
+// гарантированно ушла даже без JS (JS только снимает её из DOM). Тайминги синхронны с TOTAL_MS в Preloader.tsx.
 .preloader {
-  // Чисто декоративный оверлей — никогда не перехватывает клики (даже в непрозрачной фазе),
-  // иначе закрывает интерактивный хедер на ~600мс. Соответствует доке компонента.
+  // Чисто декоративный оверлей — никогда не перехватывает клики (даже в непрозрачной фазе).
   pointer-events: none;
 
   position: fixed;
@@ -11,20 +12,108 @@
   align-items: center;
   justify-content: center;
 
-  opacity: 1;
-  background-color: var(--color-bg);
+  // Фон в тон тёмных секций / Hero — стык с навигацией бесшовный.
+  background: radial-gradient(125% 90% at 50% 38%, var(--clr-dark-surface), var(--clr-dark) 72%);
 
-  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  // Уход встроен в CSS (forwards) → не зависит от гидрации: opacity+лёгкий подъём, как «поднятие шторки».
+  // Стартует после заливки линии (~1.1с). JS будит анимации сайта на LIFT_MS (1.55с), пока шторка уходит.
+  animation: preloader-out 0.55s cubic-bezier(0.5, 0, 0.2, 1) 1.1s forwards;
 }
 
-.hidden {
-  opacity: 0;
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+// Марка-логотип (золото из currentColor). Высота задаётся inline-стилем в компоненте.
+.logo {
+  animation: preloader-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .brand {
   font-family: var(--font-display);
-  font-size: var(--fs-2xl);
-  color: var(--color-text);
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  color: var(--clr-light);
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
+
+  animation: preloader-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+// Линия-прогресс: дорожка + золотая заливка слева направо.
+.bar {
+  position: relative;
+
+  overflow: hidden;
+
+  width: 11rem;
+  max-width: 60vw;
+  height: 2px;
+  margin-top: var(--space-1);
+
+  border-radius: var(--radius-full);
+
+  background: color-mix(in srgb, var(--clr-light) 14%, transparent);
+
+  animation: preloader-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+
+  background: var(--clr-accent);
+
+  // Наливается до начала ухода шторки (~1.1с) — ощущение «загрузки», оправдывающее длительность.
+  animation: preloader-fill 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.15s both;
+}
+
+@keyframes preloader-rise {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes preloader-fill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes preloader-out {
+  to {
+    transform: translateY(-1.5%);
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+// Reduced-motion: без анимаций — шторка сразу скрыта, prerendered-контент стабилен и виден.
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    visibility: hidden;
+    opacity: 0;
+    animation: none;
+  }
+
+  .logo,
+  .brand,
+  .bar,
+  .fill {
+    animation: none;
+  }
 }

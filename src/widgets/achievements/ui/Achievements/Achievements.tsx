@@ -1,13 +1,9 @@
-import { type CSSProperties, useRef, useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaTelegramPlane } from 'react-icons/fa';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 import { ROUTES } from '@shared/config';
+import { useScrollReveal } from '@shared/lib';
 import { AppLink, Container, IconArrowRight, Rating } from '@shared/ui';
 
 import { teamImage } from '../../config/images';
@@ -46,7 +42,6 @@ function initials(name: string): string {
  *  Контент — i18n `home.achievements`. */
 export function Achievements() {
   const { t } = useTranslation();
-  const root = useRef<HTMLElement>(null);
   const stats = t('home.achievements.stats', { returnObjects: true }) as AchievementStat[];
   const reviews = t('home.achievements.reviews', { returnObjects: true }) as Review[];
   const team = t('home.achievements.team', { returnObjects: true }) as Team;
@@ -55,21 +50,12 @@ export function Achievements() {
   const review = reviews[idx] ?? reviews[0];
   const go = (delta: number) => setIdx((i) => (i + delta + reviews.length) % reviews.length);
 
-  // Появление по скроллу. Уважаем prefers-reduced-motion.
-  useGSAP(
-    () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.from(`.${styles.stat}, .${styles.reviews}, .${styles.team}`, {
-        y: 24,
-        autoAlpha: 0,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger: 0.08,
-        scrollTrigger: { trigger: root.current, start: 'top 85%', once: true },
-      });
-    },
-    { scope: root },
-  );
+  // Появление по скроллу (общий хук).
+  const root = useScrollReveal<HTMLElement>([
+    `.${styles.stat}`,
+    `.${styles.reviews}`,
+    `.${styles.team}`,
+  ]);
 
   return (
     <section className={styles.achievements} ref={root} data-tone="light">

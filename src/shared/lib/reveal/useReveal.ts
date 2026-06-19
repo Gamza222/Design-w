@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(useGSAP, ScrollTrigger); // идемпотентно (уже регистрируется в SmoothScroll)
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 interface RevealOptions {
   /** Сдвиг по Y перед появлением (px). */
@@ -14,13 +14,6 @@ interface RevealOptions {
   start?: string;
   once?: boolean;
 }
-
-/**
- * Возвращает ref для контейнера. При скролле-в-вид его потомки с [data-reveal] плавно
- * появляются (fade-up). Уважает prefers-reduced-motion (early-return → контент всегда видим).
- * SSR/prerender-safe: никакого window в рендере — всё внутри useGSAP (клиентский layout-эффект).
- * Читает скролл через ScrollTrigger поверх ScrollSmoother-синглтона (второй смузер не создаёт).
- */
 export function useReveal<T extends HTMLElement = HTMLDivElement>(options: RevealOptions = {}) {
   const ref = useRef<T>(null);
   const { y = 24, duration = 0.8, stagger = 0.08, start = 'top 85%', once = true } = options;

@@ -1,4 +1,5 @@
 import { PostCard, type Post } from '@entities/post';
+import { useScrollReveal } from '@shared/lib';
 import { Container } from '@shared/ui';
 
 import styles from './BlogList.module.scss';
@@ -9,8 +10,11 @@ interface BlogListProps {
 }
 
 export function BlogList({ posts, title }: BlogListProps) {
+  // Появление заголовка и карточек по скроллу (общий хук).
+  const root = useScrollReveal<HTMLDivElement>([`.${styles.title}`, `.${styles.grid} > *`]);
+
   return (
-    <Container>
+    <Container ref={root}>
       {title && <h2 className={styles.title}>{title}</h2>}
       <div className={styles.grid}>
         {posts.map((post) => (

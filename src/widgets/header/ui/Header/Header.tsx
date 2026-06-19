@@ -5,7 +5,7 @@ import { useGSAP } from '@gsap/react';
 
 import { LocaleSwitcher } from '@features/locale-switcher';
 import { CONTACTS, ROUTES } from '@shared/config';
-import { cn } from '@shared/lib';
+import { cn, usePreloaderDone } from '@shared/lib';
 import { AppLink, Button, Container, Logo, SocialLinks } from '@shared/ui';
 
 import { useHeaderScroll } from '../../lib/useHeaderScroll';
@@ -19,6 +19,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const scrolled = useHeaderScroll();
   const root = useRef<HTMLElement>(null);
+  const preloaderDone = usePreloaderDone();
 
   const close = () => setOpen(false);
 
@@ -32,25 +33,27 @@ export function Header() {
     return () => document.removeEventListener('pointerdown', handler);
   }, [open]);
 
-  // Входная анимация после прелоадера — тот же приём, что в Hero: useGSAP = layout-effect
-  // (до первого пейнта), prerendered HTML сохраняет разметку → SEO/гидрация не страдают.
-  // Анимируем сам <header> (не .inner): остаточный transform от GSAP делает элемент
-  // containing-block'ом, поэтому fixed-панель мобильного меню должна считаться от <header>
+  // Входная анимация — часть флоу «сначала прелоадер, потом сайт»: хедер появляется, КОГДА шторка
+  // уходит (preloaderDone). useGSAP = layout-effect (до пейнта), prerendered HTML сохраняет разметку →
+  // SEO/гидрация не страдают. Анимируем сам <header> (не .inner): остаточный transform от GSAP делает
+  // элемент containing-block'ом, поэтому fixed-панель мобильного меню должна считаться от <header>
   // (top:0), а не от вертикально-центрированного .inner — иначе панель уезжает на ~20px вниз.
   useGSAP(
     () => {
       if (!root.current) return;
       // Уважаем prefers-reduced-motion: без анимации хедер сразу видим и стабилен.
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.from(root.current, {
-        y: -20,
-        autoAlpha: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        delay: 0.7,
-      });
+      if (!preloaderDone) {
+        gsap.set(root.current, { autoAlpha: 0, y: -20 });
+        return;
+      }
+      gsap.fromTo(
+        root.current,
+        { autoAlpha: 0, y: -20 },
+        { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' },
+      );
     },
-    { scope: root },
+    { scope: root, dependencies: [preloaderDone] },
   );
 
   return (

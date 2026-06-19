@@ -46,3 +46,4 @@ yarn-error.log*
 docs/tz-refs/.review/
 docs/tz-refs/.current/
 docs/tz-refs/.after/
+docs/tz-refs/.shots/

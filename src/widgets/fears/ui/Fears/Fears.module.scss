@@ -23,40 +23,16 @@
   gap: clamp(var(--space-8), 4vw, var(--space-12));
 
   @include up(lg) {
-    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
-    column-gap: clamp(var(--space-8), 4vw, var(--space-16));
+    grid-template-columns: minmax(0, 0.68fr) minmax(0, 0.78fr); // правая колонка сужена — gap растёт за её счёт
+    column-gap: clamp(var(--space-16), 7vw, var(--space-24));
     align-items: start; // текст и список выровнены по верху (компактно, как в макете)
-    padding-left: calc(var(--fears-photo-w) + clamp(var(--space-6), 3vw, var(--space-12)));
   }
 }
 
 // Фото. Мобайл: блок сверху, скруглённый, мягкая тень. ≥lg: выходит из левого края страницы (left:0),
 // на всю высоту блока; правый и верх/низ края растворяются в фоне через mask («затуманены»).
 .photo {
-  min-height: 17rem;
-  border-radius: var(--radius-lg);
-  background: center / cover no-repeat;
-  box-shadow: var(--shadow-card);
-
-  @include up(lg) {
-    position: absolute;
-    z-index: 0;
-    inset-block: 0;
-    left: 0;
-
-    width: var(--fears-photo-w);
-    min-height: 0;
-    border-radius: 0;
-
-    box-shadow: none;
-
-    // Растворяем правый и верх/низ края в фоне. mask-image + mask-composite:intersect — современные
-    // браузеры (вкл. Safari 15.4+) понимают без префикса; старый -webkit- не пишем (stylelint его не любит).
-    mask-image:
-      linear-gradient(to right, #000 38%, transparent 100%),
-      linear-gradient(to bottom, transparent 0%, #000 13%, #000 87%, transparent 100%);
-    mask-composite: intersect;
-  }
+  display: none; // временно скрыто — решение по размещению фото отдельно
 }
 
 // Текстовый блок (шапка + задача + CTA) — над фото.
@@ -66,37 +42,46 @@
 
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: clamp(var(--space-5), 3vw, var(--space-12)); // min снижен — на мобиле подпункты плотнее
 }
 
 .head {
-  // Заголовок секции — компактнее глобального h2, помещается в колонку без переносов посреди слова.
+  --section-header-gap: var(--space-4);
+
   h2 {
     font-size: var(--fs-2xl);
     text-wrap: balance;
   }
+
+  // Subtitle получает дополнительный сверх-gap, чтобы отступ h2→subtitle был заметно
+  // больше чем eyebrow→h2.
+  > p:last-child {
+    margin-top: var(--space-6);
+  }
 }
 
-// Блок «Наша задача» — мелкая золотая метка + текст-обещание.
+// Оранжевый акцентный hairline между подзаголовком и абзацем «Наша задача» (макет 07).
+.divider {
+  align-self: flex-start;
+
+  width: clamp(3rem, 5vw, 4rem);
+  height: 0.1875rem;
+  border-radius: 999px;
+
+  background: var(--color-accent);
+}
+
+// Абзац «Наша задача …»: жирный тёмный зачин inline + продолжение приглушённым (как в макете).
 .mission {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.missionTitle {
-  font-family: var(--font-display);
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  color: var(--color-accent);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.missionText {
   font-size: var(--fs-base);
   line-height: var(--lh-normal);
   color: color-mix(in srgb, var(--color-text) 88%, transparent);
+}
+
+.missionLead {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-strong);
 }
 
 .cta {
@@ -117,8 +102,19 @@
 }
 
 .ctaNote {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+
   font-size: var(--fs-sm);
   color: var(--color-text-muted);
+}
+
+// Щит-галочка перед заметкой (как в макете 07) — акцентного цвета.
+.ctaNoteIcon {
+  flex-shrink: 0;
+  font-size: var(--fs-lg);
+  color: var(--color-accent);
 }
 
 // Правая колонка — список «опасение → ответ» + гарантия. Над фото.
@@ -159,6 +155,15 @@
   & + & {
     border-top: 1px solid var(--color-hairline);
   }
+
+  // ≥xl: 3-колоночный грид [иконка | заголовок | ответ]; на переходных размерах (lg–xl)
+  // остаётся flex — иконка + тело стопкой, без горизонтального дробления.
+  @include up(xl) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 13rem) minmax(0, 1fr);
+    column-gap: clamp(var(--space-4), 2vw, var(--space-6));
+    align-items: center;
+  }
 }
 
 // Чип иконки страха (макет 07): мягкая тёплая «капля» с едва заметным кольцом; иконка двутоновая
@@ -166,22 +171,45 @@
 // гарантированно перебивает color у IconBadge `.surface` независимо от порядка стилей.
 .item .itemIcon {
   flex-shrink: 0;
+
   border-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
+
+  // Круглый чип (макет 07), крупнее и с более крупной двутоновой иконкой внутри.
+  border-radius: 50%;
+
+  font-size: var(--fs-xl);
   color: var(--clr-dark);
+
   background-color: color-mix(in srgb, var(--color-accent) 9%, var(--color-surface));
+
+  svg {
+    width: 1.45em;
+    height: 1.45em;
+  }
 }
 
+// Тело пункта. Мобайл: колонка (заголовок → ответ). ≥lg: растворяется через display:contents —
+// .fear и .answer становятся прямыми детьми 3-колоночного грида .item.
 .itemBody {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  flex: 1;
   gap: var(--space-1);
+  min-width: 0;
+
+  @include up(xl) {
+    display: contents; // убирает обёртку; .fear и .answer занимают колонки 2 и 3 .item
+  }
 }
 
 .fear {
-  font-size: var(--fs-xl);
+  font-size: var(--fs-base);
   font-weight: 600;
   line-height: var(--lh-snug);
   color: var(--color-strong);
+
+  @include up(xl) {
+    min-width: 0;
+  }
 }
 
 .answer {
@@ -189,6 +217,12 @@
   font-size: var(--fs-base);
   line-height: var(--lh-normal);
   color: var(--color-text-muted);
+
+  @include up(xl) {
+    min-width: 0;
+    padding-left: clamp(var(--space-4), 2vw, var(--space-6));
+    border-left: 1px solid var(--color-hairline);
+  }
 }
 
 // Плашка-гарантия снизу (макет 07): щит + сдержанный нейтральный бар (не золотистый), жирный

@@ -108,6 +108,13 @@
     var(--hero-bg, none) center / cover no-repeat;
 }
 
+// Класс-маркер элементов входного каскада Hero (цель gsap). РЕАЛЬНОЕ правило обязательно: иначе
+// styles.reveal === undefined и селектор появления ни на что не указывает (каскад Hero не работает).
+// will-change — корректный хинт: эти элементы анимируются по transform/opacity на входе.
+.reveal {
+  will-change: transform, opacity;
+}
+
 .inner {
   --container-max: var(--site-max); // full-bleed до гаттера, как у хедера
 

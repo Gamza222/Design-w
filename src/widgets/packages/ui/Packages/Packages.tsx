@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(useGSAP);
 
+import { usePreloaderDone } from '@shared/lib';
 import { PACKAGES, PackageCard } from '@entities/package';
 
 import { packageImages } from '../../config/images';
@@ -16,21 +17,25 @@ import styles from './Packages.module.scss';
  *  5-в-ряд (Hero держит 100vh); ниже — интро-шапка сверху + карточки 2×2; на телефонах — по 1 в ряд. */
 export function Packages() {
   const root = useRef<HTMLDivElement>(null);
+  const preloaderDone = usePreloaderDone();
 
-  // Появление: панель — самый нижний крупный элемент первого экрана, поэтому всплывает ПОСЛЕ каскада
-  // контента Hero (.reveal: delay 0.9, stagger 0.12 → последний элемент ~1.6). Уважаем prefers-reduced-motion.
+  // Появление: панель — нижний крупный элемент первого экрана. Часть флоу «сначала прелоадер, потом
+  // сайт»: всплывает, когда шторка уходит (preloaderDone), чуть позже текста Hero (delay 0.25).
+  // Пока шторка на экране — держим скрытой (под ней). Reduced-motion — без анимации.
   useGSAP(
     () => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.from(`.${styles.panel}`, {
-        y: 32,
-        autoAlpha: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        delay: 1.5,
-      });
+      if (!preloaderDone) {
+        gsap.set(`.${styles.panel}`, { autoAlpha: 0, y: 32 });
+        return;
+      }
+      gsap.fromTo(
+        `.${styles.panel}`,
+        { autoAlpha: 0, y: 32 },
+        { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.25 },
+      );
     },
-    { scope: root },
+    { scope: root, dependencies: [preloaderDone] },
   );
 
   return (

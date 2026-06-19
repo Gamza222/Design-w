@@ -1,9 +1,0 @@
-@use 'app/styles/abstracts' as *;
-
-// Финальный CTA — центрированная колонка: шапка + кнопка.
-.cta {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(var(--space-6), 3vw, var(--space-8));
-  align-items: center;
-}

@@ -1,11 +1,6 @@
-import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
-
+import { useScrollReveal } from '@shared/lib';
 import { Container, IconBadge } from '@shared/ui';
 
 import { STEP_ICONS } from '../step-icons';
@@ -21,24 +16,12 @@ interface ProcessStep {
  *  этапами — пунктирный коннектор. Без длительностей/плашек — компактная лента из мокапа. */
 export function Process() {
   const { t } = useTranslation();
-  const root = useRef<HTMLElement>(null);
   const steps = t('home.process.steps', { returnObjects: true }) as ProcessStep[];
 
-  // Появление этапов по скроллу. Уважаем prefers-reduced-motion.
-  useGSAP(
-    () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.from(`.${styles.step}`, {
-        y: 24,
-        autoAlpha: 0,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger: 0.08,
-        scrollTrigger: { trigger: `.${styles.steps}`, start: 'top 85%', once: true },
-      });
-    },
-    { scope: root },
-  );
+  // Появление заголовка и этапов по скроллу (общий хук — единый каскад на всей главной).
+  const root = useScrollReveal<HTMLElement>([`.${styles.title}`, `.${styles.step}`], {
+    start: 'top 80%',
+  });
 
   return (
     <section className={styles.process} ref={root} data-tone="dark">

@@ -1,12 +1,7 @@
-import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 import { ROUTES } from '@shared/config';
+import { useScrollReveal } from '@shared/lib';
 import { Button, Container, IconArrowRight, IconBadge, IconShield, SectionHeader } from '@shared/ui';
 
 import { fearsImage } from '../../config/images';
@@ -23,24 +18,14 @@ interface FearItem {
  *  справа список «опасение → ответ» с двутоновыми иконками и плашка-гарантия снизу. Контент — i18n. */
 export function Fears() {
   const { t } = useTranslation();
-  const root = useRef<HTMLElement>(null);
   const items = t('home.fears.items', { returnObjects: true }) as FearItem[];
 
-  // Появление по скроллу. Уважаем prefers-reduced-motion.
-  useGSAP(
-    () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.from(`.${styles.introText}, .${styles.item}, .${styles.guarantee}`, {
-        y: 24,
-        autoAlpha: 0,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger: 0.08,
-        scrollTrigger: { trigger: root.current, start: 'top 85%', once: true },
-      });
-    },
-    { scope: root },
-  );
+  // Появление по скроллу (общий хук).
+  const root = useScrollReveal<HTMLElement>([
+    `.${styles.introText}`,
+    `.${styles.item}`,
+    `.${styles.guarantee}`,
+  ]);
 
   return (
     <section className={styles.fears} ref={root} data-tone="light">
@@ -60,16 +45,21 @@ export function Fears() {
             subtitle={t('home.fears.subtitle')}
             className={styles.head}
           />
-          <div className={styles.mission}>
-            <p className={styles.missionTitle}>{t('home.fears.missionTitle')}</p>
-            <p className={styles.missionText}>{t('home.fears.missionText')}</p>
-          </div>
+          <span className={styles.divider} aria-hidden="true" />
+          <p className={styles.mission}>
+            <strong className={styles.missionLead}>{t('home.fears.missionTitle')}</strong>
+            {' — '}
+            {t('home.fears.missionText')}
+          </p>
           <div className={styles.cta}>
             <Button to={ROUTES.contact} size="lg" className={styles.ctaBtn}>
               <span>{t('home.fears.cta')}</span>
               <IconArrowRight aria-hidden="true" />
             </Button>
-            <p className={styles.ctaNote}>{t('home.fears.ctaNote')}</p>
+            <p className={styles.ctaNote}>
+              <IconShield className={styles.ctaNoteIcon} aria-hidden="true" />
+              <span>{t('home.fears.ctaNote')}</span>
+            </p>
           </div>
         </div>
 

@@ -1,0 +1,385 @@
+@use 'app/styles/abstracts' as *;
+
+// Секция «География» — тёмная (макет 06).
+.geography {
+  padding-block: clamp(var(--space-16), 6vw, var(--space-24));
+}
+
+.head {
+  max-width: 40ch;
+
+  @include up(lg) {
+    align-self: center; // вертикально по центру относительно карты
+    max-width: 30ch;
+  }
+}
+
+// --- Сцена: ≥lg — заголовок слева, карта справа (мокап 06); ниже — стопкой --
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-6), 3vw, var(--space-8));
+
+  margin-bottom: clamp(var(--space-8), 5vw, var(--space-16));
+
+  @include up(lg) {
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.45fr);
+    gap: clamp(var(--space-6), 4vw, var(--space-12));
+    align-items: center;
+  }
+}
+
+// Карта + плавающие карточки (карточки позиционируются относительно этой обёртки).
+.mapWrap {
+  position: relative;
+}
+
+.map {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+// Силуэт РФ — мягкая заливка + контур (не масштабируемый, всегда ~1px).
+.land {
+  stroke: color-mix(in srgb, var(--clr-accent) 34%, transparent);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+// Группа города — нужна реальным классом (GSAP анимирует .node); fill-box центрирует scale.
+.node {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+// Маршруты из Москвы — пунктир акцентом.
+.arc {
+  fill: none;
+  stroke: color-mix(in srgb, var(--clr-accent) 55%, transparent);
+  stroke-dasharray: 1 7;
+  stroke-linecap: round;
+  stroke-width: 1.6;
+}
+
+.plane {
+  fill: var(--clr-accent);
+}
+
+// Города.
+.nodeGlow {
+  opacity: 0.45;
+  fill: var(--clr-accent);
+}
+
+.nodeDot {
+  fill: var(--clr-accent);
+}
+
+.nodeRing {
+  fill: none;
+  stroke: color-mix(in srgb, var(--clr-accent) 70%, transparent);
+  stroke-width: 1.4;
+}
+
+.label {
+  // На узких экранах карта мелкая → подписи нечитаемы; показываем только светящиеся точки.
+  display: none;
+
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 600;
+  paint-order: stroke;
+
+  fill: var(--clr-light);
+  stroke: color-mix(in srgb, var(--clr-dark) 85%, transparent);
+  stroke-linejoin: round;
+  stroke-width: 4;
+
+  @include up(md) {
+    display: initial;
+  }
+}
+
+// --- Плавающие карточки (≥lg — поверх карты; ниже — обычным потоком) --------
+.overlays {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-4), 2vw, var(--space-5));
+
+  @include up(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  @include up(lg) {
+    display: contents;
+  }
+}
+
+// Карточка «работаем из любой точки».
+.remoteCard {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+
+  padding: clamp(var(--space-4), 1.6vw, var(--space-5));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-glass);
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background-color: var(--clr-dark-surface);
+  }
+
+  @include up(lg) {
+    position: absolute;
+    bottom: 7%;
+    left: 0;
+    max-width: 19rem;
+  }
+}
+
+.remoteIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 38%, transparent);
+  border-radius: var(--radius-md);
+
+  font-size: var(--fs-xl);
+  color: var(--color-accent);
+}
+
+.remoteTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.remoteText {
+  margin-top: var(--space-1);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+// Карточка кейса.
+.caseCard {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-glass);
+
+  @include up(lg) {
+    position: absolute;
+    top: 6%;
+    right: 0;
+    width: 17rem;
+  }
+}
+
+.casePhoto {
+  aspect-ratio: 16 / 9;
+  background: center / cover no-repeat;
+}
+
+.caseBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: clamp(var(--space-4), 1.5vw, var(--space-5));
+}
+
+.caseLabel {
+  font-size: var(--fs-xs);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.caseTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.caseCity {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+
+  svg {
+    font-size: var(--fs-base);
+    color: var(--color-accent);
+  }
+}
+
+.caseCta {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  margin-top: var(--space-2);
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-accent);
+
+  transition: gap var(--transition-base);
+
+  svg {
+    font-size: var(--fs-base);
+  }
+
+  &:hover {
+    gap: var(--space-3);
+  }
+}
+
+// --- Статы -----------------------------------------------------------------
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(var(--space-5), 2.5vw, var(--space-8));
+
+  margin: 0 0 clamp(var(--space-8), 5vw, var(--space-16));
+  padding: clamp(var(--space-6), 3vw, var(--space-8)) 0;
+  border-block: 1px solid var(--color-border);
+
+  list-style: none;
+
+  @include up(md) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.statItem {
+  min-width: 0;
+}
+
+// --- Как работает онлайн + CTA ---------------------------------------------
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-6), 3vw, var(--space-8));
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+
+.how {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-5), 2vw, var(--space-6));
+}
+
+.howTitle {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+}
+
+.howList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-4), 2vw, var(--space-6));
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  @include up(sm) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.howStep {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  padding: clamp(var(--space-4), 1.6vw, var(--space-5));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background-color: var(--color-surface);
+}
+
+.howNum {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+}
+
+.howIcon {
+  display: inline-flex;
+  font-size: var(--fs-xl);
+  color: var(--color-accent);
+}
+
+.howStepTitle {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: var(--lh-snug);
+  color: var(--color-text);
+}
+
+.howStepDesc {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+// CTA-карточка справа.
+.ctaCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  justify-content: center;
+
+  padding: clamp(var(--space-6), 2.5vw, var(--space-8));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-muted-bg);
+}
+
+.ctaTitle {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+}
+
+.ctaText {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+.ctaBtn {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}

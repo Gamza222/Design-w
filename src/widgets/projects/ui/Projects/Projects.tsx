@@ -1,14 +1,9 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 import type { Project } from '@entities/project';
 import { ROUTES } from '@shared/config';
-import { cn } from '@shared/lib';
+import { cn, useScrollReveal } from '@shared/lib';
 import { AppLink, Container, IconArrowRight, IconChevronDown } from '@shared/ui';
 
 import { ProjectTile } from '../ProjectTile/ProjectTile';
@@ -23,23 +18,12 @@ interface ProjectsProps {
  *  раскрывает кнопка «Ещё» (без горизонтального слайдера). Данные — из entity `project`. */
 export function Projects({ projects }: ProjectsProps) {
   const { t } = useTranslation();
-  const root = useRef<HTMLElement>(null);
   const [expanded, setExpanded] = useState(false);
 
-  // Появление плиток по скроллу. Уважаем prefers-reduced-motion.
-  useGSAP(
-    () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.from(`.${styles.gallery} > *`, {
-        y: 24,
-        autoAlpha: 0,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger: 0.08,
-        scrollTrigger: { trigger: `.${styles.gallery}`, start: 'top 88%', once: true },
-      });
-    },
-    { scope: root },
+  // Появление шапки и плиток по скроллу (общий хук).
+  const root = useScrollReveal<HTMLElement>(
+    [`.${styles.head} > *`, `.${styles.gallery} > *`],
+    { start: 'top 80%' },
   );
 
   if (projects.length === 0) return null;

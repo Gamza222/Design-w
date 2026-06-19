@@ -7,7 +7,7 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 import { ROUTES } from '@shared/config';
-import { cn } from '@shared/lib';
+import { cn, usePreloaderDone } from '@shared/lib';
 import { Button, Container } from '@shared/ui';
 
 import { heroImages } from '../../config/images';
@@ -24,24 +24,26 @@ export function Hero({ bottomSlot }: HeroProps) {
   const { t } = useTranslation();
   const root = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
+  const preloaderDone = usePreloaderDone();
 
-  // useGSAP — layout-эффект (до paint): .from прячет элементы до первого клиентского
-  // кадра, без вспышки. Prerendered HTML содержит текст → SEO/no-JS не страдают.
-  // delay 0.9 держит хореографию: прелоадер → хедер (delay 0.7) → контент Hero.
+  // Флоу: сначала отыгрывает прелоадер, и только КОГДА шторка уходит (preloaderDone) — каскад Hero.
+  // useGSAP — layout-эффект (до paint): пока шторка на экране, держим контент скрытым (под ней, без
+  // вспышки), затем проигрываем появление. Prerendered HTML содержит текст → SEO/no-JS не страдают.
   useGSAP(
     () => {
       // Уважаем prefers-reduced-motion: без анимации prerendered-контент сразу видим и стабилен.
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.from(`.${styles.reveal}`, {
-        y: 40,
-        autoAlpha: 0,
-        duration: 1,
-        ease: 'power3.out',
-        stagger: 0.12,
-        delay: 0.9,
-      });
+      if (!preloaderDone) {
+        gsap.set(`.${styles.reveal}`, { autoAlpha: 0, y: 36 });
+        return;
+      }
+      gsap.fromTo(
+        `.${styles.reveal}`,
+        { autoAlpha: 0, y: 36 },
+        { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1 },
+      );
     },
-    { scope: root },
+    { scope: root, dependencies: [preloaderDone] },
   );
 
   // Parallax фона: фон-слой плавно сдвигается, пока секция проходит вьюпорт (scrub привязан к скроллу).

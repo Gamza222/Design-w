@@ -17,7 +17,6 @@ import { Header } from '@widgets/header';
 
 import { Preloader } from './preloader/Preloader';
 import { Providers } from './providers';
-import { SmoothScroll } from './smooth-scroll/SmoothScroll';
 import type { Route } from './+types/root';
 import styles from './root.module.scss';
 
@@ -59,12 +58,10 @@ export default function App() {
     <Providers>
       <Preloader />
       <Header />
-      <SmoothScroll>
-        <main className={styles.main}>
-          <Outlet />
-        </main>
-        <Footer />
-      </SmoothScroll>
+      <main className={styles.main}>
+        <Outlet />
+      </main>
+      <Footer />
     </Providers>
   );
 }

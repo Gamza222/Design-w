@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { ROUTES } from '@shared/config';
 import { AppLink, Image } from '@shared/ui';
 
@@ -9,6 +11,7 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const { t } = useTranslation();
   const { slug, frontmatter } = project;
 
   return (
@@ -26,7 +29,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <div className={styles.body}>
         <h3 className={styles.title}>{frontmatter.title}</h3>
         <p className={styles.meta}>
-          {frontmatter.style} · {frontmatter.area} m² · {frontmatter.year}
+          {frontmatter.style} · {frontmatter.area} {t('portfolio.meta.areaUnit')} ·{' '}
+          {frontmatter.year}
         </p>
       </div>
     </AppLink>

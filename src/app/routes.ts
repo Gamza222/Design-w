@@ -12,6 +12,17 @@ function pages(suffix: string): RouteConfigEntry[] {
   return [
     index('../pages/home/ui/HomePage.tsx', { id: `home${suffix}` }),
     route('services', '../pages/services/ui/ServicesPage.tsx', { id: `services${suffix}` }),
+    // SEO-посадки услуг: три литеральных корневых пути на один модуль страницы
+    // (какая услуга — модуль определяет по pathname; список — SERVICE_LANDINGS в @shared/config).
+    route('planirovka-kvartiry', '../pages/service/ui/ServicePage.tsx', {
+      id: `service-planirovka${suffix}`,
+    }),
+    route('3d-vizualizaciya-interera', '../pages/service/ui/ServicePage.tsx', {
+      id: `service-viz3d${suffix}`,
+    }),
+    route('eskiznyj-dizajn-proekt', '../pages/service/ui/ServicePage.tsx', {
+      id: `service-sketch${suffix}`,
+    }),
     route('portfolio', '../pages/portfolio/ui/PortfolioPage.tsx', { id: `portfolio${suffix}` }),
     route('portfolio/:slug', '../pages/project/ui/ProjectPage.tsx', { id: `project${suffix}` }),
     route('blog', '../pages/blog/ui/BlogPage.tsx', { id: `blog${suffix}` }),

@@ -9,9 +9,15 @@ import {
   useLocation,
 } from 'react-router';
 
-import { getLocaleFromPath, localizePath, SITE_URL, stripLocale } from '@shared/config';
+import {
+  getLocaleFromPath,
+  localizePath,
+  normalizePathname,
+  SITE_URL,
+  stripLocale,
+} from '@shared/config';
 import { localeDict } from '@shared/lib';
-import { AppLink } from '@shared/ui';
+import { AppLink, Logo } from '@shared/ui';
 import { Footer } from '@widgets/footer';
 import { Header } from '@widgets/header';
 
@@ -23,7 +29,8 @@ import styles from './root.module.scss';
 import './styles/global.scss';
 
 export function Layout({ children }: { children: ReactNode }) {
-  const { pathname } = useLocation();
+  const { pathname: rawPathname } = useLocation();
+  const pathname = normalizePathname(rawPathname);
   const locale = getLocaleFromPath(pathname);
   const canonical = stripLocale(pathname);
 
@@ -73,9 +80,17 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <main className={styles.errorPage}>
-      <h1>{is404 ? t.notFound.title : 'Error'}</h1>
-      <p>{is404 ? t.notFound.subtitle : 'Something went wrong.'}</p>
-      <AppLink to="/">{t.notFound.back}</AppLink>
+      <AppLink to="/" className={styles.errorBrand} aria-label={t.brand}>
+        <Logo title={t.brand} style={{ height: '2.5rem' }} />
+      </AppLink>
+      <p className={styles.errorCode} aria-hidden="true">
+        {is404 ? '404' : '500'}
+      </p>
+      <h1 className={styles.errorTitle}>{is404 ? t.notFound.title : 'Error'}</h1>
+      <p className={styles.errorText}>{is404 ? t.notFound.subtitle : 'Something went wrong.'}</p>
+      <AppLink to="/" className={styles.errorBtn}>
+        {t.notFound.back}
+      </AppLink>
     </main>
   );
 }

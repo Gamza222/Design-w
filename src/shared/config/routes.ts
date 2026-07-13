@@ -15,6 +15,16 @@ export const ROUTES = {
   contact: '/contact',
 } as const;
 
+/** SEO-посадки услуг: корневые литеральные пути (одинаковы в обеих локалях).
+ *  Контент страниц — i18n `servicePages.*`; сами роуты объявлены в `app/routes.ts`. */
+export const SERVICE_LANDINGS = {
+  planirovka: '/planirovka-kvartiry',
+  viz3d: '/3d-vizualizaciya-interera',
+  sketch: '/eskiznyj-dizajn-proekt',
+} as const;
+
+export type ServiceLandingKey = keyof typeof SERVICE_LANDINGS;
+
 /** Static (non-content) page paths used to seed prerendering. */
 export const STATIC_PATHS: readonly string[] = [
   ROUTES.home,
@@ -23,7 +33,16 @@ export const STATIC_PATHS: readonly string[] = [
   ROUTES.blog,
   ROUTES.about,
   ROUTES.contact,
+  ...Object.values(SERVICE_LANDINGS),
 ];
+
+/** Убираем хвостовой слэш (кроме корня). Статические хосты отдают одну страницу и по
+ *  `/services`, и по `/services/`, а HTML пререндерен для пути без слэша — нормализация
+ *  держит `lang`/canonical/og:url одинаковыми на сервере и клиенте (иначе hydration mismatch). */
+export function normalizePathname(pathname: string): string {
+  const trimmed = pathname.replace(/\/+$/, '');
+  return trimmed === '' ? '/' : trimmed;
+}
 
 /** Prefix a canonical path with a locale (default locale stays unprefixed). */
 export function localizePath(path: string, locale: Locale): string {

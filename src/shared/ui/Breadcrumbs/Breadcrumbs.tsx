@@ -11,11 +11,12 @@ interface Crumb {
 interface BreadcrumbsProps {
   items: Crumb[];
   className?: string;
-  'aria-label'?: string;
+  /** Подпись навигации — обязательна и приходит из i18n вызывающего (не хардкодим язык в shared). */
+  'aria-label': string;
 }
 
 /** Хлебные крошки: nav > ol, aria-current на последней. Theme-agnostic. */
-export function Breadcrumbs({ items, className, 'aria-label': ariaLabel = 'Хлебные крошки' }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, className, 'aria-label': ariaLabel }: BreadcrumbsProps) {
   return (
     <nav aria-label={ariaLabel} className={cn(styles.nav, className)}>
       <ol className={styles.list}>

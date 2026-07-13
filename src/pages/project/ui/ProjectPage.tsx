@@ -29,7 +29,7 @@ export default function ProjectPage() {
   const facts = [
     { label: t('portfolio.meta.year'), value: frontmatter.year },
     { label: t('portfolio.meta.location'), value: frontmatter.location },
-    { label: t('portfolio.meta.area'), value: `${frontmatter.area} m²` },
+    { label: t('portfolio.meta.area'), value: `${frontmatter.area} ${t('portfolio.meta.areaUnit')}` },
     { label: t('portfolio.meta.style'), value: frontmatter.style },
   ];
 
@@ -51,6 +51,7 @@ export default function ProjectPage() {
             alt={frontmatter.title}
             ratio="16 / 9"
             className={styles.cover}
+            priority
           />
         )}
 

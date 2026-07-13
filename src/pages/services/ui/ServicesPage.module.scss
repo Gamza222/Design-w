@@ -1,0 +1,77 @@
+@use 'app/styles/abstracts' as *;
+
+.landingsHead {
+  margin-bottom: clamp(var(--space-8), 3vw, var(--space-12));
+}
+
+.landings {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-4), 2vw, var(--space-6));
+
+  @include up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+// Карточка-ссылка на SEO-посадку услуги.
+.landingCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  padding: clamp(var(--space-6), 2.5vw, var(--space-8));
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+
+  color: inherit;
+
+  background: var(--color-surface);
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
+
+  &:hover {
+    transform: translateY(-0.25rem);
+    border-color: var(--color-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+.landingTitle {
+  font-size: var(--fs-xl);
+}
+
+.landingText {
+  flex-grow: 1;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.landingMeta {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.landingCta {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-accent-hover);
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}

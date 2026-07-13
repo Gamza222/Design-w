@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 import { LocaleSwitcher } from '@features/locale-switcher';
-import { CONTACTS, ROUTES } from '@shared/config';
+import { CONTACTS, ROUTES, stripLocale } from '@shared/config';
 import { cn, usePreloaderDone } from '@shared/lib';
 import { AppLink, Button, Container, Logo, SocialLinks } from '@shared/ui';
 
@@ -16,10 +17,17 @@ import styles from './Header.module.scss';
 
 export function Header() {
   const { t } = useTranslation();
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const scrolled = useHeaderScroll();
   const root = useRef<HTMLElement>(null);
   const preloaderDone = usePreloaderDone();
+
+  // Хедер прозрачный (светлый текст) только над тёмным Hero главной. На остальных страницах
+  // верх контента светлый — держим сплошную navy-подложку с самого верха, иначе светлая
+  // навигация «пропадает» на светлом фоне (нечитабельна). Тёмный тон = текст всегда контрастен.
+  const isHome = stripLocale(pathname) === ROUTES.home;
+  const solid = scrolled || open || !isHome;
 
   const close = () => setOpen(false);
 
@@ -57,7 +65,7 @@ export function Header() {
   );
 
   return (
-    <header ref={root} className={cn(styles.header, (scrolled || open) && styles.scrolled)}>
+    <header ref={root} className={cn(styles.header, solid && styles.scrolled)}>
       <Container className={styles.inner}>
         <AppLink to={ROUTES.home} className={styles.brand} onClick={close}>
           <Logo title={t('brand')} style={{ height: 'var(--space-8)' }} />

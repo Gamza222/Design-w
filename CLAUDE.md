@@ -12,7 +12,8 @@ SEO-friendly, контент пополняется через MDX. Работа
 - **Контент в MDX** — `content/blog/{ru,en}` и `content/portfolio/{ru,en}`, грузится на build-time
   через `import.meta.glob`
 - **SCSS Modules + CSS-переменные** — палитра в `src/app/styles/tokens.scss`
-- **GSAP + @gsap/react** (`useGSAP`) — ScrollSmoother (плавный скролл), анимации
+- **GSAP + @gsap/react** (`useGSAP`) — ScrollTrigger-анимации (reveal по скроллу, параллакс Hero);
+  скролл нативный (ScrollSmoother убран при редизайне)
 - **Тесты**: Vitest + RTL (unit/component) · Playwright (e2e против собранной статики)
 - **Качество**: ESLint · Steiger (границы FSD) · Stylelint · Prettier
 - **npm** · деплой **Vercel** (статика, `outputDirectory: build/client`)
@@ -65,14 +66,23 @@ SEO-friendly, контент пополняется через MDX. Работа
 - **Новый проект портфолио** → скил `new-project` (RU+EN MDX в `content/portfolio/`). Затем `npm run build`.
 - **Новый слайс** → скил `new-slice` (`widgets|features|entities` + public API).
 - **i18n-ключ** → добавить в `src/shared/config/i18n/locales/ru.json` **и** `en.json`
-  (структура зеркальна; верхние ключи: `brand, nav, cta, home, services, portfolio, blog, about,
-  contact, footer, notFound`). В компонентах — `const { t } = useTranslation(); t('blog.title')`.
+  (структура зеркальна; верхние ключи: `brand, nav, cta, header, home, services, portfolio, blog,
+  achievements, about, contact, footer, servicePages, notFound`). В компонентах —
+  `const { t } = useTranslation(); t('blog.title')`.
+- **SEO-посадка услуги** → путь в `SERVICE_LANDINGS` (`src/shared/config/routes.ts`, автоматом попадает
+  в prerender/sitemap), роут в `src/app/routes.ts` (модуль `pages/service/ui/ServicePage.tsx` общий),
+  контент — ключ в `servicePages.*` (ru+en). Хаб-карточки на `/services` строятся из `SERVICE_LANDINGS`.
+- **Sitemap** генерится в `npm run build` (`scripts/generate-sitemap.mjs` обходит `build/client`).
 - **Сменить палитру** → править **только** «сырые» цвета в `src/app/styles/tokens.scss` (`--clr-*`);
   компоненты используют семантические токены (`--color-text`, `--color-accent` и т.д.).
 - **Прогнать тесты** → `npm test` (unit) · `npm run e2e` (e2e).
+- **Локальный preview** → `npm run preview` (`scripts/preview.mjs`, порт 3000, хост 127.0.0.1) —
+  зеркалит Vercel: `/services` → `services/index.html`, неизвестный путь → `__spa-fallback.html` (200).
+  `vite preview` не годится: его SPA-режим отдаёт корневой `index.html` для любых путей без хвостового
+  слэша → на каждой странице кроме главной ловится hydration mismatch (React #418).
 - **Портфолио «все в строку на больших экранах»** (быстрый откат) → сейчас лента «Примеры наших работ»
   ограничена **макс. 4 в ряд** + кнопка «Ещё» раскрывает остальные (`Projects.module.scss` → `.gallery`
-  колонки `2 → 3(md) → 4(xl)`; правила `.gallery:not(.expanded) > :nth-child(n+…)` прячут «хвост» за
+  колонки `1 → 2(sm) → 3(md) → 4(xl)`; правила `.gallery:not(.expanded) > :nth-child(n+…)` прячут «хвост» за
   первой строкой; кнопка `.moreBtn` + state `expanded` в `Projects.tsx`). **Чтобы вернуть «все 6 в один
   ряд» на больших экранах:** в `.gallery` поставить на `up(xl)`/`up(wide)` `grid-template-columns:
   repeat(6, minmax(0,1fr))`, убрать (или закрыть медиазапросом) правила скрытия `:nth-child` и скрыть
@@ -99,8 +109,7 @@ npm run typecheck && npm run lint && npm run lint:fsd && npm test && npm run bui
   единицы навешиваются при интерполяции в `clamp()` (иначе `16px/1920` даёт `px` и `…pxvw` ломает CSS).
 - **Кап ширины:** `body { max-width: var(--site-max) /*4000px*/; margin-inline: auto }`,
   тёмный фон полей за пределами — `html { background: var(--clr-dark) }` (`src/app/styles/global.scss`).
-  `#smooth-content` **не трогаем** (его транслирует ScrollSmoother). Фиксированный `Header` капается отдельно
-  тем же `max-width + margin-inline: auto`.
+  Фиксированный `Header` капается отдельно тем же `max-width + margin-inline: auto`.
 - **Правило единиц:** всё, что должно зумиться (размеры, отступы, иконки, высота хедера) — в **rem**;
   «физические» мелочи (бордеры `1px`, `outline`/`outline-offset` фокуса) — оставляем в **px**.
 - **px-медиазапросы (`$bp-*`) на флюид НЕ реагируют** (они абсолютные) → брейкпоинт бургера `down(xl)` стабилен.
@@ -109,8 +118,8 @@ npm run typecheck && npm run lint && npm run lint:fsd && npm test && npm run bui
   `<Container>` выровнены. rem-член clamp **замораживает гаттер ~на 4000px** (корневой `font-size` там капнут).
 - **Full-bleed vs контентные секции:** хедер, **Hero** и **«Пакеты»** на своём `.inner` локально ставят
   `--container-max: var(--site-max)` → тянутся до гаттера, края совпадают с навбаром. Остальные секции
-  держат глобальный `--container-max: 1280px` (кап читабельности) — на ≤1280 совпадают с навбаром, выше
-  центрируются. Главный экран собран из `@widgets/hero` + `@widgets/packages` (+ `@entities/package`,
+  держат глобальный `--container-max: 80rem` (кап читабельности; **в rem** — на 1920 это 1280px, а выше
+  растёт вместе с флюид-зумом: кап в px «сжимал» секции на >1920 — переносы по слову, наложения карточек). Главный экран собран из `@widgets/hero` + `@widgets/packages` (+ `@entities/package`,
   data-driven пакеты, картинки сгруппированы в `config/images.ts`).
 - **TODO (follow-up):** `--fs-4xl: clamp(2.75rem, 6vw, 5rem)` у `h1` — «двойной флюид» (и rem, и vw зависят
   от ширины); упростить до плоского rem. Доводка остальных секций (услуги/шаги/футер) под макет — отдельно.
@@ -122,7 +131,7 @@ npm run typecheck && npm run lint && npm run lint:fsd && npm test && npm run bui
   Новый MDX виден в сборке **только после `npm run build`** (без on-demand).
 - **`entry.server.tsx` — потоковый рендер.** `renderToString` ломает гидрацию (нет данных в HTML →
   клиент висит на `__reactRouterContext.stream`). Используем `renderToReadableStream` + `await allReady`.
-- **GSAP ScrollSmoother — синглтон.** Инициализация в `useGSAP`, через `ScrollSmoother.get() ?? create()`;
-  на SPA-навигации `ScrollSmoother.get()?.refresh()`. Никакого `window`/`document` во время рендера.
+- **GSAP — только внутри `useGSAP`.** Reveal по скроллу — общий хук `useScrollReveal` (`@shared/lib`),
+  уважает `prefers-reduced-motion` и ждёт ухода прелоадера. Никакого `window`/`document` во время рендера.
 - **prerender-хелпер исполняется в Node** (без React/`import.meta`) — отдельный reader на `gray-matter`.
 - **Vitest держим без плагина reactRouter** (`vitest.config.ts` отдельно).

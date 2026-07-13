@@ -56,6 +56,7 @@ location (город), area (м²), style, type (тип объекта), cover, 
 | Этапы процесса (иконка + срок) | `src/widgets/process/config/steps.ts` *(Фаза 2)* |
 | Города на карте (имя + координаты) | `src/widgets/geography/config/cities.ts` *(Фаза 2)* |
 | Телефон, соцсети | `src/shared/config/contacts.ts` |
+| Пути SEO-посадок услуг (`/planirovka-kvartiry`, …) | `SERVICE_LANDINGS` в `src/shared/config/routes.ts` + роуты в `src/app/routes.ts`; тексты — `servicePages.*` в i18n |
 | Адрес/часы работы | i18n: `header.hours`, `contact.*` |
 
 ## 6. Что НЕ требует пересборки vs требует

@@ -84,8 +84,10 @@ export function Achievements() {
                 {initials(review.author)}
               </span>
               <div className={styles.reviewMeta}>
+                {/* Иконка внутри span с nowrap-хвостом: при переносе имени она едет за последним
+                    словом, а не повисает отдельно по центру двухстрочного имени. */}
                 <p className={styles.author}>
-                  <span>{review.author}</span>
+                  {review.author}
                   <FaTelegramPlane className={styles.reviewSocial} aria-hidden="true" />
                 </p>
                 <p className={styles.role}>{review.role}</p>

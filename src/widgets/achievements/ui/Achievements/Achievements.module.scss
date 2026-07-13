@@ -13,12 +13,14 @@
   grid-template-columns: 1fr;
   gap: clamp(var(--space-8), 3vw, var(--space-12));
 
-  // md–xl: stats слева (2 ряда), reviews + team стопкой справа
+  // md–xl: статы полосой сверху, ниже отзывы и команда бок о бок.
+  // (Вариант «stats слева на 2 ряда» оставлял большую пустоту над цифрами:
+  // колонка отзывов+команды гораздо выше, а stats центрировались.)
   @include up(md) {
     grid-template-areas:
-      "stats reviews"
-      "stats team";
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      "stats stats"
+      "reviews team";
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
   }
 
@@ -43,6 +45,11 @@
 
   @include up(md) {
     grid-area: stats;
+    grid-template-columns: repeat(4, minmax(0, 1fr)); // полоса цифр над карточками
+  }
+
+  @include up(xl) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); // снова 2×2 в левой колонке
   }
 
   @include up(xxl) {
@@ -103,15 +110,16 @@
   color: var(--color-text);
 }
 
-// Фиксированная высота карточки отзыва — при перелистывании контент не «прыгает». Длинный текст
-// скроллится внутри (overflow на .reviewText).
+// Карточка отзыва авто-высоты с min-height: цитаты в i18n близки по длине, поэтому при
+// перелистывании высота меняется максимум на строку. Жёсткая высота с внутренним скроллом
+// срезала цитату посреди строки без многоточия — читалось как сломанная вёрстка.
 .review {
   display: flex;
   flex: 0 0 auto;
   flex-direction: column;
   gap: var(--space-4);
 
-  height: clamp(13rem, 14vw, 15.5rem);
+  min-height: clamp(13rem, 14vw, 15.5rem);
   margin: 0;
   padding: clamp(var(--space-4), 1.5vw, var(--space-5));
   border: 1px solid var(--color-hairline);
@@ -122,13 +130,7 @@
 }
 
 .reviewText {
-  scrollbar-width: thin;
-
-  overflow-y: auto;
   flex: 1 1 auto;
-
-  min-height: 0;
-
   font-size: var(--fs-base);
   line-height: var(--lh-normal);
   color: color-mix(in srgb, var(--color-text) 88%, transparent);
@@ -136,6 +138,7 @@
 
 .reviewFoot {
   display: flex;
+  flex-wrap: wrap; // на очень узкой карточке рейтинг переносится вниз, а не сжимает имя
   gap: var(--space-3);
   align-items: center;
 
@@ -169,19 +172,19 @@
 }
 
 .author {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-
   font-size: var(--fs-sm);
   font-weight: 600;
 }
 
-// Иконка соцсети (Telegram) — небольшая, в акцентном цвете, чтобы было понятно источник отзыва.
+// Иконка соцсети (Telegram) — инлайном сразу за именем: при переносе имени едет за последним словом.
 .reviewSocial {
-  flex-shrink: 0;
+  display: inline-block;
+
+  margin-left: var(--space-2);
+
   font-size: var(--fs-base);
   color: var(--color-accent);
+  vertical-align: -0.2em;
 }
 
 .role {

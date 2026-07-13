@@ -48,6 +48,7 @@ export default function PostPage() {
             alt={frontmatter.title}
             ratio="16 / 9"
             className={styles.cover}
+            priority
           />
         )}
 

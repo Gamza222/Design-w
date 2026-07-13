@@ -7,6 +7,7 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 import { ROUTES } from '@shared/config';
+import { cn } from '@shared/lib';
 import {
   AppLink,
   Button,
@@ -45,7 +46,10 @@ const HOW_ICONS: Icon[] = [IconFolderCheck, IconChat, IconClipboardCheck];
 const HUB = CITIES.find((c) => c.hub) ?? CITIES[0];
 const SPOKES = CITIES.filter((c) => !c.hub);
 // Самолётики — на длинных восточных маршрутах (чтобы не перегружать запад карты).
-const PLANE_ON = new Set(['Екатеринбург', 'Новосибирск', 'Владивосток']);
+const PLANE_ON = new Set(['ekb', 'nsk', 'vlk']);
+// Ключевые города, чьи подписи видны и на мобильной карте (остальные — только точки:
+// при ширине ~320px все девять подписей нечитаемы и слипаются).
+const MOBILE_LABELS = new Set(['moscow', 'spb', 'nsk', 'vlk']);
 
 /** Точка квадратичной кривой Безье в параметре t. */
 function quadPoint(p0: City, cx: number, cy: number, p1: City, t: number) {
@@ -146,11 +150,11 @@ export function Geography() {
                   const cx = (HUB.x + city.x) / 2;
                   const cy = (HUB.y + city.y) / 2 - Math.min(140, Math.hypot(city.x - HUB.x, city.y - HUB.y) * 0.32);
                   const d = `M${HUB.x} ${HUB.y} Q ${cx} ${cy} ${city.x} ${city.y}`;
-                  const showPlane = PLANE_ON.has(city.name);
+                  const showPlane = PLANE_ON.has(city.id);
                   const p = showPlane ? quadPoint(HUB, cx, cy, city, 0.55) : null;
                   const a = showPlane ? quadAngle(HUB, cx, cy, city, 0.55) : 0;
                   return (
-                    <g key={city.name}>
+                    <g key={city.id}>
                       <path d={d} className={styles.arc} />
                       {showPlane && p && (
                         <path
@@ -167,7 +171,7 @@ export function Geography() {
               {/* Города */}
               <g>
                 {CITIES.map((city) => (
-                  <g key={city.name} className={styles.node}>
+                  <g key={city.id} className={styles.node}>
                     <circle cx={city.x} cy={city.y} r={city.hub ? 16 : 11} className={styles.nodeGlow} filter="url(#geoGlow)" />
                     {city.hub && <circle cx={city.x} cy={city.y} r={11} className={styles.nodeRing} />}
                     <circle cx={city.x} cy={city.y} r={city.hub ? 5.5 : 4} className={styles.nodeDot} />
@@ -175,9 +179,9 @@ export function Geography() {
                       x={city.anchorEnd ? city.x - 10 : city.x + 10}
                       y={city.y + 5}
                       textAnchor={city.anchorEnd ? 'end' : 'start'}
-                      className={styles.label}
+                      className={cn(styles.label, MOBILE_LABELS.has(city.id) && styles.labelMajor)}
                     >
-                      {city.name}
+                      {t(`home.geography.cities.${city.id}`)}
                     </text>
                   </g>
                 ))}

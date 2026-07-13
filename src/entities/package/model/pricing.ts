@@ -16,11 +16,13 @@ export interface CalcAddon {
   amount: number;
 }
 
-/** Форматы проекта — порядок == i18n `home.calculator.formats`. */
+/** Форматы проекта — порядок == i18n `home.calculator.formats`. Ставки — из макета ТЗ
+ *  (docs/tz-refs/09-calculator.png): 2500 / 3000 / 3500 / 5000. «Полный проект» (5000) дороже
+ *  пакета «Полный» (3900) осознанно: тут «всё включено» — до рабочих чертежей и надзора. */
 export const CALC_FORMATS: CalcFormat[] = [
   { id: 'planning', ratePerM2: 2500 },
-  { id: 'collages', ratePerM2: 3900 },
-  { id: 'viz', ratePerM2: 5000 },
+  { id: 'collages', ratePerM2: 3000 },
+  { id: 'viz', ratePerM2: 3500 },
   { id: 'full', ratePerM2: 5000 },
 ];
 
@@ -29,7 +31,7 @@ export const CALC_ADDONS: CalcAddon[] = [
   { id: 'viz3d', kind: 'perM2', amount: 1000 },
   { id: 'supervision', kind: 'flat', amount: 20000 },
   { id: 'complectation', kind: 'flat', amount: 10000 },
-  { id: 'electric', kind: 'perM2', amount: 300 },
+  { id: 'electric', kind: 'perM2', amount: 500 },
   { id: 'ergonomics', kind: 'flat', amount: 20000 },
   { id: 'visit', kind: 'flat', amount: 5000 },
 ];

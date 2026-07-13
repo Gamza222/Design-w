@@ -168,6 +168,8 @@ export function ProjectCalculator() {
               step={CALC_AREA.step}
               unit={` ${unit}`}
               label={t('home.calculator.areaTitle')}
+              decreaseLabel={t('home.calculator.areaDecrease')}
+              increaseLabel={t('home.calculator.areaIncrease')}
               className={styles.area}
             />
             <p className={styles.areaHint}>{t('home.calculator.areaHint')}</p>

@@ -2,9 +2,15 @@
 
 .root {
   cursor: pointer;
+
   display: inline-flex;
   gap: var(--space-3);
   align-items: center;
+
+  // Тач-мишень: сам квадрат ~22px, поэтому раздуваем кликабельную зону лейбла по вертикали
+  // (вся строка с текстом кликабельна) до комфортных ~44px.
+  min-height: 2.75rem;
+  padding-block: 0.25rem;
 }
 
 .input {

@@ -1,4 +1,10 @@
-import { getDict, getLocaleFromPath, SITE_URL, type Dictionary } from '../../config';
+import {
+  getDict,
+  getLocaleFromPath,
+  normalizePathname,
+  SITE_URL,
+  type Dictionary,
+} from '../../config';
 
 /** Minimal subset of React Router's meta args we rely on (keeps page modules
  * independent of generated `+types`, which a locale-shared route file can't emit). */
@@ -14,7 +20,8 @@ export function localeDict(pathname: string): Dictionary {
 
 /** Build a standard set of React Router meta descriptors (title, description, OG). */
 export function buildMeta(title: string, description: string, pathname: string) {
-  const url = SITE_URL + pathname;
+  // Нормализуем на случай URL с хвостовым слэшом — og:url должен совпадать с пререндером.
+  const url = SITE_URL + normalizePathname(pathname);
   return [
     { title },
     { name: 'description', content: description },

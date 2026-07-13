@@ -1,7 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 3000;
-const BASE_URL = `http://localhost:${PORT}`;
+// Стучимся по IPv4-петле: vite preview по умолчанию слушает только IPv6 (`[::1]`),
+// а к IPv6-loopback на части окружений (Windows / часть CI) connect не проходит —
+// webServer-проба Playwright виснет до таймаута. Поэтому сервер ниже поднимаем на
+// `--host 127.0.0.1`, а адрес фиксируем как 127.0.0.1 (а не `localhost`).
+const HOST = '127.0.0.1';
+const BASE_URL = `http://${HOST}:${PORT}`;
 
 export default defineConfig({
   testDir: './e2e',
@@ -18,7 +23,7 @@ export default defineConfig({
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'npm run build && npm run preview',
+    command: `npm run build && npm run preview -- --host ${HOST}`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,

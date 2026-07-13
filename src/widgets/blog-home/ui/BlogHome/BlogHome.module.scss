@@ -12,7 +12,10 @@
   gap: clamp(var(--space-8), 4vw, var(--space-12));
 
   @include up(wide) {
-    grid-template-columns: minmax(15rem, 20rem) minmax(0, 1fr);
+    // 24rem, а не 20rem: min-content слова «вдохновением» в заголовке ≈ 23rem —
+    // в узкой колонке текст вылезал под карточку статьи.
+    grid-template-columns: minmax(15rem, 24rem) minmax(0, 1fr);
+    column-gap: clamp(var(--space-12), 4vw, var(--space-16));
     align-items: start;
   }
 }

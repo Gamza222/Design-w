@@ -13,9 +13,10 @@ interface StepperProps {
   unit?: ReactNode;
   /** Доступная подпись группы. */
   label?: string;
-  /** Подписи кнопок для скринридеров. */
-  decreaseLabel?: string;
-  increaseLabel?: string;
+  /** Подписи кнопок для скринридеров — обязательны и приходят из i18n вызывающего
+   *  (дефолты на одном языке протекали бы во вторую локаль). */
+  decreaseLabel: string;
+  increaseLabel: string;
   className?: string;
 }
 
@@ -28,8 +29,8 @@ export function Stepper({
   step = 1,
   unit,
   label,
-  decreaseLabel = 'Уменьшить',
-  increaseLabel = 'Увеличить',
+  decreaseLabel,
+  increaseLabel,
   className,
 }: StepperProps) {
   const clamp = (n: number) => Math.min(max, Math.max(min, n));

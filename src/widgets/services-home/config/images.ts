@@ -1,16 +1,16 @@
 import type { ResultSlot } from '../model/types';
 
-/** Изображения результатов по смысловым слотам (карточки услуг + галерея «Что вы получите»).
- *  ВРЕМЕННО подставлены интерьерные фото из public/images/temp — материалы «Планировочное
- *  решение», «Спецификация» и т.д. в репозитории отсутствуют. Чтобы подключить реальные,
- *  достаточно заменить src здесь (подписи берутся из i18n `home.services.slots.*`). */
+/** Изображения результатов по смысловым слотам — материалы №1–№6 от клиента
+ *  (`public/images/services/`, подписи берутся из i18n `home.services.slots.*`).
+ *  Производные слоты: `views3d` — ч/б план с размерами (ТЗ: «изображение планировки или
+ *  чёрно-белого объёмного вида»), `supervision` — интерьерный рендер. */
 export const resultImages: Record<ResultSlot, { src: string; position?: string }> = {
-  plan: { src: '/images/temp/interior-3.jpg' },
-  spec: { src: '/images/temp/interior-8.jpg' },
-  materials: { src: '/images/temp/interior-6.jpg' },
-  drawings: { src: '/images/temp/interior-7.jpg' },
-  viz: { src: '/images/temp/interior-2.jpg' },
-  concept: { src: '/images/temp/interior-1.jpg' },
-  views3d: { src: '/images/temp/interior-5.jpg' },
-  supervision: { src: '/images/temp/interior-4.jpg' },
+  plan: { src: '/images/services/plan.jpg' },
+  concept: { src: '/images/services/concept.jpg' },
+  viz: { src: '/images/services/viz.jpg' },
+  drawings: { src: '/images/services/drawings.jpg' },
+  materials: { src: '/images/services/materials.jpg' },
+  spec: { src: '/images/services/spec.jpg', position: '50% 12%' },
+  views3d: { src: '/images/services/drawings.jpg' },
+  supervision: { src: '/images/services/viz.jpg', position: '70% 50%' },
 };

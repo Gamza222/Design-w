@@ -7,8 +7,9 @@
   gap: var(--space-5);
   align-items: stretch;
 
+  // Референс: левая карточка уже, тёмная панель с формой — шире.
   @include up(lg) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr);
   }
 }
 
@@ -26,29 +27,43 @@
   font-size: var(--fs-xl);
 }
 
+// Референс: лента колонок «иконка + подпись»; на узких — сетка 2–3 в ряд.
 .whoList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
 
   margin: 0;
   padding: 0;
 
   list-style: none;
+
+  @include up(sm) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include up(xl) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
 }
 
 .whoItem {
   display: flex;
-  gap: var(--space-3);
-  align-items: center;
-  font-size: var(--fs-base);
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
 }
 
 // Тёмная акцентная панель — палитру переключает data-tone="dark" (global.scss).
+// Референс: слева текст с преимуществами, справа форма.
 .panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: center;
 
   padding: var(--panel-pad);
   border-radius: var(--radius-lg);
@@ -56,6 +71,17 @@
   &:focus {
     outline: none; // цель программного фокуса (tabindex=-1), кольцо не нужно
   }
+
+  @include up(xl) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: var(--space-8);
+  }
+}
+
+.panelInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 .panelTitle {
@@ -70,11 +96,11 @@
   color: var(--color-text-muted);
 }
 
-// Преимущества под кнопкой: «Ответим в течение рабочего дня» и т.д.
+// Преимущества рядом с формой: «Ответим в течение рабочего дня» и т.д.
 .benefits {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  gap: var(--space-2) var(--space-5);
 
   margin: 0;
   padding: 0;

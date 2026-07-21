@@ -43,7 +43,7 @@ export function ServicesHome() {
   // а autoAlpha прятал бы цель фокуса «Заказать этот пакет» (focus по visibility:hidden — no-op).
   const root = useScrollReveal<HTMLElement>(
     [`.${styles.header}`, `.${styles.perks}`, `.${styles.cell}`],
-    { stagger: 0.06 },
+    { y: 28, duration: 0.85, stagger: 0.07 }, // чуть мягче и медленнее общего дефолта
   );
 
   const perks = t('home.services.perks', { returnObjects: true }) as Perk[];
@@ -78,6 +78,7 @@ export function ServicesHome() {
       <Container>
         <SectionHeader
           className={styles.header}
+          align="center"
           eyebrow={t('home.services.eyebrow')}
           title={t('home.services.title')}
           subtitle={t('home.services.subtitle')}

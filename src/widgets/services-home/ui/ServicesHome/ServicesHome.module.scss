@@ -9,7 +9,8 @@
   margin-bottom: var(--section-gap-dense);
 }
 
-// Строка преимуществ: 4 в ряд на десктопе, 2×2 на мобильных.
+// Строка преимуществ: центрированная лента с тонкими разделителями (референс);
+// на мобильных — 2×2.
 .perks {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -21,7 +22,9 @@
   list-style: none;
 
   @include up(lg) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: flex;
+    gap: 0;
+    justify-content: center;
   }
 }
 
@@ -29,6 +32,14 @@
   display: flex;
   gap: var(--space-3);
   align-items: center;
+
+  @include up(lg) {
+    padding-inline: clamp(var(--space-5), 2vw, var(--space-8));
+
+    &:not(:first-child) {
+      border-left: 1px solid var(--color-hairline);
+    }
+  }
 }
 
 .perkText {

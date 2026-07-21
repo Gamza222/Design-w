@@ -31,14 +31,15 @@ export function OfferCard({ offer, image, onOpen }: OfferCardProps) {
     >
       <span className={styles.media}>
         <Image src={image.src} className={styles.photo} style={{ objectPosition: image.position }} />
+        {/* Крупный золотой номер поверх фото (как в референсе); декоративный —
+            имя кнопки не начинается с «ноль один…» */}
+        <span className={styles.num} aria-hidden="true">
+          {offer.num}
+        </span>
         {offer.popular && <span className={styles.badge}>{t('home.services.popular')}</span>}
       </span>
 
       <span className={styles.body}>
-        {/* Номер декоративный — имя кнопки не начинается с «ноль один…» */}
-        <span className={styles.num} aria-hidden="true">
-          {offer.num}
-        </span>
         <span className={styles.name}>{t(`${base}.name`)}</span>
         <span className={styles.desc}>{t(`${base}.cardDesc`)}</span>
         <span className={styles.footer}>

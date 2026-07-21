@@ -17,7 +17,7 @@
   background: color-mix(in srgb, var(--clr-dark) 55%, transparent);
   backdrop-filter: blur(6px);
 
-  animation: overlay-in 0.25s ease both;
+  animation: overlay-in 0.3s ease both;
 
   @include down(md) {
     padding: var(--space-2);
@@ -39,7 +39,7 @@
   background: var(--clr-light);
   box-shadow: 0 2.5rem 6rem rgb(8 17 37 / 24%);
 
-  animation: dialog-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: dialog-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; // мягкое всплытие
 
   @include down(md) {
     max-height: calc(100dvh - var(--space-8)); // почти весь экран, крестик всегда виден
@@ -126,25 +126,41 @@
 
 .head {
   display: flex;
-  gap: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-2);
   align-items: flex-start;
+
   padding-right: var(--space-8); // не заезжать под крестик
 }
 
+.headTop {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+// Крупный золотой номер (референс).
 .num {
   font-family: var(--font-display);
   font-size: var(--fs-3xl);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  color: color-mix(in srgb, var(--clr-dark) 16%, var(--clr-light));
+  color: var(--clr-accent);
 }
 
-.headText {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  align-items: flex-start;
+// Мягкая золотая пилюля «Популярный пакет» (референс — светлая, не кричащая).
+.popularBadge {
+  padding: 0.3rem var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--clr-accent) 38%, var(--clr-light));
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: color-mix(in srgb, var(--clr-accent) 52%, var(--clr-dark));
+  white-space: nowrap;
+
+  background: color-mix(in srgb, var(--clr-accent) 14%, var(--clr-light));
 }
 
 .title {
@@ -220,7 +236,8 @@
   border-top: 1px solid var(--color-hairline);
 }
 
-// Характеристики: Сроки · Правки · Формат · Работаем (2×2).
+// Характеристики: Сроки · Правки · Формат · Работаем — иконка сверху, 4 в ряд (референс);
+// на узких — 2×2.
 .specs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -230,27 +247,28 @@
   padding: 0;
 
   list-style: none;
+
+  @include up(sm) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 .spec {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  column-gap: var(--space-3);
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
 }
 
 .specIcon {
-  grid-row: 1 / span 2;
-  font-size: 1.4rem;
-  color: color-mix(in srgb, var(--clr-accent) 82%, var(--clr-dark));
+  margin-bottom: var(--space-1);
+  font-size: 1.5rem;
+  color: color-mix(in srgb, var(--clr-dark) 85%, var(--clr-light));
 }
 
 .specLabel {
   font-size: var(--fs-xs);
   color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
 .specValue {
@@ -260,21 +278,27 @@
   color: var(--color-strong);
 }
 
-// «Для кого подходит» — тёплая бежевая подложка.
+// «Для кого подходит» — тёплая бежевая подложка с золотой лампочкой (референс).
 .forWhom {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+
   padding: var(--space-5);
   border-radius: var(--radius-md);
+
   background: color-mix(in srgb, var(--clr-sand) 28%, var(--clr-light));
 }
 
-.forWhomTitle {
-  margin: 0 0 var(--space-2);
+.forWhomIcon {
+  flex-shrink: 0;
+}
 
-  font-size: var(--fs-xs);
+.forWhomTitle {
+  margin: 0 0 var(--space-1);
+  font-size: var(--fs-sm);
   font-weight: 700;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  color: var(--color-strong);
 }
 
 .forWhomText {
@@ -408,12 +432,20 @@
   margin-top: var(--space-4);
 }
 
+// Мини-карточки «Дополнительно»: иконка + название + цена (референс), в ряд по ширине.
+.addonsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space-3);
+}
+
 .addon {
   cursor: pointer;
 
   display: flex;
-  gap: var(--space-3);
-  align-items: center;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
 
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-hairline);
@@ -425,9 +457,9 @@
   background: var(--clr-light);
 
   transition:
-    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    border-color 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 
   &:hover {
     transform: translateY(-0.125rem);
@@ -441,10 +473,16 @@
   }
 }
 
+.addonIcon {
+  margin-bottom: var(--space-1);
+  font-size: 1.3rem;
+  color: color-mix(in srgb, var(--clr-accent) 82%, var(--clr-dark));
+}
+
 .addonName {
-  flex: 1;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   font-weight: 600;
+  line-height: var(--lh-snug);
   color: var(--color-strong);
 }
 
@@ -453,11 +491,6 @@
   font-variant-numeric: tabular-nums;
   color: var(--color-text-muted);
   white-space: nowrap;
-}
-
-.addonArrow {
-  flex-shrink: 0;
-  color: var(--color-text-muted);
 }
 
 @keyframes overlay-in {
@@ -472,12 +505,12 @@
 
 @keyframes dialog-in {
   from {
-    transform: translateY(1rem);
+    transform: translateY(1.25rem) scale(0.98);
     opacity: 0;
   }
 
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }

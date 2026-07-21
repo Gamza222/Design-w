@@ -24,9 +24,9 @@
   box-shadow: var(--shadow-card);
 
   transition:
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 
   &:hover,
   &:focus-visible {
@@ -63,7 +63,7 @@
 
   object-fit: cover;
 
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1); // мягкий, «дорогой» зум фото
 
   // Мобильные: карточки не должны быть слишком высокими — фото ниже.
   @include down(md) {
@@ -71,12 +71,29 @@
   }
 }
 
-// Золотая пилюля «Популярный» — поверх фото (как бейдж тарифа в пакетах).
+// Крупный золотой номер услуги поверх фото (нижний левый угол, как в референсе).
+.num {
+  position: absolute;
+  z-index: 1;
+  bottom: var(--space-2);
+  left: var(--space-4);
+
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--clr-accent);
+  text-shadow: 0 0.125rem 1rem rgb(8 17 37 / 35%); // читаемость на светлых фото
+  letter-spacing: 0.02em;
+}
+
+// Золотая пилюля «Популярный» — поверх фото, слева сверху (как в референсе).
 .badge {
   position: absolute;
   z-index: 1;
   top: var(--space-3);
-  right: var(--space-3);
+  left: var(--space-3);
 
   padding: 0.18rem var(--space-3);
   border-radius: var(--radius-full);
@@ -101,13 +118,6 @@
   padding: var(--card-pad);
 }
 
-.num {
-  font-size: var(--fs-xs);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text-muted);
-  letter-spacing: 0.08em;
-}
-
 .name {
   font-family: var(--font-display);
   font-size: var(--fs-lg);
@@ -123,24 +133,24 @@
 }
 
 // wrap: в узких колонках «Что входит →» уходит на вторую строку, цена не рвётся.
+// Цена и «Что входит →» друг под другом, слева (как в референсе).
 .footer {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
-  align-items: baseline;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
 
   margin-top: auto;
   padding-top: var(--space-3);
 }
 
-// Денежные цены не рвутся за счёт NBSP в i18n-строках; фразовые («Стоимость по запросу»)
-// переносятся по словам.
+// Золотая цена («тёмное золото» — читаемость на светлой карточке). Денежные цены
+// не рвутся за счёт NBSP в i18n-строках; фразовые переносятся по словам.
 .price {
   font-size: calc(var(--fs-base) * 1.06);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: var(--color-strong);
+  color: color-mix(in srgb, var(--clr-accent) 72%, var(--clr-dark));
   letter-spacing: -0.01em;
 }
 

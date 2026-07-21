@@ -51,17 +51,19 @@ export function ServicesCta({ className }: ServicesCtaProps) {
 
       {/* tabIndex=-1 — цель программного фокуса из модалки («Заказать этот пакет»). */}
       <div className={styles.panel} data-tone="dark" id={REQUEST_FORM_ID} tabIndex={-1}>
-        <h3 className={styles.panelTitle}>{t('home.services.cta.title')}</h3>
-        <p className={styles.panelText}>{t('home.services.cta.text')}</p>
+        <div className={styles.panelInfo}>
+          <h3 className={styles.panelTitle}>{t('home.services.cta.title')}</h3>
+          <p className={styles.panelText}>{t('home.services.cta.text')}</p>
+          <ul className={styles.benefits}>
+            {benefits.map((benefit) => (
+              <li key={benefit} className={styles.benefit}>
+                <IconCheck aria-hidden="true" />
+                {benefit}
+              </li>
+            ))}
+          </ul>
+        </div>
         <ConsultForm />
-        <ul className={styles.benefits}>
-          {benefits.map((benefit) => (
-            <li key={benefit} className={styles.benefit}>
-              <IconCheck aria-hidden="true" />
-              {benefit}
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );

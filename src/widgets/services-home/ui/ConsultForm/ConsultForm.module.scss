@@ -6,15 +6,11 @@
   gap: clamp(var(--space-4), 1.6vw, var(--space-5));
 }
 
-// Имя + телефон в одну строку на широких.
+// Поля друг под другом (референс: форма — правая колонка тёмной панели).
 .row {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: clamp(var(--space-4), 1.6vw, var(--space-5));
-
-  @include up(sm) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 .consent {

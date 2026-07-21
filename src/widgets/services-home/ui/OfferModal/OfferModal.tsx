@@ -3,14 +3,17 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 import {
-  Badge,
   Button,
-  IconArrowRight,
+  IconArmchair,
+  IconBadge,
+  IconChat,
   IconCheck,
   IconClock,
   IconClose,
   IconEdit,
   IconFolderCheck,
+  IconHardHat,
+  IconLightbulb,
   IconMapPin,
   Image,
 } from '@shared/ui';
@@ -37,6 +40,13 @@ const SPEC_ICONS = {
 } as const;
 
 const SPEC_KEYS = ['term', 'revisions', 'format', 'coverage'] as const;
+
+// Иконки мини-карточек «Дополнительно» (референс: иконка + название + цена).
+const ADDON_ICONS: Partial<Record<OfferId, typeof IconChat>> = {
+  supervision: IconHardHat,
+  ergonomics: IconArmchair,
+  prelaunch: IconChat,
+};
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -144,18 +154,20 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
             {/* Левая колонка: номер, название, состав, характеристики, для кого, цена */}
             <div className={styles.left}>
               <header className={styles.head}>
-                <span className={styles.num} aria-hidden="true">
-                  {offer.num}
-                </span>
-                <div className={styles.headText}>
+                <div className={styles.headTop}>
+                  <span className={styles.num} aria-hidden="true">
+                    {offer.num}
+                  </span>
                   {offer.popular && (
-                    <Badge variant="accent">{t('home.services.popularPackage')}</Badge>
+                    <span className={styles.popularBadge}>
+                      {t('home.services.popularPackage')}
+                    </span>
                   )}
-                  <h3 className={styles.title} id={titleId}>
-                    {t(`${base}.name`)}
-                  </h3>
-                  <p className={styles.desc}>{t(`${base}.desc`)}</p>
                 </div>
+                <h3 className={styles.title} id={titleId}>
+                  {t(`${base}.name`)}
+                </h3>
+                <p className={styles.desc}>{t(`${base}.desc`)}</p>
               </header>
 
               <h4 className={styles.blockTitle}>{t('home.services.modal.includesTitle')}</h4>
@@ -188,8 +200,11 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
               </ul>
 
               <div className={styles.forWhom}>
-                <p className={styles.forWhomTitle}>{t('home.services.modal.forWhomTitle')}</p>
-                <p className={styles.forWhomText}>{t(`${base}.forWhom`)}</p>
+                <IconBadge icon={<IconLightbulb />} tone="accent" className={styles.forWhomIcon} />
+                <div>
+                  <p className={styles.forWhomTitle}>{t('home.services.modal.forWhomTitle')}</p>
+                  <p className={styles.forWhomText}>{t(`${base}.forWhom`)}</p>
+                </div>
               </div>
 
               <div className={styles.order}>
@@ -235,22 +250,27 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
               {addons.length > 0 && (
                 <div className={styles.addons}>
                   <h4 className={styles.addonsTitle}>{t('home.services.modal.addonsTitle')}</h4>
-                  {addons.map((addon) => (
-                    <button
-                      key={addon.id}
-                      type="button"
-                      className={styles.addon}
-                      onClick={() => onSwitch(addon.id)}
-                    >
-                      <span className={styles.addonName}>
-                        {t(`home.services.items.${addon.id}.name`)}
-                      </span>
-                      <span className={styles.addonPrice}>
-                        {t(`home.services.items.${addon.id}.price`)}
-                      </span>
-                      <IconArrowRight className={styles.addonArrow} aria-hidden="true" />
-                    </button>
-                  ))}
+                  <div className={styles.addonsList}>
+                    {addons.map((addon) => {
+                      const AddonIcon = ADDON_ICONS[addon.id] ?? IconChat;
+                      return (
+                        <button
+                          key={addon.id}
+                          type="button"
+                          className={styles.addon}
+                          onClick={() => onSwitch(addon.id)}
+                        >
+                          <AddonIcon className={styles.addonIcon} aria-hidden="true" />
+                          <span className={styles.addonName}>
+                            {t(`home.services.items.${addon.id}.name`)}
+                          </span>
+                          <span className={styles.addonPrice}>
+                            {t(`home.services.items.${addon.id}.price`)}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </aside>

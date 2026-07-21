@@ -1,0 +1,202 @@
+@use 'app/styles/abstracts' as *;
+
+// Карточка услуги — вся кликабельна (нативная <button>), внутри только span/img.
+// Ховер по ТЗ сдержанный: подъём ~4px, фото +2%, чуть заметнее тень, 300ms.
+.card {
+  cursor: pointer;
+
+  position: relative;
+
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+
+  font: inherit;
+  color: var(--color-text);
+  text-align: left;
+
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-0.25rem);
+    box-shadow: var(--shadow-md);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:hover .photo {
+    transform: scale(1.02);
+  }
+
+  &:hover .more {
+    gap: var(--space-3);
+    color: var(--color-accent-hover);
+  }
+}
+
+.media {
+  position: relative;
+  overflow: hidden;
+  display: block;
+}
+
+.photo {
+  display: block;
+
+  aspect-ratio: 3 / 2;
+  width: 100%;
+
+  object-fit: cover;
+
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+
+  // Мобильные: карточки не должны быть слишком высокими — фото ниже.
+  @include down(md) {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+// Золотая пилюля «Популярный» — поверх фото (как бейдж тарифа в пакетах).
+.badge {
+  position: absolute;
+  z-index: 1;
+  top: var(--space-3);
+  right: var(--space-3);
+
+  padding: 0.18rem var(--space-3);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--clr-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  background: var(--clr-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  padding: var(--card-pad);
+}
+
+.num {
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  letter-spacing: 0.08em;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  color: var(--color-strong);
+}
+
+.desc {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+// wrap: в узких колонках «Что входит →» уходит на вторую строку, цена не рвётся.
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  align-items: baseline;
+  justify-content: space-between;
+
+  margin-top: auto;
+  padding-top: var(--space-3);
+}
+
+// Денежные цены не рвутся за счёт NBSP в i18n-строках; фразовые («Стоимость по запросу»)
+// переносятся по словам.
+.price {
+  font-size: calc(var(--fs-base) * 1.06);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-strong);
+  letter-spacing: -0.01em;
+}
+
+// «Что входит →» — псевдоссылка; вся карточка и так кликабельна.
+.more {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+
+  transition:
+    gap 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+// Компактные карточки второго ряда: плотнее паддинги, мельче кегль названия.
+.sm {
+  .body {
+    gap: var(--space-1);
+    padding: clamp(var(--space-4), 1.3vw, var(--space-5));
+  }
+
+  .name {
+    font-size: var(--fs-base);
+  }
+
+  .photo {
+    aspect-ratio: 16 / 10;
+
+    @include down(md) {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  .price {
+    font-size: var(--fs-sm);
+  }
+}
+
+// Популярная карточка: палитру перекрашивает data-tone="dark" (см. global.scss),
+// здесь — только акцентная цена и лёгкое затемнение фото для читаемости.
+.featured {
+  border-color: var(--color-hairline);
+
+  .price {
+    color: var(--color-accent);
+  }
+
+  .media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--clr-dark) 22%, transparent);
+  }
+}

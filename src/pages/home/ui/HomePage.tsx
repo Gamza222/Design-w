@@ -13,6 +13,7 @@ import { Packages } from '@widgets/packages';
 import { Process } from '@widgets/process';
 import { Projects } from '@widgets/projects';
 import { Reviews } from '@widgets/reviews';
+import { ServicesHome } from '@widgets/services-home';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
@@ -25,11 +26,12 @@ export default function HomePage() {
   const posts = getPosts(locale).slice(0, 3);
 
   // Воронка главной по ТЗ (мокапы 01/06/08/09/10): чередуем тёмные/светлые секции.
-  // Hero+Пакеты → Процесс(dark) → Портфолио → Достижения → География(dark) → Страхи →
+  // Hero+Пакеты → Услуги → Процесс(dark) → Портфолио → Достижения → География(dark) → Страхи →
   // Блог → Калькулятор(dark) → FAQ(dark) → Отзывы(dark) → Контакты/CTA(dark). Footer — в app-layout.
   return (
     <>
       <Hero bottomSlot={<Packages />} />
+      <ServicesHome />
       <Process />
       <Projects projects={projects} />
       <Achievements />

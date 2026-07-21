@@ -57,8 +57,307 @@
     },
     "services": {
       "eyebrow": "Our services",
-      "title": "What we do",
-      "subtitle": "We help create an interior that is thought through to the detail and gets built without trouble."
+      "title": "A design project for any task",
+      "subtitle": "We help create an interior that is thought through to the detail and gets built without costly mistakes and rework.",
+      "perks": [
+        {
+          "title": "Pricing",
+          "desc": "Clear price per m²"
+        },
+        {
+          "title": "Contract",
+          "desc": "We work officially"
+        },
+        {
+          "title": "Remote",
+          "desc": "Across all of Russia"
+        },
+        {
+          "title": "Support",
+          "desc": "At every stage"
+        }
+      ],
+      "popular": "Popular",
+      "popularPackage": "Popular package",
+      "whatsIncluded": "What's included",
+      "slots": {
+        "plan": "Layout solution",
+        "spec": "Specification",
+        "materials": "Materials and furniture selection",
+        "drawings": "Schemes and drawings",
+        "viz": "3D visualizations",
+        "concept": "Interior concept",
+        "views3d": "3D views",
+        "supervision": "Author's supervision"
+      },
+      "modal": {
+        "close": "Close",
+        "includesTitle": "What's included",
+        "forWhomTitle": "Who it's for",
+        "receiveTitle": "What you get",
+        "addonsTitle": "Additional services",
+        "order": "Order this package",
+        "specLabels": {
+          "term": "Timeline",
+          "revisions": "Revisions",
+          "format": "Format",
+          "coverage": "Coverage"
+        }
+      },
+      "items": {
+        "planning": {
+          "name": "Apartment layout",
+          "cardDesc": "We design a convenient, functional space around your lifestyle.",
+          "desc": "Everything you need to get the perfect layout for your home or apartment.",
+          "price": "from 1,500 ₽/m²",
+          "includes": [
+            "Measured floor plan",
+            "Two layout options",
+            "3D views in black and white"
+          ],
+          "specs": {
+            "term": "from 2 days",
+            "revisions": "2 rounds",
+            "format": "PDF",
+            "coverage": "all of Russia"
+          },
+          "forWhom": "For apartment and house owners who want a well-thought-out layout, smart space organization and a comfortable interior planned before renovation starts — without costly mistakes."
+        },
+        "collages": {
+          "name": "Layout + collages",
+          "cardDesc": "Layout solutions and a visual interior concept with materials and furniture selection.",
+          "desc": "Everything you need to get the perfect layout for your home plus materials for finishing.",
+          "price": "from 2,000 ₽/m²",
+          "includes": [
+            "Measured floor plan",
+            "Two layout options",
+            "3D views in black and white",
+            "Interior concept — collages"
+          ],
+          "specs": {
+            "term": "from 5 days",
+            "revisions": "2 rounds per stage",
+            "format": "PDF",
+            "coverage": "all of Russia"
+          },
+          "forWhom": "For apartment and house owners who want not only smart space organization, but also the style, color palette and overall concept of the future interior defined in advance."
+        },
+        "full": {
+          "name": "Full concept design project",
+          "cardDesc": "Everything you need for a confident renovation start without mistakes and rework.",
+          "desc": "Everything you need for a confident renovation start without mistakes and rework.",
+          "price": "from 3,900 ₽/m²",
+          "includes": [
+            "Measured floor plan",
+            "Two layout options",
+            "3D views in black and white",
+            "Interior concept — collages",
+            "3D visualizations of all rooms",
+            "Furniture and equipment placement schemes",
+            "Drawings with implementation guidance",
+            "Finishing materials and furniture selection",
+            "Specification — recommended materials list"
+          ],
+          "specs": {
+            "term": "from 14 days",
+            "revisions": "2 rounds per stage",
+            "format": "PDF",
+            "coverage": "all of Russia"
+          },
+          "forWhom": "For apartment and house owners who want a complete design project with a well-planned layout, realistic visualizations and all the materials needed to implement the interior."
+        },
+        "planViz": {
+          "name": "Layout + visualizations",
+          "cardDesc": "Layout and 3D visualizations of every room so you can see your future interior.",
+          "desc": "Layout and 3D visualizations of every room so you can see your future interior.",
+          "price": "from 3,000 ₽/m²",
+          "includes": [
+            "Measured floor plan",
+            "Two layout options",
+            "3D views in black and white",
+            "Interior concept — collages",
+            "3D visualizations of all rooms"
+          ],
+          "specs": {
+            "term": "from 10 days",
+            "revisions": "2 rounds per stage",
+            "format": "PDF",
+            "coverage": "all of Russia"
+          },
+          "forWhom": "For apartment and house owners who want to see the interior in advance, define the style and color palette, and verify every visual decision before renovation begins."
+        },
+        "electric": {
+          "name": "Layout + electrical",
+          "cardDesc": "A scheme of wiring, sockets and lighting for comfortable living.",
+          "desc": "A scheme of wiring, sockets and lighting for comfortable living.",
+          "price": "from 3,000 ₽/m²",
+          "includes": [
+            "Measured floor plan",
+            "Two layout options",
+            "3D views in black and white",
+            "Lighting fixtures placement plan",
+            "Lighting scenarios and logic description",
+            "Switches and sockets scheme",
+            "Electrical zoning principles",
+            "Equipment specification",
+            "Underfloor heating placement plan"
+          ],
+          "specs": {
+            "term": "from 5 days",
+            "revisions": "2 rounds per stage",
+            "format": "PDF",
+            "coverage": "all of Russia"
+          },
+          "forWhom": "For apartment and house owners who value comfort and functionality and want every electrical decision planned before renovation starts."
+        },
+        "viz3d": {
+          "name": "3D visualization",
+          "cardDesc": "Realistic room images so you can see your future interior.",
+          "desc": "Realistic room images so you can see your future interior.",
+          "price": "from 1,000 ₽/m²",
+          "includes": [
+            "Volumetric images based on your project",
+            "Realistic materials and lighting",
+            "High-quality images"
+          ],
+          "specs": {
+            "term": "from 5 days",
+            "revisions": "2 rounds",
+            "format": "PDF",
+            "coverage": "all of Russia"
+          },
+          "forWhom": "For apartment and house owners who want to see the future interior in advance, evaluate design decisions and be confident in the result before renovation begins."
+        },
+        "procurement": {
+          "name": "Procurement",
+          "cardDesc": "Selection and ordering of furniture, lighting and materials within your budget.",
+          "desc": "Selection and ordering of furniture, lighting and materials within your budget.",
+          "price": "Price on request",
+          "includes": [
+            "Finishing materials selection",
+            "Furniture, lighting, plumbing and doors selection",
+            "Textiles and decor selection",
+            "Specifications preparation",
+            "Sourcing suppliers and manufacturers",
+            "Finding alternatives within budget",
+            "Purchasing consultations",
+            "Checking items against the project"
+          ],
+          "specs": {
+            "term": "from 5 days",
+            "revisions": "2 rounds per stage",
+            "format": "PDF / Excel",
+            "coverage": "all of Russia"
+          },
+          "forWhom": "For apartment and house owners who want to save time, avoid purchasing mistakes and implement the interior as close to the approved project as possible."
+        },
+        "supervision": {
+          "name": "Author's supervision",
+          "cardDesc": "Checking work against the project and support at every stage of renovation.",
+          "desc": "Checking work against the project and support at every stage of renovation.",
+          "price": "from 30,000 ₽",
+          "includes": [
+            "Regular site visits",
+            "Checking renovation work against the project",
+            "Consulting builders and contractors",
+            "Explaining drawings and specifications",
+            "Prompt adjustments",
+            "Approved materials control",
+            "Photo and video reports",
+            "Answering client and contractor questions",
+            "Design concept compliance control"
+          ],
+          "receive": [
+            "Implementation control",
+            "Site visits",
+            "Photo and video reports",
+            "Contractor consultations"
+          ],
+          "specs": {
+            "term": "for the implementation period",
+            "revisions": "as needed",
+            "format": "on-site / online",
+            "coverage": "Moscow and Moscow region"
+          },
+          "forWhom": "For apartment and house owners who want to avoid mistakes during renovation, save time and implement the interior exactly as designed."
+        },
+        "ergonomics": {
+          "name": "Ergonomics consultation",
+          "cardDesc": "Analysis of the layout in terms of comfort and room logic.",
+          "desc": "Analysis of the layout in terms of comfort and room logic.",
+          "price": "from 20,000 ₽",
+          "includes": [
+            "Project analysis for comfort and functionality",
+            "Recommendations for improving identified issues"
+          ],
+          "note": "This is a consulting service and does not replace a new layout solution, a full design project, a set of drawings or other project documentation.",
+          "specs": {
+            "term": "up to 3 hours",
+            "revisions": "not included",
+            "format": "online",
+            "coverage": "all of Russia"
+          },
+          "forWhom": "For apartment and house owners who want to check an existing project, catch potential mistakes and get professional recommendations for improving the space."
+        },
+        "prelaunch": {
+          "name": "Pre-renovation consultation",
+          "cardDesc": "We check your project and help avoid mistakes before renovation starts.",
+          "desc": "We check your project and help avoid mistakes before renovation starts.",
+          "price": "from 20,000 ₽",
+          "includes": [
+            "Design project or layout analysis",
+            "Checking drawings for errors and contradictions",
+            "Feasibility assessment",
+            "Furniture and equipment placement check",
+            "Engineering elements check",
+            "Recommendations for fixing issues",
+            "Answering client questions",
+            "Final list of remarks and recommendations"
+          ],
+          "note": "This is a consulting service and does not include developing a new design project, drawings or visualizations.",
+          "specs": {
+            "term": "up to 24 hours",
+            "revisions": "not included",
+            "format": "online",
+            "coverage": "all of Russia"
+          },
+          "forWhom": "For apartment and house owners who already have a project and want to make sure everything is ready for renovation to begin."
+        }
+      },
+      "who": {
+        "title": "Who our services are for",
+        "items": [
+          "You bought a new-build apartment",
+          "You are renovating a resale home",
+          "You want to refresh your interior",
+          "You rent out your apartment",
+          "You fear mistakes and wasted costs"
+        ]
+      },
+      "cta": {
+        "title": "Not sure what to choose?",
+        "text": "Tell us about your task — we will suggest the best project format and give a preliminary cost estimate.",
+        "benefits": [
+          "We reply within one business day",
+          "No pushy sales",
+          "Working across all of Russia"
+        ],
+        "form": {
+          "name": {
+            "label": "Your name",
+            "placeholder": "How should we address you?"
+          },
+          "phone": {
+            "label": "Phone",
+            "placeholder": "+7 (___) ___-__-__"
+          },
+          "consent": "I agree to the processing of personal data",
+          "submit": "Get a consultation",
+          "success": "Thank you! We will contact you within one business day.",
+          "errorRequired": "This field is required",
+          "errorPhone": "Enter a valid phone number"
+        }
+      }
     },
     "portfolio": {
       "eyebrow": "Portfolio",

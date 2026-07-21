@@ -30,4 +30,5 @@ export {
   IconPhone,
   IconMail,
   IconQuote,
+  IconClose,
 } from './Icons';

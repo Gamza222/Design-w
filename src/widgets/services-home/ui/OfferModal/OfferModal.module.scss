@@ -1,0 +1,483 @@
+@use 'app/styles/abstracts' as *;
+
+// Модальное окно услуги. Палитра явная (--clr-*): окно всегда светлое, вне тональностей секций.
+
+// Затемнение + лёгкий блюр страницы за окном.
+.overlay {
+  position: fixed;
+  z-index: var(--z-overlay);
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--space-4);
+
+  background: color-mix(in srgb, var(--clr-dark) 55%, transparent);
+  backdrop-filter: blur(6px);
+
+  animation: overlay-in 0.25s ease both;
+
+  @include down(md) {
+    padding: var(--space-2);
+  }
+}
+
+.dialog {
+  position: relative;
+
+  overflow: hidden;
+  display: flex;
+
+  width: min(71rem, 100%); // ≈1136px на базе 1920 (ТЗ: 1050–1200)
+  max-height: 88dvh;
+  border-radius: 1.375rem; // 22px на базе (ТЗ: 18–24)
+
+  color: var(--clr-dark);
+
+  background: var(--clr-light);
+  box-shadow: 0 2.5rem 6rem rgb(8 17 37 / 24%);
+
+  animation: dialog-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @include down(md) {
+    max-height: calc(100dvh - var(--space-8)); // почти весь экран, крестик всегда виден
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .dialog {
+    animation: none;
+  }
+}
+
+// Круглая кнопка закрытия — поверх скролящегося контента, всегда видна.
+.close {
+  cursor: pointer;
+
+  position: absolute;
+  z-index: 2;
+  top: var(--space-4);
+  right: var(--space-4);
+
+  display: grid;
+  place-items: center;
+
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-full);
+
+  font-size: 1.15rem;
+  color: var(--clr-dark);
+
+  background: color-mix(in srgb, var(--clr-light) 88%, transparent);
+  backdrop-filter: blur(4px);
+
+  transition:
+    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+// Внутренний вертикальный скролл, если контент не помещается.
+// Фокусируется программно (tabindex=-1) — стрелки листают контент с клавиатуры.
+.scroller {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+
+  // ≥lg — две колонки: описание ~52%, «Что вы получите» ~48%.
+  @include up(lg) {
+    grid-template-columns: 52fr 48fr;
+    align-items: stretch;
+  }
+}
+
+// --- Левая колонка ----------------------------------------------------------
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: clamp(var(--space-6), 2.5vw, var(--space-8));
+}
+
+.head {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding-right: var(--space-8); // не заезжать под крестик
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: color-mix(in srgb, var(--clr-dark) 16%, var(--clr-light));
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--fs-xl);
+}
+
+.desc {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--color-text-muted);
+}
+
+// Лейблы блоков («Что входит», «Что вы получите», «Дополнительно»).
+.blockTitle,
+.addonsTitle {
+  margin: 0;
+
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+// Состав услуги — две колонки, как в референсе.
+.includes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-5);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  @include down(sm) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.includesItem {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+
+  > svg {
+    flex-shrink: 0;
+    margin-top: 0.2em;
+    color: color-mix(in srgb, var(--clr-accent) 82%, var(--clr-dark)); // читаемая «золотая» галочка
+  }
+}
+
+// Примечание о консультационном характере услуги (09/10).
+.note {
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+.divider {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--color-hairline);
+}
+
+// Характеристики: Сроки · Правки · Формат · Работаем (2×2).
+.specs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-5);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.spec {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: var(--space-3);
+  align-items: center;
+}
+
+.specIcon {
+  grid-row: 1 / span 2;
+  font-size: 1.4rem;
+  color: color-mix(in srgb, var(--clr-accent) 82%, var(--clr-dark));
+}
+
+.specLabel {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.specValue {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-strong);
+}
+
+// «Для кого подходит» — тёплая бежевая подложка.
+.forWhom {
+  padding: var(--space-5);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--clr-sand) 28%, var(--clr-light));
+}
+
+.forWhomTitle {
+  margin: 0 0 var(--space-2);
+
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.forWhomText {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+}
+
+// Цена + «Заказать этот пакет» — внизу левой колонки.
+.order {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: auto;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-hairline);
+}
+
+.price {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-strong);
+  letter-spacing: -0.01em;
+}
+
+.orderBtn {
+  @include down(sm) {
+    width: 100%;
+  }
+}
+
+// --- Правая колонка ---------------------------------------------------------
+
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  padding: clamp(var(--space-6), 2.5vw, var(--space-8));
+  border-top: 1px solid var(--color-hairline);
+
+  background: color-mix(in srgb, var(--clr-sand) 20%, var(--clr-light));
+
+  @include up(lg) {
+    border-top: 0;
+    border-left: 1px solid var(--color-hairline);
+  }
+}
+
+// Сетка изображений результата: 2 в ряд; на узких — по ширине.
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  @include down(sm) {
+    grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  }
+}
+
+.figure {
+  overflow: hidden;
+
+  margin: 0;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+
+  background: var(--clr-light);
+}
+
+.galleryPhoto {
+  display: block;
+  aspect-ratio: 4 / 3; // одинаковое соотношение сторон, без скачков макета
+  width: 100%;
+  object-fit: cover;
+}
+
+.caption {
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--color-hairline);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+
+// Текстовый список результатов (авторский надзор — вместо галереи).
+.receiveList {
+  display: grid;
+  gap: var(--space-3);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.receiveItem {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+
+  font-size: var(--fs-sm);
+
+  background: var(--clr-light);
+
+  > svg {
+    flex-shrink: 0;
+    margin-top: 0.2em;
+    color: color-mix(in srgb, var(--clr-accent) 82%, var(--clr-dark));
+  }
+}
+
+// Доп. услуги — переключают контент модалки без перезагрузки.
+.addons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.addon {
+  cursor: pointer;
+
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+
+  font: inherit;
+  text-align: left;
+
+  background: var(--clr-light);
+
+  transition:
+    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:hover {
+    transform: translateY(-0.125rem);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.addonName {
+  flex: 1;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-strong);
+}
+
+.addonPrice {
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.addonArrow {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -1,4 +1,4 @@
-import { type FormEvent, useId, useState } from 'react';
+import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Button, Checkbox, Field, IconCheck, IconLock, Input, Textarea } from '@shared/ui';
@@ -26,6 +26,13 @@ export function ContactForm() {
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  // После успеха форма (вместе со сфокусированным submit) размонтируется —
+  // переносим фокус на блок успеха, иначе он падает на body (как в ConsultForm).
+  useEffect(() => {
+    if (sent) successRef.current?.focus();
+  }, [sent]);
 
   const set = (name: FieldName) => (e: { target: { value: string } }) =>
     setValues((v) => ({ ...v, [name]: e.target.value }));
@@ -48,7 +55,7 @@ export function ContactForm() {
 
   if (sent) {
     return (
-      <div className={styles.success} role="status">
+      <div className={styles.success} role="status" tabIndex={-1} ref={successRef}>
         <span className={styles.successIcon} aria-hidden="true">
           <IconCheck />
         </span>

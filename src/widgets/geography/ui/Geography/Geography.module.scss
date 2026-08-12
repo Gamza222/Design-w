@@ -5,16 +5,19 @@
   padding-block: clamp(var(--space-16), 6vw, var(--space-24));
 }
 
+// Шапка — на всю ширину секции, над сценой с картой: в узкой колонке грида длинный
+// титул рассыпался лесенкой по одному слову с переносом «дизайн-/проекты».
 .head {
-  max-width: 40ch;
+  max-width: none;
+  margin-bottom: clamp(var(--space-6), 3vw, var(--space-10));
 
-  @include up(lg) {
-    align-self: center; // вертикально по центру относительно карты
-    max-width: 30ch;
+  h2 {
+    text-wrap: balance;
   }
 }
 
-// --- Сцена: ≥lg — заголовок слева, карта справа (мокап 06); ниже — стопкой --
+// --- Сцена: ≥lg — слева заголовок + карточка, справа карта + полоса кейса ----
+// Карту ничем не перекрываем: силуэт РФ занимает весь viewBox, свободных углов нет.
 .stage {
   display: flex;
   flex-direction: column;
@@ -23,15 +26,28 @@
 
   @include up(lg) {
     display: grid;
-    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.45fr);
+
+    // Колонке заголовка ~41% (было 36%): вместе со снятым ch-капом и меньшим кеглем
+    // титул ложится в 2 строки вместо лесенки; карте воздуха по-прежнему хватает.
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
     gap: clamp(var(--space-6), 4vw, var(--space-12));
     align-items: center;
   }
 }
 
-// Карта + плавающие карточки (карточки позиционируются относительно этой обёртки).
-.mapWrap {
-  position: relative;
+// Левая колонка: заголовок + «работаем из любой точки».
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-5), 2.5vw, var(--space-8));
+}
+
+// Правая колонка: карта + полоса кейса.
+.mapCol {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-4), 2vw, var(--space-6));
+  min-width: 0;
 }
 
 .map {
@@ -53,13 +69,30 @@
   transform-box: fill-box;
 }
 
-// Маршруты из Москвы — пунктир акцентом.
+// Маршруты из Москвы — пунктир акцентом; точки медленно «текут» к городам.
+// По умолчанию поток стоит: stroke-dashoffset некомпозитный, девять дуг перерисовывали бы
+// SVG каждый кадр всю сессию. Класс .flowing вешает ScrollTrigger, пока сцена во вьюпорте.
 .arc {
   fill: none;
   stroke: color-mix(in srgb, var(--clr-accent) 55%, transparent);
   stroke-dasharray: 1 7;
   stroke-linecap: round;
   stroke-width: 1.6;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: arc-flow 26s linear infinite;
+    animation-play-state: paused;
+  }
+}
+
+.flowing .arc {
+  animation-play-state: running;
+}
+
+@keyframes arc-flow {
+  to {
+    stroke-dashoffset: -400;
+  }
 }
 
 .plane {
@@ -87,15 +120,18 @@
   // (плюс несколько ключевых городов — .labelMajor ниже).
   display: none;
 
-  font-family: var(--font-sans);
-  font-size: 22px;
+  // Обычный регистр: капс на плотной карте слипался (подписи на треть шире) и читался хуже.
+  // Display-шрифт + плотный тёмный ореол (paint-order: stroke) — читаемость поверх маршрутов.
+  font-family: var(--font-display);
+  font-size: 20px;
   font-weight: 600;
+  letter-spacing: 0.01em;
   paint-order: stroke;
 
   fill: var(--clr-light);
-  stroke: color-mix(in srgb, var(--clr-dark) 85%, transparent);
+  stroke: color-mix(in srgb, var(--clr-dark) 92%, transparent);
   stroke-linejoin: round;
-  stroke-width: 4;
+  stroke-width: 5;
 
   @include up(md) {
     display: initial;
@@ -106,35 +142,20 @@
 // чтобы при ширине карты ~320px текст остался читаемым; секция не выглядит «пустым» блоком.
 .labelMajor {
   display: initial;
-  font-size: 34px;
+  font-size: 32px;
 
   @include up(md) {
-    font-size: 22px;
+    font-size: 20px;
   }
 }
 
-// --- Плавающие карточки (≥lg — поверх карты; ниже — обычным потоком) --------
-.overlays {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(var(--space-4), 2vw, var(--space-5));
-
-  @include up(sm) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-  }
-
-  @include up(lg) {
-    display: contents;
-  }
-}
-
-// Карточка «работаем из любой точки».
+// Карточка «работаем из любой точки» — в левой колонке под заголовком.
 .remoteCard {
   display: flex;
   gap: var(--space-4);
   align-items: flex-start;
 
+  max-width: 30rem;
   padding: clamp(var(--space-4), 1.6vw, var(--space-5));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
@@ -145,13 +166,6 @@
 
   @supports not (backdrop-filter: blur(1px)) {
     background-color: var(--clr-dark-surface);
-  }
-
-  @include up(lg) {
-    position: absolute;
-    bottom: 7%;
-    left: 0;
-    max-width: 19rem;
   }
 }
 
@@ -184,7 +198,7 @@
   color: var(--color-text-muted);
 }
 
-// Карточка кейса.
+// Полоса кейса под картой: ≥sm — фото слева, текст справа; на узких — стопкой.
 .caseCard {
   overflow: hidden;
   display: flex;
@@ -196,17 +210,22 @@
   background-color: var(--color-surface);
   box-shadow: var(--shadow-glass);
 
-  @include up(lg) {
-    position: absolute;
-    top: 6%;
-    right: 0;
-    width: 17rem;
+  @include up(sm) {
+    display: grid;
+    grid-template-columns: minmax(9rem, 13rem) minmax(0, 1fr);
+    align-items: stretch;
   }
 }
 
 .casePhoto {
   aspect-ratio: 16 / 9;
   background: center / cover no-repeat;
+
+  @include up(sm) {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 8rem;
+  }
 }
 
 .caseBody {
@@ -261,8 +280,11 @@
     font-size: var(--fs-base);
   }
 
-  &:hover {
-    gap: var(--space-3);
+  // Только для устройств с курсором: на таче hover «залипал» бы после тапа.
+  @media (hover: hover) {
+    &:hover {
+      gap: var(--space-3);
+    }
   }
 }
 

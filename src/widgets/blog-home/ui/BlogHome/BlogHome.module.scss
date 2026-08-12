@@ -5,13 +5,14 @@
   padding-block: clamp(var(--space-16), 6vw, var(--space-24));
 }
 
-// ≥wide — шапка слева, лента карточек справа (как «Процесс»/«Портфолио»). Ниже — шапка сверху.
+// ≥xl — шапка слева, лента карточек справа (как «Процесс»/«Портфолио»). Ниже — шапка сверху.
+// На 1280–1600 стек оставлял пустую правую половину рядом с интро — двухколонник начинается с xl.
 .inner {
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(var(--space-8), 4vw, var(--space-12));
 
-  @include up(wide) {
+  @include up(xl) {
     // 24rem, а не 20rem: min-content слова «вдохновением» в заголовке ≈ 23rem —
     // в узкой колонке текст вылезал под карточку статьи.
     grid-template-columns: minmax(15rem, 24rem) minmax(0, 1fr);
@@ -39,7 +40,8 @@
   }
 }
 
-// Карточки: 1 → 2 (≥sm) → 3 (≥lg).
+// Карточки: 1 → 2 (≥sm) → 3 (≥lg). В полосе xl–wide лента стоит рядом с интро в зауженной
+// колонке — там снова максимум 2 в ряд, чтобы карточки не сжимались.
 .cards {
   display: grid;
   grid-template-columns: 1fr;
@@ -49,7 +51,11 @@
     grid-template-columns: repeat(min(var(--blog-cols, 3), 2), minmax(0, 1fr));
   }
 
-  @include up(lg) {
+  @include between(lg, xl) {
+    grid-template-columns: repeat(var(--blog-cols, 3), minmax(0, 1fr));
+  }
+
+  @include up(wide) {
     grid-template-columns: repeat(var(--blog-cols, 3), minmax(0, 1fr));
   }
 }

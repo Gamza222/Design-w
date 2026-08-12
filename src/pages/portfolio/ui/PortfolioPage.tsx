@@ -4,6 +4,7 @@ import { getProjects } from '@entities/project';
 import { buildMeta, localeDict, useLocale, type RouteMetaArgs } from '@shared/lib';
 import { PageHeader, Section } from '@shared/ui';
 import { PortfolioGrid } from '@widgets/portfolio-grid';
+import { ContactCta } from '@widgets/contact-cta';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
@@ -21,6 +22,9 @@ export default function PortfolioPage() {
       <Section>
         <PortfolioGrid projects={projects} />
       </Section>
+
+      {/* Страница не обрывается в футер — CTA-мост к заявке. */}
+      <ContactCta />
     </>
   );
 }

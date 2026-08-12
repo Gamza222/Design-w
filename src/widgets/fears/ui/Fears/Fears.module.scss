@@ -15,9 +15,8 @@
 }
 
 // Контент. Мобайл: стек (фото → текст → список). ≥lg: текст | список; слева — место под выходящее фото.
+// Общий 80rem-рельс (без локального full-bleed — левая линия секций едина).
 .inner {
-  --container-max: var(--site-max);
-
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(var(--space-8), 4vw, var(--space-12));
@@ -167,8 +166,10 @@
 }
 
 // Чип иконки страха (макет 07): мягкая тёплая «капля» с едва заметным кольцом; иконка двутоновая
-// (navy-база = currentColor + оранжевые акценты). Селектор `.item .itemIcon` (специфичность 0-2-0)
+// (база = currentColor + оранжевые акценты). Селектор `.item .itemIcon` (специфичность 0-2-0)
 // гарантированно перебивает color у IconBadge `.surface` независимо от порядка стилей.
+// База — семантический --color-strong: на графитовой поверхности иконка светлая
+// (жёсткий --clr-dark на тёмном чипе давал ~1.5:1 — линии исчезали).
 .item .itemIcon {
   flex-shrink: 0;
 
@@ -178,7 +179,7 @@
   border-radius: 50%;
 
   font-size: var(--fs-xl);
-  color: var(--clr-dark);
+  color: var(--color-strong);
 
   background-color: color-mix(in srgb, var(--color-accent) 9%, var(--color-surface));
 

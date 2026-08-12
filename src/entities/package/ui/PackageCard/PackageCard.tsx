@@ -19,6 +19,7 @@ export function PackageCard({ pkg, image }: PackageCardProps) {
 
   return (
     <article
+      data-tone="paper"
       className={cn(styles.card, pkg.popular && styles.popular)}
       style={
         {

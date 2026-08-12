@@ -2,7 +2,7 @@
   "brand": "TheDesignNow",
   "nav": {
     "home": "Home",
-    "services": "Design project",
+    "services": "Services",
     "portfolio": "Portfolio",
     "achievements": "Achievements",
     "blog": "Blog",
@@ -345,7 +345,7 @@
         "form": {
           "name": {
             "label": "Your name",
-            "placeholder": "How should we address you?"
+            "placeholder": "Your name"
           },
           "phone": {
             "label": "Phone",
@@ -357,6 +357,11 @@
           "errorRequired": "This field is required",
           "errorPhone": "Enter a valid phone number"
         }
+      },
+      "carousel": {
+        "prev": "Previous services",
+        "next": "Next services",
+        "trackLabel": "Services strip — scrolls horizontally"
       }
     },
     "portfolio": {
@@ -375,7 +380,7 @@
     },
     "packages": {
       "title": "Design project packages",
-      "description": "Choose a suitable package or get a personal estimate in Telegram.",
+      "description": "Choose a suitable package or get a personal estimate in MAX.",
       "pick": "Choose a package",
       "select": "Choose",
       "popular": "Popular",
@@ -418,7 +423,7 @@
       "steps": [
         {
           "title": "Request",
-          "desc": "You leave a request on the website or via Telegram."
+          "desc": "You leave a request on the website or via MAX."
         },
         {
           "title": "Discuss the task",
@@ -444,7 +449,7 @@
       "perks": [
         "We work under a contract",
         "Remotely across Russia",
-        "Support in Telegram",
+        "Support in MAX",
         "We help you avoid renovation mistakes"
       ],
       "ctaTitle": "Want a process this clear?",
@@ -461,7 +466,7 @@
           "label": "completed design projects"
         },
         {
-          "value": "5 years",
+          "value": "5 years",
           "label": "of interior design experience"
         },
         {
@@ -535,7 +540,7 @@
         },
         {
           "value": "24/7",
-          "label": "Telegram chat — reach us at any moment"
+          "label": "MAX chat — reach us at any moment"
         },
         {
           "value": "0 ₽",
@@ -549,7 +554,7 @@
           "desc": "We discuss goals, wishes, style and budget."
         },
         {
-          "title": "We discuss the task in Telegram or by call",
+          "title": "We discuss the task in MAX or by call",
           "desc": "We propose layouts and concepts and agree on the details."
         },
         {
@@ -559,7 +564,7 @@
       ],
       "ctaTitle": "Estimate your project online",
       "ctaText": "We'll reply within 30 minutes during business hours.",
-      "cta": "Estimate your project online"
+      "cta": "Start the estimate"
     },
     "fears": {
       "eyebrow": "We understand your concerns",
@@ -752,7 +757,7 @@
       "form": {
         "name": {
           "label": "Your name",
-          "placeholder": "How should we address you?"
+          "placeholder": "Your name"
         },
         "phone": {
           "label": "Phone",
@@ -812,10 +817,14 @@
   "contact": {
     "title": "Get in touch",
     "subtitle": "Tell us about your project — we'll prepare an estimate and a solution.",
-    "formSoon": "The request form will appear here soon.",
     "email": "hello@thedesignnow.com",
-    "phone": "+7 (700) 000-00-00",
-    "address": "Almaty, Kazakhstan"
+    "details": {
+      "title": "Direct contacts",
+      "emailLabel": "Email",
+      "hoursLabel": "Working hours",
+      "geoLabel": "Coverage",
+      "geoValue": "Working remotely across Russia"
+    }
   },
   "footer": {
     "tagline": "We create interiors that are comfortable to live in every day.",
@@ -831,7 +840,7 @@
         "to": "/portfolio"
       },
       {
-        "label": "Blog & insights",
+        "label": "Blog",
         "to": "/blog"
       },
       {

@@ -17,6 +17,12 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  // Планшет: три колонки ссылок в один ряд (Навигация | Контакты | Документы),
+  // иначе «Документы» переносились на отдельный ряд и правый нижний угол пустовал.
+  @include up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   @include up(lg) {
     grid-template-columns: 1.6fr 1fr 1fr 1.1fr;
     align-items: start;

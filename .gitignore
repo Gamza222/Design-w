@@ -47,3 +47,7 @@ docs/tz-refs/.review/
 docs/tz-refs/.current/
 docs/tz-refs/.after/
 docs/tz-refs/.shots/
+.claude/settings.local.json
+
+# Временные скрипты ревью (Claude)
+.tmp-*

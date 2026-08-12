@@ -18,6 +18,12 @@
 
   max-width: 68ch;
   margin-bottom: var(--space-12);
+
+  // Как у статьи блога: дисплейные 5rem — перебор для длинных названий кейсов.
+  h1 {
+    font-size: var(--fs-3xl);
+    text-wrap: balance;
+  }
 }
 
 .lead {

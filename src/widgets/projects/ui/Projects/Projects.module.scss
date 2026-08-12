@@ -6,12 +6,11 @@
   padding-block: var(--section-pad-y-dense);
 }
 
-// Container тянется до бокового гаттера (full-bleed, как Hero). Фазы заголовка — как у «Процесса»:
+// Общий 80rem-рельс (локальный full-bleed давал скачущую левую линию секций).
+// Фазы заголовка — как у «Процесса»:
 //  • ≥wide (1600) — заголовок СЛЕВА, лента кейсов справа;
 //  • <wide — заголовок СВЕРХУ-слева, лента ниже (во всю ширину, скролл-снап).
 .inner {
-  --container-max: var(--site-max);
-
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--section-gap-dense);

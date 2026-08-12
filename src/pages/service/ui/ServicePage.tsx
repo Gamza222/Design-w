@@ -114,7 +114,7 @@ export default function ServicePage() {
 
       <Section compact tone="dark" className={styles.faqSection}>
         <Container>
-          <SectionHeader title={t(`${base}.faqTitle`)} align="center" className={styles.faqHead} />
+          <SectionHeader title={t(`${base}.faqTitle`)} className={styles.faqHead} />
           <div className={styles.faqList}>
             {faq.map((item, index) => (
               <Accordion

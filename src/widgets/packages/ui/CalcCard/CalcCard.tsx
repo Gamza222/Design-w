@@ -11,7 +11,7 @@ export function CalcCard() {
   const { t } = useTranslation();
 
   return (
-    <div className={styles.calc}>
+    <div className={styles.calc} data-tone="paper">
       <IconCalculator className={styles.icon} />
       <h3 className={styles.title}>{t('home.packages.calc.title')}</h3>
       <p className={styles.text}>{t('home.packages.calc.description')}</p>

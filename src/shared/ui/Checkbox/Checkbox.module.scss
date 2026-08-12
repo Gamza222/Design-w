@@ -25,7 +25,10 @@
 
   width: 1.4em;
   height: 1.4em;
-  border: 1px solid var(--color-border);
+
+  // Рамка — серебро с запасом ≥3:1 на тёмных карточках: с --color-border квадрат
+  // сливался с фоном, а это обязательное поле перед единственной CTA.
+  border: 1.5px solid color-mix(in srgb, var(--clr-silver) 72%, var(--color-border));
   border-radius: var(--radius-sm);
 
   background-color: var(--color-surface);
@@ -52,7 +55,7 @@
 }
 
 .input:focus-visible + .box {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 

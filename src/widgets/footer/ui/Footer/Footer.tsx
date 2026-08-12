@@ -46,11 +46,14 @@ export function Footer() {
         <div className={styles.col}>
           <h2 className={styles.colTitle}>{t('footer.contactsTitle')}</h2>
           <ul className={styles.list}>
-            <li>
-              <a href={CONTACTS.phoneHref} className={styles.link}>
-                {CONTACTS.phone}
-              </a>
-            </li>
+            {/* Телефон появится, когда будет заполнен в конфиге контактов. */}
+            {CONTACTS.phone != null && CONTACTS.phoneHref != null && (
+              <li>
+                <a href={CONTACTS.phoneHref} className={styles.link}>
+                  {CONTACTS.phone}
+                </a>
+              </li>
+            )}
             <li>
               <a href={`mailto:${t('contact.email')}`} className={styles.link}>
                 {t('contact.email')}

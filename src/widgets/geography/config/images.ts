@@ -1,2 +1,2 @@
 // Фото проекта в карточке-кейсе на карте (макет 06) — временное (сток), заменить, не трогая разметку.
-export const caseImage = '/images/temp/interior-4.jpg';
+export const caseImage = '/images/temp/interior-8.jpg';

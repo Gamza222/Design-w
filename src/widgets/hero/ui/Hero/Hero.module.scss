@@ -49,7 +49,7 @@
       );
   }
 
-  // Слой 2: мягкая виньетка + базовый тинт в центре — картинка дотемняется до moody-нави везде.
+  // Слой 2: мягкая виньетка + базовый тинт в центре — картинка дотемняется до moody-графита везде.
   &::after {
     z-index: -1;
     background: radial-gradient(
@@ -87,6 +87,42 @@
   }
 }
 
+// Золотая пыль в воздухе первого экрана: россыпь золотых и серебряных частиц,
+// медленный вертикальный дрейф. Декоративный слой между фоном (-1) и контентом.
+.dust {
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 0;
+  inset: -4% 0;
+
+  opacity: 0.75;
+  background-image:
+    radial-gradient(2px 2px at 12% 28%, rgb(254 188 4 / 60%), transparent 60%),
+    radial-gradient(1.5px 1.5px at 27% 62%, rgb(224 230 238 / 45%), transparent 60%),
+    radial-gradient(2.5px 2.5px at 38% 18%, rgb(254 188 4 / 40%), transparent 60%),
+    radial-gradient(1.5px 1.5px at 49% 44%, rgb(224 230 238 / 38%), transparent 60%),
+    radial-gradient(2px 2px at 57% 72%, rgb(254 188 4 / 45%), transparent 60%),
+    radial-gradient(1.5px 1.5px at 66% 24%, rgb(224 230 238 / 42%), transparent 60%),
+    radial-gradient(2px 2px at 74% 56%, rgb(254 188 4 / 50%), transparent 60%),
+    radial-gradient(1.5px 1.5px at 85% 36%, rgb(224 230 238 / 40%), transparent 60%),
+    radial-gradient(2px 2px at 93% 64%, rgb(254 188 4 / 42%), transparent 60%);
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: hero-dust 16s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes hero-dust {
+  from {
+    transform: translate3d(0, 1.2%, 0);
+  }
+
+  to {
+    transform: translate3d(0, -1.2%, 0);
+  }
+}
+
 // Фон-слой: отдельный элемент, чтобы ScrollSmoother.effects() мог двигать его (parallax).
 // Лежит ПОД оверлеями (::before -2, ::after -1). Overscan -8% покрывает parallax-сдвиг при speed 0.94.
 // Статичен и полностью покрывает секцию без JS (prerender / reduced-motion).
@@ -117,6 +153,11 @@
 
 .inner {
   --container-max: var(--site-max); // full-bleed до гаттера, как у хедера
+
+  // Контент — выше декоративной пыли: .dust позиционирован с z-index 0 и без
+  // этого рисовался бы поверх статичного текста и кнопок.
+  position: relative;
+  z-index: 1;
 
   // Заполняем высоту Hero: контент и ряд пакетов прижаты к верху, фото дышит снизу.
   display: flex;

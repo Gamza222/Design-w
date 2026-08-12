@@ -1,14 +1,14 @@
-import type { IconType } from 'react-icons';
-import { FaTelegramPlane, FaVk, FaWhatsapp } from 'react-icons/fa';
+import type { ComponentType, SVGProps } from 'react';
+import { FaVk } from 'react-icons/fa';
 
 import type { SocialLink, SocialType } from '../../config';
 import { cn } from '../../lib/cn/cn';
+import { IconMaxMessenger } from '../icons';
 import styles from './SocialLinks.module.scss';
 
-const ICONS: Record<SocialType, IconType> = {
-  telegram: FaTelegramPlane,
+const ICONS: Record<SocialType, ComponentType<SVGProps<SVGSVGElement>>> = {
+  max: IconMaxMessenger,
   vk: FaVk,
-  whatsapp: FaWhatsapp,
 };
 
 interface SocialLinksProps {
@@ -17,8 +17,11 @@ interface SocialLinksProps {
   className?: string;
 }
 
-/** Ряд круглых иконок-ссылок на соцсети. Цвет иконок — currentColor (управляется CSS). */
+/** Ряд круглых иконок-ссылок на соцсети. Цвет иконок — currentColor (управляется CSS).
+ *  Пустой список (соцсети ещё не заполнены в конфиге) — не рендерим ничего. */
 export function SocialLinks({ items, className }: SocialLinksProps) {
+  if (items.length === 0) return null;
+
   return (
     <ul className={cn(styles.list, className)}>
       {items.map(({ type, label, href }) => {

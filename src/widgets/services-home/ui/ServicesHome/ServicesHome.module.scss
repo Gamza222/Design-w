@@ -1,12 +1,61 @@
 @use 'app/styles/abstracts' as *;
 
-// Блок «Наши услуги» — светлая секция в плотном ритме главной.
+// Блок «Наши услуги» — приподнятый графит, компактная лента-карусель.
 .services {
   padding-block: var(--section-pad-y-dense);
 }
 
-.header {
+// Шапка секции + стрелки навигации ленты в одну строку (стрелки прижаты вправо).
+.headRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-end;
+  justify-content: space-between;
+
   margin-bottom: var(--section-gap-dense);
+}
+
+.header {
+  flex: 1 1 24rem;
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.9rem;
+  height: 2.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-lg);
+  color: var(--color-text);
+
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+
+  &[aria-disabled='true'] {
+    cursor: default;
+    opacity: 0.3;
+  }
+
+  // Кнопки на краях получают aria-disabled (не disabled) — остаются в tab-order.
+  @media (hover: hover) {
+    &:hover:not([aria-disabled='true']) {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      box-shadow: 0 0 1.5rem color-mix(in srgb, var(--clr-accent) 22%, transparent);
+    }
+  }
 }
 
 // Строка преимуществ: центрированная лента с тонкими разделителями (референс);
@@ -60,34 +109,105 @@
   color: var(--color-text-muted);
 }
 
-// Единая композиция карточек: 12-колоночная сетка на десктопе —
-// крупные span 3 (4 в ряд), компактные span 2 (6 в ряд); планшет 2 в ряд, мобильные 1.
-.grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
+// Лента услуг: нативный горизонтальный скролл со снапом, скроллбар спрятан
+// (навигация — стрелки/драг/свайп + прогресс-полоса ниже).
+.track {
+  // Fade по краям, где лента реально продолжается (--fade-* включают .maskStart/.maskEnd).
+  --fade-l: 0rem;
+  --fade-r: 0rem;
 
-  @include up(md) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  cursor: grab;
+  scrollbar-width: none;
+  scroll-padding-inline: 6px;
+  scroll-snap-type: x proximity;
+
+  overflow-x: auto;
+  display: flex;
+  gap: var(--space-4);
+
+  margin-bottom: calc(-1 * var(--space-6));
+  margin-inline: -6px;
+
+  // Вертикальный воздух: сверху — под hover-подъём, снизу — под тень карточек
+  // (иначе тень режется границей скроллпорта жёсткой линией); низ компенсируем
+  // отрицательным маргином, чтобы не раздувать ритм секции.
+  padding-block: var(--space-2) var(--space-10);
+
+  // Горизонтальная компенсация: фокус-кольцо крайних карточек (2px + offset 3px)
+  // не должно клиповаться краем скроллпорта.
+  padding-inline: 6px;
+
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 var(--fade-l),
+    #000 calc(100% - var(--fade-r)),
+    transparent 100%
+  );
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 
-  @include up(xl) {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
+  // Снап-точки: без align у детей scroll-snap-type — no-op.
+  > * {
+    scroll-snap-align: start;
   }
 }
 
-// Обёртка карточки — цель reveal-анимации (inline-transform GSAP не трогает саму кнопку).
-.cell {
-  display: grid;
-
-  @include up(xl) {
-    grid-column: span 3;
-  }
+.maskStart {
+  --fade-l: 2.5rem;
 }
 
-.cellSm {
-  @include up(xl) {
-    grid-column: span 2;
+.maskEnd {
+  --fade-r: 2.5rem;
+}
+
+// Во время drag'а снап отключаем (доснап делаем сами после отпускания).
+.trackDragging {
+  cursor: grabbing;
+  user-select: none;
+  scroll-snap-type: none;
+}
+
+.progressRow {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.progress {
+  overflow: hidden;
+  flex: 1;
+
+  height: 2px;
+  border-radius: 2px;
+
+  background: color-mix(in srgb, var(--clr-light) 14%, transparent);
+}
+
+.progressBar {
+  transform-origin: left;
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(90deg, var(--clr-silver), var(--clr-accent));
+
+  transition: transform 0.15s linear;
+}
+
+.counter {
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+
+  b {
+    font-weight: 700;
+    color: var(--color-text);
   }
 }
 

@@ -1,10 +1,9 @@
 import { type CSSProperties, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaTelegramPlane } from 'react-icons/fa';
 
 import { ROUTES } from '@shared/config';
 import { useScrollReveal } from '@shared/lib';
-import { AppLink, Container, IconArrowRight, Rating } from '@shared/ui';
+import { AppLink, Container, IconArrowRight, IconMaxMessenger, Rating } from '@shared/ui';
 
 import { teamImage } from '../../config/images';
 import { STAT_ICONS } from '../../lib/stats';
@@ -74,11 +73,15 @@ export function Achievements() {
           })}
         </ul>
 
-        {/* Зона 2 — карусель отзывов */}
-        <div className={styles.reviews}>
+        {/* Зона 2 — карусель отзывов. aria-live: смена отзыва стрелками озвучивается SR.
+            Кавычки — типографские CSS-ом (quotes), а не «ёлочки» в разметке: EN-локаль
+            использует свои. */}
+        <div className={styles.reviews} aria-live="polite">
           <p className={styles.reviewsTitle}>{t('home.achievements.reviewsTitle')}</p>
           <blockquote className={styles.review}>
-            <p className={styles.reviewText}>«{review.text}»</p>
+            <p className={styles.reviewText}>
+              <q>{review.text}</q>
+            </p>
             <footer className={styles.reviewFoot}>
               <span className={styles.avatar} aria-hidden="true">
                 {initials(review.author)}
@@ -88,7 +91,7 @@ export function Achievements() {
                     словом, а не повисает отдельно по центру двухстрочного имени. */}
                 <p className={styles.author}>
                   {review.author}
-                  <FaTelegramPlane className={styles.reviewSocial} aria-hidden="true" />
+                  <IconMaxMessenger className={styles.reviewSocial} />
                 </p>
                 <p className={styles.role}>{review.role}</p>
               </div>

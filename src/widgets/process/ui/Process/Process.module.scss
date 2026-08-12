@@ -5,12 +5,10 @@
   padding-block: var(--section-pad-y-dense);
 }
 
-// Container тянется до бокового гаттера (как Hero). Фазы заголовка:
+// Общий 80rem-рельс (локальный full-bleed давал скачущую левую линию секций). Фазы заголовка:
 //  • ≥wide (1600) — заголовок СЛЕВА, лента из 6 этапов справа;
 //  • <wide — заголовок СВЕРХУ-слева (даёт ленте всю ширину, без «ужатия»), лента ниже.
 .inner {
-  --container-max: var(--site-max);
-
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--section-gap-dense);

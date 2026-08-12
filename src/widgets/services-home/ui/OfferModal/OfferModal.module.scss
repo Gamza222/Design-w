@@ -87,7 +87,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
   }
 }
@@ -150,6 +150,7 @@
 }
 
 // Мягкая золотая пилюля «Популярный пакет» (референс — светлая, не кричащая).
+// Текст затемнён до ≥4.5:1 на золотисто-кремовой подложке (AA для мелкого кегля).
 .popularBadge {
   padding: 0.3rem var(--space-3);
   border: 1px solid color-mix(in srgb, var(--clr-accent) 38%, var(--clr-light));
@@ -157,7 +158,7 @@
 
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: color-mix(in srgb, var(--clr-accent) 52%, var(--clr-dark));
+  color: color-mix(in srgb, var(--clr-accent) 36%, var(--clr-dark));
   white-space: nowrap;
 
   background: color-mix(in srgb, var(--clr-accent) 14%, var(--clr-light));
@@ -468,7 +469,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
   }
 }

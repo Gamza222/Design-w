@@ -67,6 +67,20 @@ export function Hero({ bottomSlot }: HeroProps) {
           },
         },
       );
+
+      // Дрейф пыли — infinite: ставим на паузу, когда Hero ушёл из вьюпорта,
+      // чтобы компоситор не тикал весь остаток сессии.
+      const dust = root.current?.querySelector<HTMLElement>(`.${styles.dust}`);
+      if (dust) {
+        ScrollTrigger.create({
+          trigger: root.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          onToggle: (self) => {
+            dust.style.animationPlayState = self.isActive ? 'running' : 'paused';
+          },
+        });
+      }
     },
     { scope: root },
   );
@@ -79,6 +93,8 @@ export function Hero({ bottomSlot }: HeroProps) {
       style={{ '--hero-bg': `url(${heroImages.background})` } as CSSProperties}
     >
       <div className={styles.bg} ref={bgRef} aria-hidden="true" />
+      {/* Золотая пыль в воздухе — медленный дрейф (декор, отключается reduced-motion). */}
+      <span className={styles.dust} aria-hidden="true" />
       <Container className={styles.inner}>
         <div className={styles.grid}>
           <div className={styles.content}>

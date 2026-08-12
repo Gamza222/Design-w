@@ -24,7 +24,7 @@ function StepSvg({ children, ...props }: IconProps) {
   );
 }
 
-/** 01 Заявка — «бумажный самолётик» (отправить заявку на сайте/в Telegram). */
+/** 01 Заявка — «бумажный самолётик» (отправить заявку на сайте/в MAX). */
 function IconRequest(props: IconProps) {
   return (
     <StepSvg {...props}>

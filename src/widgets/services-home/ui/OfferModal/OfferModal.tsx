@@ -136,6 +136,7 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
       <div
         ref={dialogRef}
         className={styles.dialog}
+        data-tone="paper"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

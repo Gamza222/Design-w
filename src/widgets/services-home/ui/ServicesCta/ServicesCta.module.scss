@@ -27,7 +27,9 @@
   font-size: var(--fs-xl);
 }
 
-// Референс: лента колонок «иконка + подпись»; на узких — сетка 2–3 в ряд.
+// Пока карточка на всю ширину (до lg) — сетка колонок «иконка + подпись»;
+// с lg карточка встаёт узкой колонкой рядом с формой — вертикальный чек-лист
+// (5 мини-колонок в ~430px давали 57px на трек, и подписи наезжали друг на друга).
 .whoList {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -42,8 +44,9 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  @include up(xl) {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
   }
 }
 
@@ -55,10 +58,18 @@
 
   font-size: var(--fs-xs);
   line-height: var(--lh-snug);
+
+  @include up(lg) {
+    flex-direction: row;
+    gap: var(--space-3);
+    align-items: center;
+    font-size: var(--fs-sm);
+  }
 }
 
 // Тёмная акцентная панель — палитру переключает data-tone="dark" (global.scss).
-// Референс: слева текст с преимуществами, справа форма.
+// Референс: слева текст с преимуществами, справа форма. Секция сама графитовая,
+// поэтому панель отделяем металлическим бортом (как GlassPanel) и тенью — иначе 1.1:1.
 .panel {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -66,7 +77,13 @@
   align-items: center;
 
   padding: var(--panel-pad);
+  border: 1px solid transparent;
   border-radius: var(--radius-lg);
+
+  background:
+    linear-gradient(180deg, var(--clr-dark-surface), var(--clr-dark)) padding-box,
+    var(--glass-border-grad) border-box;
+  box-shadow: var(--shadow-card);
 
   &:focus {
     outline: none; // цель программного фокуса (tabindex=-1), кольцо не нужно

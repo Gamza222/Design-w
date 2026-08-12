@@ -4,6 +4,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 
+// MotionPathPlugin не импортим статически: он нужен только декоративным самолётикам
+// и подгружается лениво внутри эффекта (см. useGSAP ниже).
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 import { ROUTES } from '@shared/config';
@@ -46,7 +48,7 @@ const HOW_ICONS: Icon[] = [IconFolderCheck, IconChat, IconClipboardCheck];
 const HUB = CITIES.find((c) => c.hub) ?? CITIES[0];
 const SPOKES = CITIES.filter((c) => !c.hub);
 // Самолётики — на длинных восточных маршрутах (чтобы не перегружать запад карты).
-const PLANE_ON = new Set(['ekb', 'nsk', 'vlk']);
+const PLANE_ON = new Set(['ekb', 'nsk', 'irkutsk', 'vlk']);
 // Ключевые города, чьи подписи видны и на мобильной карте (остальные — только точки:
 // при ширине ~320px все девять подписей нечитаемы и слипаются).
 const MOBILE_LABELS = new Set(['moscow', 'spb', 'nsk', 'vlk']);
@@ -77,9 +79,9 @@ export function Geography() {
   const howSteps = t('home.geography.howSteps', { returnObjects: true }) as HowStep[];
 
   useGSAP(
-    () => {
+    (_, contextSafe) => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      // Шапка + карточки-оверлеи карты всплывают, когда сцена входит во вьюпорт.
+      // Шапка + карточки сцены всплывают, когда сцена входит во вьюпорт.
       gsap.from(`.${styles.head}, .${styles.remoteCard}, .${styles.caseCard}`, {
         y: 24,
         autoAlpha: 0,
@@ -105,6 +107,65 @@ export function Geography() {
         stagger: 0.08,
         scrollTrigger: { trigger: `.${styles.stats}`, start: 'top 88%', once: true },
       });
+
+      // Пунктир маршрутов «течёт» только пока сцена видна: класс включает CSS-анимацию
+      // дуг (animation-play-state в .arc) — вне вьюпорта девять дуг не жгут кадры.
+      ScrollTrigger.create({
+        trigger: `.${styles.stage}`,
+        start: 'top bottom',
+        end: 'bottom top',
+        toggleClass: { targets: root.current, className: styles.flowing },
+      });
+
+      // Самолётики летят из Москвы по своим дугам (MotionPath) с фейдом на концах.
+      // Цикл бесконечный, но тикает только пока сцена во вьюпорте (toggleActions).
+      // MotionPathPlugin грузим лениво: декоративный плагин уезжает в отдельный чанк
+      // и при reduced-motion не грузится вовсе (ранний return выше); до подгрузки
+      // видны статичные самолётики из SSR-разметки.
+      let cancelled = false;
+      void import('gsap/MotionPathPlugin').then(({ MotionPathPlugin }) => {
+        if (cancelled || !contextSafe) return;
+        gsap.registerPlugin(MotionPathPlugin);
+        // contextSafe: таймлайны создаются после синхронного прогона эффекта — без него
+        // они не попали бы в GSAP-контекст и не чистились бы при анмаунте.
+        contextSafe(() => {
+          const planes = root.current?.querySelectorAll<SVGPathElement>(`.${styles.plane}`) ?? [];
+          planes.forEach((plane, i) => {
+            const arc = root.current?.querySelector<SVGPathElement>(
+              `[data-arc="${plane.dataset.plane ?? ''}"]`,
+            );
+            if (!arc) return;
+            const dur = Math.max(4, arc.getTotalLength() / 70);
+            gsap
+              .timeline({
+                repeat: -1,
+                repeatDelay: 2.4,
+                delay: i * 2.8,
+                scrollTrigger: {
+                  trigger: `.${styles.stage}`,
+                  start: 'top 95%',
+                  toggleActions: 'play pause resume pause',
+                },
+              })
+              .set(plane, { autoAlpha: 0 })
+              .to(
+                plane,
+                {
+                  motionPath: { path: arc, align: arc, alignOrigin: [0.5, 0.5], autoRotate: true },
+                  duration: dur,
+                  ease: 'none',
+                },
+                0,
+              )
+              .to(plane, { autoAlpha: 1, duration: 0.6 }, 0.1)
+              .to(plane, { autoAlpha: 0, duration: 0.6 }, dur - 0.7);
+          });
+        })();
+      });
+
+      return () => {
+        cancelled = true;
+      };
     },
     { scope: root },
   );
@@ -112,16 +173,32 @@ export function Geography() {
   return (
     <section className={styles.geography} ref={root} data-tone="dark">
       <Container className={styles.inner}>
-        {/* Сцена: ≥lg — заголовок слева, карта справа (мокап 06); ниже — стопкой */}
-        <div className={styles.stage}>
-          <SectionHeader
-            eyebrow={t('home.geography.eyebrow')}
-            title={t('home.geography.title')}
-            subtitle={t('home.geography.subtitle')}
-            className={styles.head}
-          />
+        {/* Шапка — на всю ширину секции: в узкой колонке сцены длинный титул
+            рассыпался лесенкой по одному слову (на всех вьюпортах). */}
+        <SectionHeader
+          eyebrow={t('home.geography.eyebrow')}
+          title={t('home.geography.title')}
+          subtitle={t('home.geography.subtitle')}
+          className={styles.head}
+        />
 
-          <div className={styles.mapWrap}>
+        {/* Сцена: ≥lg — слева карточка «из любой точки», справа карта целиком
+            и полоса кейса под ней. Карту ничем не перекрываем — силуэт РФ занимает весь viewBox. */}
+        <div className={styles.stage}>
+          <div className={styles.left}>
+            {/* Карточка «работаем из любой точки» */}
+            <div className={styles.remoteCard}>
+              <span className={styles.remoteIcon} aria-hidden="true">
+                <IconGlobe />
+              </span>
+              <div>
+                <p className={styles.remoteTitle}>{t('home.geography.remoteTitle')}</p>
+                <p className={styles.remoteText}>{t('home.geography.remoteText')}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.mapCol}>
             <svg
               className={styles.map}
               viewBox={RUSSIA_MAP_VIEWBOX}
@@ -155,12 +232,13 @@ export function Geography() {
                   const a = showPlane ? quadAngle(HUB, cx, cy, city, 0.55) : 0;
                   return (
                     <g key={city.id}>
-                      <path d={d} className={styles.arc} />
+                      <path d={d} className={styles.arc} data-arc={city.id} />
                       {showPlane && p && (
                         <path
-                          d="M-7 -4 L8 0 L-7 4 L-3.5 0 Z"
+                          d="M-10.5 -6 L12 0 L-10.5 6 L-5.25 0 Z"
                           className={styles.plane}
-                          transform={`translate(${p.x} ${p.y}) rotate(${a}) scale(1.5)`}
+                          data-plane={city.id}
+                          transform={`translate(${p.x} ${p.y}) rotate(${a})`}
                         />
                       )}
                     </g>
@@ -177,7 +255,7 @@ export function Geography() {
                     <circle cx={city.x} cy={city.y} r={city.hub ? 5.5 : 4} className={styles.nodeDot} />
                     <text
                       x={city.anchorEnd ? city.x - 10 : city.x + 10}
-                      y={city.y + 5}
+                      y={city.y + 5 + (city.labelDy ?? 0)}
                       textAnchor={city.anchorEnd ? 'end' : 'start'}
                       className={cn(styles.label, MOBILE_LABELS.has(city.id) && styles.labelMajor)}
                     >
@@ -188,19 +266,7 @@ export function Geography() {
               </g>
             </svg>
 
-            <div className={styles.overlays}>
-            {/* Карточка «работаем из любой точки» */}
-            <div className={styles.remoteCard}>
-              <span className={styles.remoteIcon} aria-hidden="true">
-                <IconGlobe />
-              </span>
-              <div>
-                <p className={styles.remoteTitle}>{t('home.geography.remoteTitle')}</p>
-                <p className={styles.remoteText}>{t('home.geography.remoteText')}</p>
-              </div>
-            </div>
-
-            {/* Карточка кейса */}
+            {/* Полоса кейса под картой — фото слева, текст справа */}
             <article className={styles.caseCard}>
               <div
                 className={styles.casePhoto}
@@ -219,7 +285,6 @@ export function Geography() {
                 </AppLink>
               </div>
             </article>
-            </div>
           </div>
         </div>
 

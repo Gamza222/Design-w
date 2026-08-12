@@ -109,7 +109,7 @@
   align-self: stretch;
 }
 
-// FAQ услуги — одна узкая колонка стеклянных аккордеонов (паттерн главной).
+// FAQ услуги — шапка и узкая колонка стеклянных аккордеонов слева (общая типографическая сетка).
 .faqHead {
   margin-bottom: clamp(var(--space-8), 3vw, var(--space-12));
 }
@@ -118,9 +118,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-
   max-width: 52rem;
-  margin-inline: auto;
 }
 
 .faqAnswer {

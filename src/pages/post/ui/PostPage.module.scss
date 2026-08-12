@@ -16,6 +16,13 @@
 
   max-width: 68ch;
   margin-bottom: var(--space-12);
+
+  // Заголовок статьи — на ступень ниже дисплейного h1 (5rem раскатывал длинные
+  // темы на 4 строки), с балансировкой переносов.
+  h1 {
+    font-size: var(--fs-3xl);
+    text-wrap: balance;
+  }
 }
 
 .date {

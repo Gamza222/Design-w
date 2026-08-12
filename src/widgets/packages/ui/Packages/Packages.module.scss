@@ -4,34 +4,41 @@
   width: 100%;
 }
 
-// Светлая панель-контейнер ряда пакетов — наезжает на фото Hero. Тёплый off-white фон; тарифы
-// внутри — чуть белее (--clr-light) + тень, поэтому читаются как приподнятые карточки.
-// Re-assert светлой палитры БЕЗ [data-tone] (тот форс-красит фон) — чтобы intro/calc/кнопки
-// внутри тёмного Hero взяли тёмный текст и контурную кнопку.
+// Графитовая панель-контейнер ряда пакетов — наезжает на фото Hero. Премиальный контраст:
+// тёмная панель с градиентным серебряно-золотым бортом, «бумажные» тарифы внутри светлые
+// (data-tone="paper" на карточках) — самый жёсткий контрастный ряд на странице.
 .panel {
-  --color-text: var(--clr-dark);
-  --color-text-muted: var(--clr-gray);
-  --color-strong: var(--clr-black);
-  --color-border: color-mix(in srgb, var(--clr-dark) 22%, transparent);
-
-  // Светлый остров внутри тёмного Hero: возвращаем «светлые» hairline и контурную ghost-кнопку
-  // (иначе унаследуются тёмные --color-hairline / заполненная --btn-ghost-bg из data-tone="dark").
-  --color-hairline: color-mix(in srgb, var(--clr-dark) 8%, transparent);
-  --btn-ghost-color: var(--clr-dark);
+  --color-text: var(--clr-light);
+  --color-text-muted: var(--clr-muted);
+  --color-strong: var(--clr-light);
+  --color-border: color-mix(in srgb, var(--clr-light) 22%, transparent);
+  --color-hairline: color-mix(in srgb, var(--clr-light) 10%, transparent);
+  --btn-ghost-color: var(--clr-light);
   --btn-ghost-bg: transparent;
   --btn-ghost-border: currentcolor;
-  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 88%, var(--clr-dark));
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white);
 
   padding: var(--panel-pad); // карточки не упираются в края панели
-  border: 1px solid var(--color-hairline);
+  border: 1px solid transparent;
   border-radius: var(--radius-lg);
 
   color: var(--color-text);
 
-  // Светлый тёплый off-white (лишь 5% near-black) — чистая палитра, высокий контраст. Карточки
-  // тарифов приподняты над панелью премиальной многослойной тенью (--shadow-card), а не затемнением фона.
-  background: color-mix(in srgb, var(--clr-light) 95%, var(--clr-black));
+  // Двухслойный фон: объёмный графит + градиентный борт (как GlassPanel).
+  background:
+    var(--glass-bg-deep) padding-box,
+    var(--glass-border-grad) border-box;
   box-shadow: var(--shadow-glass);
+
+  // Панель лежит на фото Hero: без блюра сквозь 8–14% прозрачности просвечивает
+  // нерасфокусированная текстура снимка («грязный» шум под графитом).
+  backdrop-filter: var(--glass-blur);
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background:
+      linear-gradient(var(--clr-dark-surface), var(--clr-dark-surface)) padding-box,
+      var(--glass-border-grad) border-box;
+  }
 
   // Стадия «5-в-ряд» (≥$bp-xxl) держит 100svh — поджимаем внутренний паддинг панели и карточек
   // (через токен --card-pad, который читают тарифы и карточка расчёта), чтобы лента влезала под хром.

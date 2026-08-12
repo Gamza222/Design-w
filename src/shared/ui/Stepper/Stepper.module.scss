@@ -1,3 +1,5 @@
+@use 'app/styles/abstracts' as *;
+
 .stepper {
   display: inline-flex;
   gap: var(--space-2);
@@ -26,26 +28,53 @@
     color var(--transition-base),
     background-color var(--transition-base);
 
-  &:hover:not(:disabled) {
-    color: var(--color-accent);
-    background-color: var(--color-muted-bg);
+  // На границах min/max кнопка получает aria-disabled (не disabled) — остаётся в tab-order.
+  @media (hover: hover) {
+    &:hover:not([aria-disabled='true']) {
+      color: var(--color-accent);
+      background-color: var(--color-muted-bg);
+    }
   }
 
-  &:disabled {
+  &[aria-disabled='true'] {
     cursor: not-allowed;
     opacity: 0.4;
   }
 }
 
 .value {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
   min-width: 4ch;
+}
+
+// Поле ручного ввода — выглядит как прежнее значение, редактируемость выдаёт caret + focus-ring.
+.input {
+  width: 4ch;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+
+  font: inherit;
   font-weight: 600;
   color: var(--color-text);
   text-align: center;
+
+  background: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
 .unit {
   margin-inline-start: 0.25ch;
   font-weight: 400;
   color: var(--color-text-muted);
+}
+
+.srLive {
+  @include visually-hidden;
 }

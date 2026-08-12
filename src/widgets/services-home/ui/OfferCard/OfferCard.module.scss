@@ -1,212 +1,192 @@
-@use 'app/styles/abstracts' as *;
+// Компактная карточка ленты услуг (графит + градиентный борт + золотые акценты).
+// Вся кликабельна (нативная <button>), внутри только span. Ширина — flex-basis: лента задаёт
+// ритм, «обрезанная» карточка у края приглашает листать. Hover: подъём, вспышка борта,
+// стрелка заливается золотом.
 
-// Карточка услуги — вся кликабельна (нативная <button>), внутри только span/img.
-// Ховер по ТЗ сдержанный: подъём ~4px, фото +2%, чуть заметнее тень, 300ms.
+// «Поднятое» состояние карточки: hover (только на hover-устройствах — на таче
+// эффект залипает после тапа) и клавиатурный фокус.
+@mixin card-lifted {
+  transform: translateY(-0.45rem);
+  background:
+    linear-gradient(168deg, var(--clr-dark-elevated), color-mix(in srgb, var(--clr-dark) 88%, black))
+      padding-box,
+    linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--clr-light) 45%, transparent),
+        color-mix(in srgb, var(--clr-light) 12%, transparent) 45%,
+        color-mix(in srgb, var(--clr-accent) 35%, transparent)
+      )
+      border-box;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 9%),
+    0 1.3rem 3rem rgb(0 0 0 / 45%),
+    0 0 2.2rem color-mix(in srgb, var(--clr-accent) 10%, transparent);
+}
+
 .card {
   cursor: pointer;
 
   position: relative;
 
-  overflow: hidden;
   display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  padding: 0;
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-lg);
-
-  font: inherit;
-  color: var(--color-text);
-  text-align: left;
-
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
-
-  transition:
-    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-
-  &:hover,
-  &:focus-visible {
-    transform: translateY(-0.25rem);
-    box-shadow: var(--shadow-md);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
-
-  &:hover .photo {
-    transform: scale(1.02);
-  }
-
-  &:hover .more {
-    gap: var(--space-3);
-    color: var(--color-accent-hover);
-  }
-}
-
-.media {
-  position: relative;
-  overflow: hidden;
-  display: block;
-}
-
-.photo {
-  display: block;
-
-  aspect-ratio: 3 / 2;
-  width: 100%;
-
-  object-fit: cover;
-
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1); // мягкий, «дорогой» зум фото
-
-  // Мобильные: карточки не должны быть слишком высокими — фото ниже.
-  @include down(md) {
-    aspect-ratio: 16 / 9;
-  }
-}
-
-// Крупный золотой номер услуги поверх фото (нижний левый угол, как в референсе).
-.num {
-  position: absolute;
-  z-index: 1;
-  bottom: var(--space-2);
-  left: var(--space-4);
-
-  font-family: var(--font-display);
-  font-size: var(--fs-2xl);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-  color: var(--clr-accent);
-  text-shadow: 0 0.125rem 1rem rgb(8 17 37 / 35%); // читаемость на светлых фото
-  letter-spacing: 0.02em;
-}
-
-// Золотая пилюля «Популярный» — поверх фото, слева сверху (как в референсе).
-.badge {
-  position: absolute;
-  z-index: 1;
-  top: var(--space-3);
-  left: var(--space-3);
-
-  padding: 0.18rem var(--space-3);
-  border-radius: var(--radius-full);
-
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--clr-dark);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-
-  background: var(--clr-accent);
-  box-shadow: var(--shadow-sm);
-}
-
-.body {
-  display: flex;
-  flex: 1;
+  flex: 0 0 clamp(15rem, 22vw, 18rem);
   flex-direction: column;
   gap: var(--space-2);
 
   padding: var(--card-pad);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+
+  color: var(--color-text);
+  text-align: left;
+
+  background:
+    linear-gradient(168deg, var(--clr-dark-surface), color-mix(in srgb, var(--clr-dark) 88%, black))
+      padding-box,
+    linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--clr-light) 18%, transparent),
+        color-mix(in srgb, var(--clr-light) 6%, transparent) 50%,
+        color-mix(in srgb, var(--clr-accent) 10%, transparent)
+      )
+      border-box;
+  box-shadow: var(--shadow-card);
+
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base);
+
+  &:focus-visible {
+    @include card-lifted;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      @include card-lifted;
+    }
+  }
+}
+
+.badge {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--color-on-accent);
+
+  background: linear-gradient(180deg, #ffd23e, #f3ab00);
+}
+
+// Металлик-номер с золотой чертой — задаёт порядок чтения ленты.
+.num {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  line-height: 1;
+
+  background: linear-gradient(
+    115deg,
+    var(--clr-silver-hi) 10%,
+    var(--clr-silver) 48%,
+    var(--clr-silver-lo) 90%
+  );
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  &::after {
+    content: '';
+
+    display: block;
+
+    width: 2rem;
+    height: 2px;
+    margin-top: var(--space-2);
+    border-radius: 2px;
+
+    background: linear-gradient(90deg, var(--clr-accent), transparent);
+  }
 }
 
 .name {
-  font-family: var(--font-display);
-  font-size: var(--fs-lg);
-  font-weight: 700;
-  line-height: var(--lh-tight);
+  min-height: 2.5em;
+  margin-top: var(--space-1);
+
+  font-size: var(--fs-base);
+  font-weight: 650;
+  line-height: var(--lh-snug);
   color: var(--color-strong);
 }
 
 .desc {
+  @include line-clamp(3);
+
+  flex: 1;
+
   font-size: var(--fs-sm);
   line-height: var(--lh-snug);
   color: var(--color-text-muted);
 }
 
-// wrap: в узких колонках «Что входит →» уходит на вторую строку, цена не рвётся.
-// Цена и «Что входит →» друг под другом, слева (как в референсе).
 .footer {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  align-items: flex-start;
-
-  margin-top: auto;
-  padding-top: var(--space-3);
-}
-
-// Золотая цена («тёмное золото» — читаемость на светлой карточке). Денежные цены
-// не рвутся за счёт NBSP в i18n-строках; фразовые переносятся по словам.
-.price {
-  font-size: calc(var(--fs-base) * 1.06);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: color-mix(in srgb, var(--clr-accent) 72%, var(--clr-dark));
-  letter-spacing: -0.01em;
-}
-
-// «Что входит →» — псевдоссылка; вся карточка и так кликабельна.
-.more {
-  display: inline-flex;
   gap: var(--space-2);
   align-items: center;
+  justify-content: space-between;
+
+  margin-top: var(--space-2);
+}
+
+// Золотой прайс-чип — единственный цвет на карточке в покое.
+.price {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--clr-accent) 40%, transparent);
+  border-radius: var(--radius-full);
 
   font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--color-text-muted);
+  font-weight: 650;
+  color: var(--color-accent);
   white-space: nowrap;
+}
+
+.more {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid color-mix(in srgb, var(--clr-light) 22%, transparent);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-base);
+  color: var(--color-text-muted);
 
   transition:
-    gap 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
+    color var(--transition-base),
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
 
-// Компактные карточки второго ряда: плотнее паддинги, мельче кегль названия.
-.sm {
-  .body {
-    gap: var(--space-1);
-    padding: clamp(var(--space-4), 1.3vw, var(--space-5));
+  .card:focus-visible & {
+    border-color: transparent;
+    color: var(--color-on-accent);
+    background: linear-gradient(180deg, var(--clr-accent-hi), var(--clr-accent-lo));
+    box-shadow: 0 0.4rem 1.4rem color-mix(in srgb, var(--clr-accent) 35%, transparent);
   }
 
-  .name {
-    font-size: var(--fs-base);
-  }
-
-  .photo {
-    aspect-ratio: 16 / 10;
-
-    @include down(md) {
-      aspect-ratio: 16 / 9;
+  @media (hover: hover) {
+    .card:hover & {
+      border-color: transparent;
+      color: var(--color-on-accent);
+      background: linear-gradient(180deg, var(--clr-accent-hi), var(--clr-accent-lo));
+      box-shadow: 0 0.4rem 1.4rem color-mix(in srgb, var(--clr-accent) 35%, transparent);
     }
-  }
-
-  .price {
-    font-size: var(--fs-sm);
-  }
-}
-
-// Популярная карточка: палитру перекрашивает data-tone="dark" (см. global.scss),
-// здесь — только акцентная цена и лёгкое затемнение фото для читаемости.
-.featured {
-  border-color: var(--color-hairline);
-
-  .price {
-    color: var(--color-accent);
-  }
-
-  .media::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: color-mix(in srgb, var(--clr-dark) 22%, transparent);
   }
 }

@@ -4,6 +4,7 @@ import { getPosts } from '@entities/post';
 import { buildMeta, localeDict, useLocale, type RouteMetaArgs } from '@shared/lib';
 import { PageHeader, Section } from '@shared/ui';
 import { BlogList } from '@widgets/blog-list';
+import { ContactCta } from '@widgets/contact-cta';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
@@ -21,6 +22,9 @@ export default function BlogPage() {
       <Section>
         <BlogList posts={posts} />
       </Section>
+
+      {/* Страница не обрывается в футер — CTA-мост к заявке. */}
+      <ContactCta />
     </>
   );
 }

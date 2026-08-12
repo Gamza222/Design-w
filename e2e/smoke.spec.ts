@@ -37,3 +37,11 @@ test('language switch navigates to the /en home', async ({ page }) => {
   await page.getByRole('menuitem', { name: 'EN' }).click();
   await expect(page).toHaveURL(/\/en$/);
 });
+
+test('unknown URL responds 404 with the static error page', async ({ page }) => {
+  // Статичный 404.html: честный статус, без гидрации (см. scripts/generate-404.mjs).
+  const response = await page.goto('/no-such-page');
+  expect(response?.status()).toBe(404);
+  await expect(page.getByRole('heading', { name: 'Страница не найдена' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'На главную' })).toBeVisible();
+});

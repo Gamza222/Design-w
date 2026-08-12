@@ -350,6 +350,16 @@ export function IconQuote(props: IconProps) {
   );
 }
 
+/** Мессенджер MAX — реплика с буквой «М» (официальной иконки в react-icons нет). */
+export function IconMaxMessenger(props: IconProps) {
+  return (
+    <Icon strokeWidth={1.8} {...props}>
+      <path d="M12 3.5a8.5 8.5 0 1 1-4.1 15.9L4 20.5l1.1-3.9A8.46 8.46 0 0 1 3.5 12 8.5 8.5 0 0 1 12 3.5z" />
+      <path d="M8.8 15.2V9.3l3.2 3.4 3.2-3.4v5.9" />
+    </Icon>
+  );
+}
+
 /** Тонкий крестик — закрытие модального окна. */
 export function IconClose(props: IconProps) {
   return (

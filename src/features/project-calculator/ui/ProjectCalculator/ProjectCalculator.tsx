@@ -2,6 +2,7 @@ import { type ComponentType, type SVGProps, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CALC_ADDONS, CALC_AREA, CALC_FORMATS, calcTotal } from '@entities/package';
+import { ROUTES } from '@shared/config';
 import { cn, useLocale } from '@shared/lib';
 import {
   Button,
@@ -239,7 +240,7 @@ export function ProjectCalculator() {
 
           <p className={styles.note}>{t('home.calculator.resultNote')}</p>
 
-          <Button type="button" size="lg" className={styles.cta}>
+          <Button to={ROUTES.contact} size="lg" className={styles.cta}>
             {t('home.calculator.cta')}
           </Button>
 

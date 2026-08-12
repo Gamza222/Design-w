@@ -11,8 +11,8 @@ interface FaqItem {
   a: string;
 }
 
-/** Секция «Частые вопросы» (tone=dark, макет 10) — центрированная шапка + две независимые колонки
- *  стеклянных аккордеонов. Открыт один пункт за раз. Контент — i18n `home.faq`. */
+/** Секция «Частые вопросы» (tone=dark, макет 10) — шапка слева (общий паттерн секций) + две
+ *  независимые колонки стеклянных аккордеонов. Открыт один пункт за раз. Контент — i18n `home.faq`. */
 export function Faq() {
   const { t } = useTranslation();
   const items = t('home.faq.items', { returnObjects: true }) as FaqItem[];
@@ -38,7 +38,6 @@ export function Faq() {
           eyebrow={t('home.faq.eyebrow')}
           title={t('home.faq.title')}
           subtitle={t('home.faq.subtitle')}
-          align="center"
           className={styles.head}
         />
 

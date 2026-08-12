@@ -1,14 +1,13 @@
 @use 'app/styles/abstracts' as *;
 
 // Секция «Достижения» — светлая (макет 01): одна полоса в 3 зоны (цифры | отзывы | команда),
-// без крупного заголовка. Тянется до бокового гаттера (full-bleed), как лента портфолио выше.
+// без крупного заголовка. Сидит на общем 80rem-рельсе: локальный full-bleed давал
+// скачущую левую линию секций на 1920+.
 .achievements {
   padding-block: var(--section-pad-y-dense);
 }
 
 .inner {
-  --container-max: var(--site-max);
-
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(var(--space-8), 3vw, var(--space-12));
@@ -176,7 +175,7 @@
   font-weight: 600;
 }
 
-// Иконка соцсети (Telegram) — инлайном сразу за именем: при переносе имени едет за последним словом.
+// Иконка мессенджера (MAX) — инлайном сразу за именем: при переносе имени едет за последним словом.
 .reviewSocial {
   display: inline-block;
 

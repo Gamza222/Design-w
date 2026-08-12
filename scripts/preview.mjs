@@ -1,6 +1,6 @@
 // Локальный preview собранной статики, зеркалящий поведение Vercel:
 //  - `/services` и `/services/` → build/client/services/index.html (директорийный index);
-//  - неизвестный путь → __spa-fallback.html со статусом 200 (rewrite из vercel.json).
+//  - неизвестный путь → 404.html со статусом 404 (Vercel для статики делает то же сам).
 // `vite preview` для этого не подходит: его SPA-режим отдаёт корневой index.html для любых
 // путей без хвостового слэша → на каждой странице кроме главной ловится hydration mismatch.
 
@@ -10,7 +10,7 @@ import { extname, join, normalize, sep } from 'node:path';
 import { cwd, argv, exit } from 'node:process';
 
 const ROOT = join(cwd(), 'build', 'client');
-const FALLBACK = join(ROOT, '__spa-fallback.html');
+const NOT_FOUND = join(ROOT, '404.html');
 
 const args = argv.slice(2);
 const flag = (name, def) => {
@@ -67,13 +67,14 @@ function resolveFile(urlPath) {
 }
 
 createServer((req, res) => {
-  const file = resolveFile(req.url ?? '/') ?? FALLBACK;
+  const resolved = resolveFile(req.url ?? '/');
+  const file = resolved ?? NOT_FOUND;
   const type = MIME[extname(file).toLowerCase()] ?? 'application/octet-stream';
   // Хешированные ассеты Vite можно кешировать навечно; HTML — нет.
   const cache = file.includes(`${sep}assets${sep}`)
     ? 'public, max-age=31536000, immutable'
     : 'no-cache';
-  res.writeHead(200, { 'Content-Type': type, 'Cache-Control': cache });
+  res.writeHead(resolved ? 200 : 404, { 'Content-Type': type, 'Cache-Control': cache });
   createReadStream(file).pipe(res);
 }).listen(PORT, HOST, () => {
   console.log(`preview: http://${HOST}:${PORT} → build/client`);

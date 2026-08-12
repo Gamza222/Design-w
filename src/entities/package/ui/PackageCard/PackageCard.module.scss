@@ -37,6 +37,8 @@
   }
 
   // Кремовый скрим: слева плотно (текст читаем), справа проглядывает интерьер.
+  // Второй слой — вертикальный фейд снизу: нижние пункты списка ложатся на фото
+  // (кейс пакета «Полный» на узких вьюпортах) и без него теряют контраст.
   &::after {
     content: '';
 
@@ -44,14 +46,21 @@
     z-index: -1;
     inset: 0;
 
-    background: linear-gradient(
-      100deg,
-      var(--clr-light) 0%,
-      var(--clr-light) 46%,
-      color-mix(in srgb, var(--clr-light) 80%, transparent) 64%,
-      color-mix(in srgb, var(--clr-light) 18%, transparent) 84%,
-      transparent 100%
-    );
+    background:
+      linear-gradient(
+        100deg,
+        var(--clr-light) 0%,
+        var(--clr-light) 46%,
+        color-mix(in srgb, var(--clr-light) 80%, transparent) 64%,
+        color-mix(in srgb, var(--clr-light) 18%, transparent) 84%,
+        transparent 100%
+      ),
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--clr-light) 88%, transparent) 0%,
+        color-mix(in srgb, var(--clr-light) 55%, transparent) 26%,
+        transparent 48%
+      );
   }
 }
 

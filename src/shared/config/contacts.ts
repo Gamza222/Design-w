@@ -1,8 +1,10 @@
 // Нелокализуемые контактные данные студии (телефон, ссылки на соцсети).
 // Часы работы — НЕ здесь: это переводимая строка, держим её в i18n (`header.hours`).
-// Плейсхолдеры — заменить на реальные значения.
+// Реальных данных пока нет, поэтому phone = null и socials пуст: все места рендера
+// (хедер, футер, ContactCta) выводят эти элементы условно — достаточно заполнить
+// значения ниже, и UI подхватит их автоматически.
 
-export type SocialType = 'telegram' | 'vk' | 'whatsapp';
+export type SocialType = 'max' | 'vk';
 
 export interface SocialLink {
   type: SocialType;
@@ -11,17 +13,18 @@ export interface SocialLink {
 }
 
 export interface Contacts {
-  phone: string;
-  phoneHref: string;
+  /** Телефон для отображения; null — телефон не показываем. */
+  phone: string | null;
+  /** `tel:`-ссылка; заполняется вместе с phone. */
+  phoneHref: string | null;
   socials: readonly SocialLink[];
 }
 
 export const CONTACTS: Contacts = {
-  phone: '+7 (700) 000-00-00',
-  phoneHref: 'tel:+77000000000',
+  phone: null, // напр. '+7 (800) 707-74-83'
+  phoneHref: null, // напр. 'tel:+78007077483'
   socials: [
-    { type: 'telegram', label: 'Telegram', href: 'https://t.me/placeholder' },
-    { type: 'vk', label: 'VK', href: 'https://vk.com/placeholder' },
-    { type: 'whatsapp', label: 'WhatsApp', href: 'https://wa.me/77000000000' },
+    // { type: 'max', label: 'MAX', href: 'https://max.ru/<профиль>' },
+    // { type: 'vk', label: 'VK', href: 'https://vk.com/<профиль>' },
   ],
-} as const;
+};

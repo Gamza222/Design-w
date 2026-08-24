@@ -32,6 +32,7 @@
   // Правый край держим глубоким (≥56%) — даже светлое фото читается как тёмный нави, как в макете 01.
   &::before {
     z-index: -2;
+    opacity: 0.63;
     background:
       linear-gradient(
         100deg,
@@ -130,6 +131,7 @@
   will-change: transform;
 
   position: absolute;
+  height: 100%;
   z-index: -3;
   inset: -16% 0; // overscan по вертикали — запас под parallax-сдвиг (yPercent ±8), края не оголяются
 

@@ -11,10 +11,13 @@ describe('route locale helpers', () => {
   it('prefixes a non-default locale', () => {
     expect(localizePath('/blog', 'en')).toBe('/en/blog');
     expect(localizePath('/', 'en')).toBe('/en');
+    expect(localizePath('/blog', 'be')).toBe('/by/blog');
+    expect(localizePath('/', 'be')).toBe('/by');
   });
 
   it('detects the locale from a pathname', () => {
     expect(getLocaleFromPath('/en/blog')).toBe('en');
+    expect(getLocaleFromPath('/by/blog')).toBe('be');
     expect(getLocaleFromPath('/blog')).toBe('ru');
     expect(getLocaleFromPath('/')).toBe('ru');
   });
@@ -22,6 +25,8 @@ describe('route locale helpers', () => {
   it('strips the locale back to a canonical path', () => {
     expect(stripLocale('/en/blog')).toBe('/blog');
     expect(stripLocale('/en')).toBe('/');
+    expect(stripLocale('/by/blog')).toBe('/blog');
+    expect(stripLocale('/by')).toBe('/');
     expect(stripLocale('/blog')).toBe('/blog');
   });
 });

@@ -29,7 +29,15 @@ function pages(suffix: string): RouteConfigEntry[] {
     route('blog/:slug', '../pages/post/ui/PostPage.tsx', { id: `post${suffix}` }),
     route('about', '../pages/about/ui/AboutPage.tsx', { id: `about${suffix}` }),
     route('contact', '../pages/contact/ui/ContactPage.tsx', { id: `contact${suffix}` }),
+    route('privacy', '../pages/legal/ui/LegalPage.tsx', { id: `privacy${suffix}` }),
+    route('offer', '../pages/legal/ui/LegalPage.tsx', { id: `offer${suffix}` }),
+    route('requisites', '../pages/legal/ui/LegalPage.tsx', { id: `requisites${suffix}` }),
+    route('consent', '../pages/legal/ui/LegalPage.tsx', { id: `consent${suffix}` }),
   ];
 }
 
-export default [...pages('-ru'), ...prefix('en', pages('-en'))] satisfies RouteConfig;
+export default [
+  ...pages('-ru'),
+  ...prefix('en', pages('-en')),
+  ...prefix('by', pages('-be')),
+] satisfies RouteConfig;

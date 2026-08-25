@@ -11,6 +11,8 @@ import {
 
 import {
   getLocaleFromPath,
+  LOCALES,
+  LOCALE_HREFLANGS,
   localizePath,
   normalizePathname,
   SITE_URL,
@@ -35,14 +37,20 @@ export function Layout({ children }: { children: ReactNode }) {
   const canonical = stripLocale(pathname);
 
   return (
-    <html lang={locale}>
+    <html lang={LOCALE_HREFLANGS[locale]}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="canonical" href={SITE_URL + pathname} />
-        <link rel="alternate" hrefLang="ru" href={SITE_URL + localizePath(canonical, 'ru')} />
-        <link rel="alternate" hrefLang="en" href={SITE_URL + localizePath(canonical, 'en')} />
+        {LOCALES.map((alternateLocale) => (
+          <link
+            key={alternateLocale}
+            rel="alternate"
+            hrefLang={LOCALE_HREFLANGS[alternateLocale]}
+            href={SITE_URL + localizePath(canonical, alternateLocale)}
+          />
+        ))}
         <link
           rel="alternate"
           hrefLang="x-default"

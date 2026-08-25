@@ -36,15 +36,30 @@ export const CALC_ADDONS: CalcAddon[] = [
   { id: 'visit', kind: 'flat', amount: 5000 },
 ];
 
+/** Отдельный прайс для белорусской витрины. Это фиксированные коммерческие ставки в BYN,
+ *  а не динамическая конвертация на клиенте: итог не меняется между просмотром и заявкой.
+ *  Стартовые значения сверены с курсом НБРБ на 24.08.2026 и округлены до понятных цен. */
+export const CALC_FORMATS_BYN: CalcFormat[] = [
+  { id: 'planning', ratePerM2: 90 },
+  { id: 'collages', ratePerM2: 110 },
+  { id: 'viz', ratePerM2: 125 },
+  { id: 'full', ratePerM2: 180 },
+];
+
+export const CALC_ADDONS_BYN: CalcAddon[] = [
+  { id: 'viz3d', kind: 'perM2', amount: 35 },
+  { id: 'supervision', kind: 'flat', amount: 720 },
+  { id: 'complectation', kind: 'flat', amount: 360 },
+  { id: 'electric', kind: 'perM2', amount: 18 },
+  { id: 'ergonomics', kind: 'flat', amount: 720 },
+  { id: 'visit', kind: 'flat', amount: 180 },
+];
+
 /** Границы площади (м²) для степпера. */
 export const CALC_AREA = { min: 20, max: 400, step: 1, default: 72 } as const;
 
 /** Итоговая стоимость: (ставка формата + perM2-надбавки) × площадь + разовые суммы. */
-export function calcTotal(
-  format: CalcFormat,
-  addons: readonly CalcAddon[],
-  area: number,
-): number {
+export function calcTotal(format: CalcFormat, addons: readonly CalcAddon[], area: number): number {
   const perM2 = addons
     .filter((a) => a.kind === 'perM2')
     .reduce((sum, a) => sum + a.amount, format.ratePerM2);

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 import {
   getLocaleFromPath,
@@ -15,6 +16,7 @@ import styles from './LocaleSwitcher.module.scss';
 
 /** Дропдаун выбора языка — показывает текущую локаль, по клику раскрывает список. */
 export function LocaleSwitcher() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { pathname, search, hash } = useLocation();
@@ -39,7 +41,7 @@ export function LocaleSwitcher() {
         type="button"
         className={styles.trigger}
         aria-expanded={open}
-        aria-label="Language"
+        aria-label={t('header.language')}
         onClick={() => setOpen((v) => !v)}
       >
         {LOCALE_LABELS[current]}

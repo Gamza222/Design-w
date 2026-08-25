@@ -21,7 +21,7 @@ import {
   IconFolderCheck,
   IconGlobe,
   IconMapPin,
-  IconRuble,
+  IconWallet,
   SectionHeader,
   Stat,
 } from '@shared/ui';
@@ -42,7 +42,7 @@ interface HowStep {
   desc: string;
 }
 
-const STAT_ICONS: Icon[] = [IconMapPin, IconClock, IconChat, IconRuble];
+const STAT_ICONS: Icon[] = [IconMapPin, IconClock, IconChat, IconWallet];
 const HOW_ICONS: Icon[] = [IconFolderCheck, IconChat, IconClipboardCheck];
 
 const HUB = CITIES.find((c) => c.hub) ?? CITIES[0];
@@ -208,8 +208,14 @@ export function Geography() {
             >
               <defs>
                 <radialGradient id="geoLand" cx="38%" cy="42%" r="85%">
-                  <stop offset="0%" stopColor="color-mix(in srgb, var(--clr-light) 24%, var(--clr-dark-surface))" />
-                  <stop offset="100%" stopColor="color-mix(in srgb, var(--clr-light) 13%, var(--clr-dark-surface))" />
+                  <stop
+                    offset="0%"
+                    stopColor="color-mix(in srgb, var(--clr-light) 24%, var(--clr-dark-surface))"
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="color-mix(in srgb, var(--clr-light) 13%, var(--clr-dark-surface))"
+                  />
                 </radialGradient>
                 <filter id="geoGlow" x="-200%" y="-200%" width="500%" height="500%">
                   <feGaussianBlur stdDeviation="6" />
@@ -225,7 +231,9 @@ export function Geography() {
               <g>
                 {SPOKES.map((city) => {
                   const cx = (HUB.x + city.x) / 2;
-                  const cy = (HUB.y + city.y) / 2 - Math.min(140, Math.hypot(city.x - HUB.x, city.y - HUB.y) * 0.32);
+                  const cy =
+                    (HUB.y + city.y) / 2 -
+                    Math.min(140, Math.hypot(city.x - HUB.x, city.y - HUB.y) * 0.32);
                   const d = `M${HUB.x} ${HUB.y} Q ${cx} ${cy} ${city.x} ${city.y}`;
                   const showPlane = PLANE_ON.has(city.id);
                   const p = showPlane ? quadPoint(HUB, cx, cy, city, 0.55) : null;
@@ -250,9 +258,22 @@ export function Geography() {
               <g>
                 {CITIES.map((city) => (
                   <g key={city.id} className={styles.node}>
-                    <circle cx={city.x} cy={city.y} r={city.hub ? 16 : 11} className={styles.nodeGlow} filter="url(#geoGlow)" />
-                    {city.hub && <circle cx={city.x} cy={city.y} r={11} className={styles.nodeRing} />}
-                    <circle cx={city.x} cy={city.y} r={city.hub ? 5.5 : 4} className={styles.nodeDot} />
+                    <circle
+                      cx={city.x}
+                      cy={city.y}
+                      r={city.hub ? 16 : 11}
+                      className={styles.nodeGlow}
+                      filter="url(#geoGlow)"
+                    />
+                    {city.hub && (
+                      <circle cx={city.x} cy={city.y} r={11} className={styles.nodeRing} />
+                    )}
+                    <circle
+                      cx={city.x}
+                      cy={city.y}
+                      r={city.hub ? 5.5 : 4}
+                      className={styles.nodeDot}
+                    />
                     <text
                       x={city.anchorEnd ? city.x - 10 : city.x + 10}
                       y={city.y + 5 + (city.labelDy ?? 0)}

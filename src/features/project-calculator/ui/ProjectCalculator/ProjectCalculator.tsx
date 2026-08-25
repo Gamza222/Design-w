@@ -1,7 +1,14 @@
 import { type ComponentType, type SVGProps, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { CALC_ADDONS, CALC_AREA, CALC_FORMATS, calcTotal } from '@entities/package';
+import {
+  CALC_ADDONS,
+  CALC_ADDONS_BYN,
+  CALC_AREA,
+  CALC_FORMATS,
+  CALC_FORMATS_BYN,
+  calcTotal,
+} from '@entities/package';
 import { ROUTES } from '@shared/config';
 import { cn, useLocale } from '@shared/lib';
 import {
@@ -54,6 +61,8 @@ export function ProjectCalculator() {
   const [formatIdx, setFormatIdx] = useState(DEFAULT_FORMAT);
   const [addons, setAddons] = useState<number[]>(DEFAULT_ADDONS);
   const [area, setArea] = useState<number>(CALC_AREA.default);
+  const calcFormats = locale === 'be' ? CALC_FORMATS_BYN : CALC_FORMATS;
+  const calcAddons = locale === 'be' ? CALC_ADDONS_BYN : CALC_ADDONS;
 
   const toggleAddon = (i: number) =>
     setAddons((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
@@ -67,16 +76,27 @@ export function ProjectCalculator() {
   const total = useMemo(
     () =>
       calcTotal(
-        CALC_FORMATS[formatIdx],
-        addons.map((i) => CALC_ADDONS[i]),
+        calcFormats[formatIdx],
+        addons.map((i) => calcAddons[i]),
         area,
       ),
-    [formatIdx, addons, area],
+    [formatIdx, addons, area, calcFormats, calcAddons],
   );
 
   const money = useMemo(() => {
-    const nf = new Intl.NumberFormat(locale === 'ru' ? 'ru-RU' : 'en-US');
-    return (n: number) => `${nf.format(n)} ₽`;
+    const isBelarus = locale === 'be';
+    const nf = new Intl.NumberFormat(
+      isBelarus ? 'be-BY' : locale === 'ru' ? 'ru-RU' : 'en-US',
+      isBelarus
+        ? {
+            style: 'currency',
+            currency: 'BYN',
+            currencyDisplay: 'code',
+            maximumFractionDigits: 0,
+          }
+        : undefined,
+    );
+    return (n: number) => (isBelarus ? nf.format(n) : `${nf.format(n)} ₽`);
   }, [locale]);
 
   const FormatIcon = FORMAT_ICONS[formatIdx] ?? FORMAT_ICONS[0];

@@ -21,11 +21,12 @@
   "header": {
     "hours": "10:00–19:00",
     "menu": "Menu",
+    "language": "Website language",
     "online": "Online now"
   },
   "home": {
     "hero": {
-      "eyebrow": "Concept apartment design projects across Russia",
+      "eyebrow": "Interior design projects across Russia and Belarus",
       "titleLead": "A concept apartment design project",
       "titleAccent": "for a renovation without overpaying",
       "subtitle": "Layout, visual concept and implementation guidance. Get your estimate right on the site.",
@@ -33,7 +34,7 @@
       "bullets": {
         "consult": "30-minute consultation",
         "contract": "We work under a contract",
-        "remote": "Remotely across Russia"
+        "remote": "Remote across Russia and Belarus"
       },
       "benefitsTitle": "What you get",
       "benefits": {
@@ -110,11 +111,7 @@
           "cardDesc": "We design a convenient, functional space around your lifestyle.",
           "desc": "Everything you need to get the perfect layout for your home or apartment.",
           "price": "from 1,500 ₽/m²",
-          "includes": [
-            "Measured floor plan",
-            "Two layout options",
-            "3D views in black and white"
-          ],
+          "includes": ["Measured floor plan", "Two layout options", "3D views in black and white"],
           "specs": {
             "term": "from 2 days",
             "revisions": "2 rounds",
@@ -340,7 +337,7 @@
         "benefits": [
           "We reply within one business day",
           "No pushy sales",
-          "Working across all of Russia"
+          "Working across Russia and Belarus"
         ],
         "form": {
           "name": {
@@ -448,7 +445,7 @@
       ],
       "perks": [
         "We work under a contract",
-        "Remotely across Russia",
+        "Remote across Russia and Belarus",
         "Support in MAX",
         "We help you avoid renovation mistakes"
       ],
@@ -458,7 +455,7 @@
     },
     "achievements": {
       "eyebrow": "Achievements",
-      "title": "Projects trusted across Russia",
+      "title": "Projects trusted across Russia and Belarus",
       "subtitle": "Numbers and client reviews — people for whom we've already created a clear, comfortable interior.",
       "stats": [
         {
@@ -471,7 +468,7 @@
         },
         {
           "value": "50+",
-          "label": "cities across Russia & CIS"
+          "label": "cities across Russia, Belarus and the CIS"
         },
         {
           "value": "4.9",
@@ -510,7 +507,7 @@
     },
     "geography": {
       "eyebrow": "Geography",
-      "title": "We deliver design projects remotely across Russia",
+      "title": "We deliver design projects across Russia and Belarus",
       "subtitle": "You don't need to come to the office. Measurements, brief, edits and handover all happen online.",
       "remoteTitle": "We work from anywhere",
       "remoteText": "All you need is the internet and your phone to create a convenient, beautiful interior.",
@@ -532,7 +529,7 @@
       "stats": [
         {
           "value": "50+",
-          "label": "cities in Russia and the CIS — we work online"
+          "label": "cities in Russia, Belarus and the CIS, all served online"
         },
         {
           "value": "30 minutes",
@@ -543,8 +540,8 @@
           "label": "MAX chat — reach us at any moment"
         },
         {
-          "value": "0 ₽",
-          "label": "first consultation, no obligations"
+          "value": "RUB / BYN",
+          "label": "payments accepted in Russian and Belarusian rubles"
         }
       ],
       "howTitle": "How online work goes",
@@ -750,7 +747,7 @@
       "subtitle": "No pressure. We'll suggest options, tell you what suits you, and give you a sense of the cost.",
       "checks": [
         "A designer will answer",
-        "Online across Russia",
+        "Online across Russia and Belarus",
         "We usually reply in 15–30 minutes"
       ],
       "socialsTitle": "Message us however is convenient",
@@ -823,7 +820,9 @@
       "emailLabel": "Email",
       "hoursLabel": "Working hours",
       "geoLabel": "Coverage",
-      "geoValue": "Working remotely across Russia"
+      "geoValue": "Working remotely across Russia and Belarus",
+      "paymentLabel": "Payment",
+      "paymentValue": "MIR, BELKART and bank transfer. RUB and BYN"
     }
   },
   "footer": {

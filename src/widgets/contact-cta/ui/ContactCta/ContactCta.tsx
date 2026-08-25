@@ -13,6 +13,7 @@ import {
   IconGlobe,
   IconMail,
   IconMaxMessenger,
+  IconWallet,
   SectionHeader,
 } from '@shared/ui';
 
@@ -113,6 +114,15 @@ export function ContactCta({ details = false }: ContactCtaProps) {
                     >
                       {t('contact.email')}
                     </a>
+                  </div>
+                </li>
+                <li className={styles.detailsItem}>
+                  <span className={styles.detailsIcon} aria-hidden="true">
+                    <IconWallet />
+                  </span>
+                  <div>
+                    <p className={styles.detailsLabel}>{t('contact.details.paymentLabel')}</p>
+                    <p className={styles.detailsValue}>{t('contact.details.paymentValue')}</p>
                   </div>
                 </li>
                 <li className={styles.detailsItem}>

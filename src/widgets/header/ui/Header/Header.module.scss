@@ -16,23 +16,35 @@
 
   background-color: transparent;
 
-  transition: background-color var(--transition-base);
+  // Стеклянный слой всегда существует в одном compositor-слое и меняет только opacity.
+  // Добавление/удаление backdrop-filter на самом header иногда давало короткий flash в Safari.
+  &::before {
+    pointer-events: none;
+    content: '';
+
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+
+    border-bottom: 1px solid var(--glass-border);
+
+    opacity: 0;
+    background-color: color-mix(in srgb, var(--clr-dark) 92%, transparent);
+    backdrop-filter: var(--glass-blur);
+
+    transition: opacity var(--transition-base);
+
+    @supports not (backdrop-filter: blur(1px)) {
+      background-color: var(--clr-dark);
+    }
+  }
 }
 
 // Прозрачный у самого верха → морозное стекло на скролле (и когда открыто мобильное меню):
 // полупрозрачный navy + blur + тонкая золотая нижняя линия.
 .scrolled {
-  border-bottom: 1px solid var(--glass-border);
-
-  // 92%, а не 72%: над светлыми секциями сквозь 72% просвечивали белые карточки —
-  // за логотипом плавали мутные серые пятна, шапка выглядела «грязной». Плотный navy
-  // с лёгким blur сохраняет стеклянность, но держит стабильный контраст на любом фоне.
-  background-color: color-mix(in srgb, var(--clr-dark) 92%, transparent);
-  backdrop-filter: var(--glass-blur);
-
-  // Фолбэк без backdrop-filter — сплошной navy (читаемость над контентом).
-  @supports not (backdrop-filter: blur(1px)) {
-    background-color: var(--clr-dark);
+  &::before {
+    opacity: 1;
   }
 }
 

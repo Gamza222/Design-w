@@ -131,9 +131,11 @@
   will-change: transform;
 
   position: absolute;
-  height: 100%;
   z-index: -3;
   inset: -16% 0; // overscan по вертикали — запас под parallax-сдвиг (yPercent ±8), края не оголяются
+  transform-origin: 50% 45%;
+
+  height: 100%;
 
   // Тёмная «юбка» у низа слоя ЗАПЕЧЕНА в сам .bg (а не в ::before/::after Hero). Зачем: .bg —
   // композитный слой (transform параллакса) и под overflow:hidden Hero его текстура «подтекает» на

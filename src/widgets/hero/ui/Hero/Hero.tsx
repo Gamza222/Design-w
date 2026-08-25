@@ -53,17 +53,22 @@ export function Hero({ bottomSlot }: HeroProps) {
   useGSAP(
     () => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (!bgRef.current || !root.current) return;
+
       gsap.fromTo(
         bgRef.current,
-        { yPercent: -8 },
+        { yPercent: -7, scale: 1.035 },
         {
-          yPercent: 8,
+          yPercent: 7,
+          scale: 1.085,
           ease: 'none',
+          force3D: true,
           scrollTrigger: {
             trigger: root.current,
             start: 'top top',
             end: 'bottom top',
-            scrub: true,
+            scrub: 0.65,
+            invalidateOnRefresh: true,
           },
         },
       );

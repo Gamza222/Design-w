@@ -3,16 +3,18 @@ import { initReactI18next } from 'react-i18next';
 
 import { DEFAULT_LOCALE, LOCALES, type Locale } from '../locales';
 import en from './locales/en.json';
+import be from './locales/be.json';
 import ru from './locales/ru.json';
 
 const resources = {
   ru: { translation: ru },
   en: { translation: en },
+  be: { translation: be },
 } as const;
 
 export type Dictionary = typeof ru;
 
-const dictionaries: Record<Locale, Dictionary> = { ru, en };
+const dictionaries: Record<Locale, Dictionary> = { ru, en, be };
 
 /** Raw translation object for a locale — for use outside React (e.g. route `meta`). */
 export function getDict(locale: Locale): Dictionary {

@@ -1,0 +1,330 @@
+@use 'app/styles/abstracts' as *;
+
+.hero {
+  isolation: isolate; // локальный stacking-контекст: фон в z-index -2/-1, контент над ним
+  position: relative;
+
+  overflow: hidden; // клипируем .bg с inset:-16% чтобы parallax-оверсcan не вылезал за секцию
+  display: flex;
+  flex-direction: column; // верх — контент Hero, низ — слот пакетов (на фото)
+
+  min-height: 100svh;
+
+  // Втягиваем под прозрачный fixed-хедер: фон Hero начинается у самого верха сайта.
+  // .main даёт padding-top: var(--header-h) для прочих страниц — здесь компенсируем его.
+  margin-top: calc(-1 * var(--header-h));
+
+  // верх — под фиксированный хедер; низ — умеренный (ряд пакетов добавляет свой отступ снизу)
+  padding-block: calc(var(--header-h) + var(--space-8)) var(--space-8);
+
+  color: var(--clr-light);
+
+  // Фон вынесен в отдельный слой .bg (для parallax). Сам бокс фон не рисует.
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  // Слой 1: тёмно-синий (--clr-dark) — диагональ слева под текст + лёгкая вертикаль.
+  // Правый край держим глубоким (≥56%) — даже светлое фото читается как тёмный нави, как в макете 01.
+  &::before {
+    z-index: -2;
+    opacity: 0.63;
+    background:
+      linear-gradient(
+        100deg,
+        color-mix(in srgb, var(--clr-dark) 93%, transparent) 0%,
+        color-mix(in srgb, var(--clr-dark) 76%, transparent) 42%,
+        color-mix(in srgb, var(--clr-dark) 62%, transparent) 72%,
+        color-mix(in srgb, var(--clr-dark) 56%, transparent) 100%
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--clr-dark) 50%, transparent) 0%,
+        color-mix(in srgb, var(--clr-dark) 8%, transparent) 26%,
+        color-mix(in srgb, var(--clr-dark) 8%, transparent) 62%,
+        color-mix(in srgb, var(--clr-dark) 72%, transparent) 100%
+      );
+  }
+
+  // Слой 2: мягкая виньетка + базовый тинт в центре — картинка дотемняется до moody-графита везде.
+  &::after {
+    z-index: -1;
+    background: radial-gradient(
+      125% 80% at 48% 32%,
+      color-mix(in srgb, var(--clr-dark) 24%, transparent) 50%,
+      color-mix(in srgb, var(--clr-dark) 46%, transparent) 100%
+    );
+  }
+
+  // На стадии «5-в-ряд» (≥$bp-xxl) первый экран держит 100svh и обязан вместить ленту целиком,
+  // поэтому верхний воздух поджимаем — иначе нижняя кромка (кнопка «Подобрать пакет») уезжает под
+  // браузерный хром на ноутбуках 1440×810/900.
+  @include up(xxl) {
+    padding-block: calc(var(--header-h) + var(--space-4)) var(--space-8);
+  }
+
+  // Ниже точки перестройки ряда пакетов (5-в-ряд → интро-шапка + 2×2, $bp-xxl) Hero отпускает
+  // 100vh и растёт по контенту: панель пакетов уезжает ниже сгиба, первый экран листается (Vision 1).
+  @include down(xxl) {
+    min-height: auto;
+  }
+
+  @include down(lg) {
+    padding-block: calc(var(--header-h) + var(--space-12)) var(--space-16);
+
+    // на узких контент и панель уходят в стек → затемняем равномернее
+    &::before {
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--clr-dark) 76%, transparent) 0%,
+        color-mix(in srgb, var(--clr-dark) 56%, transparent) 45%,
+        color-mix(in srgb, var(--clr-dark) 84%, transparent) 100%
+      );
+    }
+  }
+}
+
+// Золотая пыль в воздухе первого экрана: россыпь золотых и серебряных частиц,
+// медленный вертикальный дрейф. Декоративный слой между фоном (-1) и контентом.
+.dust {
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 0;
+  inset: -4% 0;
+
+  opacity: 0.75;
+  background-image:
+    radial-gradient(2px 2px at 12% 28%, rgb(254 188 4 / 60%), transparent 60%),
+    radial-gradient(1.5px 1.5px at 27% 62%, rgb(224 230 238 / 45%), transparent 60%),
+    radial-gradient(2.5px 2.5px at 38% 18%, rgb(254 188 4 / 40%), transparent 60%),
+    radial-gradient(1.5px 1.5px at 49% 44%, rgb(224 230 238 / 38%), transparent 60%),
+    radial-gradient(2px 2px at 57% 72%, rgb(254 188 4 / 45%), transparent 60%),
+    radial-gradient(1.5px 1.5px at 66% 24%, rgb(224 230 238 / 42%), transparent 60%),
+    radial-gradient(2px 2px at 74% 56%, rgb(254 188 4 / 50%), transparent 60%),
+    radial-gradient(1.5px 1.5px at 85% 36%, rgb(224 230 238 / 40%), transparent 60%),
+    radial-gradient(2px 2px at 93% 64%, rgb(254 188 4 / 42%), transparent 60%);
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: hero-dust 16s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes hero-dust {
+  from {
+    transform: translate3d(0, 1.2%, 0);
+  }
+
+  to {
+    transform: translate3d(0, -1.2%, 0);
+  }
+}
+
+// Фон-слой: отдельный элемент, чтобы ScrollSmoother.effects() мог двигать его (parallax).
+// Лежит ПОД оверлеями (::before -2, ::after -1). Overscan -8% покрывает parallax-сдвиг при speed 0.94.
+// Статичен и полностью покрывает секцию без JS (prerender / reduced-motion).
+.bg {
+  will-change: transform;
+
+  position: absolute;
+  z-index: -3;
+  inset: -16% 0; // overscan по вертикали — запас под parallax-сдвиг (yPercent ±8), края не оголяются
+  transform-origin: 50% 45%;
+
+  height: 100%;
+
+  // Тёмная «юбка» у низа слоя ЗАПЕЧЕНА в сам .bg (а не в ::before/::after Hero). Зачем: .bg —
+  // композитный слой (transform параллакса) и под overflow:hidden Hero его текстура «подтекает» на
+  // ~1px за клип на стыке с Process → тонкая светлая линия (сырое фото без затемняющих оверлеев,
+  // которые лежат в ДРУГОМ слое). Затемняя текстуру самого .bg у низа, делаем подтекающий край тёмным.
+  // Полностью тёмно к 72% высоты слоя: низ Hero маппится в 80–96% слоя при любом yPercent параллакса —
+  // покрытие гарантировано. Видимо незаметно: эта зона и так под панелью пакетов / затемнена ::before.
+  background:
+    linear-gradient(to bottom, transparent 46%, var(--clr-dark) 72%),
+    var(--hero-bg, none) center / cover no-repeat;
+}
+
+// Класс-маркер элементов входного каскада Hero (цель gsap). РЕАЛЬНОЕ правило обязательно: иначе
+// styles.reveal === undefined и селектор появления ни на что не указывает (каскад Hero не работает).
+// will-change — корректный хинт: эти элементы анимируются по transform/opacity на входе.
+.reveal {
+  will-change: transform, opacity;
+}
+
+.inner {
+  --container-max: var(--site-max); // full-bleed до гаттера, как у хедера
+
+  // Контент — выше декоративной пыли: .dust позиционирован с z-index 0 и без
+  // этого рисовался бы поверх статичного текста и кнопок.
+  position: relative;
+  z-index: 1;
+
+  // Заполняем высоту Hero: контент и ряд пакетов прижаты к верху, фото дышит снизу.
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+  width: 100%;
+
+  @include up(lg) {
+    // Левая колонка (заголовок) шире, правая (панель) уже — пункты переносятся в 3 строки.
+    grid-template-columns: minmax(0, 1.2fr) minmax(18.75rem, 0.8fr); // rem → колонка зумится с корнем
+    gap: var(--space-12);
+    align-items: start; // колонки выровнены по верху: панель «Что вы получите» на уровне заголовка
+  }
+
+  // Стадия «5-в-ряд» (≥xxl, Hero = 100svh): свободную высоту делим поровну между «над контентом» и
+  // «под контентом» — оба, .grid и .bottom, держат margin-top:auto. Блок опускается к центру, пустота
+  // в середине больше не копится в одном месте. Доля пропорциональна излишку: на тесных 1440×810 сдвиг
+  // ≈0 (пакеты остаются видны целиком), на высоких экранах — заметный, как и просили.
+  @include up(xxl) {
+    margin-top: auto;
+  }
+}
+
+// Нижняя полоса первого экрана: ряд пакетов на фото Hero. Следует за контентом (grid без flex:1).
+// Зазор height-aware (vh) и умеренный — на коротких экранах лента не уезжает под сгиб, на высоких дышит.
+.bottom {
+  margin-top: clamp(var(--space-3), 3vh, var(--space-8));
+
+  // Стадия «5-в-ряд» (Hero = 100svh): прижимаем ленту к низу первого экрана, свободное место
+  // (фото интерьера) уходит МЕЖДУ Hero-контентом и лентой — как в макете 01, без пустой полосы снизу.
+  @include up(xxl) {
+    margin-top: auto;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: flex-start;
+
+  max-width: 42rem;
+
+  @include up(lg) {
+    max-width: none;
+  }
+}
+
+// Eyebrow — pill (как в макете): золотой бордер + лёгкая золотая заливка, обычный регистр.
+.eyebrow {
+  align-self: flex-start; // плашка по ширине текста, не на всю колонку
+
+  padding: 0.4rem var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--clr-accent) 55%, transparent);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--color-accent);
+  letter-spacing: 0.01em;
+
+  background: color-mix(in srgb, var(--clr-accent) 12%, transparent);
+}
+
+// Заголовок в 2 строки: лид — строка 1, акцент (.accent — block) — строка 2.
+// Плоский rem → масштабируется корневым font-size. Корень капнут на 14px ≤1680px, поэтому на
+// узких добавляем собственные шаги (глобальные шаги --fs-4xl обслуживают h1 контентных страниц).
+.title {
+  font-size: 2.9rem;
+  font-weight: 600;
+  line-height: 1.14;
+
+  @include down(md) {
+    font-size: 2.6rem;
+  }
+
+  @include down(sm) {
+    font-size: 2.4rem;
+  }
+}
+
+.accent {
+  display: block;
+  color: var(--color-accent);
+}
+
+.subtitle {
+  max-width: 48ch;
+  font-size: var(--fs-base);
+  line-height: var(--lh-snug);
+  color: var(--color-text-soft-on-dark);
+}
+
+.actions {
+  // Ghost-кнопка «Смотреть примеры работ» на тёмном Hero: прозрачный фон + рамка под цвет текста
+  // (currentcolor следует за --btn-ghost-color — светлым из data-tone="dark", на hover → акцент).
+  // Перекрываем заполненную графитовую пилюлю из [data-tone="dark"] только в рамках Hero.
+  --btn-ghost-bg: transparent;
+  --btn-ghost-border: currentcolor;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+
+  @include down(sm) {
+    width: 100%;
+
+    > * {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+// Строка преимуществ под кнопками (макет 01): иконки в круглых золотых чипах + подпись,
+// без горизонтального разделителя. Умеренный отступ от кнопок.
+.bullets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+
+  margin-top: var(--space-4);
+
+  list-style: none;
+
+  @include down(sm) {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+}
+
+.bullet {
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: center;
+
+  font-size: var(--fs-sm);
+  color: var(--color-text-soft-on-dark);
+}
+
+// Круглый золотой чип вокруг иконки (как в макете): прозрачная подложка + золотое кольцо.
+.bulletIcon {
+  flex-shrink: 0;
+
+  box-sizing: content-box;
+  padding: 0.5em;
+  border: 1px solid color-mix(in srgb, var(--clr-accent) 40%, transparent);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-base); // 1em → размер глифа внутри чипа
+  color: var(--color-accent);
+}
+
+.panel {
+  @include up(lg) {
+    justify-self: end;
+    width: 100%;
+    max-width: 28rem; // уже прежнего (34rem) — пункты «Что вы получите» переносятся в 3 строки
+  }
+}

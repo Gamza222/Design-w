@@ -1,0 +1,176 @@
+@use 'app/styles/abstracts' as *;
+
+// Компактная карточка тарифа (макет 01): белый скрим слева под текст, интерьерное фото справа.
+// Палитра явная (--clr-*) — карточка лежит на светлой панели пакетов.
+.card {
+  // --card-pad / --card-min-h — общие токены (tokens.scss): тарифы и карточка расчёта совпадают.
+  isolation: isolate;
+  position: relative;
+  z-index: 0;
+
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  height: 100%;
+  min-height: var(--card-min-h);
+  padding: var(--card-pad);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+
+  color: var(--clr-dark);
+
+  // Белая карточка с мягкой премиальной тенью — приподнята над светлой панелью, без «грубой» тени.
+  background: var(--clr-light);
+  box-shadow: var(--shadow-card);
+
+  // Фото-подложка (правая часть карточки).
+  &::before {
+    content: '';
+
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+
+    background: var(--card-photo, none) var(--card-photo-pos, center) / cover no-repeat;
+  }
+
+  // Кремовый скрим: слева плотно (текст читаем), справа проглядывает интерьер.
+  // Второй слой — вертикальный фейд снизу: нижние пункты списка ложатся на фото
+  // (кейс пакета «Полный» на узких вьюпортах) и без него теряют контраст.
+  &::after {
+    content: '';
+
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+
+    background:
+      linear-gradient(
+        100deg,
+        var(--clr-light) 0%,
+        var(--clr-light) 46%,
+        color-mix(in srgb, var(--clr-light) 80%, transparent) 64%,
+        color-mix(in srgb, var(--clr-light) 18%, transparent) 84%,
+        transparent 100%
+      ),
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--clr-light) 88%, transparent) 0%,
+        color-mix(in srgb, var(--clr-light) 55%, transparent) 26%,
+        transparent 48%
+      );
+  }
+}
+
+// Популярный (макет 01): та же светлая карточка, выделение — только золотой бейдж сверху.
+// Доп. отступ сверху освобождает место под бейдж, текст не заезжает.
+.popular {
+  padding-top: calc(var(--card-pad) + var(--space-5));
+}
+
+// Золотой бейдж «Популярный» — пилюля в правом верхнем углу, целиком внутри карточки
+// (overflow:hidden у .card обрезал бы страдл-бейдж; держим его в безопасной зоне).
+.badge {
+  position: absolute;
+  z-index: 2;
+  top: var(--space-3);
+  right: var(--card-pad);
+
+  padding: 0.18rem var(--space-3);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-on-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  background: var(--clr-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  color: var(--clr-black);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+// Цена — тёмная (как в макете): «от 1 500 ₽/м²».
+.price {
+  display: inline-flex;
+  gap: 0.3em;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.priceFrom {
+  font-size: var(--fs-xs);
+  color: var(--clr-gray);
+}
+
+.priceValue {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--clr-black);
+  letter-spacing: -0.01em;
+}
+
+.priceUnit {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--clr-black);
+}
+
+// Буллеты-точки (как в макете) — золотой маркер.
+.features {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  max-width: 22ch;
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.feature {
+  position: relative;
+
+  padding-left: var(--space-4);
+
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: color-mix(in srgb, var(--clr-dark) 86%, var(--clr-light));
+
+  &::before {
+    content: '';
+
+    position: absolute;
+
+    // По центру первой строки: (высота строки 1.3em − точка 0.4em) / 2 = 0.45em от верха.
+    top: 0.45em;
+    left: 0;
+
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: var(--radius-full);
+
+    background: color-mix(in srgb, var(--clr-accent) 82%, var(--clr-dark));
+  }
+}

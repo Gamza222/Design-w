@@ -1,0 +1,80 @@
+@use 'app/styles/abstracts' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-4), 1.6vw, var(--space-5));
+}
+
+// Имя + Телефон — в одну строку на ≥sm, стопкой на мобиле.
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-4), 1.6vw, var(--space-5));
+
+  @include up(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.consent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.consentError {
+  font-size: var(--fs-xs);
+  color: var(--color-danger);
+}
+
+.submit {
+  width: 100%;
+}
+
+.privacy {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+
+  svg {
+    flex-shrink: 0;
+    font-size: var(--fs-base);
+    color: var(--color-accent);
+  }
+}
+
+// Успешная отправка — заглушка вместо полей.
+.success {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: center;
+
+  min-height: 16rem;
+  padding: var(--space-8);
+
+  font-size: var(--fs-lg);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.successIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-2xl);
+  color: var(--color-on-accent);
+
+  background-color: var(--color-accent);
+}

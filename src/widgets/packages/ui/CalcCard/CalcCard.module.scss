@@ -1,0 +1,44 @@
+@use 'app/styles/abstracts' as *;
+
+// «Нужен расчёт?» — карточка-действие в одном ряду с тарифами (макет 01): белая, рамка-hairline
+// как у тарифов, иконка-калькулятор ведёт карточку сверху (в потоке), контурная кнопка — снизу.
+.calc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  height: 100%;
+  min-height: var(--card-min-h);
+  padding: var(--card-pad);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+
+  background: var(--clr-light);
+  box-shadow: var(--shadow-card);
+}
+
+// Иконка-калькулятор: обычная, цвет как текст, без рамки/подложки.
+.icon {
+  font-size: 2rem; // 1em → масштабируется с rem
+  line-height: 1;
+  color: var(--color-strong);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--color-strong);
+}
+
+.text {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-strong);
+}
+
+// Контурная кнопка прижата к низу, во всю ширину карточки (как CTA тарифной карты).
+.cta {
+  align-self: stretch;
+  margin-top: auto;
+}

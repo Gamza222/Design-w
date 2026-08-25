@@ -1,0 +1,418 @@
+@use 'app/styles/abstracts' as *;
+
+// Секция «География» — тёмная (макет 06).
+.geography {
+  padding-block: clamp(var(--space-16), 6vw, var(--space-24));
+}
+
+// Шапка — на всю ширину секции, над сценой с картой: в узкой колонке грида длинный
+// титул рассыпался лесенкой по одному слову с переносом «дизайн-/проекты».
+.head {
+  max-width: none;
+  margin-bottom: clamp(var(--space-6), 3vw, var(--space-10));
+
+  h2 {
+    text-wrap: balance;
+  }
+}
+
+// --- Сцена: ≥lg — слева заголовок + карточка, справа карта + полоса кейса ----
+// Карту ничем не перекрываем: силуэт РФ занимает весь viewBox, свободных углов нет.
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-6), 3vw, var(--space-8));
+  margin-bottom: clamp(var(--space-8), 5vw, var(--space-16));
+
+  @include up(lg) {
+    display: grid;
+
+    // Колонке заголовка ~41% (было 36%): вместе со снятым ch-капом и меньшим кеглем
+    // титул ложится в 2 строки вместо лесенки; карте воздуха по-прежнему хватает.
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+    gap: clamp(var(--space-6), 4vw, var(--space-12));
+    align-items: center;
+  }
+}
+
+// Левая колонка: заголовок + «работаем из любой точки».
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-5), 2.5vw, var(--space-8));
+}
+
+// Правая колонка: карта + полоса кейса.
+.mapCol {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-4), 2vw, var(--space-6));
+  min-width: 0;
+}
+
+.map {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+// Силуэт РФ — мягкая заливка + контур (не масштабируемый, всегда ~1px).
+.land {
+  stroke: color-mix(in srgb, var(--clr-accent) 34%, transparent);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+// Группа города — нужна реальным классом (GSAP анимирует .node); fill-box центрирует scale.
+.node {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+// Маршруты из Москвы — пунктир акцентом; точки медленно «текут» к городам.
+// По умолчанию поток стоит: stroke-dashoffset некомпозитный, девять дуг перерисовывали бы
+// SVG каждый кадр всю сессию. Класс .flowing вешает ScrollTrigger, пока сцена во вьюпорте.
+.arc {
+  fill: none;
+  stroke: color-mix(in srgb, var(--clr-accent) 55%, transparent);
+  stroke-dasharray: 1 7;
+  stroke-linecap: round;
+  stroke-width: 1.6;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: arc-flow 26s linear infinite;
+    animation-play-state: paused;
+  }
+}
+
+.flowing .arc {
+  animation-play-state: running;
+}
+
+@keyframes arc-flow {
+  to {
+    stroke-dashoffset: -400;
+  }
+}
+
+.plane {
+  fill: var(--clr-accent);
+}
+
+// Города.
+.nodeGlow {
+  opacity: 0.45;
+  fill: var(--clr-accent);
+}
+
+.nodeDot {
+  fill: var(--clr-accent);
+}
+
+.nodeRing {
+  fill: none;
+  stroke: color-mix(in srgb, var(--clr-accent) 70%, transparent);
+  stroke-width: 1.4;
+}
+
+.label {
+  // На узких экранах карта мелкая → все девять подписей нечитаемы; показываем только точки
+  // (плюс несколько ключевых городов — .labelMajor ниже).
+  display: none;
+
+  // Обычный регистр: капс на плотной карте слипался (подписи на треть шире) и читался хуже.
+  // Display-шрифт + плотный тёмный ореол (paint-order: stroke) — читаемость поверх маршрутов.
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  paint-order: stroke;
+
+  fill: var(--clr-light);
+  stroke: color-mix(in srgb, var(--clr-dark) 92%, transparent);
+  stroke-linejoin: round;
+  stroke-width: 5;
+
+  @include up(md) {
+    display: initial;
+  }
+}
+
+// Ключевые города (Москва/СПб/Новосибирск/Владивосток) подписаны и на мобиле — крупнее,
+// чтобы при ширине карты ~320px текст остался читаемым; секция не выглядит «пустым» блоком.
+.labelMajor {
+  display: initial;
+  font-size: 32px;
+
+  @include up(md) {
+    font-size: 20px;
+  }
+}
+
+// Карточка «работаем из любой точки» — в левой колонке под заголовком.
+.remoteCard {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+
+  max-width: 30rem;
+  padding: clamp(var(--space-4), 1.6vw, var(--space-5));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-glass);
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background-color: var(--clr-dark-surface);
+  }
+}
+
+.remoteIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 38%, transparent);
+  border-radius: var(--radius-md);
+
+  font-size: var(--fs-xl);
+  color: var(--color-accent);
+}
+
+.remoteTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.remoteText {
+  margin-top: var(--space-1);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+// Полоса кейса под картой: ≥sm — фото слева, текст справа; на узких — стопкой.
+.caseCard {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-glass);
+
+  @include up(sm) {
+    display: grid;
+    grid-template-columns: minmax(9rem, 13rem) minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+
+.casePhoto {
+  aspect-ratio: 16 / 9;
+  background: center / cover no-repeat;
+
+  @include up(sm) {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 8rem;
+  }
+}
+
+.caseBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: clamp(var(--space-4), 1.5vw, var(--space-5));
+}
+
+.caseLabel {
+  font-size: var(--fs-xs);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.caseTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.caseCity {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+
+  svg {
+    font-size: var(--fs-base);
+    color: var(--color-accent);
+  }
+}
+
+.caseCta {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  margin-top: var(--space-2);
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-accent);
+
+  transition: gap var(--transition-base);
+
+  svg {
+    font-size: var(--fs-base);
+  }
+
+  // Только для устройств с курсором: на таче hover «залипал» бы после тапа.
+  @media (hover: hover) {
+    &:hover {
+      gap: var(--space-3);
+    }
+  }
+}
+
+// --- Статы -----------------------------------------------------------------
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(var(--space-5), 2.5vw, var(--space-8));
+
+  margin: 0 0 clamp(var(--space-8), 5vw, var(--space-16));
+  padding: clamp(var(--space-6), 3vw, var(--space-8)) 0;
+  border-block: 1px solid var(--color-border);
+
+  list-style: none;
+
+  @include up(md) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.statItem {
+  min-width: 0;
+}
+
+// --- Как работает онлайн + CTA ---------------------------------------------
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-6), 3vw, var(--space-8));
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+
+.how {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-5), 2vw, var(--space-6));
+}
+
+.howTitle {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+}
+
+.howList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-4), 2vw, var(--space-6));
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  @include up(sm) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.howStep {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  padding: clamp(var(--space-4), 1.6vw, var(--space-5));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background-color: var(--color-surface);
+}
+
+.howNum {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+}
+
+.howIcon {
+  display: inline-flex;
+  font-size: var(--fs-xl);
+  color: var(--color-accent);
+}
+
+.howStepTitle {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: var(--lh-snug);
+  color: var(--color-text);
+}
+
+.howStepDesc {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+// CTA-карточка справа.
+.ctaCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  justify-content: center;
+
+  padding: clamp(var(--space-6), 2.5vw, var(--space-8));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-muted-bg);
+}
+
+.ctaTitle {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+}
+
+.ctaText {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+.ctaBtn {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}

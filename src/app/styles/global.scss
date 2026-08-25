@@ -1,0 +1,212 @@
+// Global stylesheet — imported once from the app root.
+// Order matters: tokens (CSS vars) → reset → base element styles.
+
+@use 'app/styles/abstracts' as *; // миксины up()/down() для адаптивных шагов
+@use 'app/styles/fonts'; // self-hosted @font-face (Google Sans)
+@use 'app/styles/tokens';
+@use 'app/styles/reset';
+
+// Тёмные поля за пределами капнутого контента (когда вьюпорт шире --site-max).
+html {
+  background-color: var(--clr-dark);
+}
+
+body {
+  // Светлая колонка контента, центрированная и ограниченная по ширине.
+  // Шире --site-max по краям видно тёмный html.
+  max-width: var(--site-max);
+  margin-inline: auto;
+
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  color: var(--color-text);
+
+  background-color: var(--color-bg);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: var(--fs-4xl);
+}
+
+// Телефоны: корневой font-size зафиксирован на 14px (≤~1680px), флюид rem уже не уменьшает
+// заголовки, поэтому даём стабильные шаги для h1–h3 (страницы поста/проекта/404, PageHeader,
+// Prose). Размеры подобраны так, чтобы длинные русские слова («Минималистичный»,
+// «Многослойный») влезали в 360px-вьюпорт без разрыва посреди слова.
+// У Hero .title — собственные мобильные шаги в его модуле.
+@include down(md) {
+  :root {
+    --fs-4xl: 3rem; // ≤768px → 42px (Hero .title ≈ 37.8px)
+    --fs-3xl: 2.4rem; // ≤768px → 33.6px
+    --fs-2xl: 2rem; // ≤768px → 28px
+  }
+
+}
+
+@include down(sm) {
+  :root {
+    --fs-4xl: 2.5rem; // ≤480px → 35px — «Минималистичный лофт» без разрыва на 360px
+    --fs-3xl: 2rem; // ≤480px → 28px
+    --fs-2xl: 1.8rem; // ≤480px → 25.2px
+  }
+}
+
+h2 {
+  font-size: var(--fs-3xl);
+}
+
+h3 {
+  font-size: var(--fs-2xl);
+}
+
+a {
+  transition: color var(--transition-base);
+}
+
+::selection {
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+}
+
+// =============================================================================
+// ТОНАЛЬНОСТЬ СЕКЦИЙ — переопределяем СЕМАНТИЧЕСКИЕ токены для поддерева.
+// Любой элемент с data-tone получает свою палитру; компоненты внутри читают
+// только --color-* и автоматически перекрашиваются. Сырьё (--clr-*) не трогаем.
+// =============================================================================
+
+// Тёмная секция (глубокий графит): процесс, портфолио, география, калькулятор, FAQ, отзывы,
+// финальный CTA, footer. Плюс серебряная аура сверху и тёплый золотой отсвет у горизонта.
+[data-tone='dark'] {
+  --color-bg: var(--clr-dark);
+  --color-surface: var(--clr-dark-surface);
+  --color-text: var(--clr-light);
+  --color-text-muted: var(--clr-dark-muted);
+  --color-border: var(--clr-dark-border);
+  --color-muted-bg: var(--clr-dark-elevated);
+  --color-strong: var(--clr-light);
+  --color-hairline: var(--clr-dark-border); // hairline на тёмном — холодный бордер вместо светлого
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white); // на тёмном hover осветляем
+  --btn-ghost-color: var(--clr-light); // ghost-кнопка на тёмном — светлый текст
+  --btn-ghost-bg: var(--clr-dark-elevated); // вторичная кнопка на тёмном — заполненная графитовая пилюля
+  --btn-ghost-border: transparent; // без видимой рамки (как в макете 01)
+
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(72rem 34rem at 10% -6%, rgb(200 210 224 / 7%), transparent 60%),
+    radial-gradient(48rem 26rem at 92% 112%, rgb(254 188 4 / 4%), transparent 65%);
+}
+
+// «Светлая» секция тёмной темы — приподнятый графит (секция-передышка между глубокими).
+[data-tone='light'] {
+  --color-bg: var(--clr-dark-soft);
+  --color-surface: var(--clr-dark-soft-surface);
+  --color-text: var(--clr-light);
+  --color-text-muted: var(--clr-muted);
+  --color-border: var(--clr-gray);
+  --color-muted-bg: var(--clr-dark-elevated);
+  --color-strong: var(--clr-light);
+  --color-hairline: color-mix(in srgb, var(--clr-light) 10%, transparent);
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white);
+  --btn-ghost-color: var(--color-text);
+
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  background-image: radial-gradient(60rem 28rem at 14% -8%, rgb(200 210 224 / 6%), transparent 60%);
+}
+
+// «Бумажная» карточка — светлая поверхность НА тьме (тарифы, «Нужен расчёт?», модалка услуги).
+// Единственное место, где текст снова тёмный; контрастный ряд — фирменный приём темы.
+[data-tone='paper'] {
+  --color-bg: var(--clr-light);
+  --color-surface: var(--clr-light);
+  --color-text: #17181b;
+  --color-text-muted: #565b63;
+  --color-border: rgb(20 22 25 / 20%);
+  --color-muted-bg: #e4e7ea;
+  --color-strong: #101114;
+  --color-hairline: rgb(20 22 25 / 10%);
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 88%, #17181b);
+  --btn-ghost-color: #17181b;
+  --btn-ghost-bg: transparent;
+  --btn-ghost-border: rgb(20 22 25 / 28%);
+
+  // Золотое кольцо фокуса на светлой «бумаге» ~1.5:1 — затемняем до ≥4:1.
+  --focus-ring: color-mix(in srgb, var(--clr-accent) 42%, var(--clr-dark));
+
+  color: var(--color-text);
+}
+
+// Стеклянная секция = тёмная база + стеклянная поверхность/бордер. Обычно glass — на карточках
+// (<GlassPanel>), а секция dark; tone="glass" — для редкого случая цельной стеклянной полосы.
+[data-tone='glass'] {
+  --color-bg: var(--clr-dark);
+  --color-surface: var(--glass-bg);
+  --color-text: var(--clr-light);
+  --color-text-muted: var(--clr-dark-muted);
+  --color-border: var(--glass-border);
+  --color-muted-bg: var(--clr-dark-elevated);
+  --color-strong: var(--clr-light);
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white);
+  --btn-ghost-color: var(--clr-light);
+
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+// =============================================================================
+// ПРЕМИАЛЬНАЯ ФАКТУРА — металлик-типографика, плёночное зерно, живые детали.
+// =============================================================================
+
+// Заголовки секций на тёмных тональностях — серебряный металлик (градиентный текст).
+// «Бумажные» карточки не затрагивает: там нет h2.
+[data-tone='dark'] h2,
+[data-tone='light'] h2 {
+  background: linear-gradient(
+    115deg,
+    var(--clr-silver-hi) 8%,
+    var(--clr-silver) 46%,
+    var(--clr-silver-lo) 92%
+  );
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+}
+
+// Режим принудительных цветов (Windows High Contrast): градиент-текст обнуляется,
+// без фолбэка заголовки становятся невидимыми.
+@media (forced-colors: active) {
+  [data-tone='dark'] h2,
+  [data-tone='light'] h2 {
+    background: none;
+
+    -webkit-text-fill-color: CanvasText;
+  }
+}
+
+// Кинематографичное зерно поверх всей страницы: под прелоадером, над контентом и модалками.
+body::after {
+  pointer-events: none;
+  content: '';
+
+  position: fixed;
+  z-index: calc(var(--z-preloader) - 50);
+  inset: 0;
+
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+// Металлик статичен: бесконечная анимация background-position на clip:text — это
+// перерисовка растра каждого заголовка каждый кадр (~10 h2 одновременно на главной).
+// Градиент сам по себе даёт «дорогой» вид; блик при появлении делает useScrollReveal.
+

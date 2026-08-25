@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Small apartment">
+  <rect width="800" height="600" fill="#e9e3d8" />
+  <rect x="40" y="40" width="720" height="520" fill="none" stroke="#98714f" stroke-width="2" />
+  <rect x="120" y="360" width="180" height="160" fill="#cdbfa6" />
+  <rect x="330" y="300" width="220" height="220" fill="#dccfb6" />
+  <text x="400" y="220" font-family="Georgia, 'Times New Roman', serif" font-size="42" fill="#1c1a17" text-anchor="middle">Small Spaces</text>
+</svg>

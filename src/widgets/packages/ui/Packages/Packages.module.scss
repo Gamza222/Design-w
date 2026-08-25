@@ -1,0 +1,78 @@
+@use 'app/styles/abstracts' as *;
+
+.packages {
+  width: 100%;
+}
+
+// Графитовая панель-контейнер ряда пакетов — наезжает на фото Hero. Премиальный контраст:
+// тёмная панель с градиентным серебряно-золотым бортом, «бумажные» тарифы внутри светлые
+// (data-tone="paper" на карточках) — самый жёсткий контрастный ряд на странице.
+.panel {
+  --color-text: var(--clr-light);
+  --color-text-muted: var(--clr-muted);
+  --color-strong: var(--clr-light);
+  --color-border: color-mix(in srgb, var(--clr-light) 22%, transparent);
+  --color-hairline: color-mix(in srgb, var(--clr-light) 10%, transparent);
+  --btn-ghost-color: var(--clr-light);
+  --btn-ghost-bg: transparent;
+  --btn-ghost-border: currentcolor;
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white);
+
+  padding: var(--panel-pad); // карточки не упираются в края панели
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+
+  color: var(--color-text);
+
+  // Двухслойный фон: объёмный графит + градиентный борт (как GlassPanel).
+  background:
+    var(--glass-bg-deep) padding-box,
+    var(--glass-border-grad) border-box;
+  box-shadow: var(--shadow-glass);
+
+  // Панель лежит на фото Hero: без блюра сквозь 8–14% прозрачности просвечивает
+  // нерасфокусированная текстура снимка («грязный» шум под графитом).
+  backdrop-filter: var(--glass-blur);
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background:
+      linear-gradient(var(--clr-dark-surface), var(--clr-dark-surface)) padding-box,
+      var(--glass-border-grad) border-box;
+  }
+
+  // Стадия «5-в-ряд» (≥$bp-xxl) держит 100svh — поджимаем внутренний паддинг панели и карточек
+  // (через токен --card-pad, который читают тарифы и карточка расчёта), чтобы лента влезала под хром.
+  @include up(xxl) {
+    --card-pad: clamp(var(--space-4), 1.4vw, var(--space-5));
+
+    padding: clamp(var(--space-4), 1.4vw, var(--space-6));
+  }
+}
+
+// Раскладка ряда (без слайдера). По умолчанию — интро-шапка сверху во всю ширину + карточки 2×2.
+// На больших (≥$bp-xxl) — всё в один ряд (макет 01). На телефонах (<$bp-sm) — по 1 карточке в ряд.
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(var(--space-4), 1.6vw, var(--space-6));
+  margin: 0;
+
+  // Интро-заголовок секции уезжает наверх, занимая всю ширину панели.
+  > :first-child {
+    grid-column: 1 / -1;
+  }
+
+  // Большие экраны ($bp-xxl): ровный ряд 5-в-ряд (интро и «расчёт» чуть у́же тарифов). Hero держит 100vh.
+  @include up(xxl) {
+    grid-template-columns: minmax(0, 0.95fr) repeat(3, minmax(0, 1.1fr)) minmax(0, 0.95fr);
+
+    > :first-child {
+      grid-column: auto; // интро возвращается в первую колонку ряда
+    }
+  }
+
+  // Телефоны: одна колонка — каждая карточка во всю ширину.
+  @include down(sm) {
+    grid-template-columns: 1fr;
+  }
+}

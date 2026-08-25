@@ -1,0 +1,154 @@
+@use 'app/styles/abstracts' as *;
+
+.header {
+  position: fixed;
+  z-index: var(--z-header);
+  inset: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  // Капаем бар хедера так же, как контент: fixed + left:0/right:0 + margin:auto
+  // центрирует его по вьюпорту, ширина совпадает со светлой колонкой body.
+  max-width: var(--site-max);
+  height: var(--header-h);
+  margin-inline: auto;
+
+  background-color: transparent;
+
+  // Стеклянный слой всегда существует в одном compositor-слое и меняет только opacity.
+  // Добавление/удаление backdrop-filter на самом header иногда давало короткий flash в Safari.
+  &::before {
+    pointer-events: none;
+    content: '';
+
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+
+    border-bottom: 1px solid var(--glass-border);
+
+    opacity: 0;
+    background-color: color-mix(in srgb, var(--clr-dark) 92%, transparent);
+    backdrop-filter: var(--glass-blur);
+
+    transition: opacity var(--transition-base);
+
+    @supports not (backdrop-filter: blur(1px)) {
+      background-color: var(--clr-dark);
+    }
+  }
+}
+
+// Прозрачный у самого верха → морозное стекло на скролле (и когда открыто мобильное меню):
+// полупрозрачный navy + blur + тонкая золотая нижняя линия.
+.scrolled {
+  &::before {
+    opacity: 1;
+  }
+}
+
+.inner {
+  // Хедер шире секций: переопределяем токены ТОЛЬКО для этого инстанса Container.
+  // Глобальный --container-max (1280) у остальных секций не трогаем.
+  --container-max: var(--site-max);
+  --container-pad: var(--page-gutter);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.brand {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+// Десктоп: обёртка nav + actions занимает остаток строки.
+// < xl: превращается в выпадающую мобильную панель.
+.menu {
+  display: flex;
+  flex: 1;
+  align-items: center;
+
+  @include down(xl) {
+    position: fixed;
+    inset: var(--header-h) 0 auto;
+    transform: translateY(-120%);
+
+    flex-direction: column;
+    gap: var(--space-8);
+    align-items: flex-start;
+
+    padding: var(--space-8) var(--container-pad);
+
+    // visibility убирает закрытое меню из tab-порядка и дерева доступности
+    // (transform один этого не делает); задержка сохраняет анимацию ухода.
+    visibility: hidden;
+    background-color: var(--clr-dark);
+
+    transition:
+      transform var(--transition-base),
+      visibility 0s var(--transition-base);
+  }
+}
+
+.menuOpen {
+  @include down(xl) {
+    transform: translateY(0);
+    visibility: visible;
+    transition:
+      transform var(--transition-base),
+      visibility 0s;
+  }
+}
+
+.nav {
+  flex-shrink: 0;
+
+  // Адаптивный зазор лого ↔ навигация: растёт с шириной, но rem уже флюиден.
+  margin-inline-start: clamp(var(--space-8), 5%, var(--space-12));
+
+  @include down(xl) {
+    margin-inline-start: 0;
+  }
+}
+
+// Правый кластер прижимается к краю через auto-margin (а не space-between),
+// поэтому при нехватке места элементы не наезжают друг на друга.
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-8);
+  align-items: center;
+
+  margin-inline-start: auto;
+
+  @include down(xl) {
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: flex-start;
+    margin-inline-start: 0;
+  }
+}
+
+.lang {
+  --color-text-muted: var(--clr-light);
+  --color-text: var(--clr-accent);
+
+  display: flex;
+  align-items: center;
+  text-shadow: 0 1px 4px rgb(8 17 37 / 55%);
+}
+
+.cta {
+  align-self: stretch; // та же высота, что у самого высокого элемента в .actions
+  padding-block: 0;
+  white-space: nowrap;
+
+  @include down(xl) {
+    align-self: auto;
+    padding-block: var(--btn-padding-block);
+  }
+}

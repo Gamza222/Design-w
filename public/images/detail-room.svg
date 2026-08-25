@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Interior detail">
+  <rect width="800" height="600" fill="#e7e0d4" />
+  <rect x="60" y="120" width="300" height="360" fill="#d6c7ac" />
+  <rect x="420" y="200" width="300" height="280" fill="#cabb9d" />
+  <line x1="0" y1="500" x2="800" y2="500" stroke="#b08968" stroke-width="3" />
+</svg>

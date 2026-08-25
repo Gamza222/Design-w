@@ -1,0 +1,19 @@
+@use 'app/styles/abstracts' as *;
+
+// Секция калькулятора — тёмная (макет 09).
+.calculator {
+  padding-block: clamp(var(--space-16), 6vw, var(--space-24));
+}
+
+// Контейнер контента секции. Реальный класс (а не «пустой» проп) — иначе `styles.inner` = undefined
+// и цель появления `.inner > *` не находится. Flex-колонка визуально эквивалентна прежнему стеку
+// (отступ шапки от калькулятора по-прежнему даёт margin-bottom у .head).
+.inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  max-width: 52ch;
+  margin-bottom: clamp(var(--space-8), 4vw, var(--space-12));
+}

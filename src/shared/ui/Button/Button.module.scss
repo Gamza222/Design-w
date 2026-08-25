@@ -1,0 +1,86 @@
+.button {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--_btn-pad-block, var(--btn-padding-block))
+    var(--_btn-pad-inline, var(--btn-padding-inline));
+  border-radius: var(--radius-full);
+
+  font-size: var(--_btn-font, var(--btn-font-size));
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base),
+    border-color var(--transition-base),
+    transform var(--transition-base);
+
+  // Подъём только на устройствах с настоящим hover: на таче эффект «залипает» после тапа.
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-0.125rem);
+    }
+  }
+}
+
+// Размеры управляют только паддингами и кеглем через локальные --_btn-* (из --btn-*-токенов).
+.md {
+  --_btn-pad-block: var(--btn-padding-block);
+  --_btn-pad-inline: var(--btn-padding-inline);
+  --_btn-font: var(--btn-font-size);
+}
+
+.sm {
+  --_btn-pad-block: var(--btn-padding-block-sm);
+  --_btn-pad-inline: var(--btn-padding-inline-sm);
+  --_btn-font: var(--btn-font-size-sm);
+}
+
+.lg {
+  --_btn-pad-block: var(--btn-padding-block-lg);
+  --_btn-pad-inline: var(--btn-padding-inline-lg);
+  --_btn-font: var(--btn-font-size-lg);
+}
+
+// Золотая CTA — объёмная: градиент, верхний блик, тёплое статичное свечение.
+// «Дыхание» тени убрано: бесконечная анимация box-shadow — это paint каждый кадр
+// у всех primary-кнопок разом (включая CTA в фиксированном хедере).
+.primary {
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+  background-image: linear-gradient(180deg, var(--clr-accent-hi), var(--clr-accent-lo));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 45%),
+    0 0.6rem 2.2rem color-mix(in srgb, var(--clr-accent) 26%, transparent);
+
+  @media (hover: hover) {
+    &:hover {
+      background-image: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--clr-accent-hi) 88%, white),
+        color-mix(in srgb, var(--clr-accent-lo) 92%, white)
+      );
+    }
+  }
+}
+
+.ghost {
+  // Рамка под цвет шрифта (currentcolor) — следует за --btn-ghost-color. На тёмных секциях
+  // контекст переопределяет --btn-ghost-border: transparent + --btn-ghost-bg → заполненная пилюля (макет 01).
+  border: 1px solid var(--btn-ghost-border, currentcolor);
+
+  // По умолчанию тёмный (для светлого фона, напр. CalcCard); контекст может переопределить
+  // --btn-ghost-color (в Hero — светлый, чтобы текст читался на тёмном фоне).
+  color: var(--btn-ghost-color, var(--color-text));
+  background-color: var(--btn-ghost-bg, transparent);
+
+  &:hover {
+    border-color: var(--btn-ghost-border, currentcolor);
+    color: var(--color-accent);
+  }
+}

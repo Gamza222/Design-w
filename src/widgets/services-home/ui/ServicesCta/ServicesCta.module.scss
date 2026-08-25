@@ -1,0 +1,140 @@
+@use 'app/styles/abstracts' as *;
+
+// Два блока в одну строку под сеткой карточек: «Кому подойдут» + тёмная панель с формой.
+.bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: stretch;
+
+  // Референс: левая карточка уже, тёмная панель с формой — шире.
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr);
+  }
+}
+
+.who {
+  padding: var(--panel-pad);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.whoTitle {
+  margin: 0 0 var(--space-5);
+  font-size: var(--fs-xl);
+}
+
+// Пока карточка на всю ширину (до lg) — сетка колонок «иконка + подпись»;
+// с lg карточка встаёт узкой колонкой рядом с формой — вертикальный чек-лист
+// (5 мини-колонок в ~430px давали 57px на трек, и подписи наезжали друг на друга).
+.whoList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  @include up(sm) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+}
+
+.whoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+
+  @include up(lg) {
+    flex-direction: row;
+    gap: var(--space-3);
+    align-items: center;
+    font-size: var(--fs-sm);
+  }
+}
+
+// Тёмная акцентная панель — палитру переключает data-tone="dark" (global.scss).
+// Референс: слева текст с преимуществами, справа форма. Секция сама графитовая,
+// поэтому панель отделяем металлическим бортом (как GlassPanel) и тенью — иначе 1.1:1.
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: center;
+
+  padding: var(--panel-pad);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+
+  background:
+    linear-gradient(180deg, var(--clr-dark-surface), var(--clr-dark)) padding-box,
+    var(--glass-border-grad) border-box;
+  box-shadow: var(--shadow-card);
+
+  &:focus {
+    outline: none; // цель программного фокуса (tabindex=-1), кольцо не нужно
+  }
+
+  @include up(xl) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: var(--space-8);
+  }
+}
+
+.panelInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.panelTitle {
+  margin: 0;
+  font-size: var(--fs-xl);
+}
+
+.panelText {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--color-text-muted);
+}
+
+// Преимущества рядом с формой: «Ответим в течение рабочего дня» и т.д.
+.benefits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  gap: var(--space-2) var(--space-5);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.benefit {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+
+  > svg {
+    flex-shrink: 0;
+    color: var(--color-accent);
+  }
+}

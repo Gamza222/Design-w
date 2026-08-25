@@ -1,0 +1,21 @@
+@use 'app/styles/abstracts' as *;
+
+.title {
+  margin-bottom: var(--space-12);
+}
+
+// Колонки: 1 → 2 (≥sm) → до 3 (≥lg), но не больше числа карточек (--blog-cols из BlogList.tsx) —
+// при 1–2 постах ряд не оставляет пустых колонок, карточки становятся шире.
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+
+  @include up(sm) {
+    grid-template-columns: repeat(min(var(--blog-cols, 3), 2), minmax(0, 1fr));
+  }
+
+  @include up(lg) {
+    grid-template-columns: repeat(var(--blog-cols, 3), minmax(0, 1fr));
+  }
+}

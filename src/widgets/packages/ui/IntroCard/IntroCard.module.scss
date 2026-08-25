@@ -1,0 +1,55 @@
+@use 'app/styles/abstracts' as *;
+
+// Блок-интро на светлой панели пакетов (не карточка). Палитра — от data-tone="light" панели.
+// На больших — левая колонка ряда (кнопка прижата к низу). В средней зоне ($bp-sm…$bp-xxl) интро
+// уезжает наверх во всю ширину и становится горизонтальной шапкой: текст слева, кнопка справа.
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  color: var(--color-strong);
+}
+
+.text {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-strong);
+}
+
+// Золотая кнопка прижата к низу.
+.cta {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+// Средняя зона: интро-шапка во всю ширину — текст слева, кнопка справа по центру высоты.
+@include between(sm, xxl) {
+  .intro {
+    flex-direction: row;
+    gap: var(--space-8);
+    align-items: center;
+    justify-content: space-between;
+
+    height: auto;
+  }
+
+  .cta {
+    flex-shrink: 0;
+    align-self: center;
+    margin-top: 0;
+  }
+}

@@ -1,0 +1,38 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.75em;
+  height: 2.75em;
+  border-radius: var(--radius-md);
+
+  font-size: var(--fs-lg); // 1em иконки масштабируется отсюда
+}
+
+.sm {
+  font-size: var(--fs-base);
+}
+
+.lg {
+  font-size: var(--fs-xl);
+}
+
+.surface {
+  border: 1px solid var(--color-border);
+  color: var(--color-accent);
+  background-color: var(--color-muted-bg);
+}
+
+.accent {
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+}
+
+// Контурный чип: прозрачная подложка + золотое кольцо + акцентная иконка (макет 01 —
+// панель Hero «Что вы получите», этапы процесса). На тёмной секции «дыра» = тёмный фон.
+.outline {
+  border: 1px solid color-mix(in srgb, var(--color-accent) 38%, transparent);
+  color: var(--color-accent);
+  background: none;
+}

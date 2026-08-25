@@ -1,0 +1,26 @@
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.icon {
+  display: inline-flex;
+  margin-bottom: var(--space-1);
+  font-size: var(--fs-xl);
+  color: var(--color-accent);
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  color: var(--color-accent);
+}
+
+.label {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}

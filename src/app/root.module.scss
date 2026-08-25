@@ -1,0 +1,69 @@
+.main {
+  // Без min-height:100vh — на короткой странице (например /contact = одна тёмная секция) остаток
+  // главной показывал светлый фон body «щелью» перед тёмным футером. Теперь футер садится вплотную;
+  // если ниже остаётся место — там тёмный navy html-фон (совпадает с футером), без светлого разрыва.
+  padding-top: var(--header-h);
+}
+
+// Страница ошибки (404/500) рендерится без Header/Footer (ErrorBoundary вне App),
+// поэтому оформлена самодостаточно: фирменный navy, логотип-ссылка домой, крупный код,
+// кнопка в стиле основного CTA.
+.errorPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100vh;
+  padding: var(--space-8);
+
+  color: var(--clr-light);
+  text-align: center;
+
+  background-color: var(--clr-dark);
+}
+
+.errorBrand {
+  margin-bottom: var(--space-8);
+  color: var(--clr-light);
+}
+
+.errorCode {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 16vw, 8rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--clr-accent);
+}
+
+.errorTitle {
+  font-size: var(--fs-2xl);
+}
+
+.errorText {
+  max-width: 40ch;
+  color: var(--clr-dark-muted);
+}
+
+.errorBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: var(--space-6);
+  padding: 0.9em 2.2em;
+  border-radius: var(--radius-full);
+
+  font-weight: 600;
+  color: var(--clr-dark);
+  text-decoration: none;
+
+  background-color: var(--clr-accent);
+
+  transition: background-color var(--transition-base);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--clr-accent) 86%, white);
+  }
+}

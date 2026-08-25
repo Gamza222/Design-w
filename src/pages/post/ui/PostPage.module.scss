@@ -1,0 +1,43 @@
+.back {
+  display: inline-block;
+  margin-bottom: var(--space-8);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  max-width: 68ch;
+  margin-bottom: var(--space-12);
+
+  // Заголовок статьи — на ступень ниже дисплейного h1 (5rem раскатывал длинные
+  // темы на 4 строки), с балансировкой переносов.
+  h1 {
+    font-size: var(--fs-3xl);
+    text-wrap: balance;
+  }
+}
+
+.date {
+  font-size: var(--fs-xs);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lead {
+  font-size: var(--fs-lg);
+  color: var(--color-text-muted);
+}
+
+.cover {
+  margin-bottom: var(--space-12);
+  border-radius: var(--radius-lg);
+}

@@ -1,0 +1,119 @@
+@use 'app/styles/abstracts' as *;
+
+// Плитка-кейс (макет 01/05): фото на всю карточку, бейдж площади сверху, подпись светлым поверх
+// фото на тёмном скриме снизу. Пропорция стабильна через aspect-ratio (без vw-«двойного флюида»).
+.tile {
+  display: block;
+
+  &:hover .cover {
+    transform: scale(1.05);
+  }
+}
+
+.media {
+  isolation: isolate;
+  position: relative;
+
+  overflow: hidden;
+  display: block;
+
+  // Чуть выше, чем 3/2 — карточки крупнее/выше при меньшем числе колонок на больших экранах.
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+
+  background: var(--color-muted-bg);
+}
+
+.cover {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition: transform var(--transition-slow);
+}
+
+// Лёгкий общий фейд фото снизу (для глубины). Основной скрим под текстом — на самой подписи
+// (.caption), чтобы высокая, в 2 строки, подпись всегда была на тёмном.
+.media::after {
+  content: '';
+
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+
+  background: linear-gradient(
+    180deg,
+    transparent 45%,
+    color-mix(in srgb, var(--clr-dark) 55%, transparent) 100%
+  );
+}
+
+// Бейдж площади — пилюля-акцент поверх фото сверху слева. z-index выше скрима подписи (z1),
+// чтобы высокий градиент подписи на него не залезал.
+.area {
+  position: absolute;
+  z-index: 2;
+  top: var(--space-2);
+  left: var(--space-2);
+
+  padding: 0.2rem var(--space-3);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-on-accent);
+
+  background-color: var(--color-accent);
+}
+
+// Подпись поверх фото внизу. Скрим «привязан» к самой подписи: собственный градиент тянется вверх
+// от низа и РАСТЁТ вместе с высотой текста (2-строчный заголовок ⇒ выше тёмная зона ⇒ всегда читаемо).
+.caption {
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+
+  padding: clamp(2.25rem, 4vw, 3.25rem) var(--space-3) var(--space-3);
+
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--clr-dark) 62%, transparent) 42%,
+    color-mix(in srgb, var(--clr-dark) 95%, transparent) 100%
+  );
+}
+
+.title {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+
+  // Длинные слова переносятся по слогам (lang выставлен на <html>), а не рвутся посреди слова
+  // на узких карточках (2 в ряд на мобиле).
+  hyphens: auto;
+  color: var(--clr-light);
+
+  // Подстраховка читаемости на светлых/пёстрых фото поверх скрима.
+  text-shadow: 0 1px 10px color-mix(in srgb, var(--clr-dark) 65%, transparent);
+
+  @include line-clamp(2);
+
+  @include down(sm) {
+    font-size: var(--fs-base);
+  }
+}
+
+.meta {
+  font-size: var(--fs-sm);
+  color: color-mix(in srgb, var(--clr-light) 88%, transparent); // светлая подпись поверх фото-скрима
+  text-shadow: 0 1px 8px color-mix(in srgb, var(--clr-dark) 60%, transparent);
+}

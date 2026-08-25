@@ -1,0 +1,57 @@
+@use 'app/styles/abstracts' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-4), 1.6vw, var(--space-5));
+}
+
+// Поля друг под другом (референс: форма — правая колонка тёмной панели).
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(var(--space-4), 1.6vw, var(--space-5));
+}
+
+.consent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.consentError {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--color-danger);
+}
+
+.submit {
+  width: 100%;
+}
+
+// Успешная отправка (как в ContactForm).
+.success {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  padding-block: var(--space-4);
+
+  p {
+    margin: 0;
+  }
+}
+
+.successIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+
+  font-size: 1.1rem;
+  color: var(--color-accent);
+
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+}

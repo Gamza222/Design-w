@@ -1,0 +1,65 @@
+@use 'app/styles/abstracts' as *;
+
+.root {
+  cursor: pointer;
+
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: center;
+
+  // Тач-мишень: сам квадрат ~22px, поэтому раздуваем кликабельную зону лейбла по вертикали
+  // (вся строка с текстом кликабельна) до комфортных ~44px.
+  min-height: 2.75rem;
+  padding-block: 0.25rem;
+}
+
+.input {
+  @include visually-hidden; // фокусируемый и в дереве доступности
+}
+
+.box {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 1.4em;
+  height: 1.4em;
+
+  // Рамка — серебро с запасом ≥3:1 на тёмных карточках: с --color-border квадрат
+  // сливался с фоном, а это обязательное поле перед единственной CTA.
+  border: 1.5px solid color-mix(in srgb, var(--clr-silver) 72%, var(--color-border));
+  border-radius: var(--radius-sm);
+
+  background-color: var(--color-surface);
+
+  transition:
+    border-color var(--transition-base),
+    background-color var(--transition-base);
+}
+
+.check {
+  font-size: 1em;
+  color: var(--color-on-accent);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.input:checked + .box {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+}
+
+.input:checked + .box .check {
+  opacity: 1;
+}
+
+.input:focus-visible + .box {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.label {
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}

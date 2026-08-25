@@ -1,0 +1,230 @@
+@use 'app/styles/abstracts' as *;
+
+// Секция «Что говорят наши клиенты» — тёмная (макет 10).
+.reviews {
+  padding-block: clamp(var(--space-16), 6vw, var(--space-24));
+}
+
+// Шапка: текст слева + блок рейтинга справа.
+.head {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-6), 3vw, var(--space-8));
+  margin-bottom: clamp(var(--space-8), 4vw, var(--space-12));
+
+  @include up(md) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+}
+
+.headText {
+  max-width: 44ch;
+}
+
+// Блок рейтинга: крупное 4.9 + звёзды/подпись + ссылка «Все отзывы».
+.ratingBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+
+  @include up(md) {
+    align-items: flex-end;
+    text-align: end;
+  }
+}
+
+.ratingValue {
+  font-family: var(--font-display);
+  font-size: calc(var(--fs-3xl) * 1.05);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.ratingMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+
+  @include up(md) {
+    align-items: flex-end;
+  }
+}
+
+.ratingStars {
+  font-size: var(--fs-base);
+}
+
+.ratingLabel {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.ratingCta {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  margin-top: var(--space-1);
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-accent);
+
+  transition: gap var(--transition-base);
+
+  svg {
+    font-size: var(--fs-base);
+  }
+
+  &:hover {
+    gap: var(--space-3);
+  }
+}
+
+// Контент: большой отзыв + колонка из двух коротких.
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-4), 2vw, var(--space-6));
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+
+// --- Большой отзыв: фото проекта + тело ------------------------------------
+.big {
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-surface);
+
+  @include up(sm) {
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+  }
+}
+
+.bigBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  // Порядок: на узком — тело под фото; на ≥sm фото слева, тело справа.
+  order: 1;
+
+  padding: clamp(var(--space-5), 2.5vw, var(--space-8));
+}
+
+.quote {
+  font-size: var(--fs-3xl);
+  line-height: 0.6;
+  color: color-mix(in srgb, var(--color-accent) 65%, transparent);
+}
+
+.bigText {
+  flex: 1;
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  color: color-mix(in srgb, var(--color-text) 92%, transparent);
+}
+
+.bigPhoto {
+  order: 0;
+  min-height: 12rem;
+  background: center / cover no-repeat;
+
+  @include up(sm) {
+    min-height: 100%;
+  }
+}
+
+// --- Короткие отзывы -------------------------------------------------------
+.shorts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-4), 2vw, var(--space-6));
+
+  // На планшете (md–lg) два коротких — рядом; на мобиле и ≥lg — стопкой.
+  @include between(md, lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.short {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  padding: clamp(var(--space-5), 2vw, var(--space-6));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-surface);
+}
+
+.shortRating {
+  font-size: var(--fs-sm);
+}
+
+.shortText {
+  flex: 1;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: color-mix(in srgb, var(--color-text) 90%, transparent);
+}
+
+// --- Подвал отзыва: аватар-инициалы + имя/город ----------------------------
+.foot {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 28%, transparent);
+  border-radius: var(--radius-full);
+
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-accent);
+
+  background-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+.who {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.city {
+  margin-top: 0.125rem;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.footRating {
+  flex-shrink: 0;
+  font-size: var(--fs-sm);
+}

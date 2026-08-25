@@ -1,0 +1,125 @@
+@use 'app/styles/abstracts' as *;
+
+// Подвал — тёмный (макет 10). data-tone="dark" переопределяет семантические токены.
+.footer {
+  padding-block: clamp(var(--space-12), 5vw, var(--space-16));
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+// Колонки: бренд (шире) + Навигация + Контакты + Документы.
+.inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-8), 4vw, var(--space-12));
+
+  @include up(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  // Планшет: три колонки ссылок в один ряд (Навигация | Контакты | Документы),
+  // иначе «Документы» переносились на отдельный ряд и правый нижний угол пустовал.
+  @include up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include up(lg) {
+    grid-template-columns: 1.6fr 1fr 1fr 1.1fr;
+    align-items: start;
+  }
+}
+
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  @include up(sm) {
+    grid-column: 1 / -1;
+  }
+
+  @include up(lg) {
+    grid-column: auto;
+  }
+}
+
+.logoLink {
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: center;
+  color: var(--color-accent);
+}
+
+.logo {
+  height: var(--space-12);
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tagline {
+  max-width: 32ch;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+.socials {
+  margin-top: var(--space-1);
+}
+
+// Колонка ссылок (навигация / документы / контакты).
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.colTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.link {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+.muted {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.copy {
+  grid-column: 1 / -1;
+
+  padding-top: clamp(var(--space-6), 3vw, var(--space-8));
+  border-top: 1px solid var(--color-border);
+
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}

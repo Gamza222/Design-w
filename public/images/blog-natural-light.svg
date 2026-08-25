@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Natural light">
+  <rect width="800" height="600" fill="#efe9df" />
+  <rect x="40" y="40" width="720" height="520" fill="none" stroke="#b08968" stroke-width="2" />
+  <circle cx="620" cy="160" r="70" fill="#e2c9a6" />
+  <text x="400" y="320" font-family="Georgia, 'Times New Roman', serif" font-size="44" fill="#1c1a17" text-anchor="middle">Natural Light</text>
+</svg>

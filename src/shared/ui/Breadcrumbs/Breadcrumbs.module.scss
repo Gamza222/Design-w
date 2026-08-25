@@ -1,0 +1,32 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+
+  font-size: var(--fs-sm);
+}
+
+.item {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  color: var(--color-text-muted);
+}
+
+.item + .item::before {
+  content: '/';
+  color: var(--color-border);
+}
+
+.link {
+  color: var(--color-text-muted);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+.current {
+  color: var(--color-text);
+}

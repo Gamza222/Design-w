@@ -1,0 +1,192 @@
+@use 'app/styles/abstracts' as *;
+
+// Секция «Давайте обсудим ваш проект» — тёмная (макет 10).
+.contact {
+  padding-block: clamp(var(--space-16), 6vw, var(--space-24));
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-8), 4vw, var(--space-16));
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+// --- Левая колонка: эмоция + чекмарки + мессенджеры ------------------------
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(var(--space-6), 3vw, var(--space-8));
+}
+
+.head {
+  max-width: 42ch;
+}
+
+.checks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.check {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+
+  font-size: var(--fs-base);
+  color: color-mix(in srgb, var(--color-text) 92%, transparent);
+}
+
+.checkIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
+
+  background-color: color-mix(in srgb, var(--color-accent) 14%, transparent);
+}
+
+.socials {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.socialsTitle {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.socialList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+// Кнопка мессенджера — графитовая пилюля с золотой иконкой; hover поднимает и подсвечивает рамку.
+.socialBtn {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  padding: 0.6rem var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text);
+
+  background-color: var(--color-muted-bg);
+
+  transition:
+    border-color var(--transition-base),
+    transform var(--transition-base),
+    background-color var(--transition-base);
+
+  &:hover {
+    transform: translateY(-0.125rem);
+    border-color: var(--color-accent);
+  }
+}
+
+.socialIcon {
+  flex-shrink: 0;
+  font-size: var(--fs-lg);
+  color: var(--color-accent);
+}
+
+// --- Прямые контакты (страница «Контакты»): почта / часы / география ------
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.detailsTitle {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.detailsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.detailsItem {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+// Круглый золотой чип иконки — в одном языке с .checkIcon, но крупнее (это ключевые факты).
+.detailsIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-lg);
+  color: var(--color-accent);
+
+  background-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.detailsLabel {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.detailsValue {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.detailsLink {
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+// --- Правая колонка: стеклянная карточка с формой -------------------------
+.formCard {
+  padding: clamp(var(--space-6), 2.5vw, var(--space-8));
+}

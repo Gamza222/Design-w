@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true
+}

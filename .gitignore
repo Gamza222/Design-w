@@ -1,0 +1,53 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build output
+build/
+dist/
+.react-router/
+
+# testing
+coverage/
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# env
+.env
+.env.local
+.env.*.local
+
+# editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# vercel
+.vercel
+
+# исходный ТЗ-PDF (тяжёлый бинарь; мокапы извлечены в docs/tz-refs/)
+*.pdf
+
+# рабочие скриншоты для сверки с мокапами (регенерируются scripts/shot.mjs; в репо не нужны)
+docs/tz-refs/.review/
+docs/tz-refs/.current/
+docs/tz-refs/.after/
+docs/tz-refs/.shots/
+.claude/settings.local.json
+
+# Временные скрипты ревью (Claude)
+.tmp-*

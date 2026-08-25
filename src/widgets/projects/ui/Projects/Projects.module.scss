@@ -1,0 +1,149 @@
+@use 'app/styles/abstracts' as *;
+
+// Секция «Примеры наших работ» — светлая, компактная (макет главной 01): контраст после тёмного
+// «Процесса». Заголовок слева, лента кейсов справа во всю ширину.
+.projects {
+  padding-block: var(--section-pad-y-dense);
+}
+
+// Общий 80rem-рельс (локальный full-bleed давал скачущую левую линию секций).
+// Фазы заголовка — как у «Процесса»:
+//  • ≥wide (1600) — заголовок СЛЕВА, лента кейсов справа;
+//  • <wide — заголовок СВЕРХУ-слева, лента ниже (во всю ширину, скролл-снап).
+.inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--section-gap-dense);
+
+  @include up(wide) {
+    grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
+    gap: clamp(var(--space-8), 4vw, var(--space-12));
+    align-items: center;
+  }
+}
+
+// Шапка слева: заголовок + золотая ссылка «Смотреть все работы» (без eyebrow, как в макете).
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.title {
+  font-size: var(--section-title-size);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+}
+
+.headCta {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: var(--space-2);
+  align-items: center;
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-accent);
+
+  transition: gap var(--transition-base);
+
+  svg {
+    font-size: var(--fs-base);
+  }
+
+  &:hover {
+    gap: var(--space-3);
+  }
+}
+
+// Колонка с сеткой кейсов и кнопкой «Ещё» (2-й элемент сетки .inner на ≥wide).
+.galleryCol {
+  display: flex;
+  flex-direction: column;
+}
+
+// Сетка кейсов (без слайдера): 1 → 2 (≥sm) → 3 (≥md) → 4 (≥xl) колонки — максимум 4 в ряд, поэтому
+// на больших экранах карточки крупнее и выше. В свёрнутом виде видна только первая строка (на телефоне —
+// две полноширинных карточки), остальное — по «Ещё». На <480px двух колонок мало: карточки ~160px,
+// подпись с градиентом накрывала почти всё фото.
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-3), 1.4vw, var(--space-5));
+
+  @include up(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include up(xl) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+// Свёрнуто — видна только первая строка (по числу колонок). На каждом брейкпоинте сначала
+// возвращаем все карточки, затем прячем «хвост» за первой строкой: 2-кол → ≥3; 3-кол → ≥4; 4-кол → ≥5.
+.gallery:not(.expanded) > :nth-child(n + 3) {
+  display: none;
+}
+
+@include up(md) {
+  .gallery:not(.expanded) > :nth-child(n + 3) {
+    display: block;
+  }
+
+  .gallery:not(.expanded) > :nth-child(n + 4) {
+    display: none;
+  }
+}
+
+@include up(xl) {
+  .gallery:not(.expanded) > :nth-child(n + 4) {
+    display: block;
+  }
+
+  .gallery:not(.expanded) > :nth-child(n + 5) {
+    display: none;
+  }
+}
+
+// Кнопка «Ещё» — раскрывает скрытые карточки. На ≥xl не нужна (всё влезает в ряд).
+.moreBtn {
+  cursor: pointer;
+
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  align-self: center;
+
+  margin-top: clamp(var(--space-5), 2.5vw, var(--space-8));
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text);
+
+  background: transparent;
+
+  transition: color var(--transition-base), border-color var(--transition-base);
+
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+}
+
+.moreIcon {
+  font-size: var(--fs-base);
+
+  // На телефоне стрелку разворачиваем вправо (компактнее, как «Ещё ›»).
+  @include down(sm) {
+    transform: rotate(-90deg);
+  }
+}

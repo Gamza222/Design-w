@@ -18,6 +18,8 @@
 }
 
 .box {
+  pointer-events: none;
+
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;

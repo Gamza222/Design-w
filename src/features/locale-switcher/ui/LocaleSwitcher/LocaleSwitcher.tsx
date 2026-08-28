@@ -12,6 +12,7 @@ import {
 } from '@shared/config';
 import { cn } from '@shared/lib';
 
+import { saveLocalePreference } from '../../lib/localePreference';
 import styles from './LocaleSwitcher.module.scss';
 
 /** Дропдаун выбора языка — показывает текущую локаль, по клику раскрывает список. */
@@ -57,6 +58,7 @@ export function LocaleSwitcher() {
               role="menuitem"
               className={styles.option}
               onClick={() => {
+                saveLocalePreference(locale);
                 navigate(localizePath(canonical, locale) + search + hash);
                 setOpen(false);
               }}

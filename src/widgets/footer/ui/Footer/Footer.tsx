@@ -1,7 +1,12 @@
 import { useTranslation } from 'react-i18next';
 
-import { CONTACTS, ROUTES } from '@shared/config';
-import { AppLink, Container, Logo, SocialLinks } from '@shared/ui';
+import {
+  CONTACTS,
+  HOME_SECTIONS,
+  ROUTES,
+  homeSectionPath,
+} from '@shared/config';
+import { AppLink, Container, Logo, SocialLinks, YandexMap } from '@shared/ui';
 
 import styles from './Footer.module.scss';
 
@@ -17,9 +22,24 @@ export function Footer() {
   const year = new Date().getFullYear();
   const nav = t('footer.nav', { returnObjects: true }) as FooterLink[];
   const documents = t('footer.documents', { returnObjects: true }) as FooterLink[];
+  const sectionByRoute: Record<string, string> = {
+    [ROUTES.services]: homeSectionPath(HOME_SECTIONS.services),
+    [ROUTES.portfolio]: homeSectionPath(HOME_SECTIONS.portfolio),
+    [ROUTES.blog]: homeSectionPath(HOME_SECTIONS.blog),
+    [ROUTES.about]: homeSectionPath(HOME_SECTIONS.about),
+    [ROUTES.contact]: homeSectionPath(HOME_SECTIONS.contacts),
+  };
+  const mapCoordinates = CONTACTS.mapPoint
+    ? `${CONTACTS.mapPoint.longitude},${CONTACTS.mapPoint.latitude}`
+    : null;
+  const mapUrl = CONTACTS.address
+    ? mapCoordinates
+      ? `https://yandex.ru/maps/?ll=${encodeURIComponent(mapCoordinates)}&mode=whatshere&whatshere%5Bpoint%5D=${encodeURIComponent(mapCoordinates)}&z=17`
+      : `https://yandex.ru/maps/?text=${encodeURIComponent(CONTACTS.address)}`
+    : null;
 
   return (
-    <footer className={styles.footer} data-tone="dark">
+    <footer id={HOME_SECTIONS.contacts} className={styles.footer} data-tone="dark">
       <Container className={styles.inner}>
         <div className={styles.brandCol}>
           <AppLink to={ROUTES.home} className={styles.logoLink} aria-label={t('brand')}>
@@ -35,7 +55,7 @@ export function Footer() {
           <ul className={styles.list}>
             {nav.map((link) => (
               <li key={link.to}>
-                <AppLink to={link.to} className={styles.link}>
+                <AppLink to={sectionByRoute[link.to] ?? link.to} className={styles.link}>
                   {link.label}
                 </AppLink>
               </li>
@@ -46,7 +66,6 @@ export function Footer() {
         <div className={styles.col}>
           <h2 className={styles.colTitle}>{t('footer.contactsTitle')}</h2>
           <ul className={styles.list}>
-            {/* Телефон появится, когда будет заполнен в конфиге контактов. */}
             {CONTACTS.phone != null && CONTACTS.phoneHref != null && (
               <li>
                 <a href={CONTACTS.phoneHref} className={styles.link}>
@@ -55,10 +74,11 @@ export function Footer() {
               </li>
             )}
             <li>
-              <a href={`mailto:${t('contact.email')}`} className={styles.link}>
-                {t('contact.email')}
+              <a href={CONTACTS.emailHref} className={styles.link}>
+                {CONTACTS.email}
               </a>
             </li>
+            {CONTACTS.address != null && <li className={styles.muted}>{CONTACTS.address}</li>}
             <li className={styles.muted}>{t('header.hours')}</li>
           </ul>
         </div>
@@ -75,6 +95,29 @@ export function Footer() {
             ))}
           </ul>
         </nav>
+
+        {CONTACTS.address && mapUrl && (
+          <section className={styles.mapBlock} aria-labelledby="footer-map-title">
+            <div className={styles.mapHead}>
+              <h2 id="footer-map-title" className={styles.mapTitle}>
+                {t('footer.mapTitle')}
+              </h2>
+              <a
+                href={mapUrl}
+                className={styles.mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('footer.mapOpen')}
+              </a>
+            </div>
+            <YandexMap
+              address={CONTACTS.address}
+              point={CONTACTS.mapPoint ?? undefined}
+              title={t('footer.mapTitle')}
+            />
+          </section>
+        )}
 
         <p className={styles.copy}>
           © {year} {t('brand')}. {t('footer.rights')}

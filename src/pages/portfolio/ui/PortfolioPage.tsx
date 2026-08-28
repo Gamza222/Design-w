@@ -8,7 +8,7 @@ import { ContactCta } from '@widgets/contact-cta';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
-  return buildMeta(`${t.portfolio.title} — ${t.brand}`, t.portfolio.subtitle, location.pathname);
+  return buildMeta(`${t.portfolio.title} | ${t.brand}`, t.portfolio.subtitle, location.pathname);
 }
 
 export default function PortfolioPage() {

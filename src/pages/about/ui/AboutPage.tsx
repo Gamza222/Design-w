@@ -7,7 +7,7 @@ import { ContactCta } from '@widgets/contact-cta';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
-  return buildMeta(`${t.about.title} — ${t.brand}`, t.about.subtitle, location.pathname);
+  return buildMeta(`${t.about.title} | ${t.brand}`, t.about.subtitle, location.pathname);
 }
 
 /** «О студии» — короткая история + полоса достижений (цифры/отзывы/команда) + финальный CTA.

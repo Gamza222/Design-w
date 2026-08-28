@@ -202,10 +202,20 @@
   }
 }
 
+.addon:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
 .addonOn {
   border-color: var(--color-accent);
   background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
   box-shadow: var(--glow-accent);
+}
+
+.addonIncluded .addonPrice {
+  font-weight: 600;
+  color: var(--color-accent);
 }
 
 .addonIcon {

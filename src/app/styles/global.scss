@@ -8,7 +8,18 @@
 
 // Тёмные поля за пределами капнутого контента (когда вьюпорт шире --site-max).
 html {
+  scroll-behavior: smooth;
   background-color: var(--clr-dark);
+}
+
+[id] {
+  scroll-margin-top: calc(var(--header-h) + var(--space-4));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -209,4 +220,3 @@ body::after {
 // Металлик статичен: бесконечная анимация background-position на clip:text — это
 // перерисовка растра каждого заголовка каждый кадр (~10 h2 одновременно на главной).
 // Градиент сам по себе даёт «дорогой» вид; блик при появлении делает useScrollReveal.
-

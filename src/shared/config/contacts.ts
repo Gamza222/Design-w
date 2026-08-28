@@ -1,8 +1,5 @@
-// Нелокализуемые контактные данные студии (телефон, ссылки на соцсети).
+// Нелокализуемые контактные данные студии (телефон, почта, адрес и соцсети).
 // Часы работы — НЕ здесь: это переводимая строка, держим её в i18n (`header.hours`).
-// Реальных данных пока нет, поэтому phone = null и socials пуст: все места рендера
-// (хедер, футер, ContactCta) выводят эти элементы условно — достаточно заполнить
-// значения ниже, и UI подхватит их автоматически.
 
 export type SocialType = 'max' | 'vk';
 
@@ -17,6 +14,10 @@ export interface Contacts {
   phone: string | null;
   /** `tel:`-ссылка; заполняется вместе с phone. */
   phoneHref: string | null;
+  email: string;
+  emailHref: string;
+  address: string | null;
+  mapPoint: { longitude: number; latitude: number } | null;
   socials: readonly SocialLink[];
 }
 
@@ -33,12 +34,13 @@ export interface LegalDetails {
 }
 
 export const CONTACTS: Contacts = {
-  phone: null, // напр. '+7 (800) 707-74-83'
-  phoneHref: null, // напр. 'tel:+78007077483'
-  socials: [
-    // { type: 'max', label: 'MAX', href: 'https://max.ru/<профиль>' },
-    // { type: 'vk', label: 'VK', href: 'https://vk.com/<профиль>' },
-  ],
+  phone: '+7 (915) 114-24-99',
+  phoneHref: 'tel:+79151142499',
+  email: 'dizain.seichas@yandex.ru',
+  emailHref: 'mailto:dizain.seichas@yandex.ru',
+  address: 'Москва, ул. Большой Каретный переулок д. 22, ст. 3',
+  mapPoint: { longitude: 37.617105, latitude: 55.772132 },
+  socials: [{ type: 'vk', label: 'VK', href: 'https://vk.ru/club240967161' }],
 };
 
 /** Реквизиты не подменяем демонстрационными данными. Юридические страницы рендерят
@@ -57,3 +59,5 @@ export const LEGAL_DETAILS: LegalDetails = {
 
 export const ACCEPTED_CURRENCIES = ['RUB', 'BYN'] as const;
 export const ACCEPTED_PAYMENT_METHODS = ['mir', 'belkart', 'bankTransfer'] as const;
+
+export const DZEN_CHANNEL_URL = 'https://dzen.ru/disainseichas?share_to=link';

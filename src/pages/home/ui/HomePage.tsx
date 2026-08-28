@@ -17,7 +17,7 @@ import { ServicesHome } from '@widgets/services-home';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
-  return buildMeta(`${t.brand} — ${t.home.hero.eyebrow}`, t.home.hero.subtitle, location.pathname);
+  return buildMeta(`${t.brand} | ${t.home.hero.eyebrow}`, t.home.hero.subtitle, location.pathname);
 }
 
 export default function HomePage() {

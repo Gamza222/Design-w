@@ -6,7 +6,7 @@
   padding-block: var(--section-pad-y-dense);
 }
 
-// Общий 80rem-рельс (локальный full-bleed давал скачущую левую линию секций).
+// Единый внешний рельс сайта.
 // Фазы заголовка — как у «Процесса»:
 //  • ≥wide (1600) — заголовок СЛЕВА, лента кейсов справа;
 //  • <wide — заголовок СВЕРХУ-слева, лента ниже (во всю ширину, скролл-снап).
@@ -131,7 +131,9 @@
 
   background: transparent;
 
-  transition: color var(--transition-base), border-color var(--transition-base);
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base);
 
   &:hover {
     border-color: var(--color-accent);

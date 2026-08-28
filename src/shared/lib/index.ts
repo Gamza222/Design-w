@@ -9,3 +9,4 @@ export { usePreloaderDone, completePreloader } from './preloader/preloaderSignal
 export { localeDict, buildMeta } from './seo/seo';
 export type { RouteMetaArgs } from './seo/seo';
 export { formatDate } from './date/formatDate';
+export { formatMoney } from './number/formatMoney';

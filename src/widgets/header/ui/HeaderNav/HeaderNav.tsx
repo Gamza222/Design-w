@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { ROUTES } from '@shared/config';
+import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
 import { cn } from '@shared/lib';
 import { AppLink } from '@shared/ui';
 
@@ -18,11 +18,11 @@ export function HeaderNav({ onNavigate, className }: HeaderNavProps) {
   const { t } = useTranslation();
 
   const links = [
-    { to: ROUTES.services, label: t('nav.services') },
-    { to: ROUTES.about, label: t('nav.about') },
-    { to: ROUTES.portfolio, label: t('nav.portfolio') },
-    { to: ROUTES.blog, label: t('nav.blog') },
-    { to: ROUTES.contact, label: t('nav.contact') },
+    { to: homeSectionPath(HOME_SECTIONS.services), label: t('nav.services') },
+    { to: homeSectionPath(HOME_SECTIONS.about), label: t('nav.about') },
+    { to: homeSectionPath(HOME_SECTIONS.portfolio), label: t('nav.portfolio') },
+    { to: homeSectionPath(HOME_SECTIONS.blog), label: t('nav.blog') },
+    { to: homeSectionPath(HOME_SECTIONS.contacts), label: t('nav.contact') },
   ];
 
   return (

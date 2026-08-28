@@ -19,6 +19,24 @@ export const ROUTES = {
   consent: '/consent',
 } as const;
 
+/** Stable anchors on the single-page home experience. */
+export const HOME_SECTIONS = {
+  services: 'services',
+  about: 'about',
+  portfolio: 'portfolio',
+  blog: 'blog',
+  calculator: 'calculator',
+  request: 'request',
+  contacts: 'contacts',
+} as const;
+
+export type HomeSection = (typeof HOME_SECTIONS)[keyof typeof HOME_SECTIONS];
+
+/** Canonical home URL with a section hash. Locale prefixing is handled by `AppLink`. */
+export function homeSectionPath(section: HomeSection): string {
+  return `/#${section}`;
+}
+
 /** SEO-посадки услуг: корневые литеральные пути (одинаковы в обеих локалях).
  *  Контент страниц — i18n `servicePages.*`; сами роуты объявлены в `app/routes.ts`. */
 export const SERVICE_LANDINGS = {
@@ -55,8 +73,13 @@ export function normalizePathname(pathname: string): string {
 /** Prefix a canonical path with a locale (default locale stays unprefixed). */
 export function localizePath(path: string, locale: Locale): string {
   if (locale === DEFAULT_LOCALE) return path;
+
+  const suffixIndex = path.search(/[?#]/);
+  const pathname = suffixIndex === -1 ? path : path.slice(0, suffixIndex);
+  const suffix = suffixIndex === -1 ? '' : path.slice(suffixIndex);
   const prefix = LOCALE_PATHS[locale];
-  return path === '/' ? `/${prefix}` : `/${prefix}${path}`;
+  const localized = pathname === '/' ? `/${prefix}` : `/${prefix}${pathname}`;
+  return `${localized}${suffix}`;
 }
 
 /** Read the locale segment from a pathname (falls back to default). */

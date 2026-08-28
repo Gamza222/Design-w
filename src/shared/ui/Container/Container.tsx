@@ -14,7 +14,7 @@ interface ContainerProps {
 /** Centered, max-width content wrapper with horizontal padding. */
 export function Container({ as: Tag = 'div', className, children, ref }: ContainerProps) {
   return (
-    <Tag ref={ref} className={cn(styles.container, className)}>
+    <Tag ref={ref} className={cn(styles.container, className)} data-layout-container="">
       {children}
     </Tag>
   );

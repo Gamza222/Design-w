@@ -5,11 +5,11 @@ import type { Package } from './types';
 export const PACKAGES: Package[] = [
   {
     id: 'start',
-    featureKeys: ['planning', 'collages', 'sketchPlans'],
+    featureKeys: ['planning'],
   },
   {
     id: 'comfort',
-    featureKeys: ['planning', 'collages', 'viz3d', 'sketchPlans'],
+    featureKeys: ['planning', 'collages'],
   },
   {
     id: 'full',

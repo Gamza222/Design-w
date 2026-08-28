@@ -49,11 +49,6 @@
 }
 
 .inner {
-  // Хедер шире секций: переопределяем токены ТОЛЬКО для этого инстанса Container.
-  // Глобальный --container-max (1280) у остальных секций не трогаем.
-  --container-max: var(--site-max);
-  --container-pad: var(--page-gutter);
-
   display: flex;
   align-items: center;
   justify-content: space-between;

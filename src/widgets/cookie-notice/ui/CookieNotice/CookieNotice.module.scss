@@ -1,0 +1,58 @@
+@use 'app/styles/abstracts' as *;
+
+.notice {
+  position: fixed;
+  z-index: calc(var(--z-overlay) - 1);
+  right: max(var(--page-gutter), calc((100vw - var(--site-max)) / 2 + var(--page-gutter)));
+  bottom: var(--space-4);
+  left: max(var(--page-gutter), calc((100vw - var(--site-max)) / 2 + var(--page-gutter)));
+
+  display: flex;
+  gap: var(--space-5);
+  align-items: center;
+  justify-content: space-between;
+
+  max-width: 58rem;
+  margin-inline: auto;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+
+  color: var(--color-text);
+
+  background: color-mix(in srgb, var(--clr-dark) 94%, transparent);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-glass);
+
+  @include down(sm) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.title {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+
+.text {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+.link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.button {
+  flex-shrink: 0;
+}

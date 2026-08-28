@@ -1,7 +1,7 @@
 import { type CSSProperties, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ROUTES } from '@shared/config';
+import { HOME_SECTIONS, ROUTES } from '@shared/config';
 import { useScrollReveal } from '@shared/lib';
 import { AppLink, Container, IconArrowRight, IconMaxMessenger, Rating } from '@shared/ui';
 
@@ -33,7 +33,7 @@ function initials(name: string): string {
   const words = name.trim().split(/[\s&]+/).filter(Boolean);
   const significant = words.filter((w) => w.length > 1);
   const pick = (significant.length ? significant : words).slice(0, 2);
-  return pick.map((w) => w[0]?.toUpperCase() ?? '').join('') || '—';
+  return pick.map((w) => w[0]?.toUpperCase() ?? '').join('') || '•';
 }
 
 /** Секция «Достижения» (tone=light, макет 01) — одна полоса в 3 зоны: слева цифры, в центре карусель
@@ -57,7 +57,12 @@ export function Achievements() {
   ]);
 
   return (
-    <section className={styles.achievements} ref={root} data-tone="light">
+    <section
+      id={HOME_SECTIONS.about}
+      className={styles.achievements}
+      ref={root}
+      data-tone="light"
+    >
       <Container className={styles.inner}>
         {/* Зона 1 — цифры */}
         <ul className={styles.stats}>

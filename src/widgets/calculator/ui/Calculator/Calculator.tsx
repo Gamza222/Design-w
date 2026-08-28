@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { ProjectCalculator } from '@features/project-calculator';
+import { HOME_SECTIONS } from '@shared/config';
 import { useScrollReveal } from '@shared/lib';
 import { Container, SectionHeader } from '@shared/ui';
 
@@ -15,7 +16,12 @@ export function Calculator() {
   const root = useScrollReveal<HTMLElement>([`.${styles.inner} > *`], { stagger: 0.12 });
 
   return (
-    <section className={styles.calculator} data-tone="dark" ref={root}>
+    <section
+      id={HOME_SECTIONS.calculator}
+      className={styles.calculator}
+      data-tone="dark"
+      ref={root}
+    >
       <Container className={styles.inner}>
         <SectionHeader
           eyebrow={t('home.calculator.eyebrow')}

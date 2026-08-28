@@ -2,7 +2,7 @@ import { type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PostCard, type Post } from '@entities/post';
-import { ROUTES } from '@shared/config';
+import { DZEN_CHANNEL_URL, HOME_SECTIONS } from '@shared/config';
 import { useScrollReveal } from '@shared/lib';
 import { Button, Container, IconArrowRight, SectionHeader } from '@shared/ui';
 
@@ -26,7 +26,7 @@ export function BlogHome({ posts }: BlogHomeProps) {
   if (posts.length === 0) return null;
 
   return (
-    <section className={styles.blog} ref={root} data-tone="light">
+    <section id={HOME_SECTIONS.blog} className={styles.blog} ref={root} data-tone="light">
       <Container className={styles.inner}>
         <div className={styles.head}>
           <SectionHeader
@@ -35,7 +35,13 @@ export function BlogHome({ posts }: BlogHomeProps) {
             subtitle={t('home.blog.subtitle')}
             className={styles.header}
           />
-          <Button to={ROUTES.blog} variant="ghost" className={styles.cta}>
+          <Button
+            href={DZEN_CHANNEL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="ghost"
+            className={styles.cta}
+          >
             <span>{t('home.blog.cta')}</span>
             <IconArrowRight aria-hidden="true" />
           </Button>

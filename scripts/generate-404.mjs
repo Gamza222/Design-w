@@ -33,7 +33,7 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>404 — ${ru.title} · TheDesignNow</title>
+<title>404 | ${ru.title} · TheDesignNow</title>
 <style>
 ${font(400, 'cyrillic')}${font(400, 'latin')}${font(600, 'cyrillic')}${font(600, 'latin')}
 :root{--dark:#191c22;--surface:#23262d;--border:#3a3f48;--light:#eef0f3;--muted:#a3aab4;--accent:#febc04;--silver:#d3d8e0}
@@ -61,7 +61,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <div class="code" aria-hidden="true">404</div>
 <h1>${ru.title}</h1>
 <p>${ru.subtitle}</p>
-<p class="en" lang="en">${en.title} — ${en.subtitle}</p>
+<p class="en" lang="en">${en.title}. ${en.subtitle}</p>
 <div class="actions">
 <a class="btn" href="/">${ru.back}</a>
 <a class="btn ghost" href="/en/" lang="en">${en.back}</a>

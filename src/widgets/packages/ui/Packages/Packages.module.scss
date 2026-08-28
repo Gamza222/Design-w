@@ -28,11 +28,11 @@
   background:
     var(--glass-bg-deep) padding-box,
     var(--glass-border-grad) border-box;
-  box-shadow: var(--shadow-glass);
 
   // Панель лежит на фото Hero: без блюра сквозь 8–14% прозрачности просвечивает
   // нерасфокусированная текстура снимка («грязный» шум под графитом).
   backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-glass);
 
   @supports not (backdrop-filter: blur(1px)) {
     background:

@@ -28,17 +28,17 @@
     color var(--transition-base),
     background-color var(--transition-base);
 
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
   // На границах min/max кнопка получает aria-disabled (не disabled) — остаётся в tab-order.
   @media (hover: hover) {
     &:hover:not([aria-disabled='true']) {
       color: var(--color-accent);
       background-color: var(--color-muted-bg);
     }
-  }
-
-  &[aria-disabled='true'] {
-    cursor: not-allowed;
-    opacity: 0.4;
   }
 }
 

@@ -6,7 +6,7 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-import { ROUTES } from '@shared/config';
+import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
 import { cn, usePreloaderDone } from '@shared/lib';
 import { Button, Container } from '@shared/ui';
 
@@ -111,10 +111,10 @@ export function Hero({ bottomSlot }: HeroProps) {
             <p className={cn(styles.subtitle, styles.reveal)}>{t('home.hero.subtitle')}</p>
 
             <div className={cn(styles.actions, styles.reveal)}>
-              <Button to={ROUTES.contact} size="lg">
+              <Button to={homeSectionPath(HOME_SECTIONS.calculator)} size="lg">
                 {t('cta.calculate')}
               </Button>
-              <Button to={ROUTES.portfolio} variant="ghost" size="lg">
+              <Button to={homeSectionPath(HOME_SECTIONS.portfolio)} variant="ghost" size="lg">
                 {t('home.hero.ctaExamples')}
               </Button>
             </div>

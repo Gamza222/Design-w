@@ -3,6 +3,72 @@
   "buildCommand": "npm run build",
   "outputDirectory": "build/client",
   "framework": null,
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "cookie", "key": "tdn_locale", "value": "en" }],
+      "destination": "/en",
+      "permanent": false
+    },
+    {
+      "source": "/:path((?!(?:en|by|assets|images|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
+      "has": [{ "type": "cookie", "key": "tdn_locale", "value": "en" }],
+      "destination": "/en/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "cookie", "key": "tdn_locale", "value": "be" }],
+      "destination": "/by",
+      "permanent": false
+    },
+    {
+      "source": "/:path((?!(?:en|by|assets|images|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
+      "has": [{ "type": "cookie", "key": "tdn_locale", "value": "be" }],
+      "destination": "/by/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "missing": [{ "type": "cookie", "key": "tdn_locale" }],
+      "has": [{ "type": "header", "key": "x-vercel-ip-country", "value": "BY" }],
+      "destination": "/by",
+      "permanent": false
+    },
+    {
+      "source": "/:path((?!(?:en|by|assets|images|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
+      "missing": [{ "type": "cookie", "key": "tdn_locale" }],
+      "has": [{ "type": "header", "key": "x-vercel-ip-country", "value": "BY" }],
+      "destination": "/by/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "missing": [{ "type": "cookie", "key": "tdn_locale" }],
+      "has": [
+        {
+          "type": "header",
+          "key": "x-vercel-ip-country",
+          "value": { "ninc": ["RU", "BY"] }
+        }
+      ],
+      "destination": "/en",
+      "permanent": false
+    },
+    {
+      "source": "/:path((?!(?:en|by|assets|images|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
+      "missing": [{ "type": "cookie", "key": "tdn_locale" }],
+      "has": [
+        {
+          "type": "header",
+          "key": "x-vercel-ip-country",
+          "value": { "ninc": ["RU", "BY"] }
+        }
+      ],
+      "destination": "/en/:path*",
+      "permanent": false
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

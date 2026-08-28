@@ -7,6 +7,7 @@ export { Logo } from './Logo/Logo';
 export { PageHeader } from './PageHeader/PageHeader';
 export { Prose } from './Prose/Prose';
 export { SocialLinks } from './SocialLinks/SocialLinks';
+export { YandexMap } from './YandexMap/YandexMap';
 
 // --- Примитивы дизайн-системы (Фаза 0) -------------------------------------
 export { SectionHeader } from './SectionHeader/SectionHeader';

@@ -22,7 +22,7 @@ function initials(name: string): string {
     .filter(Boolean);
   const significant = words.filter((w) => w.length > 1);
   const pick = (significant.length ? significant : words).slice(0, 2);
-  return pick.map((w) => w[0]?.toUpperCase() ?? '').join('') || '—';
+  return pick.map((w) => w[0]?.toUpperCase() ?? '').join('') || '•';
 }
 
 /** Секция «Что говорят наши клиенты» (tone=dark, макет 10) — шапка слева + блок рейтинга 4.9★

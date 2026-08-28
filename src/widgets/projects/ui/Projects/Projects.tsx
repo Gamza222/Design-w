@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { Project } from '@entities/project';
-import { ROUTES } from '@shared/config';
+import { HOME_SECTIONS } from '@shared/config';
 import { cn, useScrollReveal } from '@shared/lib';
-import { AppLink, Container, IconArrowRight, IconChevronDown } from '@shared/ui';
+import { Container, IconArrowRight, IconChevronDown } from '@shared/ui';
 
 import { ProjectTile } from '../ProjectTile/ProjectTile';
 import styles from './Projects.module.scss';
@@ -29,14 +29,21 @@ export function Projects({ projects }: ProjectsProps) {
   if (projects.length === 0) return null;
 
   return (
-    <section className={styles.projects} ref={root} data-tone="light">
+    <section
+      id={HOME_SECTIONS.portfolio}
+      className={styles.projects}
+      ref={root}
+      data-tone="light"
+    >
       <Container className={styles.inner}>
         <div className={styles.head}>
           <h2 className={styles.title}>{t('home.portfolio.title')}</h2>
-          <AppLink to={ROUTES.portfolio} className={styles.headCta}>
-            <span>{t('home.portfolio.cta')}</span>
-            <IconArrowRight aria-hidden="true" />
-          </AppLink>
+          {!expanded && (
+            <button type="button" className={styles.headCta} onClick={() => setExpanded(true)}>
+              <span>{t('home.portfolio.cta')}</span>
+              <IconArrowRight aria-hidden="true" />
+            </button>
+          )}
         </div>
 
         <div className={styles.galleryCol}>

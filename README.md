@@ -36,12 +36,13 @@ npm run e2e          # Playwright (поднимает build + preview сам)
 ## Деплой
 
 Production — статический хостинг REG.RU, корень сайта `/www/designseichas.ru`. Workflow `CI`
-после успешных проверок собирает проект и синхронизирует содержимое `build/client/` по SSH при
+после успешных проверок собирает проект и синхронизирует содержимое `build/client/` по FTPS при
 push в `main`.
 
-Перед первым деплоем в GitHub необходимо добавить secrets `DEPLOY_SSH_USER`, `DEPLOY_SSH_KEY`,
-`DEPLOY_KNOWN_HOSTS`, затем repository variable `DEPLOY_ENABLED=true`. При необходимости хост,
-порт и путь переопределяются variables `DEPLOY_HOST`, `DEPLOY_PORT`, `DEPLOY_PATH`.
+Перед первым деплоем в GitHub необходимо добавить secret `DEPLOY_FTP_PASSWORD`, variables
+`DEPLOY_USER`, `DEPLOY_HOST`, `DEPLOY_PORT`, `DEPLOY_PATH`, затем включить
+`DEPLOY_ENABLED=true`. Соединение требует FTP с явным TLS; `.well-known` сохраняется при
+синхронизации для продления SSL-сертификата.
 
 ---
 

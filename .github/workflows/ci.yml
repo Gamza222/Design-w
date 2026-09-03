@@ -38,7 +38,7 @@ jobs:
       - run: npm run e2e
 
   deploy:
-    name: Deploy to REG.RU
+    name: Deploy to REG.RU over FTPS
     needs: [quality, e2e]
     if: >-
       github.ref == 'refs/heads/main' &&
@@ -53,9 +53,9 @@ jobs:
       url: https://designseichas.ru
     env:
       DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'server173.hosting.reg.ru' }}
-      DEPLOY_PORT: ${{ vars.DEPLOY_PORT || '22' }}
+      DEPLOY_PORT: ${{ vars.DEPLOY_PORT || '21' }}
       DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '/www/designseichas.ru' }}
-      DEPLOY_USER: ${{ secrets.DEPLOY_SSH_USER }}
+      DEPLOY_USER: ${{ vars.DEPLOY_USER }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -65,42 +65,40 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Configure SSH
+      - name: Check deployment configuration
         env:
-          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_FTP_PASSWORD: ${{ secrets.DEPLOY_FTP_PASSWORD }}
         run: |
-          if [[ -z "$DEPLOY_USER" || -z "$DEPLOY_SSH_KEY" || -z "$DEPLOY_KNOWN_HOSTS" ]]; then
-            echo "Deployment secrets are not configured" >&2
+          if [[ -z "$DEPLOY_HOST" || -z "$DEPLOY_USER" || -z "$DEPLOY_FTP_PASSWORD" ]]; then
+            echo "FTPS deployment settings are not configured" >&2
             exit 1
           fi
           if [[ -z "$DEPLOY_PATH" || "$DEPLOY_PATH" == "/" ]]; then
             echo "Unsafe deployment path" >&2
             exit 1
           fi
-          mkdir -p ~/.ssh
-          install -m 600 /dev/null ~/.ssh/deploy_key
-          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
-          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          chmod 600 ~/.ssh/known_hosts
 
-      - name: Check remote directory
-        run: >-
-          ssh -i ~/.ssh/deploy_key -p "$DEPLOY_PORT"
-          -o BatchMode=yes -o StrictHostKeyChecking=yes
-          "$DEPLOY_USER@$DEPLOY_HOST"
-          "test -d '$DEPLOY_PATH' && test -w '$DEPLOY_PATH'"
+      - name: Install FTPS client
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes lftp
 
       - name: Upload static site
+        env:
+          DEPLOY_FTP_PASSWORD: ${{ secrets.DEPLOY_FTP_PASSWORD }}
         run: |
-          rsync -rlptvz --delete-delay --delay-updates \
-            --exclude='.well-known/' \
-            -e "ssh -i ~/.ssh/deploy_key -p $DEPLOY_PORT -o BatchMode=yes -o StrictHostKeyChecking=yes" \
-            build/client/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
-
-      - name: Verify uploaded files
-        run: >-
-          ssh -i ~/.ssh/deploy_key -p "$DEPLOY_PORT"
-          -o BatchMode=yes -o StrictHostKeyChecking=yes
-          "$DEPLOY_USER@$DEPLOY_HOST"
-          "test -s '$DEPLOY_PATH/index.html' && test -s '$DEPLOY_PATH/sitemap.xml' && test -s '$DEPLOY_PATH/404.html'"
+          lftp -u "$DEPLOY_USER","$DEPLOY_FTP_PASSWORD" -p "$DEPLOY_PORT" "$DEPLOY_HOST" <<LFTP
+          set cmd:fail-exit yes
+          set ftp:ssl-force yes
+          set ftp:ssl-protect-data yes
+          set ssl:verify-certificate yes
+          set net:max-retries 2
+          set net:timeout 20
+          mirror --reverse --delete --verbose=1 --parallel=4 \
+            --exclude='^\.well-known(/|$)' \
+            build/client/ "$DEPLOY_PATH/"
+          cls -l "$DEPLOY_PATH/index.html"
+          cls -l "$DEPLOY_PATH/sitemap.xml"
+          cls -l "$DEPLOY_PATH/404.html"
+          bye
+          LFTP

@@ -4,8 +4,7 @@ import { CONTACTS } from '@shared/config';
 
 import styles from './HeaderContacts.module.scss';
 
-/** Телефон и часы работы со статус-точкой. Телефон/ссылки — из конфига, часы — из i18n.
- *  Пока телефона в конфиге нет (null) — показываем только часы работы. */
+/** Телефон и часы работы со статус-точкой. Телефон — из конфига, часы — из i18n. */
 export function HeaderContacts() {
   const { t } = useTranslation();
 

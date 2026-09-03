@@ -1,7 +1,7 @@
 @use 'app/styles/abstracts' as *;
 
 // Секция «Достижения» — светлая (макет 01): одна полоса в 3 зоны (цифры | отзывы | команда),
-// без крупного заголовка. Сидит на общем 80rem-рельсе: локальный full-bleed давал
+// без крупного заголовка. Сидит на едином внешнем рельсе сайта: локальный full-bleed давал
 // скачущую левую линию секций на 1920+.
 .achievements {
   padding-block: var(--section-pad-y-dense);
@@ -17,15 +17,15 @@
   // колонка отзывов+команды гораздо выше, а stats центрировались.)
   @include up(md) {
     grid-template-areas:
-      "stats stats"
-      "reviews team";
+      'stats stats'
+      'reviews team';
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
   }
 
   // xl+: одна строка 3 колонки
   @include up(xl) {
-    grid-template-areas: "stats reviews team";
+    grid-template-areas: 'stats reviews team';
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 0.95fr);
   }
 }
@@ -50,10 +50,6 @@
   @include up(xl) {
     grid-template-columns: repeat(2, minmax(0, 1fr)); // снова 2×2 в левой колонке
   }
-
-  @include up(xxl) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
 }
 
 .stat {
@@ -76,6 +72,7 @@
   font-weight: 700;
   line-height: var(--lh-tight);
   color: var(--color-text);
+  white-space: nowrap;
 }
 
 .label {
@@ -219,7 +216,9 @@
 
   background: transparent;
 
-  transition: color var(--transition-base), background-color var(--transition-base),
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base),
     border-color var(--transition-base);
 
   svg {

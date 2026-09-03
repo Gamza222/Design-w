@@ -1,6 +1,5 @@
 // Public site URL — used for canonical / hreflang tags.
-// Override per environment via VITE_SITE_URL (set in Vercel). Update the fallback
-// once the production domain is known.
+// Override per environment via VITE_SITE_URL.
 export const SITE_URL = (
-  (import.meta.env?.VITE_SITE_URL as string | undefined) ?? 'https://thedesignnow.vercel.app'
+  (import.meta.env?.VITE_SITE_URL as string | undefined) ?? 'https://designseichas.ru'
 ).replace(/\/$/, '');

@@ -3,7 +3,7 @@ import { FaVk } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
 import { ContactForm } from '@features/contact-form';
-import { CONTACTS, type SocialType } from '@shared/config';
+import { CONTACTS, HOME_SECTIONS, type SocialType } from '@shared/config';
 import { cn, useScrollReveal } from '@shared/lib';
 import {
   Container,
@@ -12,7 +12,9 @@ import {
   IconClock,
   IconGlobe,
   IconMail,
+  IconMapPin,
   IconMaxMessenger,
+  IconPhone,
   IconWallet,
   SectionHeader,
 } from '@shared/ui';
@@ -50,7 +52,12 @@ export function ContactCta({ details = false }: ContactCtaProps) {
   );
 
   return (
-    <section className={styles.contact} data-tone="dark" ref={root}>
+    <section
+      id={HOME_SECTIONS.request}
+      className={styles.contact}
+      data-tone="dark"
+      ref={root}
+    >
       <Container className={styles.inner}>
         <div className={styles.left}>
           {/* На странице «Контакты» (details) H1 уже «Контакты» — золотой оверлайн
@@ -110,12 +117,39 @@ export function ContactCta({ details = false }: ContactCtaProps) {
                     <p className={styles.detailsLabel}>{t('contact.details.emailLabel')}</p>
                     <a
                       className={cn(styles.detailsValue, styles.detailsLink)}
-                      href={`mailto:${t('contact.email')}`}
+                      href={CONTACTS.emailHref}
                     >
-                      {t('contact.email')}
+                      {CONTACTS.email}
                     </a>
                   </div>
                 </li>
+                {CONTACTS.phone != null && CONTACTS.phoneHref != null && (
+                  <li className={styles.detailsItem}>
+                    <span className={styles.detailsIcon} aria-hidden="true">
+                      <IconPhone />
+                    </span>
+                    <div>
+                      <p className={styles.detailsLabel}>{t('contact.details.phoneLabel')}</p>
+                      <a
+                        className={cn(styles.detailsValue, styles.detailsLink)}
+                        href={CONTACTS.phoneHref}
+                      >
+                        {CONTACTS.phone}
+                      </a>
+                    </div>
+                  </li>
+                )}
+                {CONTACTS.address != null && (
+                  <li className={styles.detailsItem}>
+                    <span className={styles.detailsIcon} aria-hidden="true">
+                      <IconMapPin />
+                    </span>
+                    <div>
+                      <p className={styles.detailsLabel}>{t('contact.details.addressLabel')}</p>
+                      <p className={styles.detailsValue}>{CONTACTS.address}</p>
+                    </div>
+                  </li>
+                )}
                 <li className={styles.detailsItem}>
                   <span className={styles.detailsIcon} aria-hidden="true">
                     <IconWallet />

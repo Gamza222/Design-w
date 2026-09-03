@@ -20,15 +20,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Gamza222/TheDesignNow.git"
+    "url": "git+https://github.com/Gamza222/Design-w.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Gamza222/TheDesignNow/issues"
+    "url": "https://github.com/Gamza222/Design-w/issues"
   },
-  "homepage": "https://github.com/Gamza222/TheDesignNow#readme",
+  "homepage": "https://designseichas.ru",
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@mdx-js/react": "^3.1.1",

@@ -22,6 +22,7 @@ import { localeDict } from '@shared/lib';
 import { AppLink, Logo } from '@shared/ui';
 import { Footer } from '@widgets/footer';
 import { Header } from '@widgets/header';
+import { CookieNotice } from '@widgets/cookie-notice';
 
 import { Preloader } from './preloader/Preloader';
 import { Providers } from './providers';
@@ -77,6 +78,7 @@ export default function App() {
         <Outlet />
       </main>
       <Footer />
+      <CookieNotice />
     </Providers>
   );
 }

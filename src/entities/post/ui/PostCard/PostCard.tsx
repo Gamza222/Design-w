@@ -19,9 +19,8 @@ export function PostCard({ post }: PostCardProps) {
   const locale = useLocale();
   const { slug, frontmatter } = post;
   const tag = category(frontmatter.tags);
-
-  return (
-    <AppLink to={ROUTES.post(slug)} className={styles.card}>
+  const content = (
+    <>
       {frontmatter.cover && (
         <div className={styles.media}>
           <Image
@@ -43,6 +42,25 @@ export function PostCard({ post }: PostCardProps) {
           <IconArrowRight />
         </span>
       </div>
+    </>
+  );
+
+  if (frontmatter.externalUrl) {
+    return (
+      <a
+        href={frontmatter.externalUrl}
+        className={styles.card}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <AppLink to={ROUTES.post(slug)} className={styles.card}>
+      {content}
     </AppLink>
   );
 }

@@ -40,7 +40,7 @@ function landingKey(pathname: string): ServiceLandingKey {
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
   const page = t.servicePages[landingKey(location.pathname)];
-  return buildMeta(`${page.h1} — ${t.brand}`, page.subtitle, location.pathname);
+  return buildMeta(`${page.h1} | ${t.brand}`, page.subtitle, location.pathname);
 }
 
 /** SEO-посадка услуги (ТЗ, Фаза 1): H1 + интро, «что входит», цена/срок + CTA,

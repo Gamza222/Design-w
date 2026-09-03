@@ -6,7 +6,7 @@ import { ContactCta } from '@widgets/contact-cta';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
-  return buildMeta(`${t.contact.title} — ${t.brand}`, t.contact.subtitle, location.pathname);
+  return buildMeta(`${t.contact.title} | ${t.brand}`, t.contact.subtitle, location.pathname);
 }
 
 /** Страница «Контакты»: стандартный hero внутренних страниц (H1 + сабтайтл) + блок

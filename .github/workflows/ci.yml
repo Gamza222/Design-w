@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+
+env:
+  VITE_SITE_URL: https://designseichas.ru
 
 jobs:
   quality:
@@ -32,3 +36,71 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
+
+  deploy:
+    name: Deploy to REG.RU
+    needs: [quality, e2e]
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    environment:
+      name: production
+      url: https://designseichas.ru
+    env:
+      DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'server173.hosting.reg.ru' }}
+      DEPLOY_PORT: ${{ vars.DEPLOY_PORT || '22' }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '/www/designseichas.ru' }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_SSH_USER }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+      - name: Configure SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          if [[ -z "$DEPLOY_USER" || -z "$DEPLOY_SSH_KEY" || -z "$DEPLOY_KNOWN_HOSTS" ]]; then
+            echo "Deployment secrets are not configured" >&2
+            exit 1
+          fi
+          if [[ -z "$DEPLOY_PATH" || "$DEPLOY_PATH" == "/" ]]; then
+            echo "Unsafe deployment path" >&2
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          install -m 600 /dev/null ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Check remote directory
+        run: >-
+          ssh -i ~/.ssh/deploy_key -p "$DEPLOY_PORT"
+          -o BatchMode=yes -o StrictHostKeyChecking=yes
+          "$DEPLOY_USER@$DEPLOY_HOST"
+          "test -d '$DEPLOY_PATH' && test -w '$DEPLOY_PATH'"
+
+      - name: Upload static site
+        run: |
+          rsync -rlptvz --delete-delay --delay-updates \
+            --exclude='.well-known/' \
+            -e "ssh -i ~/.ssh/deploy_key -p $DEPLOY_PORT -o BatchMode=yes -o StrictHostKeyChecking=yes" \
+            build/client/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+
+      - name: Verify uploaded files
+        run: >-
+          ssh -i ~/.ssh/deploy_key -p "$DEPLOY_PORT"
+          -o BatchMode=yes -o StrictHostKeyChecking=yes
+          "$DEPLOY_USER@$DEPLOY_HOST"
+          "test -s '$DEPLOY_PATH/index.html' && test -s '$DEPLOY_PATH/sitemap.xml' && test -s '$DEPLOY_PATH/404.html'"

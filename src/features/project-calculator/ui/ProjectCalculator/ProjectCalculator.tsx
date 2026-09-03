@@ -9,18 +9,18 @@ import {
   CALC_FORMATS_BYN,
   calcTotal,
 } from '@entities/package';
-import { ROUTES } from '@shared/config';
-import { cn, useLocale } from '@shared/lib';
+import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
+import { cn, formatMoney, useLocale } from '@shared/lib';
 import {
   Button,
   GlassPanel,
   IconArmchair,
   IconBolt,
   IconCheck,
+  IconChat,
   IconClipboardCheck,
   IconCube,
   IconLayout,
-  IconMapPin,
   IconShield,
   IconWallet,
   Stepper,
@@ -32,7 +32,7 @@ type Icon = ComponentType<SVGProps<SVGSVGElement>>;
 
 // Иконки по порядку i18n `home.calculator.formats` / `addons`.
 const FORMAT_ICONS: Icon[] = [IconLayout, IconArmchair, IconCube, IconClipboardCheck];
-const ADDON_ICONS: Icon[] = [IconCube, IconShield, IconWallet, IconBolt, IconArmchair, IconMapPin];
+const ADDON_ICONS: Icon[] = [IconCube, IconShield, IconWallet, IconBolt, IconArmchair, IconChat];
 
 interface FormatText {
   name: string;
@@ -45,7 +45,7 @@ interface AddonText {
 }
 
 const DEFAULT_FORMAT = 2;
-const DEFAULT_ADDONS = [0, 3];
+const DEFAULT_ADDONS: number[] = [];
 
 /** Интерактивный калькулятор (макет 09): формат → доп.услуги → площадь, справа live-сводка «Ваш
  *  проект» с пересчётом итога. Цены — `@entities/package` pricing; тексты — i18n `home.calculator`. */
@@ -56,6 +56,7 @@ export function ProjectCalculator() {
   const formatTexts = t('home.calculator.formats', { returnObjects: true }) as FormatText[];
   const addonTexts = t('home.calculator.addons', { returnObjects: true }) as AddonText[];
   const trust = t('home.calculator.trust', { returnObjects: true }) as string[];
+  const resultTerms = t('home.calculator.resultTerms', { returnObjects: true }) as string[];
   const unit = t('home.calculator.areaUnit');
 
   const [formatIdx, setFormatIdx] = useState(DEFAULT_FORMAT);
@@ -63,9 +64,16 @@ export function ProjectCalculator() {
   const [area, setArea] = useState<number>(CALC_AREA.default);
   const calcFormats = locale === 'be' ? CALC_FORMATS_BYN : CALC_FORMATS;
   const calcAddons = locale === 'be' ? CALC_ADDONS_BYN : CALC_ADDONS;
+  const includedAddonIds = calcFormats[formatIdx]?.includedAddonIds ?? [];
+  const includedAddonIndexes = calcAddons.reduce<number[]>((indexes, addon, index) => {
+    if (includedAddonIds.includes(addon.id)) indexes.push(index);
+    return indexes;
+  }, []);
 
-  const toggleAddon = (i: number) =>
+  const toggleAddon = (i: number) => {
+    if (includedAddonIndexes.includes(i)) return;
     setAddons((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
+  };
 
   const reset = () => {
     setFormatIdx(DEFAULT_FORMAT);
@@ -83,24 +91,12 @@ export function ProjectCalculator() {
     [formatIdx, addons, area, calcFormats, calcAddons],
   );
 
-  const money = useMemo(() => {
-    const isBelarus = locale === 'be';
-    const nf = new Intl.NumberFormat(
-      isBelarus ? 'be-BY' : locale === 'ru' ? 'ru-RU' : 'en-US',
-      isBelarus
-        ? {
-            style: 'currency',
-            currency: 'BYN',
-            currencyDisplay: 'code',
-            maximumFractionDigits: 0,
-          }
-        : undefined,
-    );
-    return (n: number) => (isBelarus ? nf.format(n) : `${nf.format(n)} ₽`);
-  }, [locale]);
+  const money = (amount: number) => formatMoney(amount, locale);
 
   const FormatIcon = FORMAT_ICONS[formatIdx] ?? FORMAT_ICONS[0];
-  const selectedAddons = [...addons].sort((a, b) => a - b);
+  const selectedAddons = [...new Set([...addons, ...includedAddonIndexes])].sort(
+    (a, b) => a - b,
+  );
 
   const steps = t('home.calculator.steps', { returnObjects: true }) as Record<string, string>;
 
@@ -153,21 +149,29 @@ export function ProjectCalculator() {
             <div className={styles.addons}>
               {addonTexts.map((a, i) => {
                 const Icon = ADDON_ICONS[i] ?? ADDON_ICONS[0];
-                const on = addons.includes(i);
+                const included = includedAddonIndexes.includes(i);
+                const on = included || addons.includes(i);
                 return (
                   <button
                     key={a.name}
                     type="button"
                     aria-pressed={on}
+                    disabled={included}
                     onClick={() => toggleAddon(i)}
-                    className={cn(styles.addon, on && styles.addonOn)}
+                    className={cn(
+                      styles.addon,
+                      on && styles.addonOn,
+                      included && styles.addonIncluded,
+                    )}
                   >
                     <span className={styles.addonIcon}>
                       <Icon />
                     </span>
                     <span className={styles.addonInfo}>
                       <span className={styles.addonName}>{a.name}</span>
-                      <span className={styles.addonPrice}>{a.price}</span>
+                      <span className={styles.addonPrice}>
+                        {included ? t('home.calculator.included') : a.price}
+                      </span>
                     </span>
                     <span className={styles.addonCheck} aria-hidden="true">
                       <IconCheck />
@@ -237,7 +241,11 @@ export function ProjectCalculator() {
                     {selectedAddons.map((i) => (
                       <li key={i}>
                         <span>{addonTexts[i]?.name}</span>
-                        <span className={styles.addonSummaryPrice}>{addonTexts[i]?.price}</span>
+                        <span className={styles.addonSummaryPrice}>
+                          {includedAddonIndexes.includes(i)
+                            ? t('home.calculator.included')
+                            : addonTexts[i]?.price}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -247,7 +255,7 @@ export function ProjectCalculator() {
 
             <div className={styles.row}>
               <dt className={styles.rowLabel}>{t('home.calculator.resultTermLabel')}</dt>
-              <dd className={styles.rowValue}>{t('home.calculator.resultTerm')}</dd>
+              <dd className={styles.rowValue}>{resultTerms[formatIdx]}</dd>
             </div>
           </dl>
 
@@ -260,7 +268,7 @@ export function ProjectCalculator() {
 
           <p className={styles.note}>{t('home.calculator.resultNote')}</p>
 
-          <Button to={ROUTES.contact} size="lg" className={styles.cta}>
+          <Button to={homeSectionPath(HOME_SECTIONS.request)} size="lg" className={styles.cta}>
             {t('home.calculator.cta')}
           </Button>
 

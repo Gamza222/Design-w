@@ -13,7 +13,7 @@ import styles from './PostPage.module.scss';
 export function meta({ location, params }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
   const post = getPost(getLocaleFromPath(location.pathname), params.slug ?? '');
-  const title = post ? `${post.frontmatter.title} — ${t.brand}` : t.notFound.title;
+  const title = post ? `${post.frontmatter.title} | ${t.brand}` : t.notFound.title;
   return buildMeta(title, post?.frontmatter.description ?? '', location.pathname);
 }
 

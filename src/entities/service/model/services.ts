@@ -1,6 +1,6 @@
 import type { Service } from './types';
 
-/** Studio services — static, bilingual data (rarely changes, no slugs needed). */
+/** Studio services - static, bilingual data (rarely changes, no slugs needed). */
 export const SERVICES: Service[] = [
   {
     id: 'turnkey',
@@ -24,14 +24,14 @@ export const SERVICES: Service[] = [
     id: 'estimate',
     title: { ru: 'Смета и спецификации', en: 'Estimates & specs', be: 'Каштарыс і спецыфікацыі' },
     description: {
-      ru: 'Прозрачная смета и ведомости материалов — без сюрпризов в бюджете.',
-      en: 'A transparent estimate and material schedules — no budget surprises.',
+      ru: 'Прозрачная смета и ведомости материалов - без сюрпризов в бюджете.',
+      en: 'A transparent estimate and material schedules - no budget surprises.',
       be: 'Празрысты каштарыс і ведамасці матэрыялаў без нечаканасцяў у бюджэце.',
     },
   },
   {
     id: 'supervision',
-    title: { ru: 'Авторский надзор', en: 'Author supervision', be: 'Аўтарскі нагляд' },
+    title: { ru: 'Авторский надзор', en: 'Design supervision', be: 'Аўтарскі нагляд' },
     description: {
       ru: 'Контролируем стройку, чтобы результат точно совпал с проектом.',
       en: 'We oversee the build so the result matches the design exactly.',

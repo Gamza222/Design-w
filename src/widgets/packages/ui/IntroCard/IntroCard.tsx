@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { ROUTES } from '@shared/config';
+import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
 import { Button } from '@shared/ui';
 
 import styles from './IntroCard.module.scss';
@@ -16,7 +16,7 @@ export function IntroCard() {
         <h2 className={styles.title}>{t('home.packages.title')}</h2>
         <p className={styles.text}>{t('home.packages.description')}</p>
       </div>
-      <Button to={ROUTES.contact} className={styles.cta}>
+      <Button to={homeSectionPath(HOME_SECTIONS.calculator)} className={styles.cta}>
         {t('home.packages.pick')}
       </Button>
     </div>

@@ -13,7 +13,7 @@ import styles from './ProjectPage.module.scss';
 export function meta({ location, params }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
   const project = getProject(getLocaleFromPath(location.pathname), params.slug ?? '');
-  const title = project ? `${project.frontmatter.title} — ${t.brand}` : t.notFound.title;
+  const title = project ? `${project.frontmatter.title} | ${t.brand}` : t.notFound.title;
   return buildMeta(title, project?.frontmatter.description ?? '', location.pathname);
 }
 
@@ -80,7 +80,7 @@ export default function ProjectPage() {
                 <Image
                   key={src}
                   src={src}
-                  alt={`${frontmatter.title} — ${index + 1}`}
+                  alt={`${frontmatter.title}, ${index + 1}`}
                   ratio="4 / 3"
                   className={styles.galleryImage}
                 />

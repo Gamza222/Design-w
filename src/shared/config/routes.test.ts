@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getLocaleFromPath, localizePath, stripLocale } from './routes';
+import { getLocaleFromPath, homeSectionPath, localizePath, stripLocale } from './routes';
 
 describe('route locale helpers', () => {
   it('keeps the default locale unprefixed', () => {
@@ -13,6 +13,13 @@ describe('route locale helpers', () => {
     expect(localizePath('/', 'en')).toBe('/en');
     expect(localizePath('/blog', 'be')).toBe('/by/blog');
     expect(localizePath('/', 'be')).toBe('/by');
+  });
+
+  it('keeps home section hashes after locale prefixing', () => {
+    const services = homeSectionPath('services');
+    expect(localizePath(services, 'ru')).toBe('/#services');
+    expect(localizePath(services, 'en')).toBe('/en#services');
+    expect(localizePath(services, 'be')).toBe('/by#services');
   });
 
   it('detects the locale from a pathname', () => {

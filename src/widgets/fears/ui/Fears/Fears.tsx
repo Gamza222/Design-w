@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { ROUTES } from '@shared/config';
+import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
 import { useScrollReveal } from '@shared/lib';
 import { Button, Container, IconArrowRight, IconBadge, IconShield, SectionHeader } from '@shared/ui';
 
@@ -48,11 +48,11 @@ export function Fears() {
           <span className={styles.divider} aria-hidden="true" />
           <p className={styles.mission}>
             <strong className={styles.missionLead}>{t('home.fears.missionTitle')}</strong>
-            {' — '}
+            {': '}
             {t('home.fears.missionText')}
           </p>
           <div className={styles.cta}>
-            <Button to={ROUTES.contact} size="lg" className={styles.ctaBtn}>
+            <Button to={homeSectionPath(HOME_SECTIONS.request)} size="lg" className={styles.ctaBtn}>
               <span>{t('home.fears.cta')}</span>
               <IconArrowRight aria-hidden="true" />
             </Button>

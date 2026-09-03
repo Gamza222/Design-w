@@ -8,6 +8,7 @@ export interface PostMeta {
   cover?: string;
   tags?: string[];
   author?: string;
+  externalUrl?: string;
   draft?: boolean;
 }
 

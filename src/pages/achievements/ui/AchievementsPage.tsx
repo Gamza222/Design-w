@@ -5,7 +5,7 @@ import { Container, PageHeader, Prose, Section } from '@shared/ui';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
-  return buildMeta(`${t.achievements.title} — ${t.brand}`, t.achievements.subtitle, location.pathname);
+  return buildMeta(`${t.achievements.title} | ${t.brand}`, t.achievements.subtitle, location.pathname);
 }
 
 export default function AchievementsPage() {

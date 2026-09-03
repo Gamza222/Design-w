@@ -19,7 +19,7 @@ import {
 } from '@shared/ui';
 
 import { resultImages } from '../../config/images';
-import { ADDON_IDS, OFFERS } from '../../model/offers';
+import { OFFERS } from '../../model/offers';
 import type { Offer, OfferId } from '../../model/types';
 import styles from './OfferModal.module.scss';
 
@@ -68,7 +68,7 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
 
   const base = `home.services.items.${offer.id}`;
   const includes = t(`${base}.includes`, { returnObjects: true }) as string[];
-  const addons = OFFERS.filter((o) => ADDON_IDS.includes(o.id) && o.id !== offer.id);
+  const addons = OFFERS.filter((candidate) => offer.addons?.includes(candidate.id));
 
   // Блокировка прокрутки страницы на время жизни модалки (+ компенсация скроллбара — без сдвига).
   useEffect(() => {
@@ -160,9 +160,7 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
                     {offer.num}
                   </span>
                   {offer.popular && (
-                    <span className={styles.popularBadge}>
-                      {t('home.services.popularPackage')}
-                    </span>
+                    <span className={styles.popularBadge}>{t('home.services.popularPackage')}</span>
                   )}
                 </div>
                 <h3 className={styles.title} id={titleId}>

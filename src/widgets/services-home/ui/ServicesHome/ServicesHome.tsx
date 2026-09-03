@@ -8,6 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { cn, useScrollReveal } from '@shared/lib';
+import { HOME_SECTIONS } from '@shared/config';
 import {
   Container,
   IconArrowRight,
@@ -23,7 +24,8 @@ import { OFFERS } from '../../model/offers';
 import type { Offer, OfferId } from '../../model/types';
 import { OfferCard } from '../OfferCard/OfferCard';
 import { OfferModal } from '../OfferModal/OfferModal';
-import { REQUEST_FORM_ID, ServicesCta } from '../ServicesCta/ServicesCta';
+import { OrderModal } from '../OrderModal/OrderModal';
+import { ServicesCta } from '../ServicesCta/ServicesCta';
 import styles from './ServicesHome.module.scss';
 
 // Иконки строки преимуществ — по порядку i18n-массива home.services.perks.
@@ -47,6 +49,7 @@ const scrollBehavior = (): ScrollBehavior =>
 export function ServicesHome() {
   const { t } = useTranslation();
   const [openedId, setOpenedId] = useState<OfferId | null>(null);
+  const [orderedId, setOrderedId] = useState<OfferId | null>(null);
   // Карточка, открывшая модалку, — для возврата фокуса после закрытия.
   const triggerRef = useRef<HTMLElement | null>(null);
 
@@ -57,6 +60,7 @@ export function ServicesHome() {
 
   const perks = t('home.services.perks', { returnObjects: true }) as Perk[];
   const opened = OFFERS.find((o) => o.id === openedId) ?? null;
+  const ordered = OFFERS.find((o) => o.id === orderedId) ?? null;
 
   // --- Карусель ---------------------------------------------------------------
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -184,20 +188,26 @@ export function ServicesHome() {
     triggerRef.current = null;
   };
 
-  // «Заказать этот пакет»: закрыть модалку и подвести к форме заявки внизу блока.
+  // «Заказать этот пакет»: сохранить выбранную услугу и открыть полную форму.
   const orderFromModal = () => {
+    if (!openedId) return;
+    setOrderedId(openedId);
     setOpenedId(null);
+  };
+
+  const closeOrder = () => {
+    setOrderedId(null);
+    triggerRef.current?.focus();
     triggerRef.current = null;
-    requestAnimationFrame(() => {
-      const target = document.getElementById(REQUEST_FORM_ID);
-      if (!target) return;
-      target.focus({ preventScroll: true });
-      target.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
-    });
   };
 
   return (
-    <section className={styles.services} data-tone="light" ref={root}>
+    <section
+      id={HOME_SECTIONS.services}
+      className={styles.services}
+      data-tone="light"
+      ref={root}
+    >
       <Container>
         {/* Шапка: на мобильных стрелки уезжают под преимущества — вплотную к ленте. */}
         <div className={styles.headRow}>
@@ -289,6 +299,7 @@ export function ServicesHome() {
           onOrder={orderFromModal}
         />
       )}
+      {ordered && <OrderModal offer={ordered} onClose={closeOrder} />}
     </section>
   );
 }

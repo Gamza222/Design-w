@@ -6,7 +6,7 @@ import { readdirSync, statSync, writeFileSync, existsSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { cwd, exit } from 'node:process';
 
-const SITE_URL = process.env.VITE_SITE_URL ?? 'https://thedesignnow.vercel.app';
+const SITE_URL = process.env.VITE_SITE_URL ?? 'https://designseichas.ru';
 const CLIENT_DIR = join(cwd(), 'build', 'client');
 
 if (!existsSync(CLIENT_DIR)) {

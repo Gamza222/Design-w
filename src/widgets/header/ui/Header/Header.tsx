@@ -5,7 +5,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 import { LocaleSwitcher } from '@features/locale-switcher';
-import { CONTACTS, ROUTES, stripLocale } from '@shared/config';
+import { CONTACTS, HOME_SECTIONS, ROUTES, homeSectionPath, stripLocale } from '@shared/config';
 import { cn, usePreloaderDone } from '@shared/lib';
 import { AppLink, Button, Container, Logo, SocialLinks } from '@shared/ui';
 
@@ -80,7 +80,11 @@ export function Header() {
             <div className={styles.lang}>
               <LocaleSwitcher />
             </div>
-            <Button to={ROUTES.contact} className={styles.cta} onClick={close}>
+            <Button
+              to={homeSectionPath(HOME_SECTIONS.calculator)}
+              className={styles.cta}
+              onClick={close}
+            >
               {t('cta.calculate')}
             </Button>
           </div>

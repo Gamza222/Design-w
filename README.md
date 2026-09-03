@@ -40,9 +40,10 @@ Production — статический хостинг REG.RU, корень сай
 push в `main`.
 
 Перед первым деплоем в GitHub необходимо добавить secret `DEPLOY_FTP_PASSWORD`, variables
-`DEPLOY_USER`, `DEPLOY_HOST`, `DEPLOY_PORT`, `DEPLOY_PATH`, затем включить
+`DEPLOY_USER`, `DEPLOY_HOST`, `DEPLOY_PORT`, `DEPLOY_PATH`, `DEPLOY_FTP_CERT_SHA1`, затем включить
 `DEPLOY_ENABLED=true`. Соединение требует FTP с явным TLS; `.well-known` сохраняется при
-синхронизации для продления SSL-сертификата.
+синхронизации для продления SSL-сертификата. Самоподписанный серверный сертификат принимается
+только при совпадении закреплённого отпечатка.
 
 ---
 

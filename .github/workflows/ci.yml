@@ -13,8 +13,8 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -28,8 +28,8 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -56,9 +56,10 @@ jobs:
       DEPLOY_PORT: ${{ vars.DEPLOY_PORT || '21' }}
       DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '/www/designseichas.ru' }}
       DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+      DEPLOY_FTP_CERT_SHA1: ${{ vars.DEPLOY_FTP_CERT_SHA1 }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -69,7 +70,7 @@ jobs:
         env:
           DEPLOY_FTP_PASSWORD: ${{ secrets.DEPLOY_FTP_PASSWORD }}
         run: |
-          if [[ -z "$DEPLOY_HOST" || -z "$DEPLOY_USER" || -z "$DEPLOY_FTP_PASSWORD" ]]; then
+          if [[ -z "$DEPLOY_HOST" || -z "$DEPLOY_USER" || -z "$DEPLOY_FTP_PASSWORD" || -z "$DEPLOY_FTP_CERT_SHA1" ]]; then
             echo "FTPS deployment settings are not configured" >&2
             exit 1
           fi
@@ -83,6 +84,26 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes lftp
 
+      - name: Verify REG.RU FTPS certificate
+        run: |
+          certificate="$RUNNER_TEMP/reg-ru-ftps.pem"
+          openssl s_client \
+            -connect "$DEPLOY_HOST:$DEPLOY_PORT" \
+            -servername "$DEPLOY_HOST" \
+            -starttls ftp \
+            -showcerts </dev/null 2>/dev/null \
+            | openssl x509 -outform PEM > "$certificate"
+
+          observed_sha1="$(openssl x509 -in "$certificate" -noout -fingerprint -sha1 | sed 's/.*=//' | tr '[:lower:]' '[:upper:]')"
+          expected_sha1="$(printf '%s' "$DEPLOY_FTP_CERT_SHA1" | tr '[:lower:]' '[:upper:]')"
+          if [[ "$observed_sha1" != "$expected_sha1" ]]; then
+            echo "Unexpected FTPS certificate fingerprint: $observed_sha1" >&2
+            exit 1
+          fi
+
+          chmod 600 "$certificate"
+          echo "DEPLOY_FTP_CA_FILE=$certificate" >> "$GITHUB_ENV"
+
       - name: Upload static site
         env:
           DEPLOY_FTP_PASSWORD: ${{ secrets.DEPLOY_FTP_PASSWORD }}
@@ -91,6 +112,8 @@ jobs:
           set cmd:fail-exit yes
           set ftp:ssl-force yes
           set ftp:ssl-protect-data yes
+          set ssl:ca-file "$DEPLOY_FTP_CA_FILE"
+          set ssl:check-hostname yes
           set ssl:verify-certificate yes
           set net:max-retries 2
           set net:timeout 20

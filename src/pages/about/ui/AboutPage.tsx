@@ -5,6 +5,8 @@ import { Container, PageHeader, Prose, Section } from '@shared/ui';
 import { Achievements } from '@widgets/achievements';
 import { ContactCta } from '@widgets/contact-cta';
 
+import styles from './AboutPage.module.scss';
+
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
   return buildMeta(`${t.about.title} | ${t.brand}`, t.about.subtitle, location.pathname);
@@ -19,13 +21,26 @@ export default function AboutPage() {
   return (
     <>
       <PageHeader title={t('about.title')} subtitle={t('about.subtitle')} />
-      <Section compact>
-        <Container>
-          <Prose>
+      <Section compact className={styles.storySection}>
+        <Container className={styles.storyGrid}>
+          <Prose className={styles.storyCopy}>
             {story.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </Prose>
+          <figure className={styles.mediaFrame} aria-label={t('about.title')}>
+            <video
+              className={styles.media}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster="/realimages/web/about-poster.jpg"
+            >
+              <source src="/realimages/web/about-studio.mp4" type="video/mp4" />
+            </video>
+          </figure>
         </Container>
       </Section>
       <Achievements />

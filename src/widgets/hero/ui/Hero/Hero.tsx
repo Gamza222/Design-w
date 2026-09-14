@@ -57,10 +57,10 @@ export function Hero({ bottomSlot }: HeroProps) {
 
       gsap.fromTo(
         bgRef.current,
-        { yPercent: -7, scale: 1.035 },
+        { yPercent: -5, scale: 1.025 },
         {
-          yPercent: 7,
-          scale: 1.085,
+          yPercent: 5,
+          scale: 1.055,
           ease: 'none',
           force3D: true,
           scrollTrigger: {

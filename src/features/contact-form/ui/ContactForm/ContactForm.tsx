@@ -1,6 +1,7 @@
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { createLeadSubmissionId, submitLead } from '@shared/lib';
 import { Button, Checkbox, Field, IconCheck, IconLock, Input, Textarea } from '@shared/ui';
 
 import styles from './ContactForm.module.scss';
@@ -53,9 +54,9 @@ function initialValues(initialPackage?: string): Values {
   };
 }
 
-/** Full project enquiry form. Submission is local until a mail delivery endpoint is connected. */
+/** Full project enquiry form delivered to the studio email and Telegram via a server function. */
 export function ContactForm({ initialPackage }: ContactFormProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const uid = useId();
   const fid = (name: string) => `${uid}-${name}`;
 
@@ -63,7 +64,10 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const successRef = useRef<HTMLDivElement>(null);
+  const submissionIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (sent) successRef.current?.focus();
@@ -73,6 +77,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
     const value = e.target.value;
     setValues((current) => ({ ...current, [name]: value }));
     setErrors((current) => (current[name] ? { ...current, [name]: undefined } : current));
+    setSubmitError(false);
   };
 
   function validate(): Errors {
@@ -89,11 +94,33 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
     return next;
   }
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const next = validate();
     setErrors(next);
-    if (Object.keys(next).length === 0) setSent(true);
+    if (Object.keys(next).length > 0) return;
+
+    const website = String(new FormData(e.currentTarget).get('website') ?? '');
+    setSubmitting(true);
+    setSubmitError(false);
+
+    try {
+      submissionIdRef.current ??= createLeadSubmissionId();
+      await submitLead({
+        kind: 'project',
+        ...values,
+        consent: true,
+        submissionId: submissionIdRef.current,
+        locale: i18n.resolvedLanguage ?? i18n.language,
+        page: window.location.pathname,
+        website,
+      });
+      setSent(true);
+    } catch {
+      setSubmitError(true);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (sent) {
@@ -108,7 +135,15 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
   }
 
   return (
-    <form className={styles.form} onSubmit={onSubmit} noValidate>
+    <form className={styles.form} onSubmit={onSubmit} noValidate aria-busy={submitting}>
+      <input
+        className={styles.trap}
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+      />
       <div className={styles.row}>
         <Field
           id={fid('name')}
@@ -120,6 +155,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
             id={fid('name')}
             name="name"
             autoComplete="name"
+            maxLength={120}
             value={values.name}
             onChange={set('name')}
             invalid={!!errors.name}
@@ -139,6 +175,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
             type="tel"
             inputMode="tel"
             autoComplete="tel"
+            maxLength={80}
             value={values.phone}
             onChange={set('phone')}
             invalid={!!errors.phone}
@@ -185,6 +222,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
             type="number"
             inputMode="numeric"
             min={1}
+            max={100000}
             value={values.area}
             onChange={set('area')}
             invalid={!!errors.area}
@@ -226,6 +264,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
           id={fid('comment')}
           name="comment"
           rows={3}
+          maxLength={2800}
           value={values.comment}
           onChange={set('comment')}
           placeholder={t('home.contactCta.form.comment.placeholder')}
@@ -254,9 +293,17 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
         )}
       </div>
 
-      <Button type="submit" size="lg" className={styles.submit}>
-        {t('home.contactCta.form.submit')}
+      <Button type="submit" size="lg" className={styles.submit} disabled={submitting}>
+        {submitting
+          ? t('home.contactCta.form.submitting')
+          : t('home.contactCta.form.submit')}
       </Button>
+
+      {submitError && (
+        <p className={styles.submitError} role="alert">
+          {t('home.contactCta.form.errorSubmit')}
+        </p>
+      )}
 
       <p className={styles.privacy}>
         <IconLock aria-hidden="true" />

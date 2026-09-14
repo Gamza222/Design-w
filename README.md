@@ -1,4 +1,4 @@
-# TheDesignNow
+# ДизайнСейчас
 
 Мультиязычный имиджевый сайт студии дизайна интерьера: услуги, портфолио, блог. Быстрый,
 SEO-friendly, статический (SSG), контент пополняется через MDX.
@@ -38,6 +38,25 @@ npm run e2e          # Playwright (поднимает build + preview сам)
 Production — статический хостинг REG.RU, корень сайта `/www/designseichas.ru`. Workflow `CI`
 после успешных проверок собирает проект и синхронизирует содержимое `build/client/` по FTPS при
 push в `main`.
+
+### Доставка заявок
+
+Формы отправляют заявку на `POST /api/lead.php`. Обработчик разворачивается вместе со статикой на
+REG.RU, отправляет письмо через SMTP Яндекса на `dizain.seichas@yandex.ru` и ту же заявку через
+Telegram Bot API. Успех показывается пользователю только после подтверждения обоих каналов; повтор
+запроса с тем же идентификатором досылает только ранее упавший канал.
+
+Перед production-деплоем добавьте в GitHub Actions три repository secret:
+
+- `LEAD_SMTP_PASSWORD` — отдельный пароль приложения Яндекса для
+  `dizain.seichas@yandex.ru`, не основной пароль;
+- `LEAD_TELEGRAM_BOT_TOKEN` — токен бота от BotFather;
+- `LEAD_TELEGRAM_CHAT_ID` — числовой ID личного чата после `/start`, либо `@channel_name` для
+  канала, куда бот добавлен с правом публикации.
+
+Во время deploy workflow создаёт `build/client/api/.lead-config.php`; файл игнорируется Git и
+закрыт от HTTP-доступа правилами `public/api/.htaccess`. Без всех трёх значений deploy намеренно
+останавливается, чтобы не публиковать форму, которая теряет заявки.
 
 Перед первым деплоем в GitHub необходимо добавить secret `DEPLOY_FTP_PASSWORD`, variables
 `DEPLOY_USER`, `DEPLOY_HOST`, `DEPLOY_PORT`, `DEPLOY_PATH`, `DEPLOY_FTP_CERT_SHA1`, затем включить

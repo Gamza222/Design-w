@@ -1,11 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import {
-  CONTACTS,
-  HOME_SECTIONS,
-  ROUTES,
-  homeSectionPath,
-} from '@shared/config';
+import { CONTACTS, HOME_SECTIONS, ROUTES, homeSectionPath } from '@shared/config';
 import { AppLink, Container, Logo, SocialLinks, YandexMap } from '@shared/ui';
 
 import styles from './Footer.module.scss';
@@ -43,7 +38,7 @@ export function Footer() {
       <Container className={styles.inner}>
         <div className={styles.brandCol}>
           <AppLink to={ROUTES.home} className={styles.logoLink} aria-label={t('brand')}>
-            <Logo title={t('brand')} className={styles.logo} />
+            <Logo title={t('brand')} className={styles.logo} aria-hidden="true" />
             <span className={styles.brand}>{t('brand')}</span>
           </AppLink>
           <p className={styles.tagline}>{t('footer.tagline')}</p>
@@ -102,12 +97,7 @@ export function Footer() {
               <h2 id="footer-map-title" className={styles.mapTitle}>
                 {t('footer.mapTitle')}
               </h2>
-              <a
-                href={mapUrl}
-                className={styles.mapLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={mapUrl} className={styles.mapLink} target="_blank" rel="noopener noreferrer">
                 {t('footer.mapOpen')}
               </a>
             </div>

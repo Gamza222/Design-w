@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router';
 
-import { getLocaleFromPath, LEGAL_DETAILS, ROUTES, stripLocale } from '@shared/config';
+import { getDict, getLocaleFromPath, LEGAL_DETAILS, ROUTES, stripLocale } from '@shared/config';
 import { buildMeta, useLocale, type RouteMetaArgs } from '@shared/lib';
 import { AppLink, Container, PageHeader, Prose, Section } from '@shared/ui';
 
@@ -11,7 +11,11 @@ export function meta({ location }: RouteMetaArgs) {
   const locale = getLocaleFromPath(location.pathname);
   const id = LEGAL_ROUTE_IDS[stripLocale(location.pathname)] ?? 'offer';
   const document = LEGAL_DOCUMENTS[locale][id];
-  return buildMeta(`${document.title} | TheDesignNow`, document.description, location.pathname);
+  return buildMeta(
+    `${document.title} | ${getDict(locale).brand}`,
+    document.description,
+    location.pathname,
+  );
 }
 
 export default function LegalPage() {

@@ -1,31 +1,23 @@
 @use 'app/styles/abstracts' as *;
 
-// Компактная карточка тарифа (макет 01): белый скрим слева под текст, интерьерное фото справа.
-// Палитра явная (--clr-*) — карточка лежит на светлой панели пакетов.
 .card {
-  // --card-pad / --card-min-h — общие токены (tokens.scss): тарифы и карточка расчёта совпадают.
   isolation: isolate;
   position: relative;
-  z-index: 0;
 
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
 
-  height: 100%;
   min-height: var(--card-min-h);
-  padding: var(--card-pad);
-  border: 1px solid var(--color-hairline);
-  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--clr-light) 18%, transparent);
+  border-radius: calc(var(--radius-lg) - 0.15rem);
 
-  color: var(--clr-dark);
+  color: var(--clr-light);
 
-  // Белая карточка с мягкой премиальной тенью — приподнята над светлой панелью, без «грубой» тени.
-  background: var(--clr-light);
-  box-shadow: var(--shadow-card);
+  background: var(--clr-dark-surface);
+  box-shadow: 0 1rem 2.5rem rgb(6 8 12 / 20%);
 
-  // Фото-подложка (правая часть карточки).
   &::before {
     content: '';
 
@@ -34,11 +26,10 @@
     inset: 0;
 
     background: var(--card-photo, none) var(--card-photo-pos, center) / cover no-repeat;
+
+    transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
-  // Кремовый скрим: слева плотно (текст читаем), справа проглядывает интерьер.
-  // Второй слой — вертикальный фейд снизу: нижние пункты списка ложатся на фото
-  // (кейс пакета «Полный» на узких вьюпортах) и без него теряют контраст.
   &::after {
     content: '';
 
@@ -48,48 +39,74 @@
 
     background:
       linear-gradient(
-        100deg,
-        var(--clr-light) 0%,
-        var(--clr-light) 46%,
-        color-mix(in srgb, var(--clr-light) 80%, transparent) 64%,
-        color-mix(in srgb, var(--clr-light) 18%, transparent) 84%,
-        transparent 100%
+        180deg,
+        rgb(13 15 20 / 22%) 0%,
+        rgb(13 15 20 / 42%) 30%,
+        rgb(13 15 20 / 95%) 74%
       ),
-      linear-gradient(
-        to top,
-        color-mix(in srgb, var(--clr-light) 88%, transparent) 0%,
-        color-mix(in srgb, var(--clr-light) 55%, transparent) 26%,
-        transparent 48%
-      );
+      linear-gradient(100deg, rgb(13 15 20 / 48%), transparent 70%);
+  }
+
+  @media (hover: hover) {
+    &:hover::before {
+      transform: scale(1.035);
+    }
+  }
+
+  @include down(lg) {
+    min-height: 18rem;
+  }
+
+  @include down(sm) {
+    min-height: 21rem;
   }
 }
 
-// Популярный пакет сохраняет ту же верхнюю линию, что и остальные карточки.
-// Короткое название слева и бейдж справа помещаются в одной безопасной зоне.
-.popular .name {
-  padding-right: 7.5rem;
+.popular {
+  border-color: color-mix(in srgb, var(--clr-accent) 68%, transparent);
+  box-shadow:
+    0 1rem 2.5rem rgb(6 8 12 / 28%),
+    inset 0 0 0 1px color-mix(in srgb, var(--clr-accent) 14%, transparent);
 }
 
-// Золотой бейдж «Популярный» — пилюля в правом верхнем углу, целиком внутри карточки
-// (overflow:hidden у .card обрезал бы страдл-бейдж; держим его в безопасной зоне).
+.topline {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kind,
 .badge {
-  position: absolute;
-  z-index: 2;
-  top: var(--space-3);
-  right: var(--card-pad);
-
-  padding: 0.18rem var(--space-3);
-  border-radius: var(--radius-full);
-
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--color-on-accent);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
+  letter-spacing: 0.1em;
+}
 
+.kind {
+  color: color-mix(in srgb, var(--clr-light) 72%, transparent);
+}
+
+.badge {
+  padding: 0.25rem var(--space-3);
+  border-radius: var(--radius-full);
+  color: var(--color-on-accent);
   background: var(--clr-accent);
-  box-shadow: var(--shadow-sm);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  justify-content: flex-end;
+
+  padding-top: clamp(var(--space-4), 2vw, var(--space-8));
+
+  @media (min-width: $bp-xl) and (height <= 800px) {
+    padding-top: var(--space-2);
+  }
 }
 
 .head {
@@ -100,49 +117,50 @@
 
 .name {
   font-family: var(--font-display);
-  font-size: var(--fs-lg);
-  font-weight: 700;
+  font-size: var(--fs-xl);
+  font-weight: 600;
   line-height: var(--lh-tight);
-  color: var(--clr-black);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  color: var(--clr-light);
+  letter-spacing: -0.02em;
 }
 
-// Цена — тёмная (как в макете): «от 1 500 ₽/м²».
+.tagline {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: color-mix(in srgb, var(--clr-light) 76%, transparent);
+}
+
 .price {
-  display: inline-flex;
-  gap: 0.3em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
   align-items: baseline;
-  white-space: nowrap;
 }
 
 .priceFrom {
   font-size: var(--fs-xs);
-  color: var(--clr-gray);
+  color: color-mix(in srgb, var(--clr-light) 68%, transparent);
 }
 
 .priceValue {
   font-size: var(--fs-xl);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: var(--clr-black);
-  letter-spacing: -0.01em;
+  color: var(--clr-accent);
+  letter-spacing: -0.02em;
 }
 
 .priceUnit {
   font-size: var(--fs-sm);
   font-weight: 600;
-  color: var(--clr-black);
+  color: var(--clr-light);
 }
 
-// Буллеты-точки (как в макете) — золотой маркер.
 .features {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 0.2rem;
 
-  max-width: 22ch;
   margin: 0;
   padding: 0;
 
@@ -154,23 +172,45 @@
 
   padding-left: var(--space-4);
 
-  font-size: var(--fs-sm);
-  line-height: var(--lh-snug);
-  color: color-mix(in srgb, var(--clr-dark) 86%, var(--clr-light));
+  font-size: var(--fs-xs);
+  line-height: 1.25;
+  color: color-mix(in srgb, var(--clr-light) 84%, transparent);
 
   &::before {
     content: '';
 
     position: absolute;
-
-    // По центру первой строки: (высота строки 1.3em − точка 0.4em) / 2 = 0.45em от верха.
-    top: 0.45em;
+    top: 0.5em;
     left: 0;
 
-    width: 0.4em;
-    height: 0.4em;
+    width: 0.35em;
+    height: 0.35em;
     border-radius: var(--radius-full);
 
-    background: color-mix(in srgb, var(--clr-accent) 82%, var(--clr-dark));
+    background: var(--clr-accent);
+  }
+}
+
+.cta {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: 1px solid color-mix(in srgb, var(--clr-light) 18%, transparent);
+
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--clr-light);
+
+  svg {
+    color: var(--clr-accent);
+    transition: transform var(--transition-base);
+  }
+
+  &:hover svg {
+    transform: translateX(0.25rem);
   }
 }

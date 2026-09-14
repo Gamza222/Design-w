@@ -12,7 +12,7 @@ description: Создать новую статью блога в MDX сразу
 - **slug**: kebab-case (латиница), одинаковый для RU и EN — напр. `small-kitchen-ideas`
 - **title / description** на RU и EN
 - **cover**: путь к обложке в `public/images/` (можно временно переиспользовать существующую svg)
-- **tags**, **author** (по умолчанию `TheDesignNow`)
+- **tags**, **author** (по умолчанию `ДизайнСейчас`)
 
 ## Фронтматтер (точно эти поля)
 ```yaml
@@ -22,7 +22,7 @@ description: '…'
 date: 'YYYY-MM-DD'        # сегодня; список сортируется по date убыванию
 cover: '/images/<file>.svg'
 tags: ['тег1', 'тег2']
-author: 'TheDesignNow'
+author: 'ДизайнСейчас'
 ---
 ```
 

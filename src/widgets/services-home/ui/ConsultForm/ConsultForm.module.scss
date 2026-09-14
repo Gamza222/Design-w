@@ -1,9 +1,21 @@
 @use 'app/styles/abstracts' as *;
 
 .form {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: clamp(var(--space-4), 1.6vw, var(--space-5));
+}
+
+.trap {
+  pointer-events: none;
+
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
 }
 
 // Поля друг под другом (референс: форма — правая колонка тёмной панели).
@@ -27,6 +39,13 @@
 
 .submit {
   width: 100%;
+}
+
+.submitError {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-danger);
+  text-align: center;
 }
 
 // Успешная отправка (как в ContactForm).

@@ -11,7 +11,7 @@
       "permanent": false
     },
     {
-      "source": "/:path((?!(?:en|by|assets|images|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
+      "source": "/:path((?!(?:en|by|assets|images|realimages|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|favicon-32\\.png|apple-touch-icon\\.png|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
       "has": [{ "type": "cookie", "key": "tdn_locale", "value": "en" }],
       "destination": "/en/:path*",
       "permanent": false
@@ -23,7 +23,7 @@
       "permanent": false
     },
     {
-      "source": "/:path((?!(?:en|by|assets|images|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
+      "source": "/:path((?!(?:en|by|assets|images|realimages|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|favicon-32\\.png|apple-touch-icon\\.png|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
       "has": [{ "type": "cookie", "key": "tdn_locale", "value": "be" }],
       "destination": "/by/:path*",
       "permanent": false
@@ -36,7 +36,7 @@
       "permanent": false
     },
     {
-      "source": "/:path((?!(?:en|by|assets|images|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
+      "source": "/:path((?!(?:en|by|assets|images|realimages|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|favicon-32\\.png|apple-touch-icon\\.png|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
       "missing": [{ "type": "cookie", "key": "tdn_locale" }],
       "has": [{ "type": "header", "key": "x-vercel-ip-country", "value": "BY" }],
       "destination": "/by/:path*",
@@ -56,7 +56,7 @@
       "permanent": false
     },
     {
-      "source": "/:path((?!(?:en|by|assets|images|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
+      "source": "/:path((?!(?:en|by|assets|images|realimages|fonts|api|_vercel|\\.well-known)(?:/|$)|(?:favicon\\.svg|favicon-32\\.png|apple-touch-icon\\.png|robots\\.txt|sitemap\\.xml|404\\.html|__spa-fallback\\.html)$).+)",
       "missing": [{ "type": "cookie", "key": "tdn_locale" }],
       "has": [
         {
@@ -73,6 +73,15 @@
     {
       "source": "/assets/(.*)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/realimages/web/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
     }
   ]
 }

@@ -65,6 +65,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Build protected lead-delivery configuration
+        env:
+          LEAD_SMTP_PASSWORD: ${{ secrets.LEAD_SMTP_PASSWORD }}
+          LEAD_TELEGRAM_BOT_TOKEN: ${{ secrets.LEAD_TELEGRAM_BOT_TOKEN }}
+          LEAD_TELEGRAM_CHAT_ID: ${{ secrets.LEAD_TELEGRAM_CHAT_ID }}
+        run: node scripts/generate-lead-config.mjs
 
       - name: Check deployment configuration
         env:
@@ -120,6 +126,8 @@ jobs:
           mirror --reverse --delete --verbose=1 --parallel=4 \
             --exclude='^\.well-known(/|$)' \
             build/client/ "$DEPLOY_PATH/"
+          put build/client/api/.lead-config.php -o "$DEPLOY_PATH/api/.lead-config.php"
+          chmod 600 "$DEPLOY_PATH/api/.lead-config.php"
           cls -l "$DEPLOY_PATH/index.html"
           cls -l "$DEPLOY_PATH/sitemap.xml"
           cls -l "$DEPLOY_PATH/404.html"

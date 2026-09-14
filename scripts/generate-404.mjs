@@ -22,6 +22,7 @@ const locale = (name) =>
 
 const ru = locale('ru.json');
 const en = locale('en.json');
+const BRAND = 'ДизайнСейчас';
 
 // Шрифт — те же self-hosted сабсеты, что и у сайта (public/fonts — стабильные пути).
 const font = (weight, subset) =>
@@ -33,7 +34,13 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>404 | ${ru.title} · TheDesignNow</title>
+<title>404 | ${ru.title} · ${BRAND}</title>
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<meta name="theme-color" content="#191c22">
+<meta name="application-name" content="${BRAND}">
+<meta name="apple-mobile-web-app-title" content="${BRAND}">
+<meta property="og:site_name" content="${BRAND}">
 <style>
 ${font(400, 'cyrillic')}${font(400, 'latin')}${font(600, 'cyrillic')}${font(600, 'latin')}
 :root{--dark:#191c22;--surface:#23262d;--border:#3a3f48;--light:#eef0f3;--muted:#a3aab4;--accent:#febc04;--silver:#d3d8e0}
@@ -41,7 +48,8 @@ ${font(400, 'cyrillic')}${font(400, 'latin')}${font(600, 'cyrillic')}${font(600,
 html{background:var(--dark);font-size:clamp(14px,0.8333vw,33.33px)}
 body{min-height:100vh;display:grid;place-items:center;background:var(--dark);color:var(--light);font-family:'Google Sans',system-ui,-apple-system,'Segoe UI',roboto,sans-serif;text-align:center;padding:1.5rem}
 main{max-width:34rem}
-.logo{height:3rem;margin:0 auto 2.5rem;display:block}
+.brand{display:inline-flex;align-items:center;gap:.75rem;margin:0 auto 2.5rem;color:var(--light);font-size:1.25rem;font-weight:600;letter-spacing:-.035em;text-decoration:none}
+.logo{height:3rem;display:block}
 .code{font-size:6rem;font-weight:600;line-height:1;letter-spacing:0.04em;color:var(--accent)}
 h1{margin-top:1rem;font-size:1.75rem;font-weight:600;background:linear-gradient(115deg,#f8f9fb 20%,var(--silver) 55%,#9199a4 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--silver)}
 p{margin-top:0.75rem;color:var(--muted);font-size:1rem;line-height:1.6}
@@ -57,7 +65,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </head>
 <body>
 <main>
-<img class="logo" src="/images/logo.png" alt="TheDesignNow">
+<a class="brand" href="/" aria-label="${BRAND}"><img class="logo" src="/images/logo.png" alt=""><span>${BRAND}</span></a>
 <div class="code" aria-hidden="true">404</div>
 <h1>${ru.title}</h1>
 <p>${ru.subtitle}</p>

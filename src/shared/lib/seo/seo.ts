@@ -22,6 +22,7 @@ export function localeDict(pathname: string): Dictionary {
 export function buildMeta(title: string, description: string, pathname: string) {
   // Нормализуем на случай URL с хвостовым слэшом — og:url должен совпадать с пререндером.
   const url = SITE_URL + normalizePathname(pathname);
+  const socialImage = `${SITE_URL}/realimages/web/project-classic-living.jpg`;
   return [
     { title },
     { name: 'description', content: description },
@@ -29,5 +30,8 @@ export function buildMeta(title: string, description: string, pathname: string) 
     { property: 'og:description', content: description },
     { property: 'og:type', content: 'website' },
     { property: 'og:url', content: url },
+    { property: 'og:image', content: socialImage },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:image', content: socialImage },
   ];
 }

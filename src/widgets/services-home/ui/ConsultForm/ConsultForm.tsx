@@ -1,6 +1,7 @@
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { createLeadSubmissionId, submitLead } from '@shared/lib';
 import { Button, Checkbox, Field, IconCheck, Input } from '@shared/ui';
 
 import styles from './ConsultForm.module.scss';
@@ -12,10 +13,9 @@ function isValidPhone(value: string): boolean {
   return (value.match(/\d/g) ?? []).length >= 10;
 }
 
-/** Компактная форма «Получить консультацию» (имя + телефон + согласие) для тёмной панели
- *  блока услуг. Отправка — заглушка, как в @features/contact-form: валидация и success. */
+/** Компактная форма «Получить консультацию» с серверной доставкой заявки в два канала. */
 export function ConsultForm() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const uid = useId();
   const fid = (name: string) => `${uid}-${name}`;
 
@@ -23,7 +23,10 @@ export function ConsultForm() {
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const successRef = useRef<HTMLDivElement>(null);
+  const submissionIdRef = useRef<string | null>(null);
 
   // Форма размонтируется вместе со сфокусированной кнопкой — переводим фокус на success-блок,
   // иначе клавиатурный пользователь падает на body, а скринридер не озвучивает результат.
@@ -31,8 +34,11 @@ export function ConsultForm() {
     if (sent) successRef.current?.focus();
   }, [sent]);
 
-  const set = (name: 'name' | 'phone') => (e: { target: { value: string } }) =>
+  const set = (name: 'name' | 'phone') => (e: { target: { value: string } }) => {
     setValues((v) => ({ ...v, [name]: e.target.value }));
+    setErrors((current) => (current[name] ? { ...current, [name]: undefined } : current));
+    setSubmitError(false);
+  };
 
   function validate(): Errors {
     const next: Errors = {};
@@ -43,11 +49,33 @@ export function ConsultForm() {
     return next;
   }
 
-  function onSubmit(e: FormEvent) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const next = validate();
     setErrors(next);
-    if (Object.keys(next).length === 0) setSent(true); // заглушка: реального запроса нет
+    if (Object.keys(next).length > 0) return;
+
+    const website = String(new FormData(e.currentTarget).get('website') ?? '');
+    setSubmitting(true);
+    setSubmitError(false);
+
+    try {
+      submissionIdRef.current ??= createLeadSubmissionId();
+      await submitLead({
+        kind: 'consultation',
+        ...values,
+        consent: true,
+        submissionId: submissionIdRef.current,
+        locale: i18n.resolvedLanguage ?? i18n.language,
+        page: window.location.pathname,
+        website,
+      });
+      setSent(true);
+    } catch {
+      setSubmitError(true);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (sent) {
@@ -62,7 +90,15 @@ export function ConsultForm() {
   }
 
   return (
-    <form className={styles.form} onSubmit={onSubmit} noValidate>
+    <form className={styles.form} onSubmit={onSubmit} noValidate aria-busy={submitting}>
+      <input
+        className={styles.trap}
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+      />
       <div className={styles.row}>
         <Field
           id={fid('name')}
@@ -74,6 +110,7 @@ export function ConsultForm() {
             id={fid('name')}
             name="name"
             autoComplete="name"
+            maxLength={120}
             value={values.name}
             onChange={set('name')}
             invalid={!!errors.name}
@@ -94,6 +131,7 @@ export function ConsultForm() {
             type="tel"
             inputMode="tel"
             autoComplete="tel"
+            maxLength={80}
             value={values.phone}
             onChange={set('phone')}
             invalid={!!errors.phone}
@@ -108,7 +146,13 @@ export function ConsultForm() {
         <Checkbox
           id={fid('consent')}
           checked={consent}
-          onChange={(e) => setConsent(e.target.checked)}
+          onChange={(e) => {
+            setConsent(e.target.checked);
+            setErrors((current) =>
+              current.consent ? { ...current, consent: undefined } : current,
+            );
+            setSubmitError(false);
+          }}
           label={t('home.services.cta.form.consent')}
           aria-invalid={errors.consent ? true : undefined}
           aria-describedby={errors.consent ? `${fid('consent')}-error` : undefined}
@@ -120,9 +164,17 @@ export function ConsultForm() {
         )}
       </div>
 
-      <Button type="submit" size="lg" className={styles.submit}>
-        {t('home.services.cta.form.submit')}
+      <Button type="submit" size="lg" className={styles.submit} disabled={submitting}>
+        {submitting
+          ? t('home.services.cta.form.submitting')
+          : t('home.services.cta.form.submit')}
       </Button>
+
+      {submitError && (
+        <p className={styles.submitError} role="alert">
+          {t('home.services.cta.form.errorSubmit')}
+        </p>
+      )}
     </form>
   );
 }

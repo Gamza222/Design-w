@@ -1,55 +1,118 @@
 @use 'app/styles/abstracts' as *;
 
-// Блок-интро на светлой панели пакетов (не карточка). Палитра — от data-tone="light" панели.
-// На больших — левая колонка ряда (кнопка прижата к низу). В средней зоне ($bp-sm…$bp-xxl) интро
-// уезжает наверх во всю ширину и становится горизонтальной шапкой: текст слева, кнопка справа.
 .intro {
+  position: relative;
+
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  height: 100%;
+
+  min-height: var(--card-min-h);
+  padding: var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--clr-accent) 26%, transparent);
+  border-radius: calc(var(--radius-lg) - 0.15rem);
+
+  background:
+    radial-gradient(circle at 100% 0%, rgb(254 188 4 / 13%), transparent 45%),
+    linear-gradient(150deg, rgb(43 47 55 / 98%), rgb(18 20 26 / 98%));
+
+  &::after {
+    pointer-events: none;
+    content: 'ДС';
+
+    position: absolute;
+    right: -0.08em;
+    bottom: -0.32em;
+
+    font-family: var(--font-display);
+    font-size: clamp(8rem, 12vw, 12rem);
+    font-weight: 700;
+    line-height: 1;
+    color: rgb(255 255 255 / 3.5%);
+    letter-spacing: -0.08em;
+  }
+
+  @include down(lg) {
+    min-height: 18rem;
+    padding: var(--space-5);
+  }
+
+  @include down(sm) {
+    min-height: auto;
+  }
 }
 
 .copy {
+  position: relative;
+  z-index: 1;
+
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
+}
+
+.kicker {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--clr-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
 .title {
+  max-width: 12ch;
+
   font-family: var(--font-display);
   font-size: var(--fs-xl);
-  font-weight: 700;
+  font-weight: 600;
   line-height: var(--lh-tight);
-  color: var(--color-strong);
+  color: var(--clr-light);
+  letter-spacing: -0.025em;
 }
 
 .text {
+  max-width: 31ch;
   font-size: var(--fs-sm);
   line-height: var(--lh-snug);
-  color: var(--color-strong);
+  color: color-mix(in srgb, var(--clr-light) 74%, transparent);
 }
 
-// Золотая кнопка прижата к низу.
-.cta {
-  align-self: flex-start;
+.actions {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+
   margin-top: auto;
 }
 
-// Средняя зона: интро-шапка во всю ширину — текст слева, кнопка справа по центру высоты.
-@include between(sm, xxl) {
-  .intro {
-    flex-direction: row;
-    gap: var(--space-8);
-    align-items: center;
-    justify-content: space-between;
+.cta {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 35%),
+    0 0.45rem 1rem rgb(7 9 13 / 28%);
+}
 
-    height: auto;
+.sample {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  padding-block: var(--space-1);
+
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--clr-light);
+
+  svg {
+    color: var(--clr-accent);
+    transition: transform var(--transition-base);
   }
 
-  .cta {
-    flex-shrink: 0;
-    align-self: center;
-    margin-top: 0;
+  &:hover svg {
+    transform: translateX(0.25rem);
   }
 }

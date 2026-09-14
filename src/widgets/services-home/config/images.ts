@@ -1,16 +1,13 @@
 import type { ResultSlot } from '../model/types';
 
-/** Изображения результатов по смысловым слотам — материалы №1–№6 от клиента
- *  (`public/images/services/`, подписи берутся из i18n `home.services.slots.*`).
- *  Производные слоты: `views3d` — ч/б план с размерами (ТЗ: «изображение планировки или
- *  чёрно-белого объёмного вида»), `supervision` — интерьерный рендер. */
+/** Реальные материалы студии: листы из примера проекта и авторские визуализации. */
 export const resultImages: Record<ResultSlot, { src: string; position?: string }> = {
-  plan: { src: '/images/services/plan.jpg' },
-  concept: { src: '/images/services/concept.jpg' },
-  viz: { src: '/images/services/viz.jpg' },
-  drawings: { src: '/images/services/drawings.jpg' },
-  materials: { src: '/images/services/materials.jpg' },
-  spec: { src: '/images/services/spec.jpg', position: '50% 12%' },
-  views3d: { src: '/images/services/drawings.jpg' },
-  supervision: { src: '/images/services/viz.jpg', position: '70% 50%' },
+  plan: { src: '/realimages/web/project-plan.jpg' },
+  concept: { src: '/realimages/web/project-concept.jpg' },
+  viz: { src: '/realimages/web/project-minimal-loft-1.jpg' },
+  drawings: { src: '/realimages/web/project-lighting-plan.jpg' },
+  materials: { src: '/realimages/web/service-materials.jpg' },
+  spec: { src: '/realimages/web/project-electrics.jpg' },
+  views3d: { src: '/realimages/web/project-furniture-plan.jpg' },
+  supervision: { src: '/realimages/web/project-modern-kitchen-2.jpg', position: '55% 50%' },
 };

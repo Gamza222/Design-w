@@ -10,3 +10,5 @@ export { localeDict, buildMeta } from './seo/seo';
 export type { RouteMetaArgs } from './seo/seo';
 export { formatDate } from './date/formatDate';
 export { formatMoney } from './number/formatMoney';
+export { createLeadSubmissionId, submitLead } from './leads/submitLead';
+export type { LeadKind, LeadPayload } from './leads/submitLead';

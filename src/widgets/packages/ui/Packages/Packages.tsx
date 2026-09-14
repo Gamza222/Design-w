@@ -8,13 +8,10 @@ import { usePreloaderDone } from '@shared/lib';
 import { PACKAGES, PackageCard } from '@entities/package';
 
 import { packageImages } from '../../config/images';
-import { CalcCard } from '../CalcCard/CalcCard';
 import { IntroCard } from '../IntroCard/IntroCard';
 import styles from './Packages.module.scss';
 
-/** Ряд пакетов (макет 01) — светлая панель, наезжающая на фото Hero как нижняя полоса первого
- *  экрана: интро · СТАРТ · КОМФОРТ · ПОЛНЫЙ · «Нужен расчёт?». На больших (≥$bp-xxl) — сетка
- *  5-в-ряд (Hero держит 100vh); ниже — интро-шапка сверху + карточки 2×2; на телефонах — по 1 в ряд. */
+/** Редакционная сетка тарифов: вводная карточка и три фотокарточки пакетов. */
 export function Packages() {
   const root = useRef<HTMLDivElement>(null);
   const preloaderDone = usePreloaderDone();
@@ -46,7 +43,6 @@ export function Packages() {
           {PACKAGES.map((pkg) => (
             <PackageCard key={pkg.id} pkg={pkg} image={packageImages[pkg.id]} />
           ))}
-          <CalcCard />
         </div>
       </div>
     </div>

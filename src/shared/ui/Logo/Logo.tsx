@@ -10,12 +10,12 @@ interface LogoProps extends SVGProps<SVGSVGElement> {
 }
 
 /**
- * Логотип AC как inline-SVG из двух гладких контуров: полный силуэт (база, тёмный) и
+ * Логотип ДС как inline-SVG из двух гладких контуров: полный силуэт (база, тёмный) и
  * передняя грань (яркий акцент) поверх. Видимая разница между ними и есть ровная 3D-экструзия.
  * Цвет берётся из `currentColor` (по умолчанию — акцент), глубина выводится из него же через
  * color-mix — поэтому цвет и «тень» меняются вместе с палитрой. Размер задаётся `font-size`/`height`.
  */
-export function Logo({ className, title = 'AC', ...rest }: LogoProps) {
+export function Logo({ className, title = 'ДС', ...rest }: LogoProps) {
   return (
     <svg
       className={cn(styles.logo, className)}

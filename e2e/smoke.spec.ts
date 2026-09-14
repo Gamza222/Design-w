@@ -98,6 +98,15 @@ test('service SEO landing renders in all locales', async ({ page }) => {
 });
 
 test('service order opens the full form with the selected package', async ({ page }) => {
+  let submittedLead: unknown;
+  await page.route('**/api/lead.php', async (route) => {
+    submittedLead = route.request().postDataJSON();
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ok: true, requestId: 'e2e-request' }),
+    });
+  });
   await page.goto('/#services');
   await page.getByRole('button', { name: /Планировка квартиры.*1\s*500\s*₽\/м²/i }).click();
 
@@ -118,6 +127,56 @@ test('service order opens the full form with the selected package', async ({ pag
     .click();
   await formDialog.getByRole('button', { name: 'Обсудить проект' }).click();
   await expect(formDialog.getByText(/Спасибо! Мы свяжемся/)).toBeVisible();
+  expect(submittedLead).toEqual(
+    expect.objectContaining({
+      kind: 'project',
+      name: 'Анна',
+      phone: '+7 999 123-45-67',
+      premises: 'apartment',
+      area: '72',
+      package: 'planning',
+      consent: true,
+    }),
+  );
+});
+
+test('consultation form sends a complete lead and confirms delivery', async ({ page }) => {
+  const submittedLeads: Record<string, unknown>[] = [];
+  await page.route('**/api/lead.php', async (route) => {
+    submittedLeads.push(route.request().postDataJSON() as Record<string, unknown>);
+    const isRetry = submittedLeads.length > 1;
+    await route.fulfill({
+      status: isRetry ? 200 : 502,
+      contentType: 'application/json',
+      body: JSON.stringify(
+        isRetry
+          ? { ok: true, requestId: 'e2e-consultation' }
+          : { ok: false, error: 'delivery_failed' },
+      ),
+    });
+  });
+
+  await page.goto('/#services-request');
+  const panel = page.locator('#services-request');
+  await panel.getByLabel('Ваше имя').fill('Ирина');
+  await panel.getByLabel('Телефон').fill('+7 916 555-44-33');
+  await panel.getByText('Соглашаюсь с обработкой персональных данных', { exact: true }).click();
+  await panel.getByRole('button', { name: 'Получить консультацию' }).click();
+
+  await expect(panel.getByText(/Не удалось отправить заявку/)).toBeVisible();
+  await panel.getByRole('button', { name: 'Получить консультацию' }).click();
+  await expect(panel.getByText(/Спасибо! Мы свяжемся/)).toBeVisible();
+  expect(submittedLeads).toHaveLength(2);
+  expect(submittedLeads[0]).toEqual(
+    expect.objectContaining({
+      kind: 'consultation',
+      name: 'Ирина',
+      phone: '+7 916 555-44-33',
+      consent: true,
+      page: '/',
+    }),
+  );
+  expect(submittedLeads[1]?.submissionId).toBe(submittedLeads[0]?.submissionId);
 });
 
 test('calculator includes bundled 3D once and changes the timeline with the format', async ({

@@ -1,5 +1,5 @@
 {
-  "brand": "TheDesignNow",
+  "brand": "ДизайнСейчас",
   "nav": {
     "home": "Home",
     "services": "Services",
@@ -362,7 +362,9 @@
           },
           "consent": "I agree to the processing of personal data",
           "submit": "Get a consultation",
+          "submitting": "Sending…",
           "success": "Thank you! We will contact you within one business day.",
+          "errorSubmit": "We couldn't send your request. Please try again or call us.",
           "errorRequired": "This field is required",
           "errorPhone": "Enter a valid phone number"
         }
@@ -388,10 +390,13 @@
       "cta": "View all articles"
     },
     "packages": {
+      "kicker": "Ways to work",
       "title": "Design project packages",
       "description": "Choose a suitable package or get a personal estimate in MAX.",
       "pick": "Choose a package",
       "select": "Choose",
+      "packageLabel": "Package",
+      "sampleProject": "View a sample project",
       "popular": "Popular",
       "priceFrom": "from",
       "priceUnit": "₽/m²",
@@ -512,8 +517,8 @@
         }
       ],
       "team": {
-        "title": "Our team",
-        "text": "Architects and designers who see your project through to the result.",
+        "title": "Designed as a whole",
+        "text": "From layouts and visualizations to a clear set of documents for implementation.",
         "cta": "About the studio"
       }
     },
@@ -795,8 +800,10 @@
         },
         "consent": "I agree to the processing of personal data",
         "submit": "Discuss a project",
-        "privacy": "Your data is not shared with third parties.",
+        "submitting": "Sending…",
+        "privacy": "We use your details only to respond to this request.",
         "success": "Thank you! We'll get in touch with you shortly.",
+        "errorSubmit": "We couldn't send your request. Please try again or call us.",
         "errorRequired": "Please fill in this field",
         "errorPhone": "Please enter a valid phone number"
       }
@@ -832,7 +839,7 @@
     "title": "About the studio",
     "subtitle": "We are a team in love with details and meaningful spaces.",
     "story": [
-      "TheDesignNow is an interior design studio. We craft apartment and home projects where form and comfort work together.",
+      "ДизайнСейчас is an interior design studio. We craft apartment and home projects where form and comfort work together.",
       "Every project starts with understanding how a person lives. Then come layout, materials, light and a precise estimate, so the result matches expectations."
     ]
   },

@@ -42,7 +42,12 @@ export function Layout({ children }: { children: ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <meta name="theme-color" content="#191c22" />
+        <meta name="application-name" content="ДизайнСейчас" />
+        <meta name="apple-mobile-web-app-title" content="ДизайнСейчас" />
+        <meta property="og:site_name" content="ДизайнСейчас" />
         <link rel="canonical" href={SITE_URL + pathname} />
         {LOCALES.map((alternateLocale) => (
           <link
@@ -91,7 +96,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
     <main className={styles.errorPage}>
       <AppLink to="/" className={styles.errorBrand} aria-label={t.brand}>
-        <Logo title={t.brand} style={{ height: '2.5rem' }} />
+        <Logo title={t.brand} style={{ height: '2.5rem' }} aria-hidden="true" />
+        <span>{t.brand}</span>
       </AppLink>
       <p className={styles.errorCode} aria-hidden="true">
         {is404 ? '404' : '500'}

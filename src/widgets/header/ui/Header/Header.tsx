@@ -67,8 +67,11 @@ export function Header() {
   return (
     <header ref={root} className={cn(styles.header, solid && styles.scrolled)}>
       <Container className={styles.inner}>
-        <AppLink to={ROUTES.home} className={styles.brand} onClick={close}>
-          <Logo title={t('brand')} style={{ height: 'var(--space-8)' }} />
+        <AppLink to={ROUTES.home} className={styles.brand} aria-label={t('brand')} onClick={close}>
+          <Logo title={t('brand')} className={styles.brandMark} aria-hidden="true" />
+          <span className={styles.wordmark} aria-hidden="true">
+            {t('brand')}
+          </span>
         </AppLink>
 
         <div id="header-menu" className={cn(styles.menu, open && styles.menuOpen)}>

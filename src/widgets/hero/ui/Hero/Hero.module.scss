@@ -1,21 +1,26 @@
 @use 'app/styles/abstracts' as *;
 
 .hero {
+  --hero-tail: clamp(2.5rem, 7svh, 5rem);
+
   isolation: isolate; // локальный stacking-контекст: фон в z-index -2/-1, контент над ним
   position: relative;
 
-  overflow: hidden; // клипируем .bg с inset:-16% чтобы parallax-оверсcan не вылезал за секцию
+  overflow: hidden; // клипируем увеличенный фотослой, чтобы parallax-overscan не вылезал за секцию
   display: flex;
   flex-direction: column; // верх — контент Hero, низ — слот пакетов (на фото)
 
-  min-height: 100svh;
+  // Контент и тарифы раскладываются в первых 100svh, затем фото получает отдельный «хвост».
+  // Поэтому следующий светлый блок не режет параллакс ровно по линии нижнего края экрана.
+  min-height: calc(100svh + var(--hero-tail));
 
   // Втягиваем под прозрачный fixed-хедер: фон Hero начинается у самого верха сайта.
   // .main даёт padding-top: var(--header-h) для прочих страниц — здесь компенсируем его.
   margin-top: calc(-1 * var(--header-h));
 
   // верх — под фиксированный хедер; низ — умеренный (ряд пакетов добавляет свой отступ снизу)
-  padding-block: calc(var(--header-h) + var(--space-8)) var(--space-8);
+  padding-block: calc(var(--header-h) + var(--space-8))
+    calc(var(--space-8) + var(--hero-tail));
 
   color: var(--clr-light);
 
@@ -64,7 +69,8 @@
   // поэтому верхний воздух поджимаем — иначе нижняя кромка (кнопка «Подобрать пакет») уезжает под
   // браузерный хром на ноутбуках 1440×810/900.
   @include up(xxl) {
-    padding-block: calc(var(--header-h) + var(--space-4)) var(--space-8);
+    padding-block: calc(var(--header-h) + var(--space-4))
+      calc(var(--space-8) + var(--hero-tail));
   }
 
   // Ниже точки перестройки ряда пакетов (5-в-ряд → интро-шапка + 2×2, $bp-xxl) Hero отпускает
@@ -74,7 +80,8 @@
   }
 
   @include down(lg) {
-    padding-block: calc(var(--header-h) + var(--space-12)) var(--space-16);
+    padding-block: calc(var(--header-h) + var(--space-12))
+      calc(var(--space-16) + var(--hero-tail));
 
     // на узких контент и панель уходят в стек → затемняем равномернее
     &::before {
@@ -85,6 +92,13 @@
         color-mix(in srgb, var(--clr-dark) 84%, transparent) 100%
       );
     }
+  }
+
+  // На широких, но невысоких экранах (типичные 1280×720 и 1366×768) сохраняем всю ленту
+  // тарифов в первом экране. Меняем только вертикальный ритм — размеры кликабельных целей остаются.
+  @media (min-width: $bp-xl) and (height <= 800px) {
+    padding-block: calc(var(--header-h) + var(--space-2))
+      calc(var(--space-2) + var(--hero-tail));
   }
 }
 
@@ -124,18 +138,16 @@
   }
 }
 
-// Фон-слой: отдельный элемент, чтобы ScrollSmoother.effects() мог двигать его (parallax).
-// Лежит ПОД оверлеями (::before -2, ::after -1). Overscan -8% покрывает parallax-сдвиг при speed 0.94.
-// Статичен и полностью покрывает секцию без JS (prerender / reduced-motion).
+// Фон-слой выше Hero: при секции в 100svh реальная высота изображения = 136% её высоты.
+// Такой overscan нужен для параллакса и мягкого нижнего стыка — на краях движения кадр не кончается.
+// Слой лежит под оверлеями и полностью покрывает секцию без JS (prerender / reduced-motion).
 .bg {
   will-change: transform;
 
   position: absolute;
   z-index: -3;
-  inset: -16% 0; // overscan по вертикали — запас под parallax-сдвиг (yPercent ±8), края не оголяются
+  inset: -18% 0;
   transform-origin: 50% 45%;
-
-  height: 100%;
 
   // Тёмная «юбка» у низа слоя ЗАПЕЧЕНА в сам .bg (а не в ::before/::after Hero). Зачем: .bg —
   // композитный слой (transform параллакса) и под overflow:hidden Hero его текстура «подтекает» на
@@ -145,7 +157,7 @@
   // покрытие гарантировано. Видимо незаметно: эта зона и так под панелью пакетов / затемнена ::before.
   background:
     linear-gradient(to bottom, transparent 46%, var(--clr-dark) 72%),
-    var(--hero-bg, none) center / cover no-repeat;
+    var(--hero-bg, none) 54% center / cover no-repeat;
 }
 
 // Класс-маркер элементов входного каскада Hero (цель gsap). РЕАЛЬНОЕ правило обязательно: иначе
@@ -199,6 +211,10 @@
   @include up(xxl) {
     margin-top: auto;
   }
+
+  @media (min-width: $bp-xl) and (height <= 800px) {
+    margin-top: var(--space-2);
+  }
 }
 
 .content {
@@ -211,6 +227,10 @@
 
   @include up(lg) {
     max-width: none;
+  }
+
+  @media (min-width: $bp-xl) and (height <= 800px) {
+    gap: var(--space-3);
   }
 }
 
@@ -278,6 +298,10 @@
       flex: 1 1 100%;
     }
   }
+
+  @media (min-width: $bp-xl) and (height <= 800px) {
+    margin-top: 0;
+  }
 }
 
 // Строка преимуществ под кнопками (макет 01): иконки в круглых золотых чипах + подпись,
@@ -294,6 +318,10 @@
   @include down(sm) {
     flex-direction: column;
     gap: var(--space-3);
+  }
+
+  @media (min-width: $bp-xl) and (height <= 800px) {
+    margin-top: var(--space-2);
   }
 }
 

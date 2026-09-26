@@ -21,18 +21,21 @@ export function Packages() {
   // Пока шторка на экране — держим скрытой (под ней). Reduced-motion — без анимации.
   useGSAP(
     () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      if (!preloaderDone) {
-        gsap.set(`.${styles.panel}`, { autoAlpha: 0, y: 32 });
-        return;
-      }
-      gsap.fromTo(
-        `.${styles.panel}`,
-        { autoAlpha: 0, y: 32 },
-        { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.25 },
-      );
+      const media = gsap.matchMedia();
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        if (!preloaderDone) {
+          gsap.set(`.${styles.panel}`, { autoAlpha: 0, y: 32 });
+          return;
+        }
+        gsap.fromTo(
+          `.${styles.panel}`,
+          { autoAlpha: 0, y: 32 },
+          { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.25 },
+        );
+      });
+      return () => media.revert();
     },
-    { scope: root, dependencies: [preloaderDone] },
+    { scope: root, dependencies: [preloaderDone], revertOnUpdate: true },
   );
 
   return (

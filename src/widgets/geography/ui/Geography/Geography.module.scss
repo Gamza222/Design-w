@@ -69,30 +69,14 @@
   transform-box: fill-box;
 }
 
-// Маршруты из Москвы — пунктир акцентом; точки медленно «текут» к городам.
-// По умолчанию поток стоит: stroke-dashoffset некомпозитный, девять дуг перерисовывали бы
-// SVG каждый кадр всю сессию. Класс .flowing вешает ScrollTrigger, пока сцена во вьюпорте.
+// Статичный пунктир: движение передают самолётики на десктопе. stroke-dashoffset
+// перерисовывал бы весь SVG каждый кадр, особенно заметно во время мобильного скролла.
 .arc {
   fill: none;
   stroke: color-mix(in srgb, var(--clr-accent) 55%, transparent);
   stroke-dasharray: 1 7;
   stroke-linecap: round;
   stroke-width: 1.6;
-
-  @media (prefers-reduced-motion: no-preference) {
-    animation: arc-flow 26s linear infinite;
-    animation-play-state: paused;
-  }
-}
-
-.flowing .arc {
-  animation-play-state: running;
-}
-
-@keyframes arc-flow {
-  to {
-    stroke-dashoffset: -400;
-  }
 }
 
 .plane {
@@ -274,16 +258,15 @@
   font-weight: 600;
   color: var(--color-accent);
 
-  transition: gap var(--transition-base);
-
   svg {
     font-size: var(--fs-base);
+    transition: transform var(--transition-base);
   }
 
   // Только для устройств с курсором: на таче hover «залипал» бы после тапа.
-  @media (hover: hover) {
-    &:hover {
-      gap: var(--space-3);
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover svg {
+      transform: translateX(var(--space-1));
     }
   }
 }

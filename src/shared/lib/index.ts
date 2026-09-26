@@ -3,6 +3,7 @@ export type { ClassValue } from './cn/cn';
 export { buildCollection } from './mdx/collection';
 export type { CollectionItem, MdxComponent, MdxModule } from './mdx/types';
 export { useLocale } from './i18n/useLocale';
+export { useHydrated } from './hydration/useHydrated';
 export { useReveal } from './reveal/useReveal';
 export { useScrollReveal } from './reveal/useScrollReveal';
 export { usePreloaderDone, completePreloader } from './preloader/preloaderSignal';

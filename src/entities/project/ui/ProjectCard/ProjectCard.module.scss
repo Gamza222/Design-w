@@ -3,8 +3,10 @@
   flex-direction: column;
   gap: var(--space-4);
 
-  &:hover .cover {
-    transform: scale(1.04);
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover .cover {
+      transform: scale(1.025);
+    }
   }
 }
 

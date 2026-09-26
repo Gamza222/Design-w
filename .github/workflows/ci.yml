@@ -23,6 +23,13 @@ jobs:
       - run: npm run lint
       - run: npm run lint:fsd
       - run: npm test
+      - name: Test lead delivery backend
+        run: |
+          php -l public/api/lead.php
+          php -l scripts/check-lead-delivery.php
+          php tests/backend/lead-test.php
+          node --test scripts/generate-lead-config.test.mjs
+          node scripts/setup-leads.mjs --self-test
       - run: npm run build
 
   e2e:
@@ -34,7 +41,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: npm run e2e
 
   deploy:
@@ -70,7 +77,11 @@ jobs:
           LEAD_SMTP_PASSWORD: ${{ secrets.LEAD_SMTP_PASSWORD }}
           LEAD_TELEGRAM_BOT_TOKEN: ${{ secrets.LEAD_TELEGRAM_BOT_TOKEN }}
           LEAD_TELEGRAM_CHAT_ID: ${{ secrets.LEAD_TELEGRAM_CHAT_ID }}
+          LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: ${{ secrets.LEAD_TELEGRAM_CHAT_ID_ADDITIONAL }}
         run: node scripts/generate-lead-config.mjs
+
+      - name: Verify lead delivery credentials
+        run: php scripts/check-lead-delivery.php
 
       - name: Check deployment configuration
         env:

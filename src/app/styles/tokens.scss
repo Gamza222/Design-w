@@ -45,7 +45,12 @@
   --color-text-muted: var(--clr-muted); // серебристо-серый приглушённый текст
   --color-border: var(--clr-gray);
   --color-accent: var(--clr-accent);
-  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white); // на тёмном hover осветляем
+  --color-accent-hover: color-mix(
+    in srgb,
+    var(--clr-accent) 86%,
+    white
+  ); // на тёмном hover осветляем
+
   --color-muted-bg: var(--clr-dark-elevated);
   --color-on-accent: #14120f; // тёмный текст на золоте
   --color-strong: var(--clr-light); // насыщенный текст на графите — светлый
@@ -105,11 +110,14 @@
 
   // Премиальная многослойная тень карточек на тьме: контактный слой + средний + мягкий ореол,
   // плюс внутренний верхний блик — свет как будто падает сверху.
-  --shadow-card: inset 0 1px 0 rgb(255 255 255 / 6%), 0 1px 2px rgb(0 0 0 / 22%),
+  --shadow-card:
+    inset 0 1px 0 rgb(255 255 255 / 6%), 0 1px 2px rgb(0 0 0 / 22%),
     0 0.375rem 1rem rgb(0 0 0 / 26%), 0 0.875rem 2.25rem rgb(0 0 0 / 24%);
-  --shadow-glass: inset 0 1px 0 rgb(255 255 255 / 9%), 0 1.75rem 4.5rem rgb(0 0 0 / 50%); // глубина стекла
+  --shadow-glass:
+    inset 0 1px 0 rgb(255 255 255 / 9%), 0 1.75rem 4.5rem rgb(0 0 0 / 50%); // глубина стекла
   // Подсветка active-состояний (pill/select/инпут-фокус) — кольцо (1px, «физика») + ореол акцента (rem).
-  --glow-accent: 0 0 0 1px color-mix(in srgb, var(--clr-accent) 40%, transparent),
+  --glow-accent:
+    0 0 0 1px color-mix(in srgb, var(--clr-accent) 40%, transparent),
     0 0 1.5rem color-mix(in srgb, var(--clr-accent) 28%, transparent);
 
   // Единый внешний рельс для Hero, шапки, секций и подвала. Читабельность длинного текста
@@ -135,8 +143,17 @@
     rgb(120 130 145 / 10%) 45%,
     rgb(254 188 4 / 22%)
   );
-  --glass-line: linear-gradient(90deg, transparent, rgb(224 230 238 / 90%), transparent); // верхняя серебряная линия
-  --glass-blur: blur(12px); // frosted glass (18px давал ре-блюр фиксированного хедера на каждом кадре заметно дороже — визуально ~то же)
+  --glass-line: linear-gradient(
+    90deg,
+    transparent,
+    rgb(224 230 238 / 90%),
+    transparent
+  ); // верхняя серебряная линия
+
+  --glass-blur: blur(
+    12px
+  ); // frosted glass (18px давал ре-блюр фиксированного хедера на каждом кадре заметно дороже — визуально ~то же)
+
   --glass-radius: var(--radius-lg);
 
   // --- Ритм секций (вертикальный шаг + внутренние зазоры) ---------------------
@@ -146,16 +163,30 @@
   // Флюид сохраняется (rem-границы зумятся корнем, vw-член даёт доводку в полосе ≤1680px).
   --section-pad-y-dense: clamp(var(--space-8), 4vw, var(--space-12));
   --section-gap: var(--space-12); // зазор «шапка секции ↔ контент»
-  --section-gap-dense: clamp(var(--space-6), 3vw, var(--space-8)); // зазор «шапка ↔ контент» в плотных секциях
+  --section-gap-dense: clamp(
+    var(--space-6),
+    3vw,
+    var(--space-8)
+  ); // зазор «шапка ↔ контент» в плотных секциях
+
   --section-header-gap: var(--space-3); // зазор «eyebrow ↔ title ↔ subtitle»
   // Шапка секции — переиспользуемый компактный кегль заголовка (Процесс/Проекты/Достижения,
   // а также цифры статистик). Подзаголовок берёт --fs-lg напрямую в SectionHeader.
   --section-title-size: calc(var(--fs-2xl) * 1.15); // крупный заголовок секции
 
   // --- Карточки/панели — переиспользуемые «ручки» размеров (лента пакетов, Hero-панель) ------
-  --card-pad: clamp(var(--space-5), 1.6vw, var(--space-6)); // внутренний отступ карточки тарифа/расчёта
+  --card-pad: clamp(
+    var(--space-5),
+    1.6vw,
+    var(--space-6)
+  ); // внутренний отступ карточки тарифа/расчёта
+
   --card-min-h: 11rem; // минимальная высота карточек ряда пакетов (тарифы ≡ расчёт)
-  --panel-pad: clamp(var(--space-6), 2vw, var(--space-8)); // паддинг крупных панелей (Hero-выгоды, лента пакетов)
+  --panel-pad: clamp(
+    var(--space-6),
+    2vw,
+    var(--space-8)
+  ); // паддинг крупных панелей (Hero-выгоды, лента пакетов)
 
   // --- Кнопки (переиспользуемые размеры) -------------------------------------
   // md (дефолт) = базовые значения; sm/lg переопределяют паддинги и кегль.
@@ -170,8 +201,8 @@
   --btn-font-size-lg: calc(var(--fs-base) * 1.06);
 
   // --- Прочее ----------------------------------------------------------------
-  --transition-base: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  --transition-slow: 0.8s cubic-bezier(0.22, 1, 0.36, 1); // медленный hover-zoom фото (плитки, карточки кейсов)
+  --transition-base: 0.22s cubic-bezier(0.23, 1, 0.32, 1);
+  --transition-slow: 0.28s cubic-bezier(0.23, 1, 0.32, 1); // короткий hover-zoom фото
   --header-h: 4.5rem; // = 72px на базе; в rem, чтобы масштабироваться вместе с корнем
 
   // --- Z-index слои ----------------------------------------------------------

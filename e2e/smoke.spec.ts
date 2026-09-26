@@ -249,7 +249,12 @@ test('services hub links to the SEO landings', async ({ page }) => {
 
 test('language switch navigates between country versions', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Язык сайта' }).click();
+  const trigger = page.getByRole('button', { name: 'Язык сайта' });
+  await trigger.click();
+  await expect(page.getByRole('menuitem', { name: 'BY' })).toBeVisible();
+  await trigger.click();
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  await trigger.click();
   await expect(page.getByRole('menuitem', { name: 'BY' })).toBeVisible();
   await page.getByRole('menuitem', { name: 'EN' }).click();
   await expect(page).toHaveURL(/\/en$/);

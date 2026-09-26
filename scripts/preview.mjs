@@ -8,6 +8,8 @@ import { createServer } from 'node:http';
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { extname, join, normalize, sep } from 'node:path';
 import { cwd, argv, exit } from 'node:process';
+import { createGzip } from 'node:zlib';
+import { pipeline } from 'node:stream';
 
 const ROOT = join(cwd(), 'build', 'client');
 const NOT_FOUND = join(ROOT, '404.html');
@@ -56,6 +58,10 @@ function resolveFile(urlPath) {
   } catch {
     return null;
   }
+  // This is a static preview, never expose PHP source or hidden deployment credentials.
+  if (pathname.split('/').some((part) => part.startsWith('.')) || /\.php$/i.test(pathname)) {
+    return null;
+  }
   const safe = normalize(pathname).replace(/^(\.\.[/\\])+/, '');
   const full = join(ROOT, safe);
   if (!full.startsWith(ROOT + sep) && full !== ROOT) return null;
@@ -74,8 +80,27 @@ createServer((req, res) => {
   const cache = file.includes(`${sep}assets${sep}`)
     ? 'public, max-age=31536000, immutable'
     : 'no-cache';
-  res.writeHead(resolved ? 200 : 404, { 'Content-Type': type, 'Cache-Control': cache });
-  createReadStream(file).pipe(res);
+  // Match production's mod_deflate so local transfer/performance checks are representative.
+  const compressible = /^(text\/|application\/(json|xml)|image\/svg\+xml)/.test(type);
+  const acceptsGzip = String(req.headers['accept-encoding'] ?? '')
+    .split(',')
+    .some((encoding) => {
+      const [name, ...parameters] = encoding.trim().split(';');
+      const quality = parameters.find((parameter) => parameter.trim().startsWith('q='));
+      return name === 'gzip' && (!quality || Number(quality.trim().slice(2)) > 0);
+    });
+  const gzip = compressible && acceptsGzip;
+  res.writeHead(resolved ? 200 : 404, {
+    'Content-Type': type,
+    'Cache-Control': cache,
+    ...(compressible ? { Vary: 'Accept-Encoding' } : {}),
+    ...(gzip ? { 'Content-Encoding': 'gzip' } : { 'Content-Length': statSync(file).size }),
+  });
+  if (req.method === 'HEAD') return res.end();
+  const streams = [createReadStream(file), ...(gzip ? [createGzip()] : []), res];
+  pipeline(...streams, (error) => {
+    if (error && !res.destroyed) res.destroy(error);
+  });
 }).listen(PORT, HOST, () => {
   console.log(`preview: http://${HOST}:${PORT} → build/client`);
 });

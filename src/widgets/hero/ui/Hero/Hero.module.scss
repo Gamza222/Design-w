@@ -19,8 +19,7 @@
   margin-top: calc(-1 * var(--header-h));
 
   // верх — под фиксированный хедер; низ — умеренный (ряд пакетов добавляет свой отступ снизу)
-  padding-block: calc(var(--header-h) + var(--space-8))
-    calc(var(--space-8) + var(--hero-tail));
+  padding-block: calc(var(--header-h) + var(--space-8)) calc(var(--space-8) + var(--hero-tail));
 
   color: var(--clr-light);
 
@@ -33,63 +32,47 @@
     inset: 0;
   }
 
-  // Слой 1: тёмно-синий (--clr-dark) — диагональ слева под текст + лёгкая вертикаль.
-  // Правый край держим глубоким (≥56%) — даже светлое фото читается как тёмный нави, как в макете 01.
+  // Локальный scrim под текстом: свет и фактура интерьера остаются видны справа.
   &::before {
     z-index: -2;
-    opacity: 0.63;
     background:
       linear-gradient(
-        100deg,
-        color-mix(in srgb, var(--clr-dark) 93%, transparent) 0%,
-        color-mix(in srgb, var(--clr-dark) 76%, transparent) 42%,
-        color-mix(in srgb, var(--clr-dark) 62%, transparent) 72%,
-        color-mix(in srgb, var(--clr-dark) 56%, transparent) 100%
+        90deg,
+        rgb(8 10 14 / 74%) 0%,
+        rgb(8 10 14 / 56%) 34%,
+        rgb(8 10 14 / 16%) 66%,
+        rgb(8 10 14 / 8%) 100%
       ),
       linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--clr-dark) 50%, transparent) 0%,
-        color-mix(in srgb, var(--clr-dark) 8%, transparent) 26%,
-        color-mix(in srgb, var(--clr-dark) 8%, transparent) 62%,
-        color-mix(in srgb, var(--clr-dark) 72%, transparent) 100%
+        rgb(8 10 14 / 38%) 0%,
+        transparent 24%,
+        transparent 64%,
+        var(--clr-dark) 100%
       );
   }
 
-  // Слой 2: мягкая виньетка + базовый тинт в центре — картинка дотемняется до moody-графита везде.
+  // Виньетка не заливает серым центр фотографии.
   &::after {
     z-index: -1;
-    background: radial-gradient(
-      125% 80% at 48% 32%,
-      color-mix(in srgb, var(--clr-dark) 24%, transparent) 50%,
-      color-mix(in srgb, var(--clr-dark) 46%, transparent) 100%
-    );
+    background: radial-gradient(125% 80% at 48% 32%, transparent 50%, rgb(8 10 14 / 24%) 100%);
   }
 
-  // На стадии «5-в-ряд» (≥$bp-xxl) первый экран держит 100svh и обязан вместить ленту целиком,
-  // поэтому верхний воздух поджимаем — иначе нижняя кромка (кнопка «Подобрать пакет») уезжает под
-  // браузерный хром на ноутбуках 1440×810/900.
+  // На desktop содержимое вместе с тарифами помещается до сгиба; фон продолжается ниже.
   @include up(xxl) {
-    padding-block: calc(var(--header-h) + var(--space-4))
-      calc(var(--space-8) + var(--hero-tail));
-  }
-
-  // Ниже точки перестройки ряда пакетов (5-в-ряд → интро-шапка + 2×2, $bp-xxl) Hero отпускает
-  // 100vh и растёт по контенту: панель пакетов уезжает ниже сгиба, первый экран листается (Vision 1).
-  @include down(xxl) {
-    min-height: auto;
+    padding-block: calc(var(--header-h) + var(--space-4)) calc(var(--space-8) + var(--hero-tail));
   }
 
   @include down(lg) {
-    padding-block: calc(var(--header-h) + var(--space-12))
-      calc(var(--space-16) + var(--hero-tail));
+    padding-block: calc(var(--header-h) + var(--space-12)) calc(var(--space-16) + var(--hero-tail));
 
-    // на узких контент и панель уходят в стек → затемняем равномернее
+    // Контраст текста сохраняется на узком кадре.
     &::before {
       background: linear-gradient(
         180deg,
-        color-mix(in srgb, var(--clr-dark) 76%, transparent) 0%,
-        color-mix(in srgb, var(--clr-dark) 56%, transparent) 45%,
-        color-mix(in srgb, var(--clr-dark) 84%, transparent) 100%
+        rgb(8 10 14 / 62%) 0%,
+        rgb(8 10 14 / 56%) 30rem,
+        transparent 64rem
       );
     }
   }
@@ -97,8 +80,7 @@
   // На широких, но невысоких экранах (типичные 1280×720 и 1366×768) сохраняем всю ленту
   // тарифов в первом экране. Меняем только вертикальный ритм — размеры кликабельных целей остаются.
   @media (min-width: $bp-xl) and (height <= 800px) {
-    padding-block: calc(var(--header-h) + var(--space-2))
-      calc(var(--space-2) + var(--hero-tail));
+    padding-block: calc(var(--header-h) + var(--space-2)) calc(var(--space-2) + var(--hero-tail));
   }
 }
 
@@ -158,6 +140,15 @@
   background:
     linear-gradient(to bottom, transparent 46%, var(--clr-dark) 72%),
     var(--hero-bg, none) 54% center / cover no-repeat;
+
+  @include down(lg) {
+    // Фото рассчитано на первый экран, а не растянуто на весь высокий стек тарифов.
+    inset: -8rem 0;
+    background:
+      linear-gradient(to bottom, transparent 30rem, var(--clr-dark) 63rem),
+      var(--hero-bg, none) 56% top / auto 68rem no-repeat,
+      var(--clr-dark);
+  }
 }
 
 // Класс-маркер элементов входного каскада Hero (цель gsap). РЕАЛЬНОЕ правило обязательно: иначе
@@ -192,10 +183,7 @@
     align-items: start; // колонки выровнены по верху: панель «Что вы получите» на уровне заголовка
   }
 
-  // Стадия «5-в-ряд» (≥xxl, Hero = 100svh): свободную высоту делим поровну между «над контентом» и
-  // «под контентом» — оба, .grid и .bottom, держат margin-top:auto. Блок опускается к центру, пустота
-  // в середине больше не копится в одном месте. Доля пропорциональна излишку: на тесных 1440×810 сдвиг
-  // ≈0 (пакеты остаются видны целиком), на высоких экранах — заметный, как и просили.
+  // На высоких экранах свободная высота распределяется вокруг контента и тарифов.
   @include up(xxl) {
     margin-top: auto;
   }
@@ -206,8 +194,7 @@
 .bottom {
   margin-top: clamp(var(--space-3), 3vh, var(--space-8));
 
-  // Стадия «5-в-ряд» (Hero = 100svh): прижимаем ленту к низу первого экрана, свободное место
-  // (фото интерьера) уходит МЕЖДУ Hero-контентом и лентой — как в макете 01, без пустой полосы снизу.
+  // Тарифы остаются в первом экране, нижний запас фона задаётся padding секции.
   @include up(xxl) {
     margin-top: auto;
   }

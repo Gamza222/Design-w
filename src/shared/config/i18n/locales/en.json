@@ -392,7 +392,7 @@
     "packages": {
       "kicker": "Ways to work",
       "title": "Design project packages",
-      "description": "Choose a suitable package or get a personal estimate in MAX.",
+      "description": "Choose a suitable package or get a personal estimate.",
       "pick": "Choose a package",
       "select": "Choose",
       "packageLabel": "Package",
@@ -437,7 +437,7 @@
       "steps": [
         {
           "title": "Request",
-          "desc": "You leave a request on the website or via MAX."
+          "desc": "Leave a request on the website and we will contact you."
         },
         {
           "title": "Discuss the task",
@@ -463,7 +463,7 @@
       "perks": [
         "We work under a contract",
         "Remote across Russia and Belarus",
-        "Support in MAX",
+        "Online support",
         "We help you avoid renovation mistakes"
       ],
       "ctaTitle": "Want a process this clear?",
@@ -554,7 +554,7 @@
         },
         {
           "value": "24/7",
-          "label": "MAX chat - reach us at any moment"
+          "label": "send a website enquiry whenever it suits you"
         },
         {
           "value": "RUB / BYN",
@@ -568,7 +568,7 @@
           "desc": "We discuss goals, wishes, style and budget."
         },
         {
-          "title": "We discuss the task in MAX or by call",
+          "title": "We discuss your project online or by phone",
           "desc": "We propose layouts and concepts and agree on the details."
         },
         {

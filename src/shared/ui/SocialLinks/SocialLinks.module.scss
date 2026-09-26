@@ -23,8 +23,13 @@
 
   // Hover как у плашки-eyebrow: полупрозрачная accent-заливка (не сплошная), иконка остаётся accent.
   &:hover {
-    transform: translateY(-0.125rem);
     background-color: color-mix(in srgb, var(--clr-accent) 12%, transparent);
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: translateY(-0.125rem);
+    }
   }
 }
 

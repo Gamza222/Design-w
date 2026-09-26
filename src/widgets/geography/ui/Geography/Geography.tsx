@@ -79,93 +79,106 @@ export function Geography() {
   const howSteps = t('home.geography.howSteps', { returnObjects: true }) as HowStep[];
 
   useGSAP(
-    (_, contextSafe) => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      // Шапка + карточки сцены всплывают, когда сцена входит во вьюпорт.
-      gsap.from(`.${styles.head}, .${styles.remoteCard}, .${styles.caseCard}`, {
-        y: 24,
-        autoAlpha: 0,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger: 0.1,
-        scrollTrigger: { trigger: `.${styles.stage}`, start: 'top 80%', once: true },
-      });
-      gsap.from(`.${styles.node}`, {
-        scale: 0,
-        autoAlpha: 0,
-        transformOrigin: 'center',
-        duration: 0.5,
-        ease: 'back.out(2)',
-        stagger: 0.08,
-        scrollTrigger: { trigger: `.${styles.stage}`, start: 'top 75%', once: true },
-      });
-      gsap.from(`.${styles.statItem}, .${styles.howStep}, .${styles.ctaCard}`, {
-        y: 24,
-        autoAlpha: 0,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger: 0.08,
-        scrollTrigger: { trigger: `.${styles.stats}`, start: 'top 88%', once: true },
-      });
-
-      // Пунктир маршрутов «течёт» только пока сцена видна: класс включает CSS-анимацию
-      // дуг (animation-play-state в .arc) — вне вьюпорта девять дуг не жгут кадры.
-      ScrollTrigger.create({
-        trigger: `.${styles.stage}`,
-        start: 'top bottom',
-        end: 'bottom top',
-        toggleClass: { targets: root.current, className: styles.flowing },
-      });
-
-      // Самолётики летят из Москвы по своим дугам (MotionPath) с фейдом на концах.
-      // Цикл бесконечный, но тикает только пока сцена во вьюпорте (toggleActions).
-      // MotionPathPlugin грузим лениво: декоративный плагин уезжает в отдельный чанк
-      // и при reduced-motion не грузится вовсе (ранний return выше); до подгрузки
-      // видны статичные самолётики из SSR-разметки.
-      let cancelled = false;
-      void import('gsap/MotionPathPlugin').then(({ MotionPathPlugin }) => {
-        if (cancelled || !contextSafe) return;
-        gsap.registerPlugin(MotionPathPlugin);
-        // contextSafe: таймлайны создаются после синхронного прогона эффекта — без него
-        // они не попали бы в GSAP-контекст и не чистились бы при анмаунте.
-        contextSafe(() => {
-          const planes = root.current?.querySelectorAll<SVGPathElement>(`.${styles.plane}`) ?? [];
-          planes.forEach((plane, i) => {
-            const arc = root.current?.querySelector<SVGPathElement>(
-              `[data-arc="${plane.dataset.plane ?? ''}"]`,
-            );
-            if (!arc) return;
-            const dur = Math.max(4, arc.getTotalLength() / 70);
-            gsap
-              .timeline({
-                repeat: -1,
-                repeatDelay: 2.4,
-                delay: i * 2.8,
-                scrollTrigger: {
-                  trigger: `.${styles.stage}`,
-                  start: 'top 95%',
-                  toggleActions: 'play pause resume pause',
-                },
-              })
-              .set(plane, { autoAlpha: 0 })
-              .to(
-                plane,
-                {
-                  motionPath: { path: arc, align: arc, alignOrigin: [0.5, 0.5], autoRotate: true },
-                  duration: dur,
-                  ease: 'none',
-                },
-                0,
-              )
-              .to(plane, { autoAlpha: 1, duration: 0.6 }, 0.1)
-              .to(plane, { autoAlpha: 0, duration: 0.6 }, dur - 0.7);
+    () => {
+      const media = gsap.matchMedia();
+      media.add(
+        {
+          animate: '(prefers-reduced-motion: no-preference)',
+          finePointer: '(hover: hover) and (pointer: fine)',
+        },
+        (context) => {
+          if (!context.conditions?.animate) return;
+          // Шапка + карточки сцены всплывают, когда сцена входит во вьюпорт.
+          gsap.from(`.${styles.head}, .${styles.remoteCard}, .${styles.caseCard}`, {
+            y: 24,
+            autoAlpha: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            stagger: 0.08,
+            scrollTrigger: { trigger: root.current, start: 'top 80%', once: true },
           });
-        })();
-      });
+          gsap.from(`.${styles.node}`, {
+            scale: 0.95,
+            autoAlpha: 0,
+            transformOrigin: 'center',
+            duration: 0.5,
+            ease: 'power3.out',
+            stagger: 0.08,
+            scrollTrigger: { trigger: `.${styles.stage}`, start: 'top 75%', once: true },
+          });
+          gsap.from(`.${styles.statItem}, .${styles.howStep}, .${styles.ctaCard}`, {
+            y: 24,
+            autoAlpha: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            stagger: 0.08,
+            scrollTrigger: { trigger: `.${styles.stats}`, start: 'top 88%', once: true },
+          });
 
-      return () => {
-        cancelled = true;
-      };
+          // Мобильной карте достаточно статичных маршрутов: нет непрерывной JS-анимации
+          // во время свайпа. На десктопе сохраняем движение самолётиков.
+          if (!context.conditions.finePointer) return;
+
+          // Самолётики летят из Москвы по своим дугам (MotionPath) с фейдом на концах.
+          // Цикл бесконечный, но тикает только пока сцена во вьюпорте (toggleActions).
+          // MotionPathPlugin грузим лениво: декоративный плагин уезжает в отдельный чанк
+          // и при reduced-motion не грузится вовсе (ранний return выше); до подгрузки
+          // видны статичные самолётики из SSR-разметки.
+          let cancelled = false;
+          void import('gsap/MotionPathPlugin')
+            .then(({ MotionPathPlugin }) => {
+              if (cancelled) return;
+              gsap.registerPlugin(MotionPathPlugin);
+              // Таймлайны принадлежат media-контексту, поэтому смена reduced-motion
+              // останавливает их и возвращает исходные позиции прямо во время просмотра.
+              context.add(() => {
+                const planes =
+                  root.current?.querySelectorAll<SVGPathElement>(`.${styles.plane}`) ?? [];
+                planes.forEach((plane, i) => {
+                  const arc = root.current?.querySelector<SVGPathElement>(
+                    `[data-arc="${plane.dataset.plane ?? ''}"]`,
+                  );
+                  if (!arc) return;
+                  const dur = Math.max(4, arc.getTotalLength() / 70);
+                  gsap
+                    .timeline({
+                      repeat: -1,
+                      repeatDelay: 2.4,
+                      delay: i * 2.8,
+                      scrollTrigger: {
+                        trigger: `.${styles.stage}`,
+                        start: 'top 95%',
+                        toggleActions: 'play pause resume pause',
+                      },
+                    })
+                    .set(plane, { autoAlpha: 0 })
+                    .to(
+                      plane,
+                      {
+                        motionPath: {
+                          path: arc,
+                          align: arc,
+                          alignOrigin: [0.5, 0.5],
+                          autoRotate: true,
+                        },
+                        duration: dur,
+                        ease: 'none',
+                      },
+                      0,
+                    )
+                    .to(plane, { autoAlpha: 1, duration: 0.6 }, 0.1)
+                    .to(plane, { autoAlpha: 0, duration: 0.6 }, dur - 0.7);
+                });
+              });
+            })
+            .catch(() => undefined);
+
+          return () => {
+            cancelled = true;
+          };
+        },
+      );
+      return () => media.revert();
     },
     { scope: root },
   );

@@ -48,8 +48,7 @@ const ADDON_ICONS: Partial<Record<OfferId, typeof IconChat>> = {
   prelaunch: IconChat,
 };
 
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]';
 
 /**
  * Модальное окно услуги: слева — состав, характеристики и цена, справа — «Что вы получите»
@@ -94,21 +93,23 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
       if (e.key !== 'Tab') return;
       const root = dialogRef.current;
       if (!root) return;
-      const focusables = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE));
+      const focusables = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+        (element) =>
+          !element.matches(':disabled, [tabindex="-1"], [aria-hidden="true"]') &&
+          element.getClientRects().length > 0,
+      );
       if (focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
       const active = document.activeElement as HTMLElement | null;
-      if (!active || !root.contains(active) || active === root) {
-        (e.shiftKey ? last : first).focus();
-        e.preventDefault();
-      } else if (e.shiftKey && active === first) {
-        last.focus();
-        e.preventDefault();
-      } else if (!e.shiftKey && active === last) {
-        first.focus();
-        e.preventDefault();
-      }
+      const index = active ? focusables.indexOf(active) : -1;
+      // Include buttons even when Safari's native Tab order skips them.
+      const next =
+        index < 0
+          ? e.shiftKey
+            ? focusables.length - 1
+            : 0
+          : (index + (e.shiftKey ? -1 : 1) + focusables.length) % focusables.length;
+      e.preventDefault();
+      focusables[next].focus();
     }
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);

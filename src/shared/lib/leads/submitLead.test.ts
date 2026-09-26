@@ -18,7 +18,7 @@ afterEach(() => {
 
 describe('lead submission', () => {
   it('posts the complete lead to the REG.RU PHP endpoint', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200 });
+    const fetchMock = vi.fn().mockResolvedValue(Response.json({ ok: true }));
     vi.stubGlobal('fetch', fetchMock);
 
     await submitLead(payload);
@@ -40,6 +40,21 @@ describe('lead submission', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 502 }));
 
     await expect(submitLead(payload)).rejects.toThrow('status 502');
+  });
+
+  it.each([null, {}, { ok: false }, { ok: 'true' }])(
+    'does not treat HTTP 200 without explicit delivery confirmation as success: %j',
+    async (confirmation) => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json(confirmation)));
+
+      await expect(submitLead(payload)).rejects.toThrow('did not confirm');
+    },
+  );
+
+  it('rejects an HTML fallback page served instead of the PHP handler', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('<!doctype html><html></html>')));
+
+    await expect(submitLead(payload)).rejects.toThrow();
   });
 
   it('creates an id suitable for safe retry deduplication', () => {

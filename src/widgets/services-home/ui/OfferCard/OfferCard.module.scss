@@ -6,9 +6,12 @@
 // «Поднятое» состояние карточки: hover (только на hover-устройствах — на таче
 // эффект залипает после тапа) и клавиатурный фокус.
 @mixin card-lifted {
-  transform: translateY(-0.45rem);
   background:
-    linear-gradient(168deg, var(--clr-dark-elevated), color-mix(in srgb, var(--clr-dark) 88%, black))
+    linear-gradient(
+        168deg,
+        var(--clr-dark-elevated),
+        color-mix(in srgb, var(--clr-dark) 88%, black)
+      )
       padding-box,
     linear-gradient(
         160deg,
@@ -52,17 +55,21 @@
       border-box;
   box-shadow: var(--shadow-card);
 
-  transition:
-    transform var(--transition-base),
-    box-shadow var(--transition-base);
+  transition: transform var(--transition-base);
 
   &:focus-visible {
     @include card-lifted;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     &:hover {
       @include card-lifted;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover:not(:focus-visible) {
+      transform: translateY(-0.2rem);
     }
   }
 }

@@ -3,9 +3,20 @@
 declare(strict_types=1);
 
 const LEAD_EMAIL_DEFAULT = 'dizain.seichas@yandex.ru';
+const LEAD_EMAIL_RECIPIENTS = [LEAD_EMAIL_DEFAULT, 'gamzaweb@gmail.com'];
 const LEAD_MAX_BODY_BYTES = 32768;
 const LEAD_RATE_LIMIT = 5;
 const LEAD_RATE_WINDOW_SECONDS = 600;
+const LEAD_DELIVERY_TIMEOUT_SECONDS = 24;
+
+function stateDirectory(): string
+{
+    $directory = sys_get_temp_dir() . '/design-seichas-' . substr(hash('sha256', __DIR__), 0, 16);
+    if (!is_dir($directory) && !@mkdir($directory, 0700, true) && !is_dir($directory)) {
+        throw new RuntimeException('Delivery state directory is unavailable');
+    }
+    return $directory;
+}
 
 /** @param array<string, mixed> $payload */
 function respond(int $status, array $payload): void
@@ -62,13 +73,13 @@ function isAllowedOrigin(): bool
 
 function isRateLimited(string $ip): bool
 {
-    $path = sys_get_temp_dir() . '/design-seichas-leads-' . hash('sha256', $ip) . '.json';
+    $path = stateDirectory() . '/rate-' . hash('sha256', $ip) . '.json';
     $handle = @fopen($path, 'c+');
     if ($handle === false || !flock($handle, LOCK_EX)) {
         if (is_resource($handle)) {
             fclose($handle);
         }
-        return false;
+        throw new RuntimeException('Rate limit storage is unavailable');
     }
 
     $raw = stream_get_contents($handle);
@@ -102,9 +113,9 @@ function isRateLimited(string $ip): bool
 /** @return resource|false */
 function openDeliveryState(string $submissionId)
 {
-    $path = sys_get_temp_dir() . '/design-seichas-delivery-' . hash('sha256', $submissionId) . '.json';
+    $path = stateDirectory() . '/delivery-' . hash('sha256', $submissionId) . '.json';
     $handle = @fopen($path, 'c+');
-    if ($handle === false || !flock($handle, LOCK_EX)) {
+    if ($handle === false || !flock($handle, LOCK_EX | LOCK_NB)) {
         if (is_resource($handle)) {
             fclose($handle);
         }
@@ -113,35 +124,36 @@ function openDeliveryState(string $submissionId)
     return $handle;
 }
 
-/** @param resource $handle @return array{email: bool, telegram: bool} */
+/** @param resource $handle @return array{fingerprint: string, delivered: array<string, bool>} */
 function readDeliveryState($handle): array
 {
     rewind($handle);
     $raw = stream_get_contents($handle);
-    $decoded = is_string($raw) && $raw !== '' ? json_decode($raw, true) : null;
+    if ($raw === '') {
+        return ['fingerprint' => '', 'delivered' => []];
+    }
+    $decoded = is_string($raw) ? json_decode($raw, true) : null;
+    if (!is_array($decoded) || !is_string($decoded['fingerprint'] ?? null)
+        || !is_array($decoded['delivered'] ?? null)) {
+        throw new RuntimeException('Delivery state is unreadable');
+    }
     return [
-        'email' => is_array($decoded) && ($decoded['email'] ?? false) === true,
-        'telegram' => is_array($decoded) && ($decoded['telegram'] ?? false) === true,
+        'fingerprint' => $decoded['fingerprint'],
+        'delivered' => $decoded['delivered'],
     ];
 }
 
-/** @param resource $handle @param array{email: bool, telegram: bool} $state */
+/** @param resource $handle @param array{fingerprint: string, delivered: array<string, bool>} $state */
 function writeDeliveryState($handle, array $state): void
 {
     rewind($handle);
-    ftruncate($handle, 0);
-    fwrite(
-        $handle,
-        (string) json_encode([
-            'email' => $state['email'],
-            'telegram' => $state['telegram'],
-            'updatedAt' => time(),
-        ]),
-    );
-    fflush($handle);
+    $json = (string) json_encode($state + ['updatedAt' => time()]);
+    if (!ftruncate($handle, 0) || fwrite($handle, $json) !== strlen($json) || !fflush($handle)) {
+        throw new RuntimeException('Delivery state could not be saved');
+    }
 }
 
-/** @return array{smtpPassword: string, telegramBotToken: string, telegramChatId: string} */
+/** @return array<string, string> */
 function loadDeliveryConfig(): array
 {
     $fileConfig = [];
@@ -167,36 +179,133 @@ function loadDeliveryConfig(): array
         'smtpPassword' => $read('LEAD_SMTP_PASSWORD', 'smtpPassword'),
         'telegramBotToken' => $read('LEAD_TELEGRAM_BOT_TOKEN', 'telegramBotToken'),
         'telegramChatId' => $read('LEAD_TELEGRAM_CHAT_ID', 'telegramChatId'),
+        'telegramAdditionalChatId' => $read('LEAD_TELEGRAM_CHAT_ID_ADDITIONAL', 'telegramAdditionalChatId'),
     ];
 }
 
+/** @param array<string, string> $config @return array<int, array{channel: string, target: string}> */
+function deliveryRecipients(array $config): array
+{
+    if ($config['smtpPassword'] === ''
+        || preg_match('/^\d+:[A-Za-z0-9_-]{30,}$/', $config['telegramBotToken']) !== 1) {
+        throw new RuntimeException('Delivery credentials are incomplete');
+    }
+    $chatIds = [$config['telegramChatId'], $config['telegramAdditionalChatId']];
+    foreach ($chatIds as $chatId) {
+        // Личные username не принимаются Bot API: нужны ID чатов после /start.
+        if (preg_match('/^-?[1-9]\d{0,19}$/', $chatId) !== 1) {
+            throw new RuntimeException('Both Telegram recipients need numeric chat IDs');
+        }
+    }
+    if ($chatIds[0] === $chatIds[1]) {
+        throw new RuntimeException('Telegram recipients must be distinct');
+    }
+    $recipients = [];
+    foreach (LEAD_EMAIL_RECIPIENTS as $email) {
+        $recipients[] = ['channel' => 'email', 'target' => $email];
+    }
+    foreach ($chatIds as $chatId) {
+        $recipients[] = ['channel' => 'telegram', 'target' => $chatId];
+    }
+    return $recipients;
+}
+
+/**
+ * @param resource $handle
+ * @param array<int, array{channel: string, target: string}> $recipients
+ * @return array<int, string>
+ */
+function deliverLeadRecipients($handle, array $recipients, string $fingerprint, callable $send): array
+{
+    $state = readDeliveryState($handle);
+    if ($state['fingerprint'] !== '' && !hash_equals($state['fingerprint'], $fingerprint)) {
+        throw new DomainException('Submission ID belongs to different lead details');
+    }
+    $state['fingerprint'] = $fingerprint;
+    writeDeliveryState($handle, $state);
+    $failures = [];
+    foreach ($recipients as $recipient) {
+        $key = $recipient['channel'] . ':' . hash('sha256', $recipient['target']);
+        if (($state['delivered'][$key] ?? false) === true) {
+            continue;
+        }
+        try {
+            $send($recipient);
+        } catch (Throwable $error) {
+            // Ни адресаты, ни содержание заявки, ни учётные данные не попадают в журнал.
+            error_log('[lead] ' . $recipient['channel'] . ' delivery failed: ' . $error->getMessage());
+            $failures[] = $key;
+            continue;
+        }
+        $state['delivered'][$key] = true;
+        writeDeliveryState($handle, $state);
+    }
+    return $failures;
+}
+
+function secondsRemaining(float $deadline): float
+{
+    $remaining = $deadline - microtime(true);
+    if ($remaining <= 0) {
+        throw new RuntimeException('Delivery time budget exhausted');
+    }
+    return min(5.0, $remaining);
+}
+
 /** @param resource $socket */
-function smtpRead($socket, array $expectedCodes): void
+function setSocketDeadline($socket, float $deadline): void
+{
+    $remaining = secondsRemaining($deadline);
+    $seconds = (int) $remaining;
+    stream_set_timeout($socket, $seconds, (int) (($remaining - $seconds) * 1000000));
+}
+
+/** @param resource $socket */
+function smtpWrite($socket, string $data, float $deadline): void
+{
+    $offset = 0;
+    while ($offset < strlen($data)) {
+        setSocketDeadline($socket, $deadline);
+        $written = fwrite($socket, substr($data, $offset));
+        if ($written === false || $written === 0) {
+            throw new RuntimeException('SMTP write failed');
+        }
+        $offset += $written;
+    }
+}
+
+/** @param resource $socket */
+function smtpRead($socket, array $expectedCodes, float $deadline): void
 {
     $response = '';
-    while (($line = fgets($socket, 1024)) !== false) {
+    $complete = false;
+    while (strlen($response) < 32768) {
+        setSocketDeadline($socket, $deadline);
+        $line = fgets($socket, 1024);
+        if ($line === false) {
+            break;
+        }
         $response .= $line;
-        if (strlen($line) >= 4 && $line[3] === ' ') {
+        if (preg_match('/^\d{3} /', $line) === 1 && substr($line, -2) === "\r\n") {
+            $complete = true;
             break;
         }
     }
 
     $code = (int) substr($response, 0, 3);
-    if (!in_array($code, $expectedCodes, true)) {
+    if (!$complete || !in_array($code, $expectedCodes, true)) {
         throw new RuntimeException('SMTP rejected a command with status ' . $code);
     }
 }
 
 /** @param resource $socket */
-function smtpCommand($socket, string $command, array $expectedCodes): void
+function smtpCommand($socket, string $command, array $expectedCodes, float $deadline): void
 {
-    if (fwrite($socket, $command . "\r\n") === false) {
-        throw new RuntimeException('SMTP write failed');
-    }
-    smtpRead($socket, $expectedCodes);
+    smtpWrite($socket, $command . "\r\n", $deadline);
+    smtpRead($socket, $expectedCodes, $deadline);
 }
 
-function sendEmail(string $password, string $subject, string $message, string $requestId): void
+function sendEmail(string $password, string $recipient, string $subject, string $message, string $requestId, float $deadline): void
 {
     $context = stream_context_create([
         'ssl' => [
@@ -211,7 +320,7 @@ function sendEmail(string $password, string $subject, string $message, string $r
         'ssl://smtp.yandex.ru:465',
         $errorNumber,
         $errorMessage,
-        10,
+        secondsRemaining($deadline),
         STREAM_CLIENT_CONNECT,
         $context,
     );
@@ -220,26 +329,24 @@ function sendEmail(string $password, string $subject, string $message, string $r
         throw new RuntimeException('SMTP connection failed with status ' . $errorNumber);
     }
 
-    stream_set_timeout($socket, 10);
-
     try {
-        smtpRead($socket, [220]);
-        smtpCommand($socket, 'EHLO designseichas.ru', [250]);
-        smtpCommand($socket, 'AUTH LOGIN', [334]);
-        smtpCommand($socket, base64_encode(LEAD_EMAIL_DEFAULT), [334]);
-        smtpCommand($socket, base64_encode($password), [235]);
-        smtpCommand($socket, 'MAIL FROM:<' . LEAD_EMAIL_DEFAULT . '>', [250]);
-        smtpCommand($socket, 'RCPT TO:<' . LEAD_EMAIL_DEFAULT . '>', [250, 251]);
-        smtpCommand($socket, 'DATA', [354]);
+        smtpRead($socket, [220], $deadline);
+        smtpCommand($socket, 'EHLO designseichas.ru', [250], $deadline);
+        smtpCommand($socket, 'AUTH LOGIN', [334], $deadline);
+        smtpCommand($socket, base64_encode(LEAD_EMAIL_DEFAULT), [334], $deadline);
+        smtpCommand($socket, base64_encode($password), [235], $deadline);
+        smtpCommand($socket, 'MAIL FROM:<' . LEAD_EMAIL_DEFAULT . '>', [250], $deadline);
+        smtpCommand($socket, 'RCPT TO:<' . $recipient . '>', [250, 251], $deadline);
+        smtpCommand($socket, 'DATA', [354], $deadline);
 
         $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
         $encodedFrom = '=?UTF-8?B?' . base64_encode('ДизайнСейчас · сайт') . '?=';
         $headers = [
             'Date: ' . date(DATE_RFC2822),
             'From: ' . $encodedFrom . ' <' . LEAD_EMAIL_DEFAULT . '>',
-            'To: <' . LEAD_EMAIL_DEFAULT . '>',
+            'To: <' . $recipient . '>',
             'Subject: ' . $encodedSubject,
-            'Message-ID: <' . $requestId . '@designseichas.ru>',
+            'Message-ID: <' . $requestId . '.' . substr(hash('sha256', $recipient), 0, 12) . '@designseichas.ru>',
             'MIME-Version: 1.0',
             'Content-Type: text/plain; charset=UTF-8',
             'Content-Transfer-Encoding: base64',
@@ -248,31 +355,31 @@ function sendEmail(string $password, string $subject, string $message, string $r
         $data .= chunk_split(base64_encode($message), 76, "\r\n");
         $data .= ".\r\n";
 
-        if (fwrite($socket, $data) === false) {
-            throw new RuntimeException('SMTP message write failed');
-        }
-        smtpRead($socket, [250]);
-        smtpCommand($socket, 'QUIT', [221]);
+        smtpWrite($socket, $data, $deadline);
+        smtpRead($socket, [250], $deadline);
+        // 250 после DATA означает принятие письма; обрыв QUIT не должен создавать дубль.
+        @fwrite($socket, "QUIT\r\n");
     } finally {
         fclose($socket);
     }
 }
 
-function sendTelegram(string $token, string $chatId, string $message): void
+function sendTelegram(string $token, string $chatId, string $message, float $deadline): void
 {
     if (!preg_match('/^\d+:[A-Za-z0-9_-]{30,}$/', $token)) {
         throw new RuntimeException('Telegram bot token has an invalid format');
     }
-    if (!preg_match('/^(?:-?\d+|@[A-Za-z][A-Za-z0-9_]{4,31})$/', $chatId)) {
+    if (!preg_match('/^-?[1-9]\d{0,19}$/', $chatId)) {
         throw new RuntimeException('Telegram chat id has an invalid format');
     }
 
     $url = 'https://api.telegram.org/bot' . $token . '/sendMessage';
     $payload = (string) json_encode(
-        ['chat_id' => $chatId, 'text' => $message, 'disable_web_page_preview' => true],
+        ['chat_id' => $chatId, 'text' => $message, 'link_preview_options' => ['is_disabled' => true]],
         JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
     );
 
+    $timeout = secondsRemaining($deadline);
     if (function_exists('curl_init')) {
         $curl = curl_init($url);
         if ($curl === false) {
@@ -283,8 +390,8 @@ function sendTelegram(string $token, string $chatId, string $message): void
             CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
             CURLOPT_POSTFIELDS => $payload,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 5,
-            CURLOPT_TIMEOUT => 10,
+            CURLOPT_CONNECTTIMEOUT_MS => (int) ceil($timeout * 1000),
+            CURLOPT_TIMEOUT_MS => (int) ceil($timeout * 1000),
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
         ]);
@@ -297,7 +404,7 @@ function sendTelegram(string $token, string $chatId, string $message): void
                 'method' => 'POST',
                 'header' => "Content-Type: application/json\r\n",
                 'content' => $payload,
-                'timeout' => 10,
+                'timeout' => $timeout,
                 'ignore_errors' => true,
             ],
         ]);
@@ -308,7 +415,10 @@ function sendTelegram(string $token, string $chatId, string $message): void
     }
 
     $decoded = is_string($response) ? json_decode($response, true) : null;
-    if ($status < 200 || $status >= 300 || !is_array($decoded) || ($decoded['ok'] ?? false) !== true) {
+    if ($status < 200 || $status >= 300 || !is_array($decoded) || ($decoded['ok'] ?? false) !== true
+        || !is_array($decoded['result'] ?? null)
+        || !is_int($decoded['result']['message_id'] ?? null)
+        || (string) ($decoded['result']['chat']['id'] ?? '') !== $chatId) {
         throw new RuntimeException('Telegram rejected the message with status ' . $status);
     }
 }
@@ -360,6 +470,8 @@ function buildLeadMessage(array $lead, string $requestId): string
     return implode("\n", $lines);
 }
 
+function handleLeadRequest(): void
+{
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     header('Allow: POST');
     respond(405, ['ok' => false, 'error' => 'method_not_allowed']);
@@ -446,55 +558,52 @@ if (!$valid) {
     respond(422, ['ok' => false, 'error' => 'validation_failed']);
 }
 
-$ip = is_string($_SERVER['REMOTE_ADDR'] ?? null) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
-if (isRateLimited($ip)) {
-    respond(429, ['ok' => false, 'error' => 'rate_limited']);
-}
-
-$config = loadDeliveryConfig();
-if ($config['smtpPassword'] === '' || $config['telegramBotToken'] === '' || $config['telegramChatId'] === '') {
-    error_log('[lead] Delivery configuration is incomplete');
+$stateHandle = false;
+try {
+    $config = loadDeliveryConfig();
+    $recipients = deliveryRecipients($config);
+    $ip = is_string($_SERVER['REMOTE_ADDR'] ?? null) ? $_SERVER['REMOTE_ADDR'] : 'unknown';
+    if (isRateLimited($ip)) {
+        header('Retry-After: ' . LEAD_RATE_WINDOW_SECONDS);
+        respond(429, ['ok' => false, 'error' => 'rate_limited']);
+    }
+    $stateHandle = openDeliveryState($submissionId);
+    if ($stateHandle === false) {
+        respond(503, ['ok' => false, 'error' => 'submission_busy']);
+    }
+} catch (Throwable $error) {
+    error_log('[lead] Delivery setup failed: ' . $error->getMessage());
     respond(503, ['ok' => false, 'error' => 'delivery_unavailable']);
 }
 
+ignore_user_abort(true);
+@set_time_limit(35);
+$deadline = microtime(true) + LEAD_DELIVERY_TIMEOUT_SECONDS;
 date_default_timezone_set('Europe/Moscow');
 $requestId = $submissionId;
 $message = buildLeadMessage($lead, $requestId);
 $subject = ($lead['kind'] === 'project' ? 'Заявка на проект' : 'Заявка на консультацию')
     . ' — ' . $lead['name'];
-$failures = [];
-$stateHandle = openDeliveryState($submissionId);
-$state = $stateHandle !== false
-    ? readDeliveryState($stateHandle)
-    : ['email' => false, 'telegram' => false];
-
-if (!$state['email']) {
-    try {
-        sendEmail($config['smtpPassword'], $subject, $message, $requestId);
-        $state['email'] = true;
-        if ($stateHandle !== false) {
-            writeDeliveryState($stateHandle, $state);
-        }
-    } catch (Throwable $error) {
-        error_log('[lead:' . $requestId . '] Email delivery failed: ' . $error->getMessage());
-        $failures[] = 'email';
-    }
-}
-
-if (!$state['telegram']) {
-    try {
-        sendTelegram($config['telegramBotToken'], $config['telegramChatId'], $message);
-        $state['telegram'] = true;
-        if ($stateHandle !== false) {
-            writeDeliveryState($stateHandle, $state);
-        }
-    } catch (Throwable $error) {
-        error_log('[lead:' . $requestId . '] Telegram delivery failed: ' . $error->getMessage());
-        $failures[] = 'telegram';
-    }
-}
-
-if ($stateHandle !== false) {
+$fingerprint = hash('sha256', (string) json_encode($lead));
+try {
+    $failures = deliverLeadRecipients(
+        $stateHandle,
+        $recipients,
+        $fingerprint,
+        static function (array $recipient) use ($config, $subject, $message, $requestId, $deadline): void {
+            if ($recipient['channel'] === 'email') {
+                sendEmail($config['smtpPassword'], $recipient['target'], $subject, $message, $requestId, $deadline);
+            } else {
+                sendTelegram($config['telegramBotToken'], $recipient['target'], $message, $deadline);
+            }
+        },
+    );
+} catch (DomainException $error) {
+    respond(409, ['ok' => false, 'error' => 'submission_conflict', 'requestId' => $requestId]);
+} catch (Throwable $error) {
+    error_log('[lead:' . $requestId . '] Delivery state failed');
+    respond(503, ['ok' => false, 'error' => 'delivery_unavailable', 'requestId' => $requestId]);
+} finally {
     flock($stateHandle, LOCK_UN);
     fclose($stateHandle);
 }
@@ -504,3 +613,8 @@ if ($failures !== []) {
 }
 
 respond(200, ['ok' => true, 'requestId' => $requestId]);
+}
+
+if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) {
+    handleLeadRequest();
+}

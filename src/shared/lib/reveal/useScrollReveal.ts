@@ -34,36 +34,46 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
 ) {
   const ref = useRef<T>(null);
   const done = usePreloaderDone();
-  const { y = 24, duration = 0.7, stagger = 0.08, start = 'top 82%', ease = 'power3.out', trigger } =
-    options;
+  const {
+    y = 24,
+    duration = 0.7,
+    stagger = 0.08,
+    start = 'top 82%',
+    ease = 'power3.out',
+    trigger,
+  } = options;
 
   useGSAP(
     () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const targets = Array.isArray(selector) ? selector.join(', ') : selector;
+      const media = gsap.matchMedia();
 
-      // Пока прелоадер не ушёл — просто прячем (под шторкой), без триггера.
-      if (!done) {
-        gsap.set(targets, { autoAlpha: 0, y });
-        return;
-      }
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        // Пока прелоадер не ушёл — просто прячем (под шторкой), без триггера.
+        if (!done) {
+          gsap.set(targets, { autoAlpha: 0, y });
+          return;
+        }
 
-      // fromTo с явными краями: устойчиво к повторному запуску эффекта (иначе gsap.from записал бы
-      // текущее — уже скрытое — состояние как конечное и анимировал бы 0→0).
-      gsap.fromTo(
-        targets,
-        { autoAlpha: 0, y },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration,
-          ease,
-          stagger,
-          scrollTrigger: { trigger: trigger ?? ref.current, start, once: true },
-        },
-      );
+        gsap.fromTo(
+          targets,
+          { autoAlpha: 0, y },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration,
+            ease,
+            stagger,
+            scrollTrigger: { trigger: trigger ?? ref.current, start, once: true },
+          },
+        );
+      });
+
+      // При смене системной настройки снимаем и transform, и visibility:hidden:
+      // ещё не просмотренные секции должны сразу вернуться в обычный документ.
+      return () => media.revert();
     },
-    { scope: ref, dependencies: [done] },
+    { scope: ref, dependencies: [done], revertOnUpdate: true },
   );
 
   return ref;

@@ -13,8 +13,7 @@ interface OrderModalProps {
   onClose: () => void;
 }
 
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]';
 
 /** Accessible full enquiry dialog opened from a selected service. */
 export function OrderModal({ offer, onClose }: OrderModalProps) {
@@ -31,11 +30,12 @@ export function OrderModal({ offer, onClose }: OrderModalProps) {
     body.style.overflow = 'hidden';
     if (scrollbar > 0) body.style.paddingRight = `${scrollbar}px`;
 
-    requestAnimationFrame(() => {
+    const focusFrame = requestAnimationFrame(() => {
       dialogRef.current?.querySelector<HTMLElement>('input[name="name"]')?.focus();
     });
 
     return () => {
+      cancelAnimationFrame(focusFrame);
       body.style.overflow = previousOverflow;
       body.style.paddingRight = previousPadding;
     };
@@ -51,19 +51,24 @@ export function OrderModal({ offer, onClose }: OrderModalProps) {
 
       const focusable = Array.from(
         dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE),
+      ).filter(
+        (element) =>
+          !element.matches(':disabled, [tabindex="-1"], [aria-hidden="true"]') &&
+          element.getClientRects().length > 0,
       );
       if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      const active = document.activeElement;
-
-      if (event.shiftKey && active === first) {
-        last.focus();
-        event.preventDefault();
-      } else if (!event.shiftKey && active === last) {
-        first.focus();
-        event.preventDefault();
-      }
+      const active = document.activeElement as HTMLElement | null;
+      const index = active ? focusable.indexOf(active) : -1;
+      // Advance explicitly: Safari's default Tab order can otherwise skip buttons,
+      // including the close control, and escape a boundary-only focus trap.
+      const next =
+        index < 0
+          ? event.shiftKey
+            ? focusable.length - 1
+            : 0
+          : (index + (event.shiftKey ? -1 : 1) + focusable.length) % focusable.length;
+      event.preventDefault();
+      focusable[next].focus();
     }
 
     document.addEventListener('keydown', onKeyDown);

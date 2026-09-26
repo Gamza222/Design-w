@@ -16,8 +16,8 @@ interface AccordionProps {
 
 /**
  * Один аккордеон (список собирается в виджете). Доступный: button + region,
- * aria-expanded/controls, клавиатура «бесплатно» от <button>. Высота — grid-rows 0fr→1fr
- * (safe к reduced-motion; контент остаётся в DOM → виден для SEO/no-JS).
+ * aria-expanded/controls, клавиатура «бесплатно» от <button>. Закрытый ответ исключён
+ * из навигации и дерева доступности; содержимое остаётся в HTML для индексации.
  */
 export function Accordion({ id, summary, open, onToggle, className, children }: AccordionProps) {
   return (
@@ -35,7 +35,7 @@ export function Accordion({ id, summary, open, onToggle, className, children }: 
           <IconChevronDown className={styles.chevron} aria-hidden="true" />
         </button>
       </h3>
-      <div id={`${id}-region`} role="region" aria-labelledby={`${id}-btn`} className={styles.region}>
+      <div id={`${id}-region`} role="region" aria-labelledby={`${id}-btn`} hidden={!open}>
         <div className={styles.inner}>{children}</div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { createLeadSubmissionId, submitLead } from '@shared/lib';
+import { createLeadSubmissionId, submitLead, useHydrated } from '@shared/lib';
 import { Button, Checkbox, Field, IconCheck, IconLock, Input, Textarea } from '@shared/ui';
 
 import styles from './ContactForm.module.scss';
@@ -38,9 +38,10 @@ interface Values {
 
 const PACKAGE_ID_SET = new Set<string>(PACKAGE_IDS);
 
-/** A phone is valid when it contains at least ten digits. Formatting is intentionally flexible. */
+/** Match the delivery endpoint's phone limits while allowing familiar formatting. */
 function isValidPhone(value: string): boolean {
-  return (value.match(/\d/g) ?? []).length >= 10;
+  const digits = (value.match(/\d/g) ?? []).length;
+  return digits >= 10 && digits <= 18;
 }
 
 function initialValues(initialPackage?: string): Values {
@@ -56,6 +57,7 @@ function initialValues(initialPackage?: string): Values {
 
 /** Full project enquiry form delivered to the studio email and Telegram via a server function. */
 export function ContactForm({ initialPackage }: ContactFormProps) {
+  const hydrated = useHydrated();
   const { t, i18n } = useTranslation();
   const uid = useId();
   const fid = (name: string) => `${uid}-${name}`;
@@ -68,6 +70,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
   const [submitError, setSubmitError] = useState(false);
   const successRef = useRef<HTMLDivElement>(null);
   const submissionIdRef = useRef<string | null>(null);
+  const submittingRef = useRef(false);
 
   useEffect(() => {
     if (sent) successRef.current?.focus();
@@ -75,6 +78,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
 
   const set = (name: FieldName) => (e: { target: { value: string } }) => {
     const value = e.target.value;
+    submissionIdRef.current = null;
     setValues((current) => ({ ...current, [name]: value }));
     setErrors((current) => (current[name] ? { ...current, [name]: undefined } : current));
     setSubmitError(false);
@@ -82,11 +86,16 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
 
   function validate(): Errors {
     const next: Errors = {};
-    if (!values.name.trim()) next.name = t('home.contactCta.form.errorRequired');
+    if (values.name.trim().length < 2) next.name = t('home.contactCta.form.errorRequired');
     if (!values.phone.trim()) next.phone = t('home.contactCta.form.errorRequired');
     else if (!isValidPhone(values.phone)) next.phone = t('home.contactCta.form.errorPhone');
     if (!values.premises) next.premises = t('home.contactCta.form.errorRequired');
-    if (!values.area || Number(values.area) <= 0) {
+    if (
+      !values.area ||
+      !Number.isFinite(Number(values.area)) ||
+      Number(values.area) <= 0 ||
+      Number(values.area) > 100000
+    ) {
       next.area = t('home.contactCta.form.errorRequired');
     }
     if (!values.package) next.package = t('home.contactCta.form.errorRequired');
@@ -96,11 +105,19 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submittingRef.current) return;
     const next = validate();
     setErrors(next);
-    if (Object.keys(next).length > 0) return;
+    if (Object.keys(next).length > 0) {
+      const form = e.currentTarget;
+      requestAnimationFrame(() =>
+        form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(),
+      );
+      return;
+    }
 
     const website = String(new FormData(e.currentTarget).get('website') ?? '');
+    submittingRef.current = true;
     setSubmitting(true);
     setSubmitError(false);
 
@@ -119,6 +136,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
     } catch {
       setSubmitError(true);
     } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
   }
@@ -135,7 +153,12 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
   }
 
   return (
-    <form className={styles.form} onSubmit={onSubmit} noValidate aria-busy={submitting}>
+    <form
+      className={styles.form}
+      onSubmit={onSubmit}
+      noValidate
+      aria-busy={!hydrated || submitting}
+    >
       <input
         className={styles.trap}
         type="text"
@@ -154,6 +177,8 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
           <Input
             id={fid('name')}
             name="name"
+            disabled={!hydrated || submitting}
+            aria-required="true"
             autoComplete="name"
             maxLength={120}
             value={values.name}
@@ -172,6 +197,8 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
           <Input
             id={fid('phone')}
             name="phone"
+            disabled={!hydrated || submitting}
+            aria-required="true"
             type="tel"
             inputMode="tel"
             autoComplete="tel"
@@ -195,6 +222,8 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
           <select
             id={fid('premises')}
             name="premises"
+            disabled={!hydrated || submitting}
+            aria-required="true"
             className={styles.select}
             value={values.premises}
             onChange={set('premises')}
@@ -219,6 +248,8 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
           <Input
             id={fid('area')}
             name="area"
+            disabled={!hydrated || submitting}
+            aria-required="true"
             type="number"
             inputMode="numeric"
             min={1}
@@ -241,6 +272,8 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
         <select
           id={fid('package')}
           name="package"
+          disabled={!hydrated || submitting}
+          aria-required="true"
           className={styles.select}
           value={values.package}
           onChange={set('package')}
@@ -263,6 +296,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
         <Textarea
           id={fid('comment')}
           name="comment"
+          disabled={!hydrated || submitting}
           rows={3}
           maxLength={2800}
           value={values.comment}
@@ -273,9 +307,13 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
 
       <div className={styles.consent}>
         <Checkbox
+          id={fid('consent')}
+          disabled={!hydrated || submitting}
+          aria-required="true"
           checked={consent}
           onChange={(e) => {
             setConsent(e.target.checked);
+            setSubmitError(false);
             if (e.target.checked) {
               setErrors((current) =>
                 current.consent ? { ...current, consent: undefined } : current,
@@ -293,10 +331,8 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
         )}
       </div>
 
-      <Button type="submit" size="lg" className={styles.submit} disabled={submitting}>
-        {submitting
-          ? t('home.contactCta.form.submitting')
-          : t('home.contactCta.form.submit')}
+      <Button type="submit" size="lg" className={styles.submit} disabled={!hydrated || submitting}>
+        {submitting ? t('home.contactCta.form.submitting') : t('home.contactCta.form.submit')}
       </Button>
 
       {submitError && (

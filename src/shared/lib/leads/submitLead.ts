@@ -28,21 +28,29 @@ export function createLeadSubmissionId(): string {
 export async function submitLead(payload: LeadPayload): Promise<void> {
   const controller = new AbortController();
   const timeout = globalThis.setTimeout(() => controller.abort(), 30_000);
-  let response: Response;
-
   try {
-    response = await fetch('/api/lead.php', {
+    const response = await fetch('/api/lead.php', {
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       signal: controller.signal,
     });
+
+    if (!response.ok) {
+      throw new Error(`Lead delivery failed with status ${response.status}`);
+    }
+
+    const confirmation: unknown = await response.json();
+    if (
+      typeof confirmation !== 'object' ||
+      confirmation === null ||
+      !('ok' in confirmation) ||
+      confirmation.ok !== true
+    ) {
+      throw new Error('The server did not confirm lead delivery');
+    }
   } finally {
     globalThis.clearTimeout(timeout);
-  }
-
-  if (!response.ok) {
-    throw new Error(`Lead delivery failed with status ${response.status}`);
   }
 }

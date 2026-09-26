@@ -21,7 +21,10 @@ export default defineConfig({
     // отрисовывают контент сразу — так e2e не гоняется с анимацией появления.
     contextOptions: { reducedMotion: 'reduce' },
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+  ],
   webServer: {
     command: `npm run build && npm run preview -- --host ${HOST}`,
     url: BASE_URL,

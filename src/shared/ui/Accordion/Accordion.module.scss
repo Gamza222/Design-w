@@ -35,28 +35,18 @@
   transform: rotate(180deg);
 }
 
-.region {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows var(--transition-base);
-}
-
-.open .region {
-  grid-template-rows: 1fr;
-}
-
 .inner {
-  overflow: hidden;
+  padding: 0 var(--space-6) var(--space-6);
   line-height: var(--lh-normal);
   color: var(--color-text-muted);
 }
 
-.open .inner {
-  padding: 0 var(--space-6) var(--space-6);
+.trigger:focus-visible .chevron {
+  transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .region {
+  .chevron {
     transition: none;
   }
 }

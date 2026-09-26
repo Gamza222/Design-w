@@ -73,14 +73,15 @@
   font-weight: 600;
   color: var(--color-accent);
 
-  transition: gap var(--transition-base);
-
   svg {
     font-size: var(--fs-base);
+    transition: transform var(--transition-base);
   }
 
-  &:hover {
-    gap: var(--space-3);
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover svg {
+      transform: translateX(var(--space-1));
+    }
   }
 }
 

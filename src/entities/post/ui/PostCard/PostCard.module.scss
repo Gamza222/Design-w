@@ -11,22 +11,20 @@
 
   background-color: var(--color-surface);
 
-  transition:
-    transform var(--transition-base),
-    box-shadow var(--transition-base);
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-md);
-  }
-
-  &:hover .cover {
-    transform: scale(1.05);
-  }
+  transition: transform var(--transition-base);
 
   &:hover .more {
-    gap: var(--space-3);
     color: var(--color-accent);
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: translateY(-3px);
+    }
+
+    &:hover .cover {
+      transform: scale(1.025);
+    }
   }
 }
 
@@ -100,7 +98,5 @@
   font-size: var(--fs-lg);
   color: var(--color-text-muted);
 
-  transition:
-    gap var(--transition-base),
-    color var(--transition-base);
+  transition: color var(--transition-base);
 }

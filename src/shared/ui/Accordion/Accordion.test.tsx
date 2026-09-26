@@ -23,8 +23,30 @@ describe('Accordion', () => {
         Ответ
       </Accordion>,
     );
-    expect(screen.getByRole('button', { name: 'Вопрос' })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByRole('button', { name: 'Вопрос' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
     screen.getByRole('button', { name: 'Вопрос' }).click();
     expect(onToggle).toHaveBeenCalledTimes(1);
+  });
+
+  it('excludes a closed answer from the accessibility tree', () => {
+    const { rerender } = render(
+      <Accordion id="faq-1" summary="Вопрос" open={false} onToggle={() => {}}>
+        <a href="/contact">Связаться</a>
+      </Accordion>,
+    );
+
+    expect(screen.queryByRole('region')).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Связаться' })).not.toBeInTheDocument();
+
+    rerender(
+      <Accordion id="faq-1" summary="Вопрос" open onToggle={() => {}}>
+        <a href="/contact">Связаться</a>
+      </Accordion>,
+    );
+    expect(screen.getByRole('region')).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Связаться' })).toBeVisible();
   });
 });

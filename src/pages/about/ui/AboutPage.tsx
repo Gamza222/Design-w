@@ -31,12 +31,11 @@ export default function AboutPage() {
           <figure className={styles.mediaFrame} aria-label={t('about.title')}>
             <video
               className={styles.media}
-              autoPlay
+              controls
               muted
-              loop
               playsInline
-              preload="metadata"
-              poster="/realimages/web/about-poster.jpg"
+              preload="none"
+              poster="/realimages/web/about-poster.webp"
             >
               <source src="/realimages/web/about-studio.mp4" type="video/mp4" />
             </video>

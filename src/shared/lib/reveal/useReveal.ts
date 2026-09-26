@@ -20,19 +20,22 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(options: Revea
 
   useGSAP(
     () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
       const targets = ref.current?.querySelectorAll('[data-reveal]');
       if (!targets || targets.length === 0) return;
 
-      gsap.from(targets, {
-        y,
-        autoAlpha: 0,
-        duration,
-        ease: 'power3.out',
-        stagger,
-        scrollTrigger: { trigger: ref.current, start, once },
+      const media = gsap.matchMedia();
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        gsap.from(targets, {
+          y,
+          autoAlpha: 0,
+          duration,
+          ease: 'power3.out',
+          stagger,
+          scrollTrigger: { trigger: ref.current, start, once },
+        });
       });
+
+      return () => media.revert();
     },
     { scope: ref },
   );

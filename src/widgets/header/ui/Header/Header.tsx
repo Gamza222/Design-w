@@ -38,7 +38,35 @@ export function Header() {
       if (root.current && !root.current.contains(e.target as Node)) close();
     };
     document.addEventListener('pointerdown', handler);
-    return () => document.removeEventListener('pointerdown', handler);
+    const menu = root.current?.querySelector<HTMLElement>('#header-menu');
+    const opener = root.current?.querySelector<HTMLElement>('[aria-controls="header-menu"]');
+    // Safari may leave focus on the previous element after a pointer click on a button.
+    const focusOrigin = document.activeElement;
+    const focusDeadline = performance.now() + 500;
+    let focusFrame = 0;
+    const focusMenu = () => {
+      // Stop if the user has already moved focus. Opening CSS can still be hidden
+      // on the first frame, and a reduced-motion transition may end before this
+      // effect runs, so retry briefly instead of depending on transitionend.
+      if (document.activeElement !== opener && document.activeElement !== focusOrigin) return;
+      const firstLink = menu?.querySelector<HTMLElement>('a[href]');
+      if (firstLink && getComputedStyle(firstLink).visibility === 'visible') {
+        firstLink.focus({ preventScroll: true });
+        if (document.activeElement === firstLink) return;
+      }
+      if (performance.now() < focusDeadline) focusFrame = requestAnimationFrame(focusMenu);
+    };
+    focusFrame = requestAnimationFrame(focusMenu);
+    const desktop = window.matchMedia('(min-width: 1280px)');
+    const onDesktop = () => {
+      if (desktop.matches) close();
+    };
+    desktop.addEventListener('change', onDesktop);
+    return () => {
+      document.removeEventListener('pointerdown', handler);
+      desktop.removeEventListener('change', onDesktop);
+      cancelAnimationFrame(focusFrame);
+    };
   }, [open]);
 
   // Входная анимация — часть флоу «сначала прелоадер, потом сайт»: хедер появляется, КОГДА шторка
@@ -49,23 +77,39 @@ export function Header() {
   useGSAP(
     () => {
       if (!root.current) return;
-      // Уважаем prefers-reduced-motion: без анимации хедер сразу видим и стабилен.
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      if (!preloaderDone) {
-        gsap.set(root.current, { autoAlpha: 0, y: -20 });
-        return;
-      }
-      gsap.fromTo(
-        root.current,
-        { autoAlpha: 0, y: -20 },
-        { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' },
-      );
+      const media = gsap.matchMedia();
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        if (!preloaderDone) {
+          gsap.set(root.current, { autoAlpha: 0, y: -20 });
+          return;
+        }
+        gsap.fromTo(
+          root.current,
+          { autoAlpha: 0, y: -20 },
+          { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' },
+        );
+      });
+      return () => media.revert();
     },
-    { scope: root, dependencies: [preloaderDone] },
+    { scope: root, dependencies: [preloaderDone], revertOnUpdate: true },
   );
 
   return (
-    <header ref={root} className={cn(styles.header, solid && styles.scrolled)}>
+    <header
+      ref={root}
+      className={cn(styles.header, solid && styles.scrolled, open && styles.menuExpanded)}
+      onKeyDown={(event) => {
+        if (open && event.key === 'Escape' && !event.defaultPrevented) {
+          close();
+          root.current?.querySelector<HTMLElement>('[aria-controls="header-menu"]')?.focus();
+        }
+      }}
+      onBlur={(event) => {
+        if (open && event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) {
+          close();
+        }
+      }}
+    >
       <Container className={styles.inner}>
         <AppLink to={ROUTES.home} className={styles.brand} aria-label={t('brand')} onClick={close}>
           <Logo title={t('brand')} className={styles.brandMark} aria-hidden="true" />

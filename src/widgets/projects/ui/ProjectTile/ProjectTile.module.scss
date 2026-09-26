@@ -5,8 +5,10 @@
 .tile {
   display: block;
 
-  &:hover .cover {
-    transform: scale(1.05);
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    &:hover .cover {
+      transform: scale(1.025);
+    }
   }
 }
 
@@ -112,8 +114,9 @@
   }
 }
 
+// Светлая подпись поверх фото-скрима.
 .meta {
   font-size: var(--fs-sm);
-  color: color-mix(in srgb, var(--clr-light) 88%, transparent); // светлая подпись поверх фото-скрима
+  color: color-mix(in srgb, var(--clr-light) 88%, transparent);
   text-shadow: 0 1px 8px color-mix(in srgb, var(--clr-dark) 60%, transparent);
 }

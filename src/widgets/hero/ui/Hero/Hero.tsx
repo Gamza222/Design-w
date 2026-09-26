@@ -31,61 +31,70 @@ export function Hero({ bottomSlot }: HeroProps) {
   // вспышки), затем проигрываем появление. Prerendered HTML содержит текст → SEO/no-JS не страдают.
   useGSAP(
     () => {
-      // Уважаем prefers-reduced-motion: без анимации prerendered-контент сразу видим и стабилен.
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      if (!preloaderDone) {
-        gsap.set(`.${styles.reveal}`, { autoAlpha: 0, y: 36 });
-        return;
-      }
-      gsap.fromTo(
-        `.${styles.reveal}`,
-        { autoAlpha: 0, y: 36 },
-        { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1 },
-      );
+      const media = gsap.matchMedia();
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        if (!preloaderDone) {
+          gsap.set(`.${styles.reveal}`, { autoAlpha: 0, y: 24 });
+          return;
+        }
+        gsap.fromTo(
+          `.${styles.reveal}`,
+          { autoAlpha: 0, y: 24 },
+          { autoAlpha: 1, y: 0, duration: 0.55, ease: 'power3.out', stagger: 0.07 },
+        );
+      });
+      return () => media.revert();
     },
-    { scope: root, dependencies: [preloaderDone] },
+    { scope: root, dependencies: [preloaderDone], revertOnUpdate: true },
   );
 
   // Parallax фона: фон-слой плавно сдвигается, пока секция проходит вьюпорт (scrub привязан к скроллу).
-  // Через ScrollTrigger напрямую (а не ScrollSmoother.effects), т.к. эффекты дочернего useGSAP
-  // регистрируются раньше, чем родительский SmoothScroll создаёт смус. ScrollTrigger работает
-  // поверх ScrollSmoother — движение остаётся плавным. transform-based (GPU). useGSAP чистит при анмаунте.
+  // Нативный скролл, только transform. matchMedia также убирает движение, если пользователь
+  // переключил reduced-motion во время просмотра, и адаптирует амплитуду при смене ширины.
   useGSAP(
     () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       if (!bgRef.current || !root.current) return;
-
-      gsap.fromTo(
-        bgRef.current,
-        { yPercent: -5, scale: 1.025 },
+      const media = gsap.matchMedia();
+      media.add(
         {
-          yPercent: 5,
-          scale: 1.055,
-          ease: 'none',
-          force3D: true,
-          scrollTrigger: {
-            trigger: root.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 0.65,
-            invalidateOnRefresh: true,
-          },
+          motion: '(prefers-reduced-motion: no-preference)',
+          desktop: '(min-width: 1024px)',
+        },
+        (context) => {
+          if (!context.conditions?.motion) return;
+          const travel = context.conditions.desktop ? 5 : 2;
+          gsap.fromTo(
+            bgRef.current,
+            { yPercent: -travel, scale: 1.025 },
+            {
+              yPercent: travel,
+              scale: 1.045,
+              ease: 'none',
+              force3D: true,
+              scrollTrigger: {
+                trigger: root.current,
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 0.65,
+                invalidateOnRefresh: true,
+              },
+            },
+          );
+
+          const dust = root.current?.querySelector<HTMLElement>(`.${styles.dust}`);
+          if (dust) {
+            ScrollTrigger.create({
+              trigger: root.current,
+              start: 'top bottom',
+              end: 'bottom top',
+              onToggle: (self) => {
+                dust.style.animationPlayState = self.isActive ? 'running' : 'paused';
+              },
+            });
+          }
         },
       );
-
-      // Дрейф пыли — infinite: ставим на паузу, когда Hero ушёл из вьюпорта,
-      // чтобы компоситор не тикал весь остаток сессии.
-      const dust = root.current?.querySelector<HTMLElement>(`.${styles.dust}`);
-      if (dust) {
-        ScrollTrigger.create({
-          trigger: root.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          onToggle: (self) => {
-            dust.style.animationPlayState = self.isActive ? 'running' : 'paused';
-          },
-        });
-      }
+      return () => media.revert();
     },
     { scope: root },
   );
@@ -97,6 +106,7 @@ export function Hero({ bottomSlot }: HeroProps) {
       data-tone="dark"
       style={{ '--hero-bg': `url(${heroImages.background})` } as CSSProperties}
     >
+      <link rel="preload" as="image" href={heroImages.background} fetchPriority="high" />
       <div className={styles.bg} ref={bgRef} aria-hidden="true" />
       {/* Золотая пыль в воздухе — медленный дрейф (декор, отключается reduced-motion). */}
       <span className={styles.dust} aria-hidden="true" />

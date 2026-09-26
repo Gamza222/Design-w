@@ -29,19 +29,16 @@
   background: var(--color-surface);
 
   transition:
-    border-color 0.25s ease,
-    transform 0.25s ease;
+    border-color var(--transition-base),
+    transform var(--transition-base);
 
   &:hover {
-    transform: translateY(-0.25rem);
     border-color: var(--color-accent);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     &:hover {
-      transform: none;
+      transform: translateY(-0.2rem);
     }
   }
 }

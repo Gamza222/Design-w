@@ -1,3 +1,3 @@
 // Фото-интерьер для блока «Страхи» (левая колонка, макет 07) — временное (сток): спокойный
 // уголок с креслом и растением, ближе к макету. Заменить на реальное фото студии, не трогая разметку.
-export const fearsImage = '/realimages/web/fears-case.jpg';
+export const fearsImage = '/realimages/web/fears-case.webp';

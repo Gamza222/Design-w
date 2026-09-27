@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import gsap from 'gsap';
 import {
   isRouteErrorResponse,
   Links,
@@ -30,6 +31,12 @@ import type { Route } from './+types/root';
 import styles from './root.module.scss';
 
 import './styles/global.scss';
+
+// Content must become readable on schedule even on devices that drop frames.
+// GSAP's default lag smoothing turns each >500ms stall into only 33ms of progress,
+// stretching short entrances into many seconds. Keep wall-clock timing instead;
+// reduced-motion handling and scroll-linked parallax remain in their own contexts.
+if (typeof window !== 'undefined') gsap.ticker.lagSmoothing(0);
 
 export function Layout({ children }: { children: ReactNode }) {
   const { pathname: rawPathname } = useLocation();

@@ -101,6 +101,32 @@ test('order dialog keeps keyboard focus inside during validation and after succe
   await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
 });
 
+test('mobile menu waits for hydration before accepting its first click', async ({ page }) => {
+  await page.setViewportSize({ width: 844, height: 390 });
+  let releaseScripts: () => void = () => {};
+  const scriptsReady = new Promise<void>((resolve) => {
+    releaseScripts = resolve;
+  });
+  await page.route('**/*.js', async (route) => {
+    await scriptsReady;
+    await route.continue();
+  });
+  await page.goto('/', { waitUntil: 'commit' });
+  const burger = page.getByRole('button', { name: 'Меню', exact: true });
+  try {
+    await expect(burger).toBeDisabled();
+    await expect(burger).toHaveAttribute('aria-expanded', 'false');
+  } finally {
+    releaseScripts();
+  }
+  await expect(burger).toBeEnabled();
+  await burger.click();
+  await expect(burger).toHaveAttribute('aria-expanded', 'true');
+  await expect(
+    page.locator('#header-menu').getByRole('link', { name: 'Услуги', exact: true }),
+  ).toBeFocused();
+});
+
 test('short mobile menu scrolls to its last action and closes accessibly', async ({ page }) => {
   await page.setViewportSize({ width: 844, height: 390 });
   await page.goto('/');

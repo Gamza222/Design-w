@@ -97,6 +97,28 @@ test('service SEO landing renders in all locales', async ({ page }) => {
   await expect(page.getByText('ад 55 BYN/м²').first()).toBeVisible();
 });
 
+test('service price card stays inside its rail with a wider fallback font', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 900 });
+  await page.goto('/eskiznyj-dizajn-proekt');
+  await page.evaluate(() => {
+    document.documentElement.style.setProperty('--font-sans', 'Verdana, sans-serif');
+    const cta = document.querySelector<HTMLElement>('aside a');
+    if (cta) cta.style.letterSpacing = '2px';
+  });
+  const bounds = await page.locator('main aside').evaluate((card) => {
+    const container = card.parentElement!;
+    const rect = container.getBoundingClientRect();
+    const style = getComputedStyle(container);
+    return {
+      cardRight: card.getBoundingClientRect().right,
+      contentRight: rect.right - parseFloat(style.paddingRight),
+      overflow: document.documentElement.scrollWidth - window.innerWidth,
+    };
+  });
+  expect(bounds.cardRight).toBeLessThanOrEqual(bounds.contentRight + 1);
+  expect(bounds.overflow).toBeLessThanOrEqual(1);
+});
+
 test('service order opens the full form with the selected package', async ({ page }) => {
   let submittedLead: unknown;
   await page.route('**/api/lead.php', async (route) => {
@@ -304,6 +326,7 @@ test('Belarus home uses BYN and exposes payment methods', async ({ page }) => {
 
 test('header glass does not flicker around the scroll threshold', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('body > div[aria-hidden="true"]')).toHaveCount(0);
 
   const classChanges = await page.evaluate(async () => {
     const header = document.querySelector('header');
@@ -317,7 +340,11 @@ test('header glass does not flicker around the scroll threshold', async ({ page 
 
     for (let index = 0; index < 12; index += 1) {
       window.scrollTo(0, index % 2 === 0 ? 28 : 18);
-      await new Promise((resolve) => setTimeout(resolve, 30));
+      // Give the scroll handler and React a frame each. A fixed 30ms delay can
+      // skip every intermediate position on slower WebKit renderers.
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
     }
 
     observer.disconnect();

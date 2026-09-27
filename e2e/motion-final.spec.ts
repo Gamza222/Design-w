@@ -71,6 +71,29 @@ test.describe('motion and accessible content', () => {
     ).toBe('auto');
   });
 
+  test('entrances remain readable when animation frames are severely delayed', async ({ page }) => {
+    await page.addInitScript(() => {
+      window.requestAnimationFrame = (callback) =>
+        window.setTimeout(() => callback(performance.now()), 650);
+      window.cancelAnimationFrame = (id) => window.clearTimeout(id);
+    });
+    await openHome(page);
+    const title = page.getByRole('heading', { name: 'Пакеты дизайн-проекта', exact: true });
+    await expect
+      .poll(() =>
+        title.evaluate((element) => {
+          let current: Element | null = element;
+          while (current) {
+            const style = getComputedStyle(current);
+            if (style.visibility === 'hidden' || Number(style.opacity) < 0.99) return false;
+            current = current.parentElement;
+          }
+          return true;
+        }),
+      )
+      .toBe(true);
+  });
+
   test('FAQ keyboard toggles expose only the current answer', async ({ page }) => {
     await openHome(page);
     const secondQuestion = page.locator('#faq-1-btn');

@@ -6,7 +6,7 @@ import { useGSAP } from '@gsap/react';
 
 import { LocaleSwitcher } from '@features/locale-switcher';
 import { CONTACTS, HOME_SECTIONS, ROUTES, homeSectionPath, stripLocale } from '@shared/config';
-import { cn, usePreloaderDone } from '@shared/lib';
+import { cn, useHydrated, usePreloaderDone } from '@shared/lib';
 import { AppLink, Button, Container, Logo, SocialLinks } from '@shared/ui';
 
 import { useHeaderScroll } from '../../lib/useHeaderScroll';
@@ -21,6 +21,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const scrolled = useHeaderScroll();
   const root = useRef<HTMLElement>(null);
+  const hydrated = useHydrated();
   const preloaderDone = usePreloaderDone();
 
   // Хедер прозрачный (светлый текст) только над тёмным Hero главной. На остальных страницах
@@ -139,6 +140,7 @@ export function Header() {
 
         <Burger
           open={open}
+          disabled={!hydrated}
           aria-label={t('header.menu')}
           aria-controls="header-menu"
           onClick={() => setOpen((value) => !value)}

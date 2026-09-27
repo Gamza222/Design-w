@@ -45,7 +45,7 @@ for (const [name, overrides] of [
   ['missing bot token', { LEAD_TELEGRAM_BOT_TOKEN: '' }],
   ['missing primary recipient', { LEAD_TELEGRAM_CHAT_ID: '' }],
   ['missing additional recipient', { LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: '' }],
-  ['personal username', { LEAD_TELEGRAM_CHAT_ID: '@designnoww' }],
+  ['personal username', { LEAD_TELEGRAM_CHAT_ID: '@some_user' }],
   ['duplicate recipients', { LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: '100001' }],
   ['invalid bot token', { LEAD_TELEGRAM_BOT_TOKEN: 'invalid' }],
 ]) {

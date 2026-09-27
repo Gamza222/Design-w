@@ -2,24 +2,29 @@ import { spawn } from 'node:child_process';
 import { emitKeypressEvents } from 'node:readline';
 
 const repository = 'Gamza222/Design-w';
-const recipients = [
-  { username: 'designnoww', secret: 'LEAD_TELEGRAM_CHAT_ID' },
-  { username: 'qwerty12345777', secret: 'LEAD_TELEGRAM_CHAT_ID_ADDITIONAL' },
-];
+const recipientSecrets = ['LEAD_TELEGRAM_CHAT_ID', 'LEAD_TELEGRAM_CHAT_ID_ADDITIONAL'];
 
 class SetupError extends Error {}
 
 const normalizeUsername = (value) =>
   typeof value === 'string' && /^[A-Za-z0-9_]{5,32}$/.test(value) ? value.toLowerCase() : '';
 
-function privateChats(updates) {
+function privateChats(updates, botUsername) {
   if (!Array.isArray(updates)) throw new SetupError('Telegram вернул неверный список сообщений.');
   const chats = new Map();
   for (const update of updates) {
-    const message = update?.message ?? update?.edited_message;
+    const message = update?.message;
     const chat = message?.chat;
     const sender = message?.from;
+    const start =
+      typeof message?.text === 'string'
+        ? /^\/start(?:@([A-Za-z0-9_]+))?(?:\s|$)/.exec(message.text)
+        : null;
     if (
+      !start ||
+      (start[1] && normalizeUsername(start[1]) !== normalizeUsername(botUsername)) ||
+      message.forward_origin ||
+      message.forward_date ||
       chat?.type !== 'private' ||
       !Number.isSafeInteger(chat.id) ||
       chat.id <= 0 ||
@@ -30,72 +35,43 @@ function privateChats(updates) {
     }
     const chatUsername = normalizeUsername(chat.username);
     const senderUsername = normalizeUsername(sender.username);
-    // Both fields are optional in the Bot API. Either can identify the verified
-    // sender; text/forwarded names must never determine the destination.
-    if (chatUsername && senderUsername && chatUsername !== senderUsername) continue;
+    // Usernames are optional display labels, never recipient identifiers.
     const id = String(chat.id);
     const username = senderUsername || chatUsername;
-    chats.set(`${id}:${username}`, { id, username });
+    chats.set(id, { id, username });
   }
   return [...chats.values()];
 }
 
 function mergeRecipientChats(chats, incoming) {
-  for (const [username, id] of incoming) {
-    if (chats.has(username) && chats.get(username) !== id) {
-      throw new SetupError(`Для @${username} обнаружены разные ID. Проверьте владельца аккаунта.`);
-    }
-    chats.set(username, id);
-  }
-
-  if (new Set(chats.values()).size !== chats.size) {
-    throw new SetupError('Два получателя должны иметь разные личные Telegram-чаты.');
-  }
+  for (const chat of incoming) chats.set(chat.id, chat);
   return chats;
 }
 
-function findRecipientChats(updates) {
-  const matches = privateChats(updates)
-    .filter(({ username }) => recipients.some((recipient) => recipient.username === username))
-    .map(({ username, id }) => [username, id]);
-  return mergeRecipientChats(new Map(), matches);
-}
-
-function validateRecipientChat(chat, username, id) {
+function validateRecipientChat(chat, id) {
   if (
     chat?.type !== 'private' ||
-    String(chat.id) !== id ||
-    normalizeUsername(chat.username) !== username
+    !Number.isSafeInteger(chat.id) ||
+    chat.id <= 0 ||
+    String(chat.id) !== id
   ) {
-    const actual = normalizeUsername(chat?.username);
     throw new SetupError(
-      `ID для @${username} не подтверждён${actual ? `: Telegram вернул @${actual}` : ''}. Проверьте именно имя пользователя в настройках Telegram, не отображаемое имя.`,
+      `Личный чат ID ${id} не подтверждён Telegram. Проверьте числовой ID получателя.`,
     );
   }
+  return { id, username: normalizeUsername(chat.username) };
 }
 
+const describeChat = ({ id, username }) =>
+  `${username ? `@${username}` : 'без @username'} — ID ${id}`;
+
 function reportChats(updates, chats, log) {
-  log(
-    `Получено событий: ${updates.length}. Найдено получателей: ${chats.size}/${recipients.length}.`,
-  );
-  for (const { username } of recipients) {
-    log(
-      chats.has(username)
-        ? `✓ @${username}: чат найден, ID ${chats.get(username)}.`
-        : `— @${username}: пока не найден.`,
-    );
-  }
-  const observed = privateChats(updates);
-  if (observed.length) {
-    log('Личные чаты в ответе Telegram (тексты сообщений не выводятся):');
-    for (const { id, username } of observed)
-      log(`  ${username ? `@${username}` : 'без @username'} — ID ${id}`);
-    log(
-      'Если нужного @username нет в списке, проверьте выбранный аккаунт Telegram и его имя пользователя.',
-    );
+  log(`Получено событий: ${updates.length}. Личных аккаунтов с /start: ${chats.size}; нужны два.`);
+  if (chats.size) {
+    for (const chat of chats.values()) log(`  ${describeChat(chat)}`);
   } else {
     log(
-      'В ответе нет личных сообщений. Отправьте новое сообщение боту сейчас, а не только нажмите старую кнопку «Запустить».',
+      'В ответе нет личных /start. Отправьте боту новое /start сейчас с каждого из двух аккаунтов.',
     );
     log(
       'Старые события хранятся не дольше 24 часов; другой запущенный обработчик тоже мог забрать их.',
@@ -228,6 +204,7 @@ async function main({
     throw new SetupError('Telegram не подтвердил аккаунт бота. Проверьте токен.');
   }
   log(`Бот подтверждён: @${bot.username} — https://t.me/${bot.username}`);
+  log('Используем два аккаунта, отправивших /start. Привязки к конкретным @username нет.');
   const webhook = await api(token, 'getWebhookInfo');
   let manual = Boolean(webhook?.url);
   if (manual) {
@@ -252,24 +229,29 @@ async function main({
     const updates = await api(token, 'getUpdates', {
       limit: 100,
       timeout: 0,
-      allowed_updates: ['message', 'edited_message'],
+      allowed_updates: ['message'],
     });
-    mergeRecipientChats(chats, findRecipientChats(updates));
+    mergeRecipientChats(chats, privateChats(updates, bot.username));
     reportChats(updates, chats, log);
-    const missing = recipients.filter(({ username }) => !chats.has(username));
-    if (missing.length === 0) break;
-    log(
-      `${missing.map(({ username }) => `@${username}`).join(' и ')}: откройте https://t.me/${bot.username} и отправьте НОВОЕ /start именно сейчас.`,
-    );
-    log('Отсутствие ответа бота на /start нормально: сейчас проверяем входящее сообщение.');
     if (updates.length === 100) {
       log(
-        'Показаны первые 100 событий очереди; мастер не удаляет их. Для уже известных ID используйте id.',
+        'Очередь содержит не менее 100 событий; список может быть неполным. Выберите два известных ID вручную. Мастер не удаляет события.',
       );
     }
+    if (chats.size > 2 || updates.length === 100) {
+      if (chats.size > 2)
+        log('Найдено больше двух аккаунтов. Автоматически выбирать получателей небезопасно.');
+      manual = true;
+      break;
+    }
+    if (chats.size === 2) break;
+    log(
+      `Откройте https://t.me/${bot.username} и отправьте НОВОЕ /start со второго аккаунта${chats.size ? '' : ' и с первого'}.`,
+    );
+    log('Отсутствие ответа бота на /start нормально: сейчас проверяем входящее сообщение.');
     if (attempts >= 5) {
       throw new SetupError(
-        'После 5 проверок чат не найден. Сверьте @username в диагностике выше, убедитесь, что пишете именно этому боту и нет второго обработчика getUpdates. Токен никуда не отправляйте.',
+        'После 5 проверок не найдены два личных /start. Убедитесь, что оба аккаунта пишут именно этому боту и нет второго обработчика getUpdates. Или повторите мастер с ручным вводом ID (id). Токен никуда не отправляйте.',
       );
     }
     manual =
@@ -281,25 +263,34 @@ async function main({
         .trim()
         .toLowerCase() === 'id';
   }
+  let selected = [...chats.keys()];
   if (manual) {
-    for (const { username } of recipients) {
-      if (chats.has(username)) continue;
-      const id = (await prompt(`Числовой ID личного чата @${username} (не @username): `)).trim();
+    selected = [];
+    for (let index = 0; index < recipientSecrets.length; index++) {
+      const id = (
+        await prompt(`Числовой ID личного чата получателя ${index + 1} (не @username): `)
+      ).trim();
       if (!/^[1-9]\d*$/.test(id) || !Number.isSafeInteger(Number(id))) {
         throw new SetupError('Личный chat ID должен быть положительным целым числом.');
       }
-      mergeRecipientChats(chats, [[username, id]]);
+      if (selected.includes(id)) {
+        throw new SetupError('Два получателя должны иметь разные личные Telegram-чаты.');
+      }
+      selected.push(id);
     }
   }
-  for (const { username } of recipients) {
-    const id = chats.get(username);
-    validateRecipientChat(await api(token, 'getChat', { chat_id: id }), username, id);
+  const recipients = [];
+  for (const id of selected) {
+    const chat = validateRecipientChat(await api(token, 'getChat', { chat_id: id }), id);
+    recipients.push(chat);
+    log(`✓ Подтверждён получатель: ${describeChat(chat)}.`);
   }
   log('Оба личных чата подтверждены Telegram, ID разные.');
+  log('Получатели сохраняются по ID. Новые /start после настройки не добавят других получателей.');
 
   const secrets = [
     ['LEAD_TELEGRAM_BOT_TOKEN', token],
-    ...recipients.map(({ username, secret }) => [secret, chats.get(username)]),
+    ...recipients.map(({ id }, index) => [recipientSecrets[index], id]),
   ];
   for (const [name, value] of secrets) {
     const code = await github(['secret', 'set', name, '--repo', repository], value);
@@ -320,8 +311,8 @@ async function main({
       .trim()
       .toUpperCase() === 'TEST'
   ) {
-    for (const { username } of recipients) {
-      const id = chats.get(username);
+    for (const chat of recipients) {
+      const { id } = chat;
       const sent = await api(token, 'sendMessage', {
         chat_id: id,
         text: 'ДизайнСейчас — проверка подключения. Этот чат настроен для заявок с designseichas.ru. Это тест из мастера настройки, не заявка клиента.',
@@ -332,7 +323,7 @@ async function main({
           'Настройки сохранены, но Telegram не подтвердил доставку проверочного сообщения.',
         );
       }
-      log(`✓ Проверочное сообщение принято Telegram для @${username}.`);
+      log(`✓ Проверочное сообщение принято Telegram: ${describeChat(chat)}.`);
     }
   }
   log(
@@ -346,57 +337,67 @@ async function selfTest() {
     message: {
       chat: { username, id, type: 'private', ...overrides },
       from: { username, id, is_bot: false },
+      text: '/start',
     },
   });
-  assert.deepEqual(
-    [...findRecipientChats([update('DesignNoww', 1001), update('qwerty12345777', 1002)])],
-    [
-      ['designnoww', '1001'],
-      ['qwerty12345777', '1002'],
-    ],
-  );
-  assert.equal(findRecipientChats([update('designnoww', 1001, { type: 'group' })]).size, 0);
-  assert.equal(findRecipientChats([update('designnoww_fake', 1001)]).size, 0);
-  assert.equal(findRecipientChats([update('designnoww', Number.MAX_SAFE_INTEGER + 1)]).size, 0);
-  assert.equal(findRecipientChats([update('designnoww', -1001)]).size, 0);
+  assert.deepEqual(privateChats([update('First_person', 1001), update(undefined, 1002)]), [
+    { id: '1001', username: 'first_person' },
+    { id: '1002', username: '' },
+  ]);
+  assert.equal(privateChats([update('first_person', 1001, { type: 'group' })]).length, 0);
+  assert.equal(privateChats([update('first_person', Number.MAX_SAFE_INTEGER + 1)]).length, 0);
+  assert.equal(privateChats([update('first_person', -1001)]).length, 0);
   assert.equal(
-    findRecipientChats([update('designnoww', 1001), update('designnoww', 1001)]).size,
+    privateChats([update('first_person', 1001), update('renamed_person', 1001)]).length,
     1,
   );
-  assert.throws(() => findRecipientChats([update('designnoww', 1001), update('designnoww', 1002)]));
-  assert.throws(() =>
-    findRecipientChats([update('designnoww', 1001), update('qwerty12345777', 1001)]),
-  );
-  assert.throws(() => findRecipientChats(null));
+  // A username can change owners; different verified sender IDs remain distinct.
+  assert.equal(privateChats([update('same_name', 1001), update('same_name', 1002)]).length, 2);
+  assert.throws(() => privateChats(null));
   const spoofed = update('unrelated', 1003);
-  spoofed.message.text = '@designnoww';
-  assert.equal(findRecipientChats([spoofed]).size, 0);
-  const mismatched = update('designnoww', 1001);
+  for (const text of ['@first_person', 'hello /start', '/starter', '/start@other_bot']) {
+    spoofed.message.text = text;
+    assert.equal(privateChats([spoofed], 'designseichas_bot').length, 0);
+  }
+  spoofed.message.text = '/start@Designseichas_bot campaign';
+  assert.equal(privateChats([spoofed], 'designseichas_bot').length, 1);
+  spoofed.message.forward_origin = { type: 'user' };
+  assert.equal(privateChats([spoofed], 'designseichas_bot').length, 0);
+  const edited = update('first_person', 1001);
+  assert.equal(privateChats([{ edited_message: edited.message }]).length, 0);
+  const mismatched = update('first_person', 1001);
   mismatched.message.from.id = 1002;
-  assert.equal(findRecipientChats([mismatched]).size, 0);
-  const optionalChatUsername = update('designnoww', 1001);
+  assert.equal(privateChats([mismatched]).length, 0);
+  const botSender = update('another_bot', 1001);
+  botSender.message.from.is_bot = true;
+  assert.equal(privateChats([botSender]).length, 0);
+  const optionalChatUsername = update('first_person', 1001);
   delete optionalChatUsername.message.chat.username;
-  assert.equal(findRecipientChats([optionalChatUsername]).get('designnoww'), '1001');
-  const optionalSenderUsername = update('designnoww', 1001);
+  assert.equal(privateChats([optionalChatUsername])[0].username, 'first_person');
+  const optionalSenderUsername = update('first_person', 1001);
   delete optionalSenderUsername.message.from.username;
-  assert.equal(findRecipientChats([optionalSenderUsername]).get('designnoww'), '1001');
-  const conflictingNames = update('designnoww', 1001);
+  assert.equal(privateChats([optionalSenderUsername])[0].username, 'first_person');
+  const conflictingNames = update('first_person', 1001);
   conflictingNames.message.from.username = 'unrelated';
-  assert.equal(findRecipientChats([conflictingNames]).size, 0);
-  assert.throws(() =>
-    validateRecipientChat(
-      { type: 'private', id: 1001, username: 'unrelated' },
-      'designnoww',
-      '1001',
-    ),
+  assert.equal(privateChats([conflictingNames])[0].id, '1001');
+  assert.equal(
+    validateRecipientChat({ type: 'private', id: 1001, username: 'renamed_person' }, '1001')
+      .username,
+    'renamed_person',
   );
-  assert.throws(() =>
-    mergeRecipientChats(new Map([['designnoww', '1001']]), [['designnoww', '1002']]),
+  assert.throws(() => validateRecipientChat({ type: 'private', id: 1002 }, '1001'));
+  assert.throws(() => validateRecipientChat({ type: 'group', id: 1001 }, '1001'));
+  assert.throws(() => validateRecipientChat({ type: 'private', id: '1001' }, '1001'));
+  assert.equal(
+    mergeRecipientChats(new Map([['1001', { id: '1001', username: 'first_person' }]]), [
+      { id: '1001', username: 'renamed_person' },
+    ]).size,
+    1,
   );
 
   // Exercise the actual interactive flow with fake I/O: never touch Telegram/GitHub.
   const fakeToken = `123456:${'x'.repeat(32)}`;
-  const scenario = (batches, answers = [], webhook = false) => {
+  const scenario = (batches, answers = [], webhook = false, chatOverrides = {}) => {
     const calls = [];
     const saved = [];
     const logs = [];
@@ -417,7 +418,7 @@ async function selfTest() {
           if (method === 'getWebhookInfo')
             return { url: webhook ? 'https://example.invalid/private' : '' };
           if (method === 'getUpdates') {
-            assert.deepEqual(payload.allowed_updates, ['message', 'edited_message']);
+            assert.deepEqual(payload.allowed_updates, ['message']);
             assert.equal(Object.hasOwn(payload, 'offset'), false);
             return batches[Math.min(batch++, batches.length - 1)] ?? [];
           }
@@ -425,7 +426,8 @@ async function selfTest() {
             return {
               id: Number(payload.chat_id),
               type: 'private',
-              username: payload.chat_id === '1001' ? 'designnoww' : 'qwerty12345777',
+              username: payload.chat_id === '1001' ? 'renamed_person' : undefined,
+              ...chatOverrides,
             };
           if (method === 'sendMessage')
             return { message_id: 5, chat: { id: Number(payload.chat_id) } };
@@ -434,7 +436,14 @@ async function selfTest() {
       });
     return { run, calls, saved, logs };
   };
-  const foundInSeparatePolls = scenario([[update('qwerty12345777', 1002)], [optionalChatUsername]]);
+  const exactTwo = scenario([[update('first_person', 1001), update(undefined, 1002)]]);
+  await exactTwo.run();
+  assert.deepEqual(exactTwo.saved, [
+    ['LEAD_TELEGRAM_BOT_TOKEN', fakeToken],
+    ['LEAD_TELEGRAM_CHAT_ID', '1001'],
+    ['LEAD_TELEGRAM_CHAT_ID_ADDITIONAL', '1002'],
+  ]);
+  const foundInSeparatePolls = scenario([[update(undefined, 1002)], [optionalChatUsername]]);
   await foundInSeparatePolls.run();
   assert.deepEqual(
     foundInSeparatePolls.saved.map(([name]) => name),
@@ -445,7 +454,11 @@ async function selfTest() {
     0,
   );
   assert.ok(!foundInSeparatePolls.logs.join('\n').includes(fakeToken));
-  assert.ok(foundInSeparatePolls.logs.some((line) => line.includes('✓ @qwerty12345777')));
+  assert.ok(
+    foundInSeparatePolls.logs.some((line) =>
+      line.includes('✓ Подтверждён получатель: без @username — ID 1002'),
+    ),
+  );
 
   const unknownUpdate = update('unrelated', 1003);
   unknownUpdate.message.text = 'private message content must never appear';
@@ -454,6 +467,32 @@ async function selfTest() {
   assert.equal(boundedMissing.calls.filter(({ method }) => method === 'getUpdates').length, 5);
   assert.equal(boundedMissing.saved.length, 0);
   assert.ok(!boundedMissing.logs.join('\n').includes(unknownUpdate.message.text));
+
+  const duplicateOnly = scenario([[update('first_person', 1001), update('renamed_person', 1001)]]);
+  await assert.rejects(duplicateOnly.run(), /После 5 проверок/);
+  assert.equal(duplicateOnly.saved.length, 0);
+
+  const tooMany = scenario(
+    [[update('first_person', 1001), update(undefined, 1002), update('third_person', 1003)]],
+    ['1003', '1002'],
+  );
+  await tooMany.run();
+  assert.deepEqual(
+    tooMany.saved.slice(1).map(([, id]) => id),
+    ['1003', '1002'],
+  );
+  const noSelection = scenario([
+    [update('first_person', 1001), update(undefined, 1002), update('third_person', 1003)],
+  ]);
+  await assert.rejects(noSelection.run(), /положительным целым/);
+  assert.equal(noSelection.saved.length, 0);
+  const fullQueue = scenario(
+    [Array.from({ length: 100 }, (_, index) => update(undefined, index % 2 ? 1001 : 1002))],
+    ['1001', '1002'],
+  );
+  await fullQueue.run();
+  assert.equal(fullQueue.saved.length, 3);
+  assert.ok(fullQueue.logs.some((line) => line.includes('список может быть неполным')));
 
   const manualWebhook = scenario([], ['id', '1001', '1002', 'TEST'], true);
   await manualWebhook.run();
@@ -467,6 +506,17 @@ async function selfTest() {
   const duplicateManual = scenario([], ['id', '1001', '1001'], true);
   await assert.rejects(duplicateManual.run(), /разные личные/);
   assert.equal(duplicateManual.saved.length, 0);
+  const manualAfterOne = scenario([[update('first_person', 1001)]], ['id', '1002', '1001']);
+  await manualAfterOne.run();
+  assert.deepEqual(
+    manualAfterOne.saved.slice(1).map(([, id]) => id),
+    ['1002', '1001'],
+  );
+  for (const chatOverrides of [{ type: 'group' }, { id: 9999 }]) {
+    const invalidChat = scenario([], ['id', '1001', '1002'], true, chatOverrides);
+    await assert.rejects(invalidChat.run(), /не подтверждён/);
+    assert.equal(invalidChat.saved.length, 0);
+  }
 
   const sentinel = 'private-token-must-not-appear';
   await assert.rejects(
@@ -487,7 +537,7 @@ async function selfTest() {
   );
   assert.deepEqual(result, []);
   console.log(
-    'Setup self-test: OK (оба чата, необязательные username, накопление найденных ID, диагностика, лимит повторов, ручной ввод, 3 секрета без почты, тестовые сообщения только после TEST, защита токена).',
+    'Setup self-test: OK (два /start-аккаунта по ID, любые username, дедупликация, защита от пересланных сообщений, ручной выбор при >2, проверка Telegram, лимит повторов, 3 секрета без почты, тестовые сообщения только после TEST, защита токена).',
   );
 }
 

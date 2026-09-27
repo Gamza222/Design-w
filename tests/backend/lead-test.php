@@ -26,16 +26,25 @@ function rejects(callable $operation, string $exceptionType, string $label): voi
 }
 
 $config = [
-    'smtpPassword' => 'test-only-password',
     'telegramBotToken' => '123456:' . str_repeat('a', 32),
     'telegramChatId' => '100001',
     'telegramAdditionalChatId' => '100002',
 ];
 $recipients = deliveryRecipients($config);
-check(count($recipients) === 4, 'All four recipients are required');
-check($recipients[0]['target'] === 'dizain.seichas@yandex.ru', 'Studio receives email');
-check($recipients[1]['target'] === 'gamzaweb@gmail.com', 'Additional inbox receives email');
-check($recipients[2]['target'] === '100001' && $recipients[3]['target'] === '100002', 'Both chats receive leads');
+check(count($recipients) === 2, 'Exactly two recipients are required without SMTP configuration');
+check($recipients[0]['channel'] === 'telegram' && $recipients[1]['channel'] === 'telegram', 'Only Telegram receives leads');
+check($recipients[0]['target'] === '100001' && $recipients[1]['target'] === '100002', 'Both chats receive leads');
+
+foreach (['telegramBotToken', 'telegramChatId', 'telegramAdditionalChatId'] as $requiredKey) {
+    rejects(static function () use ($config, $requiredKey): void {
+        $incompleteConfig = $config;
+        unset($incompleteConfig[$requiredKey]);
+        deliveryRecipients($incompleteConfig);
+    }, RuntimeException::class, 'Every Telegram credential is required');
+}
+rejects(static function () use ($config): void {
+    telegramRequest($config['telegramBotToken'], 'deleteWebhook', [], microtime(true) + 1);
+}, RuntimeException::class, 'Unneeded Telegram mutations are rejected before any request');
 
 foreach (['@designnoww', '0', 'not-an-id', '100001'] as $invalidId) {
     rejects(static function () use ($config, $invalidId): void {
@@ -54,7 +63,7 @@ $first = deliverLeadRecipients($handle, $recipients, $fingerprint, static functi
     }
 });
 check(count($first) === 1, 'Partial failure is reported');
-check(count($attempts) === 4, 'Every recipient is attempted');
+check(count($attempts) === 2, 'Both Telegram recipients are attempted');
 
 $attempts = [];
 $retry = deliverLeadRecipients($handle, $recipients, $fingerprint, static function (array $recipient) use (&$attempts): void {

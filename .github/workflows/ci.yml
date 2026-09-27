@@ -74,7 +74,6 @@ jobs:
       - run: npm run build
       - name: Build protected lead-delivery configuration
         env:
-          LEAD_SMTP_PASSWORD: ${{ secrets.LEAD_SMTP_PASSWORD }}
           LEAD_TELEGRAM_BOT_TOKEN: ${{ secrets.LEAD_TELEGRAM_BOT_TOKEN }}
           LEAD_TELEGRAM_CHAT_ID: ${{ secrets.LEAD_TELEGRAM_CHAT_ID }}
           LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: ${{ secrets.LEAD_TELEGRAM_CHAT_ID_ADDITIONAL }}

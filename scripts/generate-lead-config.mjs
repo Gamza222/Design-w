@@ -2,7 +2,6 @@ import { chmod, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 
 const required = {
-  smtpPassword: process.env.LEAD_SMTP_PASSWORD,
   telegramBotToken: process.env.LEAD_TELEGRAM_BOT_TOKEN,
   telegramChatId: process.env.LEAD_TELEGRAM_CHAT_ID,
   telegramAdditionalChatId: process.env.LEAD_TELEGRAM_CHAT_ID_ADDITIONAL,
@@ -38,7 +37,6 @@ if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) {
 }
 
 return [
-    'smtpPassword' => base64_decode('${encode(required.smtpPassword)}', true),
     'telegramBotToken' => base64_decode('${encode(required.telegramBotToken)}', true),
     'telegramChatId' => base64_decode('${encode(required.telegramChatId)}', true),
     'telegramAdditionalChatId' => base64_decode('${encode(required.telegramAdditionalChatId)}', true),

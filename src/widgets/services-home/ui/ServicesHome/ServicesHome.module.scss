@@ -115,27 +115,26 @@
   // Fade по краям, где лента реально продолжается (--fade-* включают .maskStart/.maskEnd).
   --fade-l: 0rem;
   --fade-r: 0rem;
+  --track-gutter: min(var(--space-6), var(--container-pad));
 
   cursor: grab;
   scrollbar-width: none;
-  scroll-padding-inline: 6px;
+  scroll-padding-inline: var(--track-gutter);
   scroll-snap-type: x proximity;
 
   overflow-x: auto;
   display: flex;
   gap: var(--space-4);
 
-  margin-bottom: calc(-1 * var(--space-6));
-  margin-inline: -6px;
+  margin-inline: calc(-1 * var(--track-gutter));
 
-  // Вертикальный воздух: сверху — под hover-подъём, снизу — под тень карточек
-  // (иначе тень режется границей скроллпорта жёсткой линией); низ компенсируем
-  // отрицательным маргином, чтобы не раздувать ритм секции.
-  padding-block: var(--space-2) var(--space-10);
+  // Реальное место под подъём, фокус-кольцо и тени. Низ не компенсируем
+  // отрицательным margin: прогресс и счётчик всегда идут ПОСЛЕ скроллпорта.
+  padding-block: var(--space-6) var(--space-12);
 
   // Горизонтальная компенсация: фокус-кольцо крайних карточек (2px + offset 3px)
   // не должно клиповаться краем скроллпорта.
-  padding-inline: 6px;
+  padding-inline: var(--track-gutter);
 
   mask-image: linear-gradient(
     90deg,
@@ -200,10 +199,14 @@
 }
 
 .counter {
+  flex-shrink: 0;
+
   font-family: var(--font-display);
   font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
   color: var(--color-text-muted);
   letter-spacing: 0.06em;
+  white-space: nowrap;
 
   b {
     font-weight: 700;

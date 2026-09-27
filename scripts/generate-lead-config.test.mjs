@@ -6,7 +6,6 @@ import { join } from 'node:path';
 import test from 'node:test';
 
 const fixture = {
-  LEAD_SMTP_PASSWORD: "test-'\\-password",
   LEAD_TELEGRAM_BOT_TOKEN: `123456:${'a'.repeat(32)}`,
   LEAD_TELEGRAM_CHAT_ID: '100001',
   LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: '100002',
@@ -33,6 +32,7 @@ test('generates a protected config for both distinct Telegram recipients', async
     const content = await readFile(target, 'utf8');
     assert.match(content, /http_response_code\(404\)/);
     assert.match(content, /telegramAdditionalChatId/);
+    assert.doesNotMatch(content, /smtp|email|yandex/i);
     for (const value of Object.values(fixture)) {
       assert.ok(content.includes(Buffer.from(value).toString('base64')));
       assert.ok(!result.stdout.includes(value));
@@ -42,7 +42,8 @@ test('generates a protected config for both distinct Telegram recipients', async
 });
 
 for (const [name, overrides] of [
-  ['missing password', { LEAD_SMTP_PASSWORD: '' }],
+  ['missing bot token', { LEAD_TELEGRAM_BOT_TOKEN: '' }],
+  ['missing primary recipient', { LEAD_TELEGRAM_CHAT_ID: '' }],
   ['missing additional recipient', { LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: '' }],
   ['personal username', { LEAD_TELEGRAM_CHAT_ID: '@designnoww' }],
   ['duplicate recipients', { LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: '100001' }],

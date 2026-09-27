@@ -9,10 +9,12 @@ const recipients = [
 
 class SetupError extends Error {}
 
-function findRecipientChats(updates) {
+const normalizeUsername = (value) =>
+  typeof value === 'string' && /^[A-Za-z0-9_]{5,32}$/.test(value) ? value.toLowerCase() : '';
+
+function privateChats(updates) {
   if (!Array.isArray(updates)) throw new SetupError('Telegram вернул неверный список сообщений.');
   const chats = new Map();
-
   for (const update of updates) {
     const message = update?.message ?? update?.edited_message;
     const chat = message?.chat;
@@ -26,10 +28,20 @@ function findRecipientChats(updates) {
     ) {
       continue;
     }
-    const username = typeof chat.username === 'string' ? chat.username.toLowerCase() : '';
-    if (!recipients.some((recipient) => recipient.username === username)) continue;
-    if (sender.username?.toLowerCase() !== username) continue;
+    const chatUsername = normalizeUsername(chat.username);
+    const senderUsername = normalizeUsername(sender.username);
+    // Both fields are optional in the Bot API. Either can identify the verified
+    // sender; text/forwarded names must never determine the destination.
+    if (chatUsername && senderUsername && chatUsername !== senderUsername) continue;
     const id = String(chat.id);
+    const username = senderUsername || chatUsername;
+    chats.set(`${id}:${username}`, { id, username });
+  }
+  return [...chats.values()];
+}
+
+function mergeRecipientChats(chats, incoming) {
+  for (const [username, id] of incoming) {
     if (chats.has(username) && chats.get(username) !== id) {
       throw new SetupError(`Для @${username} обнаружены разные ID. Проверьте владельца аккаунта.`);
     }
@@ -40,6 +52,55 @@ function findRecipientChats(updates) {
     throw new SetupError('Два получателя должны иметь разные личные Telegram-чаты.');
   }
   return chats;
+}
+
+function findRecipientChats(updates) {
+  const matches = privateChats(updates)
+    .filter(({ username }) => recipients.some((recipient) => recipient.username === username))
+    .map(({ username, id }) => [username, id]);
+  return mergeRecipientChats(new Map(), matches);
+}
+
+function validateRecipientChat(chat, username, id) {
+  if (
+    chat?.type !== 'private' ||
+    String(chat.id) !== id ||
+    normalizeUsername(chat.username) !== username
+  ) {
+    const actual = normalizeUsername(chat?.username);
+    throw new SetupError(
+      `ID для @${username} не подтверждён${actual ? `: Telegram вернул @${actual}` : ''}. Проверьте именно имя пользователя в настройках Telegram, не отображаемое имя.`,
+    );
+  }
+}
+
+function reportChats(updates, chats, log) {
+  log(
+    `Получено событий: ${updates.length}. Найдено получателей: ${chats.size}/${recipients.length}.`,
+  );
+  for (const { username } of recipients) {
+    log(
+      chats.has(username)
+        ? `✓ @${username}: чат найден, ID ${chats.get(username)}.`
+        : `— @${username}: пока не найден.`,
+    );
+  }
+  const observed = privateChats(updates);
+  if (observed.length) {
+    log('Личные чаты в ответе Telegram (тексты сообщений не выводятся):');
+    for (const { id, username } of observed)
+      log(`  ${username ? `@${username}` : 'без @username'} — ID ${id}`);
+    log(
+      'Если нужного @username нет в списке, проверьте выбранный аккаунт Telegram и его имя пользователя.',
+    );
+  } else {
+    log(
+      'В ответе нет личных сообщений. Отправьте новое сообщение боту сейчас, а не только нажмите старую кнопку «Запустить».',
+    );
+    log(
+      'Старые события хранятся не дольше 24 часов; другой запущенный обработчик тоже мог забрать их.',
+    );
+  }
 }
 
 function readHidden(label) {
@@ -110,7 +171,14 @@ async function telegramRequest(token, method, payload = {}, request = fetch) {
         'Бот уже использует webhook или другой getUpdates. Остановите его обработчик и повторите настройку.',
       );
     }
-    throw new SetupError('Telegram отклонил запрос. Повторите настройку позже.');
+    if (response.status === 403 || body?.error_code === 403) {
+      throw new SetupError(
+        'Telegram запретил доступ к чату. Разблокируйте бота и отправьте ему /start из нужного аккаунта.',
+      );
+    }
+    throw new SetupError(
+      `Telegram отклонил ${method}. Проверьте ID чата и отправьте боту новое /start.`,
+    );
   }
   return body.result;
 }
@@ -128,75 +196,147 @@ function runGh(args, input) {
   });
 }
 
-async function main() {
-  if (!process.stdin.isTTY || !process.stdout.isTTY) {
+async function main({
+  prompt = readHidden,
+  api = telegramRequest,
+  github = runGh,
+  log = console.log,
+  interactive = process.stdin.isTTY && process.stdout.isTTY,
+} = {}) {
+  if (!interactive) {
     throw new SetupError(
       'Запустите node scripts/setup-leads.mjs в обычном интерактивном терминале.',
     );
   }
-  console.log(`Настройка доставки заявок — ${repository}`);
-  console.log('Токен и пароль вводятся скрыто и сохраняются только в GitHub Secrets.');
-  console.log('Понадобится пароль приложения Яндекса для dizain.seichas@yandex.ru.');
-  if ((await runGh(['auth', 'status', '--hostname', 'github.com'])) !== 0) {
+  log(`Настройка Telegram-заявок — ${repository}`);
+  log('Почта отключена. Нужен только токен бота; ввод скрыт, хранение — GitHub Secrets.');
+  log(
+    'В production заявки отправляет PHP на том же сервере, где сайт. Держать этот терминал открытым не нужно.',
+  );
+  if ((await github(['auth', 'status', '--hostname', 'github.com'])) !== 0) {
     throw new SetupError(
       'Сначала выполните gh auth login --hostname github.com и повторите команду.',
     );
   }
 
-  const token = (await readHidden('Токен бота из BotFather: ')).trim();
+  const token = (await prompt('Токен бота из BotFather: ')).trim();
   if (!/^\d+:[A-Za-z0-9_-]{30,}$/.test(token)) {
     throw new SetupError('Неверный формат токена. Скопируйте его целиком из BotFather.');
   }
-  const bot = await telegramRequest(token, 'getMe');
+  const bot = await api(token, 'getMe');
   if (bot?.is_bot !== true || !/^[A-Za-z0-9_]{5,32}$/.test(bot.username ?? '')) {
     throw new SetupError('Telegram не подтвердил аккаунт бота. Проверьте токен.');
   }
-  console.log(`Бот подтверждён: @${bot.username} — https://t.me/${bot.username}`);
+  log(`Бот подтверждён: @${bot.username} — https://t.me/${bot.username}`);
+  const webhook = await api(token, 'getWebhookInfo');
+  let manual = Boolean(webhook?.url);
+  if (manual) {
+    log(
+      'У бота уже настроен webhook: он получает сообщения вместо мастера. Мастер его не отключает.',
+    );
+    if (
+      (await prompt('Если знаете числовые ID обоих чатов, введите id; иначе Ctrl+C: '))
+        .trim()
+        .toLowerCase() !== 'id'
+    ) {
+      throw new SetupError('Нужны ID из действующего обработчика бота. Webhook не изменён.');
+    }
+  }
 
-  let chats;
-  for (;;) {
-    // Без offset: сообщения не подтверждаются и не удаляются из очереди Telegram.
-    const updates = await telegramRequest(token, 'getUpdates', { limit: 100, timeout: 0 });
-    chats = findRecipientChats(updates);
+  const chats = new Map();
+  let attempts = 0;
+  while (!manual) {
+    attempts++;
+    // Explicit subscription also repairs a previously saved filter excluding
+    // messages. It applies to NEW updates. No offset: nothing is acknowledged.
+    const updates = await api(token, 'getUpdates', {
+      limit: 100,
+      timeout: 0,
+      allowed_updates: ['message', 'edited_message'],
+    });
+    mergeRecipientChats(chats, findRecipientChats(updates));
+    reportChats(updates, chats, log);
     const missing = recipients.filter(({ username }) => !chats.has(username));
     if (missing.length === 0) break;
-    console.log(
-      `${missing.map(({ username }) => `@${username}`).join(' и ')}: откройте https://t.me/${bot.username} и отправьте /start со своего аккаунта.`,
+    log(
+      `${missing.map(({ username }) => `@${username}`).join(' и ')}: откройте https://t.me/${bot.username} и отправьте НОВОЕ /start именно сейчас.`,
     );
-    console.log(
-      'Бот может не ответить — это нормально. Для обнаружения достаточно входящего /start.',
-    );
+    log('Отсутствие ответа бота на /start нормально: сейчас проверяем входящее сообщение.');
     if (updates.length === 100) {
-      throw new SetupError(
-        'Очередь содержит 100 сообщений: нужные чаты могут быть за пределами ответа. Используйте нового бота или проверьте очередь вручную.',
+      log(
+        'Показаны первые 100 событий очереди; мастер не удаляет их. Для уже известных ID используйте id.',
       );
     }
-    await readHidden('Когда оба пользователя отправят /start, нажмите Enter (Ctrl+C — выход): ');
+    if (attempts >= 5) {
+      throw new SetupError(
+        'После 5 проверок чат не найден. Сверьте @username в диагностике выше, убедитесь, что пишете именно этому боту и нет второго обработчика getUpdates. Токен никуда не отправляйте.',
+      );
+    }
+    manual =
+      (
+        await prompt(
+          `Проверка ${attempts}/5: Enter — проверить ещё раз; id — ввести известные ID; Ctrl+C — выход: `,
+        )
+      )
+        .trim()
+        .toLowerCase() === 'id';
   }
-  console.log('Оба личных чата найдены: @designnoww и @qwerty12345777; ID разные.');
-
-  const password = (
-    await readHidden('Пароль приложения Яндекса для dizain.seichas@yandex.ru: ')
-  ).replace(/\s/g, '');
-  if (!password) throw new SetupError('Пароль приложения не может быть пустым.');
+  if (manual) {
+    for (const { username } of recipients) {
+      if (chats.has(username)) continue;
+      const id = (await prompt(`Числовой ID личного чата @${username} (не @username): `)).trim();
+      if (!/^[1-9]\d*$/.test(id) || !Number.isSafeInteger(Number(id))) {
+        throw new SetupError('Личный chat ID должен быть положительным целым числом.');
+      }
+      mergeRecipientChats(chats, [[username, id]]);
+    }
+  }
+  for (const { username } of recipients) {
+    const id = chats.get(username);
+    validateRecipientChat(await api(token, 'getChat', { chat_id: id }), username, id);
+  }
+  log('Оба личных чата подтверждены Telegram, ID разные.');
 
   const secrets = [
-    ['LEAD_SMTP_PASSWORD', password],
     ['LEAD_TELEGRAM_BOT_TOKEN', token],
     ...recipients.map(({ username, secret }) => [secret, chats.get(username)]),
   ];
   for (const [name, value] of secrets) {
-    const code = await runGh(['secret', 'set', name, '--repo', repository], value);
+    const code = await github(['secret', 'set', name, '--repo', repository], value);
     if (code !== 0) {
       throw new SetupError(
         `Не удалось сохранить ${name}. Часть настроек могла сохраниться; проверьте права на ${repository} и повторите команду целиком.`,
       );
     }
-    console.log(`Сохранён ${name}.`);
+    log(`Сохранён ${name}.`);
   }
-  console.log('Готово: четыре секрета сохранены. Сайт автоматически этой командой не публикуется.');
-  console.log(
-    'После деплоя нужно проверить тестовую заявку в обоих Telegram-чатах и обеих почтах.',
+  log('Готово: три секрета сохранены. Сайт автоматически этой командой не публикуется.');
+  if (
+    (
+      await prompt(
+        'Отправить по одному проверочному сообщению в оба чата? Введите TEST, Enter — пропустить: ',
+      )
+    )
+      .trim()
+      .toUpperCase() === 'TEST'
+  ) {
+    for (const { username } of recipients) {
+      const id = chats.get(username);
+      const sent = await api(token, 'sendMessage', {
+        chat_id: id,
+        text: 'ДизайнСейчас — проверка подключения. Этот чат настроен для заявок с designseichas.ru. Это тест из мастера настройки, не заявка клиента.',
+        link_preview_options: { is_disabled: true },
+      });
+      if (!Number.isSafeInteger(sent?.message_id) || String(sent?.chat?.id) !== id) {
+        throw new SetupError(
+          'Настройки сохранены, но Telegram не подтвердил доставку проверочного сообщения.',
+        );
+      }
+      log(`✓ Проверочное сообщение принято Telegram для @${username}.`);
+    }
+  }
+  log(
+    'После публикации отдельно проверим заявку с сайта: локальный тест не проверяет сеть хостинга.',
   );
 }
 
@@ -234,6 +374,99 @@ async function selfTest() {
   const mismatched = update('designnoww', 1001);
   mismatched.message.from.id = 1002;
   assert.equal(findRecipientChats([mismatched]).size, 0);
+  const optionalChatUsername = update('designnoww', 1001);
+  delete optionalChatUsername.message.chat.username;
+  assert.equal(findRecipientChats([optionalChatUsername]).get('designnoww'), '1001');
+  const optionalSenderUsername = update('designnoww', 1001);
+  delete optionalSenderUsername.message.from.username;
+  assert.equal(findRecipientChats([optionalSenderUsername]).get('designnoww'), '1001');
+  const conflictingNames = update('designnoww', 1001);
+  conflictingNames.message.from.username = 'unrelated';
+  assert.equal(findRecipientChats([conflictingNames]).size, 0);
+  assert.throws(() =>
+    validateRecipientChat(
+      { type: 'private', id: 1001, username: 'unrelated' },
+      'designnoww',
+      '1001',
+    ),
+  );
+  assert.throws(() =>
+    mergeRecipientChats(new Map([['designnoww', '1001']]), [['designnoww', '1002']]),
+  );
+
+  // Exercise the actual interactive flow with fake I/O: never touch Telegram/GitHub.
+  const fakeToken = `123456:${'x'.repeat(32)}`;
+  const scenario = (batches, answers = [], webhook = false) => {
+    const calls = [];
+    const saved = [];
+    const logs = [];
+    let batch = 0;
+    const run = () =>
+      main({
+        interactive: true,
+        log: (line) => logs.push(line),
+        prompt: async (label) => (label.startsWith('Токен') ? fakeToken : (answers.shift() ?? '')),
+        github: async (args, value) => {
+          if (args[0] === 'secret') saved.push([args[2], value]);
+          return 0;
+        },
+        api: async (token, method, payload) => {
+          assert.equal(token, fakeToken);
+          calls.push({ method, payload });
+          if (method === 'getMe') return { is_bot: true, username: 'designseichas_bot' };
+          if (method === 'getWebhookInfo')
+            return { url: webhook ? 'https://example.invalid/private' : '' };
+          if (method === 'getUpdates') {
+            assert.deepEqual(payload.allowed_updates, ['message', 'edited_message']);
+            assert.equal(Object.hasOwn(payload, 'offset'), false);
+            return batches[Math.min(batch++, batches.length - 1)] ?? [];
+          }
+          if (method === 'getChat')
+            return {
+              id: Number(payload.chat_id),
+              type: 'private',
+              username: payload.chat_id === '1001' ? 'designnoww' : 'qwerty12345777',
+            };
+          if (method === 'sendMessage')
+            return { message_id: 5, chat: { id: Number(payload.chat_id) } };
+          assert.fail(`Unexpected mutation: ${method}`);
+        },
+      });
+    return { run, calls, saved, logs };
+  };
+  const foundInSeparatePolls = scenario([[update('qwerty12345777', 1002)], [optionalChatUsername]]);
+  await foundInSeparatePolls.run();
+  assert.deepEqual(
+    foundInSeparatePolls.saved.map(([name]) => name),
+    ['LEAD_TELEGRAM_BOT_TOKEN', 'LEAD_TELEGRAM_CHAT_ID', 'LEAD_TELEGRAM_CHAT_ID_ADDITIONAL'],
+  );
+  assert.equal(
+    foundInSeparatePolls.calls.filter(({ method }) => method === 'sendMessage').length,
+    0,
+  );
+  assert.ok(!foundInSeparatePolls.logs.join('\n').includes(fakeToken));
+  assert.ok(foundInSeparatePolls.logs.some((line) => line.includes('✓ @qwerty12345777')));
+
+  const unknownUpdate = update('unrelated', 1003);
+  unknownUpdate.message.text = 'private message content must never appear';
+  const boundedMissing = scenario([[unknownUpdate]]);
+  await assert.rejects(boundedMissing.run(), /После 5 проверок/);
+  assert.equal(boundedMissing.calls.filter(({ method }) => method === 'getUpdates').length, 5);
+  assert.equal(boundedMissing.saved.length, 0);
+  assert.ok(!boundedMissing.logs.join('\n').includes(unknownUpdate.message.text));
+
+  const manualWebhook = scenario([], ['id', '1001', '1002', 'TEST'], true);
+  await manualWebhook.run();
+  assert.equal(manualWebhook.calls.filter(({ method }) => method === 'getUpdates').length, 0);
+  assert.deepEqual(
+    manualWebhook.calls
+      .filter(({ method }) => method === 'sendMessage')
+      .map(({ payload }) => payload.chat_id),
+    ['1001', '1002'],
+  );
+  const duplicateManual = scenario([], ['id', '1001', '1001'], true);
+  await assert.rejects(duplicateManual.run(), /разные личные/);
+  assert.equal(duplicateManual.saved.length, 0);
 
   const sentinel = 'private-token-must-not-appear';
   await assert.rejects(
@@ -254,7 +487,7 @@ async function selfTest() {
   );
   assert.deepEqual(result, []);
   console.log(
-    'Setup self-test: OK (получатели, подмена данных, повторные ID, отсутствие offset, скрытие токена).',
+    'Setup self-test: OK (оба чата, необязательные username, накопление найденных ID, диагностика, лимит повторов, ручной ввод, 3 секрета без почты, тестовые сообщения только после TEST, защита токена).',
   );
 }
 

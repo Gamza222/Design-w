@@ -1,5 +1,6 @@
 .badge {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
 
@@ -8,6 +9,14 @@
   border-radius: var(--radius-md);
 
   font-size: var(--fs-lg); // 1em иконки масштабируется отсюда
+
+  // The symbol should read at a glance, not occupy only one third of its badge.
+  // Preserve the outer footprint so perk rows and process connectors stay aligned.
+  > svg {
+    flex: none;
+    width: 1.5em;
+    height: 1.5em;
+  }
 }
 
 .sm {

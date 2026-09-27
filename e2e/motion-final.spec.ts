@@ -29,15 +29,25 @@ test.describe('motion and accessible content', () => {
           .poll(() =>
             heading.evaluate((element) => {
               let current: Element | null = element;
+              const hidden = [];
               while (current) {
                 const style = getComputedStyle(current);
-                if (style.visibility === 'hidden' || Number(style.opacity) < 0.99) return false;
+                if (style.visibility === 'hidden' || Number(style.opacity) < 0.99) {
+                  hidden.push({
+                    heading: element.textContent,
+                    ancestor: current.className,
+                    opacity: style.opacity,
+                    visibility: style.visibility,
+                    top: current.getBoundingClientRect().top,
+                    scrollY: window.scrollY,
+                  });
+                }
                 current = current.parentElement;
               }
-              return true;
+              return hidden;
             }),
           )
-          .toBe(true);
+          .toEqual([]);
       }
 
       expect(errors).toEqual([]);

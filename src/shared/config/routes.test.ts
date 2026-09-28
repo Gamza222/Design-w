@@ -36,4 +36,20 @@ describe('route locale helpers', () => {
     expect(stripLocale('/by')).toBe('/');
     expect(stripLocale('/blog')).toBe('/blog');
   });
+
+  it.each(['', '/en', '/by'])('normalizes directory URLs with locale prefix "%s"', (prefix) => {
+    expect(stripLocale(`${prefix}/`)).toBe('/');
+    for (const path of [
+      '/privacy',
+      '/offer',
+      '/requisites',
+      '/consent',
+      '/planirovka-kvartiry',
+      '/3d-vizualizaciya-interera',
+      '/eskiznyj-dizajn-proekt',
+    ]) {
+      expect(stripLocale(`${prefix}${path}/`)).toBe(path);
+      expect(stripLocale(`${prefix}${path}///`)).toBe(path);
+    }
+  });
 });

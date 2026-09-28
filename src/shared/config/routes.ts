@@ -88,9 +88,9 @@ export function getLocaleFromPath(pathname: string): Locale {
   return LOCALES.find((locale) => LOCALE_PATHS[locale] === seg) ?? DEFAULT_LOCALE;
 }
 
-/** Remove the locale prefix, returning the canonical path. */
+/** Remove the locale prefix and hosting-added trailing slashes for canonical lookups. */
 export function stripLocale(pathname: string): string {
   const prefixes = LOCALES.map((locale) => LOCALE_PATHS[locale]).filter(Boolean);
   const stripped = pathname.replace(new RegExp(`^/(?:${prefixes.join('|')})(?=/|$)`), '');
-  return stripped === '' ? '/' : stripped;
+  return normalizePathname(stripped);
 }

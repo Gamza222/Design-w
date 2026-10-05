@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
 
+  min-height: 44px;
   padding: var(--_btn-pad-block, var(--btn-padding-block))
     var(--_btn-pad-inline, var(--btn-padding-inline));
   border-radius: var(--radius-full);
@@ -92,6 +93,6 @@
 
   &:hover {
     border-color: var(--btn-ghost-border, currentcolor);
-    color: var(--color-accent);
+    color: var(--color-text);
   }
 }

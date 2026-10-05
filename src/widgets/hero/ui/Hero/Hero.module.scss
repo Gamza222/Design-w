@@ -137,17 +137,32 @@
   // которые лежат в ДРУГОМ слое). Затемняя текстуру самого .bg у низа, делаем подтекающий край тёмным.
   // Полностью тёмно к 72% высоты слоя: низ Hero маппится в 80–96% слоя при любом yPercent параллакса —
   // покрытие гарантировано. Видимо незаметно: эта зона и так под панелью пакетов / затемнена ::before.
-  background:
-    linear-gradient(to bottom, transparent 46%, var(--clr-dark) 72%),
-    var(--hero-bg, none) 54% center / cover no-repeat;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 46%, var(--clr-dark) 72%);
+  }
 
   @include down(lg) {
-    // Фото рассчитано на первый экран, а не растянуто на весь высокий стек тарифов.
     inset: -8rem 0;
-    background:
-      linear-gradient(to bottom, transparent 30rem, var(--clr-dark) 63rem),
-      var(--hero-bg, none) 56% top / auto 68rem no-repeat,
-      var(--clr-dark);
+    background: var(--clr-dark);
+
+    &::after {
+      background: linear-gradient(to bottom, transparent 30rem, var(--clr-dark) 63rem);
+    }
+  }
+}
+
+.bgPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 54% center;
+
+  @include down(lg) {
+    height: 68rem;
+    object-position: 56% top;
   }
 }
 
@@ -155,7 +170,7 @@
 // styles.reveal === undefined и селектор появления ни на что не указывает (каскад Hero не работает).
 // will-change — корректный хинт: эти элементы анимируются по transform/opacity на входе.
 .reveal {
-  will-change: transform, opacity;
+  isolation: auto;
 }
 
 .inner {

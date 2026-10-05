@@ -10,11 +10,11 @@ const modules = import.meta.glob('/content/portfolio/**/*.mdx', { eager: true })
 
 const projects = buildCollection<ProjectMeta>(modules);
 
-/** Published projects for a locale, newest year first. */
+/** Editorial order does not imply an unverified completion date. */
 export function getProjects(locale: Locale): Project[] {
   return projects
     .filter((project) => project.locale === locale)
-    .sort((a, b) => b.frontmatter.year - a.frontmatter.year);
+    .sort((a, b) => (a.frontmatter.order ?? 0) - (b.frontmatter.order ?? 0));
 }
 
 /** A single project by slug within a locale. */

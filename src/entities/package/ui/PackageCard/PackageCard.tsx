@@ -1,11 +1,10 @@
-import type { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
-import { cn } from '@shared/lib';
-import { AppLink, IconArrowRight } from '@shared/ui';
+import { cn, openLeadDialog, useLocale } from '@shared/lib';
+import { IconArrowRight, Image } from '@shared/ui';
 
 import type { Package } from '../../model/types';
+import { getTariff } from '../../model/tariffs';
 import styles from './PackageCard.module.scss';
 
 interface PackageCardProps {
@@ -17,19 +16,18 @@ interface PackageCardProps {
 /** Контрастная фотокарточка тарифа с быстрым переходом к расчёту. */
 export function PackageCard({ pkg, image }: PackageCardProps) {
   const { t } = useTranslation();
-  const name = t(`home.packages.items.${pkg.id}.name`);
+  const tariff = getTariff(pkg.id, useLocale());
+  const name = tariff.name;
 
   return (
-    <article
-      data-tone="dark"
-      className={cn(styles.card, pkg.popular && styles.popular)}
-      style={
-        {
-          '--card-photo': `url(${image.src})`,
-          '--card-photo-pos': image.position ?? 'center',
-        } as CSSProperties
-      }
-    >
+    <article data-tone="dark" className={cn(styles.card, pkg.popular && styles.popular)}>
+      <Image
+        src={image.src}
+        alt=""
+        className={styles.photo}
+        sizes="(max-width: 479px) 100vw, (max-width: 1279px) 50vw, 25vw"
+        style={{ objectPosition: image.position ?? 'center' }}
+      />
       <div className={styles.topline}>
         <span className={styles.kind}>{t('home.packages.packageLabel')}</span>
         {pkg.popular && <span className={styles.badge}>{t('home.packages.popular')}</span>}
@@ -38,30 +36,37 @@ export function PackageCard({ pkg, image }: PackageCardProps) {
       <div className={styles.body}>
         <header className={styles.head}>
           <h3 className={styles.name}>{name}</h3>
-          <p className={styles.tagline}>{t(`home.packages.items.${pkg.id}.tagline`)}</p>
+          <p className={styles.tagline}>{tariff.description}</p>
         </header>
         <p className={styles.price}>
-          <span className={styles.priceFrom}>{t('home.packages.priceFrom')}</span>{' '}
-          <span className={styles.priceValue}>{t(`home.packages.items.${pkg.id}.priceValue`)}</span>{' '}
-          <span className={styles.priceUnit}>{t('home.packages.priceUnit')}</span>
+          <span className={styles.priceValue}>{tariff.priceLabel}</span>
         </p>
 
         <ul className={styles.features}>
-          {pkg.featureKeys.map((key) => (
+          {tariff.summary.map((key) => (
             <li key={key} className={styles.feature}>
-              {t(`home.packages.features.${key}`)}
+              {key}
             </li>
           ))}
         </ul>
 
-        <AppLink
-          to={homeSectionPath(HOME_SECTIONS.calculator)}
+        <button
+          type="button"
+          onClick={() =>
+            openLeadDialog({
+              source: 'package-card',
+              service: name,
+              packageId: pkg.id,
+              packageName: name,
+              currency: tariff.currency,
+            })
+          }
           className={styles.cta}
           aria-label={`${t('home.packages.select')} ${name}`}
         >
           <span>{t('home.packages.select')}</span>
           <IconArrowRight aria-hidden="true" />
-        </AppLink>
+        </button>
       </div>
     </article>
   );

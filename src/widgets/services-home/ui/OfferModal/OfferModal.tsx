@@ -2,21 +2,10 @@ import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
-import {
-  Button,
-  IconArmchair,
-  IconBadge,
-  IconChat,
-  IconCheck,
-  IconClock,
-  IconClose,
-  IconEdit,
-  IconFolderCheck,
-  IconHardHat,
-  IconLightbulb,
-  IconMapPin,
-  Image,
-} from '@shared/ui';
+import { getTariff } from '@entities/package';
+import { useLocale } from '@shared/lib';
+
+import { Button, IconChat, IconCheck, IconClose, IconHardHat, Image } from '@shared/ui';
 
 import { resultImages } from '../../config/images';
 import { OFFERS } from '../../model/offers';
@@ -32,20 +21,9 @@ interface OfferModalProps {
   onOrder: () => void;
 }
 
-const SPEC_ICONS = {
-  term: IconClock,
-  revisions: IconEdit,
-  format: IconFolderCheck,
-  coverage: IconMapPin,
-} as const;
-
-const SPEC_KEYS = ['term', 'revisions', 'format', 'coverage'] as const;
-
-// Иконки мини-карточек «Дополнительно» (референс: иконка + название + цена).
 const ADDON_ICONS: Partial<Record<OfferId, typeof IconChat>> = {
   supervision: IconHardHat,
-  ergonomics: IconArmchair,
-  prelaunch: IconChat,
+  consultation: IconChat,
 };
 
 const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]';
@@ -65,8 +43,9 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
   // иначе выделение текста с отпусканием мыши на фоне захлопывало бы окно.
   const pressedOnBackdrop = useRef(false);
 
-  const base = `home.services.items.${offer.id}`;
-  const includes = t(`${base}.includes`, { returnObjects: true }) as string[];
+  const locale = useLocale();
+  const tariff = getTariff(offer.id, locale);
+  const includes = tariff.includes;
   const addons = OFFERS.filter((candidate) => offer.addons?.includes(candidate.id));
 
   // Блокировка прокрутки страницы на время жизни модалки (+ компенсация скроллбара — без сдвига).
@@ -165,50 +144,33 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
                   )}
                 </div>
                 <h3 className={styles.title} id={titleId}>
-                  {t(`${base}.name`)}
+                  {tariff.name}
                 </h3>
-                <p className={styles.desc}>{t(`${base}.desc`)}</p>
+                <p className={styles.desc}>{tariff.description}</p>
               </header>
 
-              <h4 className={styles.blockTitle}>{t('home.services.modal.includesTitle')}</h4>
-              <ul className={styles.includes}>
-                {includes.map((item) => (
-                  <li key={item} className={styles.includesItem}>
-                    <IconCheck aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              {offer.hasNote && <p className={styles.note}>{t(`${base}.note`)}</p>}
-
-              <hr className={styles.divider} />
-
-              <ul className={styles.specs}>
-                {SPEC_KEYS.map((key) => {
-                  const SpecIcon = SPEC_ICONS[key];
-                  return (
-                    <li key={key} className={styles.spec}>
-                      <SpecIcon className={styles.specIcon} aria-hidden="true" />
-                      <span className={styles.specLabel}>
-                        {t(`home.services.modal.specLabels.${key}`)}
-                      </span>
-                      <span className={styles.specValue}>{t(`${base}.specs.${key}`)}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-
-              <div className={styles.forWhom}>
-                <IconBadge icon={<IconLightbulb />} tone="accent" className={styles.forWhomIcon} />
-                <div>
-                  <p className={styles.forWhomTitle}>{t('home.services.modal.forWhomTitle')}</p>
-                  <p className={styles.forWhomText}>{t(`${base}.forWhom`)}</p>
-                </div>
-              </div>
+              {includes.length > 0 && (
+                <>
+                  <h4 className={styles.blockTitle}>{t('home.services.modal.includesTitle')}</h4>
+                  <ul className={styles.includes}>
+                    {includes.map((item) => (
+                      <li key={item} className={styles.includesItem}>
+                        <IconCheck aria-hidden="true" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {tariff.exclusions.map((item) => (
+                <p key={item} className={styles.note}>
+                  {item}
+                </p>
+              ))}
+              <p className={styles.note}>{t('tariffs.terms')}</p>
 
               <div className={styles.order}>
-                <span className={styles.price}>{t(`${base}.price`)}</span>
+                <span className={styles.price}>{tariff.priceLabel}</span>
                 <Button size="lg" onClick={onOrder} className={styles.orderBtn}>
                   {t('home.services.modal.order')}
                 </Button>
@@ -217,34 +179,28 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
 
             {/* Правая колонка: «Что вы получите» + доп. услуги */}
             <aside className={styles.right}>
-              <h4 className={styles.blockTitle}>{t('home.services.modal.receiveTitle')}</h4>
-
-              {offer.hasReceiveList ? (
-                <ul className={styles.receiveList}>
-                  {(t(`${base}.receive`, { returnObjects: true }) as string[]).map((item) => (
-                    <li key={item} className={styles.receiveItem}>
-                      <IconCheck aria-hidden="true" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <ul className={styles.gallery}>
-                  {offer.gallery.map((slot) => (
-                    <li key={slot}>
-                      <figure className={styles.figure}>
-                        <Image
-                          src={resultImages[slot].src}
-                          className={styles.galleryPhoto}
-                          style={{ objectPosition: resultImages[slot].position }}
-                        />
-                        <figcaption className={styles.caption}>
-                          {t(`home.services.slots.${slot}`)}
-                        </figcaption>
-                      </figure>
-                    </li>
-                  ))}
-                </ul>
+              {offer.gallery.length > 0 && (
+                <>
+                  <h4 className={styles.blockTitle}>{t('home.services.modal.receiveTitle')}</h4>
+                  <ul className={styles.gallery}>
+                    {offer.gallery.map((slot) => (
+                      <li key={slot}>
+                        <figure className={styles.figure}>
+                          <Image
+                            src={resultImages[slot].src}
+                            alt={t(`home.services.slots.${slot}`)}
+                            sizes="(max-width: 767px) 90vw, 25vw"
+                            className={styles.galleryPhoto}
+                            style={{ objectPosition: resultImages[slot].position }}
+                          />
+                          <figcaption className={styles.caption}>
+                            {t(`home.services.slots.${slot}`)}
+                          </figcaption>
+                        </figure>
+                      </li>
+                    ))}
+                  </ul>
+                </>
               )}
 
               {addons.length > 0 && (
@@ -253,6 +209,7 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
                   <div className={styles.addonsList}>
                     {addons.map((addon) => {
                       const AddonIcon = ADDON_ICONS[addon.id] ?? IconChat;
+                      const addonTariff = getTariff(addon.id, locale);
                       return (
                         <button
                           key={addon.id}
@@ -261,12 +218,8 @@ export function OfferModal({ offer, onClose, onSwitch, onOrder }: OfferModalProp
                           onClick={() => onSwitch(addon.id)}
                         >
                           <AddonIcon className={styles.addonIcon} aria-hidden="true" />
-                          <span className={styles.addonName}>
-                            {t(`home.services.items.${addon.id}.name`)}
-                          </span>
-                          <span className={styles.addonPrice}>
-                            {t(`home.services.items.${addon.id}.price`)}
-                          </span>
+                          <span className={styles.addonName}>{addonTariff.name}</span>
+                          <span className={styles.addonPrice}>{addonTariff.priceLabel}</span>
                         </button>
                       );
                     })}

@@ -5,8 +5,8 @@ import type { ComponentType, SVGProps } from 'react';
 
 type IconProps = SVGProps<SVGSVGElement>;
 
-const accentStroke = { stroke: 'var(--clr-accent)' } as const;
-const accentFill = { fill: 'var(--clr-accent)', stroke: 'var(--clr-accent)' } as const;
+const accentStroke = { stroke: 'var(--color-accent)' } as const;
+const accentFill = { fill: 'var(--color-accent)', stroke: 'var(--color-accent)' } as const;
 
 function FearSvg({ children, ...props }: IconProps) {
   return (
@@ -16,7 +16,7 @@ function FearSvg({ children, ...props }: IconProps) {
       height="1em"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"

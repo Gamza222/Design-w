@@ -10,7 +10,7 @@ import fg from 'fast-glob';
 import matter from 'gray-matter';
 
 import { LOCALES, isLocale, type Locale } from '../../config/locales';
-import { localizePath, STATIC_PATHS } from '../../config/routes';
+import { localizePath, normalizePathname, STATIC_PATHS } from '../../config/routes';
 
 type ContentType = 'blog' | 'portfolio';
 
@@ -37,20 +37,20 @@ function readContent(type: ContentType): ContentEntry[] {
   return entries;
 }
 
-/** Full list of literal paths to statically prerender (static pages × locales + content). */
+/** React Router requires slashless render keys; public canonical URLs retain a final slash. */
 export function getAllPrerenderPaths(): string[] {
   const paths = new Set<string>();
 
   for (const locale of LOCALES) {
     for (const path of STATIC_PATHS) {
-      paths.add(localizePath(path, locale));
+      paths.add(normalizePathname(localizePath(path, locale)));
     }
   }
 
   for (const type of ['blog', 'portfolio'] as const) {
     const base = type === 'blog' ? '/blog' : '/portfolio';
     for (const { locale, slug } of readContent(type)) {
-      paths.add(localizePath(`${base}/${slug}`, locale));
+      paths.add(normalizePathname(localizePath(`${base}/${slug}`, locale)));
     }
   }
 

@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /__spa-fallback.html
 
 Sitemap: https://designseichas.ru/sitemap.xml

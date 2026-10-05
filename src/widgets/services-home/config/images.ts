@@ -7,7 +7,7 @@ export const resultImages: Record<ResultSlot, { src: string; position?: string }
   viz: { src: '/realimages/web/project-minimal-loft-1.webp' },
   drawings: { src: '/realimages/web/project-lighting-plan.webp' },
   materials: { src: '/realimages/web/service-materials.webp' },
-  spec: { src: '/realimages/web/project-electrics.webp' },
-  views3d: { src: '/realimages/web/project-furniture-plan.webp' },
+  electrics: { src: '/realimages/web/project-electrics.webp' },
+  furniturePlan: { src: '/realimages/web/project-furniture-plan.webp' },
   supervision: { src: '/realimages/web/project-modern-kitchen-2.webp', position: '55% 50%' },
 };

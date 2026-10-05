@@ -2,14 +2,17 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
 
+import { getTariff, SERVICE_LANDING_TARIFFS } from '@entities/package';
 import { getProjects } from '@entities/project';
+import { ROUTES, SERVICE_LANDINGS, stripLocale, type ServiceLandingKey } from '@shared/config';
 import {
-  ROUTES,
-  SERVICE_LANDINGS,
-  stripLocale,
-  type ServiceLandingKey,
-} from '@shared/config';
-import { buildMeta, localeDict, useLocale, useScrollReveal, type RouteMetaArgs } from '@shared/lib';
+  buildMeta,
+  localeDict,
+  openLeadDialog,
+  useLocale,
+  useScrollReveal,
+  type RouteMetaArgs,
+} from '@shared/lib';
 import {
   Accordion,
   Breadcrumbs,
@@ -52,8 +55,13 @@ export default function ServicePage() {
 
   const key = landingKey(pathname);
   const base = `servicePages.${key}`;
-  const includes = t(`${base}.includes`, { returnObjects: true }) as string[];
-  const faq = t(`${base}.faq`, { returnObjects: true }) as FaqItem[];
+  const tariff = getTariff(SERVICE_LANDING_TARIFFS[key], locale);
+  const includes = tariff.includes;
+  const faq = t(`${base}.faq`, {
+    returnObjects: true,
+    price: tariff.priceLabel,
+    exclusions: tariff.exclusions.join(' '),
+  }) as FaqItem[];
   const [open, setOpen] = useState(0);
   const projects = getProjects(locale).slice(0, 6);
 
@@ -94,18 +102,37 @@ export default function ServicePage() {
                 </li>
               ))}
             </ul>
+            {tariff.exclusions.map((item) => (
+              <p key={item} className={styles.intro}>
+                {item}
+              </p>
+            ))}
           </div>
 
           <aside className={styles.card}>
             <div className={styles.cardRow}>
               <span className={styles.cardLabel}>{t(`${base}.priceLabel`)}</span>
-              <span className={styles.cardValue}>{t(`${base}.price`)}</span>
+              <span className={styles.cardValue}>{tariff.priceLabel}</span>
             </div>
             <div className={styles.cardRow}>
               <span className={styles.cardLabel}>{t(`${base}.termLabel`)}</span>
-              <span className={styles.cardValue}>{t(`${base}.term`)}</span>
+              <span className={styles.cardValue}>{t('tariffs.terms')}</span>
             </div>
-            <Button to={ROUTES.contact} size="lg" className={styles.cardCta}>
+            <Button
+              type="button"
+              onClick={() =>
+                openLeadDialog({
+                  source: `service-page-${key}`,
+                  service: tariff.name,
+                  packageId: tariff.id === 'viz3d' ? undefined : tariff.id,
+                  packageName: tariff.id === 'viz3d' ? undefined : tariff.name,
+                  currency: tariff.currency,
+                  preliminary: tariff.from,
+                })
+              }
+              size="lg"
+              className={styles.cardCta}
+            >
               {t(`${base}.cta`)}
             </Button>
           </aside>

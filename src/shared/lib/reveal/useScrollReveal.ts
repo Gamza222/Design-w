@@ -3,10 +3,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 
-import { usePreloaderDone } from '../preloader/preloaderSignal';
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
-
 interface ScrollRevealOptions {
   /** Стартовый сдвиг по Y (px). */
   y?: number;
@@ -19,21 +15,13 @@ interface ScrollRevealOptions {
   trigger?: string;
 }
 
-/**
- * Единое появление по скроллу для секций сайта (заменяет дублирующийся `useGSAP`-блок в каждом
- * виджете — одинаковая длительность/ease/каскад везде). Возвращает ref на корень секции (scope);
- * `selector` (один или список) ищется внутри scope и всплывает (fade-up) каскадом.
- *
- * Ждёт ухода прелоадера: пока шторка на экране — цели держатся скрытыми и НЕ проигрываются (иначе
- * секции первого экрана отыграли бы за непрозрачной шторкой и зритель бы их не увидел). После ухода —
- * видимые секции появляются сразу, остальные по мере прокрутки. Уважает prefers-reduced-motion.
- */
+/** Small scroll entrance. Text remains visible even when animation frames stall.
+ * Reduced motion reverts all transforms without waiting for a scroll trigger. */
 export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
   selector: string | string[],
   options: ScrollRevealOptions = {},
 ) {
   const ref = useRef<T>(null);
-  const done = usePreloaderDone();
   const {
     y = 24,
     duration = 0.7,
@@ -45,23 +33,18 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
 
   useGSAP(
     () => {
+      gsap.registerPlugin(useGSAP, ScrollTrigger);
       const targets = Array.isArray(selector) ? selector.join(', ') : selector;
       const media = gsap.matchMedia();
 
       media.add('(prefers-reduced-motion: no-preference)', () => {
-        // Пока прелоадер не ушёл — просто прячем (под шторкой), без триггера.
-        if (!done) {
-          gsap.set(targets, { autoAlpha: 0, y });
-          return;
-        }
-
         gsap.fromTo(
           targets,
-          { autoAlpha: 0, y },
+          { y },
           {
-            autoAlpha: 1,
             y: 0,
             duration,
+            clearProps: 'transform',
             ease,
             stagger,
             scrollTrigger: { trigger: trigger ?? ref.current, start, once: true },
@@ -69,11 +52,9 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
         );
       });
 
-      // При смене системной настройки снимаем и transform, и visibility:hidden:
-      // ещё не просмотренные секции должны сразу вернуться в обычный документ.
       return () => media.revert();
     },
-    { scope: ref, dependencies: [done], revertOnUpdate: true },
+    { scope: ref },
   );
 
   return ref;

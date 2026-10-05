@@ -1,4 +1,5 @@
-import { type CSSProperties, type ReactNode, useRef } from 'react';
+import { openLeadDialog } from '@shared/lib';
+import { type ReactNode, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -7,8 +8,8 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
-import { cn, usePreloaderDone } from '@shared/lib';
-import { Button, Container } from '@shared/ui';
+import { cn } from '@shared/lib';
+import { Button, Container, Image } from '@shared/ui';
 
 import { heroImages } from '../../config/images';
 import { HERO_BULLETS } from '../../lib/bullets';
@@ -24,29 +25,9 @@ export function Hero({ bottomSlot }: HeroProps) {
   const { t } = useTranslation();
   const root = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
-  const preloaderDone = usePreloaderDone();
 
-  // Флоу: сначала отыгрывает прелоадер, и только КОГДА шторка уходит (preloaderDone) — каскад Hero.
-  // useGSAP — layout-эффект (до paint): пока шторка на экране, держим контент скрытым (под ней, без
-  // вспышки), затем проигрываем появление. Prerendered HTML содержит текст → SEO/no-JS не страдают.
-  useGSAP(
-    () => {
-      const media = gsap.matchMedia();
-      media.add('(prefers-reduced-motion: no-preference)', () => {
-        if (!preloaderDone) {
-          gsap.set(`.${styles.reveal}`, { autoAlpha: 0, y: 24 });
-          return;
-        }
-        gsap.fromTo(
-          `.${styles.reveal}`,
-          { autoAlpha: 0, y: 24 },
-          { autoAlpha: 1, y: 0, duration: 0.55, ease: 'power3.out', stagger: 0.07 },
-        );
-      });
-      return () => media.revert();
-    },
-    { scope: root, dependencies: [preloaderDone], revertOnUpdate: true },
-  );
+  // Above-the-fold content is visible in prerendered HTML and during hydration.
+  // Opacity entrances on H1 delayed LCP even after the image had loaded.
 
   // Parallax фона: фон-слой плавно сдвигается, пока секция проходит вьюпорт (scrub привязан к скроллу).
   // Нативный скролл, только transform. matchMedia также убирает движение, если пользователь
@@ -61,7 +42,7 @@ export function Hero({ bottomSlot }: HeroProps) {
           desktop: '(min-width: 1024px)',
         },
         (context) => {
-          if (!context.conditions?.motion) return;
+          if (!context.conditions?.motion || !context.conditions.desktop) return;
           const travel = context.conditions.desktop ? 5 : 2;
           gsap.fromTo(
             bgRef.current,
@@ -100,14 +81,16 @@ export function Hero({ bottomSlot }: HeroProps) {
   );
 
   return (
-    <section
-      className={styles.hero}
-      ref={root}
-      data-tone="dark"
-      style={{ '--hero-bg': `url(${heroImages.background})` } as CSSProperties}
-    >
-      <link rel="preload" as="image" href={heroImages.background} fetchPriority="high" />
-      <div className={styles.bg} ref={bgRef} aria-hidden="true" />
+    <section className={styles.hero} ref={root} data-tone="dark" data-theme-fixed="dark">
+      <div className={styles.bg} ref={bgRef} aria-hidden="true">
+        <Image
+          src={heroImages.background}
+          alt=""
+          priority
+          sizes="100vw"
+          className={styles.bgPhoto}
+        />
+      </div>
       {/* Золотая пыль в воздухе — медленный дрейф (декор, отключается reduced-motion). */}
       <span className={styles.dust} aria-hidden="true" />
       <Container className={styles.inner}>
@@ -121,7 +104,7 @@ export function Hero({ bottomSlot }: HeroProps) {
             <p className={cn(styles.subtitle, styles.reveal)}>{t('home.hero.subtitle')}</p>
 
             <div className={cn(styles.actions, styles.reveal)}>
-              <Button to={homeSectionPath(HOME_SECTIONS.calculator)} size="lg">
+              <Button onClick={() => openLeadDialog({ source: 'hero' })} size="lg">
                 {t('cta.calculate')}
               </Button>
               <Button to={homeSectionPath(HOME_SECTIONS.portfolio)} variant="ghost" size="lg">

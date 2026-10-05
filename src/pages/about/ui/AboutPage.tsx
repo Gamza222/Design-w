@@ -12,8 +12,7 @@ export function meta({ location }: RouteMetaArgs) {
   return buildMeta(`${t.about.title} | ${t.brand}`, t.about.subtitle, location.pathname);
 }
 
-/** «О студии» — короткая история + полоса достижений (цифры/отзывы/команда) + финальный CTA.
- *  Собрана из переиспользуемых секций главной, чтобы страница ощущалась завершённой, а не пустой. */
+/** Studio introduction, service scope and next step. */
 export default function AboutPage() {
   const { t } = useTranslation();
   const story = t('about.story', { returnObjects: true }) as string[];

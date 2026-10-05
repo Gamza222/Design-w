@@ -3,12 +3,12 @@ import type { Service } from './types';
 /** Studio services - static, bilingual data (rarely changes, no slugs needed). */
 export const SERVICES: Service[] = [
   {
-    id: 'turnkey',
-    title: { ru: 'Дизайн под ключ', en: 'Turnkey design', be: 'Дызайн пад ключ' },
+    id: 'design',
+    title: { ru: 'Дизайн-проект', en: 'Design project', be: 'Дызайн-праект' },
     description: {
-      ru: 'Полный цикл: концепция, планировка, визуализация и реализация проекта.',
-      en: 'Full cycle: concept, layout, visualisation and project delivery.',
-      be: 'Поўны цыкл: канцэпцыя, планіроўка, візуалізацыя і рэалізацыя праекта.',
+      ru: 'Состав дизайн-проекта зависит от выбранного пакета. Реализация оплачивается отдельно.',
+      en: 'The design scope depends on the selected package. Implementation is paid separately.',
+      be: 'Склад дызайн-праекта залежыць ад выбранага пакета. Рэалізацыя аплачваецца асобна.',
     },
   },
   {
@@ -33,9 +33,9 @@ export const SERVICES: Service[] = [
     id: 'supervision',
     title: { ru: 'Авторский надзор', en: 'Design supervision', be: 'Аўтарскі нагляд' },
     description: {
-      ru: 'Контролируем стройку, чтобы результат точно совпал с проектом.',
-      en: 'We oversee the build so the result matches the design exactly.',
-      be: 'Кантралюем рамонт, каб вынік дакладна адпавядаў праекту.',
+      ru: 'Отдельная услуга с ежемесячной оплатой; состав согласуем в договоре.',
+      en: 'A separate monthly service; the scope is agreed in the contract.',
+      be: 'Асобная паслуга са штомесячнай аплатай; склад узгоднім у дагаворы.',
     },
   },
 ];

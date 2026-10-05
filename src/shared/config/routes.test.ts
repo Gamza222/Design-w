@@ -1,25 +1,41 @@
 import { describe, expect, it } from 'vitest';
 
-import { getLocaleFromPath, homeSectionPath, localizePath, stripLocale } from './routes';
+import {
+  canonicalPathname,
+  getLocaleFromPath,
+  homeSectionPath,
+  localizePath,
+  stripLocale,
+} from './routes';
 
 describe('route locale helpers', () => {
   it('keeps the default locale unprefixed', () => {
-    expect(localizePath('/blog', 'ru')).toBe('/blog');
+    expect(localizePath('/blog', 'ru')).toBe('/blog/');
     expect(localizePath('/', 'ru')).toBe('/');
   });
 
   it('prefixes a non-default locale', () => {
-    expect(localizePath('/blog', 'en')).toBe('/en/blog');
-    expect(localizePath('/', 'en')).toBe('/en');
-    expect(localizePath('/blog', 'be')).toBe('/by/blog');
-    expect(localizePath('/', 'be')).toBe('/by');
+    expect(localizePath('/blog', 'en')).toBe('/en/blog/');
+    expect(localizePath('/', 'en')).toBe('/en/');
+    expect(localizePath('/blog', 'be')).toBe('/by/blog/');
+    expect(localizePath('/', 'be')).toBe('/by/');
   });
 
   it('keeps home section hashes after locale prefixing', () => {
     const services = homeSectionPath('services');
     expect(localizePath(services, 'ru')).toBe('/#services');
-    expect(localizePath(services, 'en')).toBe('/en#services');
-    expect(localizePath(services, 'be')).toBe('/by#services');
+    expect(localizePath(services, 'en')).toBe('/en/#services');
+    expect(localizePath(services, 'be')).toBe('/by/#services');
+  });
+
+  it('keeps queries and fragments after the canonical directory slash', () => {
+    expect(canonicalPathname('/portfolio/minimal-loft?utm_source=ad#details')).toBe(
+      '/portfolio/minimal-loft/?utm_source=ad#details',
+    );
+    expect(localizePath('/services/?ref=home#packages', 'be')).toBe(
+      '/by/services/?ref=home#packages',
+    );
+    expect(canonicalPathname('/en///')).toBe('/en/');
   });
 
   it('detects the locale from a pathname', () => {

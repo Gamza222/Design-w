@@ -48,8 +48,8 @@
 }
 
 .input:checked + .box {
-  border-color: var(--color-accent);
-  background-color: var(--color-accent);
+  border-color: var(--clr-accent);
+  background-color: var(--clr-accent);
 }
 
 .input:checked + .box .check {
@@ -64,4 +64,8 @@
 .label {
   font-size: var(--fs-sm);
   color: var(--color-text);
+}
+
+html[data-theme='light'] .box {
+  border-color: #707983;
 }

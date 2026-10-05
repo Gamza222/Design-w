@@ -20,7 +20,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <div className={styles.media}>
           <Image
             src={frontmatter.cover}
-            alt={frontmatter.title}
+            alt={frontmatter.coverAlt ?? frontmatter.title}
+            width={frontmatter.coverWidth}
+            height={frontmatter.coverHeight}
             ratio="4 / 5"
             className={styles.cover}
           />
@@ -29,8 +31,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <div className={styles.body}>
         <h3 className={styles.title}>{frontmatter.title}</h3>
         <p className={styles.meta}>
-          {frontmatter.style} · {frontmatter.area} {t('portfolio.meta.areaUnit')} ·{' '}
-          {frontmatter.year}
+          {[
+            frontmatter.style,
+            frontmatter.area ? `${frontmatter.area} ${t('portfolio.meta.areaUnit')}` : undefined,
+            frontmatter.year,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
         </p>
       </div>
     </AppLink>

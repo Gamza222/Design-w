@@ -2,6 +2,9 @@ import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
+import { getTariff } from '@entities/package';
+import { useLocale } from '@shared/lib';
+
 import { ContactForm } from '@features/contact-form';
 import { IconClose } from '@shared/ui';
 
@@ -75,7 +78,7 @@ export function OrderModal({ offer, onClose }: OrderModalProps) {
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
 
-  const serviceName = t(`home.services.items.${offer.id}.name`);
+  const serviceName = getTariff(offer.id, useLocale()).name;
 
   return createPortal(
     <div

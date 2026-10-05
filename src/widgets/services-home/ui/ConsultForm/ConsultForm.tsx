@@ -1,3 +1,4 @@
+import { getLeadAttribution } from '@shared/lib';
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +26,7 @@ export function ConsultForm() {
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+  const [leadNumber, setLeadNumber] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const successRef = useRef<HTMLDivElement>(null);
@@ -73,7 +75,7 @@ export function ConsultForm() {
 
     try {
       submissionIdRef.current ??= createLeadSubmissionId();
-      await submitLead({
+      const result = await submitLead({
         kind: 'consultation',
         ...values,
         consent: true,
@@ -81,7 +83,10 @@ export function ConsultForm() {
         locale: i18n.resolvedLanguage ?? i18n.language,
         page: window.location.pathname,
         website,
+        context: { source: 'services-consultation' },
+        attribution: getLeadAttribution(),
       });
+      setLeadNumber(result.leadNumber);
       setSent(true);
     } catch {
       setSubmitError(true);
@@ -98,6 +103,7 @@ export function ConsultForm() {
           <IconCheck />
         </span>
         <p>{t('home.services.cta.form.success')}</p>
+        {leadNumber && <p>№ {leadNumber}</p>}
       </div>
     );
   }

@@ -4,7 +4,7 @@
     "home": "Home",
     "services": "Services",
     "portfolio": "Portfolio",
-    "achievements": "Achievements",
+    "achievements": "Our approach",
     "blog": "Blog",
     "about": "About us",
     "contact": "Contact",
@@ -22,7 +22,7 @@
     "hours": "10:00-19:00",
     "menu": "Menu",
     "language": "Website language",
-    "online": "Online now"
+    "online": "Online enquiries"
   },
   "cookie": {
     "title": "Cookies",
@@ -32,33 +32,33 @@
   },
   "home": {
     "hero": {
-      "eyebrow": "Interior design projects across Russia and Belarus",
-      "titleLead": "A concept design project for your apartment",
-      "titleAccent": "for a renovation without overpaying",
-      "subtitle": "Layout, visual concept and implementation guidance. Get an estimate directly on the website.",
+      "eyebrow": "Interior design for Russia and Belarus",
+      "titleLead": "An interior design project",
+      "titleAccent": "for your life and needs",
+      "subtitle": "Layouts, drawings, collages and visualisations in your chosen package. Calculate a preliminary estimate.",
       "ctaExamples": "View our work",
       "bullets": {
-        "consult": "30-minute consultation",
-        "contract": "We work under a contract",
-        "remote": "Remote across Russia and Belarus"
+        "consult": "Discuss your brief",
+        "contract": "Agree on the scope",
+        "remote": "Online across Russia and Belarus"
       },
-      "benefitsTitle": "What you get",
+      "benefitsTitle": "Choose the project scope you need",
       "benefits": {
         "planning": {
-          "title": "Layout solution",
-          "desc": "A convenient layout where everything is in its place."
+          "title": "Space planning",
+          "desc": "Two layout options, with furniture and equipment positions."
         },
         "concept": {
-          "title": "Visual concept",
-          "desc": "We pick the style, colors, materials and furniture for your lifestyle."
+          "title": "Collages and visualisations",
+          "desc": "Discuss the look of the interior through the relevant packages."
         },
         "sketches": {
-          "title": "Concept plans",
-          "desc": "Schemes for furniture, lighting, sockets and key decisions."
+          "title": "Working drawings",
+          "desc": "Available in Drawings, Drawings + collages and the Full design project."
         },
         "support": {
-          "title": "Estimate and support",
-          "desc": "We help you understand the budget and avoid unnecessary purchases."
+          "title": "Additional services",
+          "desc": "Supervision, procurement and implementation are discussed separately."
         }
       }
     },
@@ -88,22 +88,22 @@
       "popularPackage": "Popular package",
       "whatsIncluded": "What's included",
       "slots": {
-        "plan": "Layout solution",
-        "spec": "Specification",
+        "plan": "Measured survey plan",
         "materials": "Materials and furniture selection",
         "drawings": "Schemes and drawings",
         "viz": "3D visualizations",
         "concept": "Interior concept",
-        "views3d": "3D views",
-        "supervision": "Design supervision"
+        "supervision": "Design supervision",
+        "furniturePlan": "Furniture placement plan",
+        "electrics": "Sockets and electrical outlets plan"
       },
       "modal": {
         "close": "Close",
         "includesTitle": "What's included",
         "forWhomTitle": "Who it's for",
-        "receiveTitle": "What you get",
+        "receiveTitle": "Examples of project materials",
         "addonsTitle": "Additional services",
-        "order": "Order this package",
+        "order": "Discuss this service",
         "specLabels": {
           "term": "Timeline",
           "revisions": "Revisions",
@@ -116,222 +116,6 @@
         "title": "Tell us about your property",
         "subtitle": "You selected “{{service}}”. You can change the service in the form.",
         "close": "Close the form"
-      },
-      "items": {
-        "planning": {
-          "name": "Apartment layout",
-          "cardDesc": "We design a convenient, functional space around your lifestyle.",
-          "desc": "Everything you need to get the perfect layout for your home or apartment.",
-          "price": "from 1,500 ₽/m²",
-          "includes": ["Measured floor plan", "Two layout options", "3D views in black and white"],
-          "specs": {
-            "term": "from 2 days",
-            "revisions": "2 rounds",
-            "format": "PDF",
-            "coverage": "across Russia"
-          },
-          "forWhom": "For apartment and house owners who want a well-thought-out layout, smart space organization and a comfortable interior planned before renovation starts - without costly mistakes."
-        },
-        "collages": {
-          "name": "Layout + collages",
-          "cardDesc": "Layout solutions and a visual interior concept with materials and furniture selection.",
-          "desc": "Everything you need for the right home layout, plus a coordinated selection of finishing materials.",
-          "price": "from 2,000 ₽/m²",
-          "includes": [
-            "Measured floor plan",
-            "Two layout options",
-            "3D views in black and white",
-            "Interior concept - collages"
-          ],
-          "specs": {
-            "term": "from 5 days",
-            "revisions": "2 rounds per stage",
-            "format": "PDF",
-            "coverage": "across Russia"
-          },
-          "forWhom": "For apartment and house owners who want not only smart space organization, but also the style, color palette and overall concept of the future interior defined in advance."
-        },
-        "full": {
-          "name": "Full concept design project",
-          "cardDesc": "Everything you need for a confident renovation start without mistakes and rework.",
-          "desc": "Everything you need for a confident renovation start without mistakes and rework.",
-          "price": "from 3,900 ₽/m²",
-          "includes": [
-            "Measured floor plan",
-            "Two layout options",
-            "3D views in black and white",
-            "Interior concept - collages",
-            "3D visualizations of all rooms",
-            "Furniture and equipment placement schemes",
-            "Drawings with implementation guidance",
-            "Finishing materials and furniture selection",
-            "Specification - recommended materials list"
-          ],
-          "specs": {
-            "term": "from 14 days",
-            "revisions": "2 rounds per stage",
-            "format": "PDF",
-            "coverage": "across Russia"
-          },
-          "forWhom": "For apartment and house owners who want a complete design project with a well-planned layout, realistic visualizations and all the materials needed to implement the interior."
-        },
-        "planViz": {
-          "name": "Layout + visualizations",
-          "cardDesc": "Layout and 3D visualizations of every room so you can see your future interior.",
-          "desc": "Layout and 3D visualizations of every room so you can see your future interior.",
-          "price": "from 3,000 ₽/m²",
-          "includes": [
-            "Measured floor plan",
-            "Two layout options",
-            "3D views in black and white",
-            "Interior concept - collages",
-            "3D visualizations of all rooms"
-          ],
-          "specs": {
-            "term": "from 10 days",
-            "revisions": "2 rounds per stage",
-            "format": "PDF",
-            "coverage": "across Russia"
-          },
-          "forWhom": "For apartment and house owners who want to see the interior in advance, define the style and color palette, and verify every visual decision before renovation begins."
-        },
-        "electric": {
-          "name": "Layout + electrical",
-          "cardDesc": "A scheme of wiring, sockets and lighting for comfortable living.",
-          "desc": "A scheme of wiring, sockets and lighting for comfortable living.",
-          "price": "from 3,000 ₽/m²",
-          "includes": [
-            "Measured floor plan",
-            "Two layout options",
-            "3D views in black and white",
-            "Lighting fixtures placement plan",
-            "Lighting scenarios and logic description",
-            "Switches and sockets scheme",
-            "Electrical zoning principles",
-            "Equipment specification",
-            "Underfloor heating placement plan"
-          ],
-          "specs": {
-            "term": "from 5 days",
-            "revisions": "2 rounds per stage",
-            "format": "PDF",
-            "coverage": "across Russia"
-          },
-          "forWhom": "For apartment and house owners who value comfort and functionality and want every electrical decision planned before renovation starts."
-        },
-        "viz3d": {
-          "name": "3D visualization",
-          "cardDesc": "Realistic room images so you can see your future interior.",
-          "desc": "Realistic room images so you can see your future interior.",
-          "price": "from 1,000 ₽/m²",
-          "includes": [
-            "3D images based on your project",
-            "Realistic materials and lighting",
-            "High-quality images"
-          ],
-          "specs": {
-            "term": "from 5 days",
-            "revisions": "2 rounds per stage",
-            "format": "PDF",
-            "coverage": "across Russia"
-          },
-          "forWhom": "For apartment and house owners who want to see the future interior in advance, evaluate design decisions and be confident in the result before renovation begins."
-        },
-        "procurement": {
-          "name": "Procurement",
-          "cardDesc": "Selection and ordering of furniture, lighting and materials within your budget.",
-          "desc": "Selection and ordering of furniture, lighting and materials within your budget.",
-          "price": "Price on request",
-          "includes": [
-            "Finishing materials selection",
-            "Furniture, lighting, plumbing and doors selection",
-            "Textiles and decor selection",
-            "Specifications preparation",
-            "Sourcing suppliers and manufacturers",
-            "Finding alternatives within budget",
-            "Purchasing consultations",
-            "Checking items against the project"
-          ],
-          "specs": {
-            "term": "from 5 days",
-            "revisions": "2 rounds per stage",
-            "format": "PDF / Excel",
-            "coverage": "across Russia"
-          },
-          "forWhom": "For apartment and house owners who want to save time, avoid purchasing mistakes and implement the interior as close to the approved project as possible."
-        },
-        "supervision": {
-          "name": "Design supervision",
-          "cardDesc": "Checking work against the project and support at every stage of renovation.",
-          "desc": "Checking work against the project and support at every stage of renovation.",
-          "price": "from 30,000 ₽",
-          "includes": [
-            "Regular site visits",
-            "Checking renovation work against the project",
-            "Consulting builders and contractors",
-            "Explaining drawings and specifications",
-            "Prompt adjustments",
-            "Approved materials control",
-            "Photo and video reports",
-            "Answering client and contractor questions",
-            "Design concept compliance control"
-          ],
-          "receive": [
-            "Implementation control",
-            "Site visits",
-            "Photo and video reports",
-            "Contractor consultations"
-          ],
-          "specs": {
-            "term": "for the implementation period",
-            "revisions": "as needed",
-            "format": "on-site / online",
-            "coverage": "Moscow and Moscow region"
-          },
-          "forWhom": "For apartment and house owners who want to avoid mistakes during renovation, save time and implement the interior exactly as designed."
-        },
-        "ergonomics": {
-          "name": "Ergonomics consultation",
-          "cardDesc": "Analysis of the layout in terms of comfort and room logic.",
-          "desc": "Analysis of the layout in terms of comfort and room logic.",
-          "price": "from 20,000 ₽",
-          "includes": [
-            "Project analysis for comfort and functionality",
-            "Recommendations for improving identified issues"
-          ],
-          "note": "This is a consulting service and does not replace a new layout solution, a full design project, a set of drawings or other project documentation.",
-          "specs": {
-            "term": "up to 3 hours",
-            "revisions": "not included",
-            "format": "online",
-            "coverage": "across Russia"
-          },
-          "forWhom": "For apartment and house owners who want to check an existing project, catch potential mistakes and get professional recommendations for improving the space."
-        },
-        "prelaunch": {
-          "name": "Pre-renovation consultation",
-          "cardDesc": "We check your project and help avoid mistakes before renovation starts.",
-          "desc": "We check your project and help avoid mistakes before renovation starts.",
-          "price": "from 20,000 ₽",
-          "includes": [
-            "Design project or layout analysis",
-            "Checking drawings for errors and contradictions",
-            "Feasibility assessment",
-            "Furniture and equipment placement check",
-            "Engineering elements check",
-            "Recommendations for fixing issues",
-            "Answering client questions",
-            "Final list of remarks and recommendations"
-          ],
-          "note": "This is a consulting service and does not include developing a new design project, drawings or visualizations.",
-          "specs": {
-            "term": "up to 24 hours",
-            "revisions": "not included",
-            "format": "online",
-            "coverage": "across Russia"
-          },
-          "forWhom": "For apartment and house owners who already have a project and want to make sure everything is ready for renovation to begin."
-        }
       },
       "who": {
         "title": "Who our services are for",
@@ -377,8 +161,8 @@
     },
     "portfolio": {
       "eyebrow": "Portfolio",
-      "title": "Examples of our work",
-      "subtitle": "Real interiors, not stock images from the internet.",
+      "title": "Interiors in detail",
+      "subtitle": "Explore palettes, furniture shapes and lighting in our selection.",
       "cta": "See all works",
       "more": "More",
       "areaUnit": "m²"
@@ -398,32 +182,6 @@
       "packageLabel": "Package",
       "sampleProject": "View a sample project",
       "popular": "Popular",
-      "priceFrom": "from",
-      "priceUnit": "₽/m²",
-      "features": {
-        "planning": "Layout",
-        "collages": "Collages",
-        "viz3d": "3D visualizations",
-        "sketchPlans": "Concept plans",
-        "materials": "Materials and furniture selection"
-      },
-      "items": {
-        "start": {
-          "name": "Start",
-          "priceValue": "1,500",
-          "tagline": "A confident renovation start"
-        },
-        "comfort": {
-          "name": "Comfort",
-          "priceValue": "2,000",
-          "tagline": "Balance of price and detail"
-        },
-        "full": {
-          "name": "Full",
-          "priceValue": "3,900",
-          "tagline": "A complete project package"
-        }
-      },
       "calc": {
         "title": "Need an estimate?",
         "description": "Answer a few questions and get a preliminary project cost.",
@@ -433,101 +191,73 @@
     "process": {
       "eyebrow": "How we work",
       "title": "How your project progresses",
-      "subtitle": "A clear process, understandable stages and a predictable result. You always know which stage the project is at.",
+      "subtitle": "Define the brief and scope first, then review the materials included in your chosen package.",
       "steps": [
         {
-          "title": "Request",
-          "desc": "Leave a request on the website and we will contact you."
+          "title": "Enquiry",
+          "desc": "Leave your contact details and a short description."
         },
         {
-          "title": "Discuss the task",
-          "desc": "We learn your wishes, needs and budget."
+          "title": "Discussion",
+          "desc": "Review your plan, preferences and budget."
         },
         {
-          "title": "Estimate the cost",
-          "desc": "We calculate the project cost and timeline."
+          "title": "Scope and price",
+          "desc": "Agree on the package, cost and schedule before starting."
         },
         {
-          "title": "Layout",
-          "desc": "We propose space-planning options."
+          "title": "Space planning",
+          "desc": "Prepare two layout options."
         },
         {
-          "title": "Concept",
-          "desc": "We select the style, colors, materials and furniture."
+          "title": "Package development",
+          "desc": "Create drawings, collages or visualisations according to the selected scope."
         },
         {
-          "title": "Handover",
-          "desc": "You receive the concept design package and recommendations."
+          "title": "Material delivery",
+          "desc": "Deliver the agreed set of project materials."
         }
       ],
       "perks": [
-        "We work under a contract",
-        "Remote across Russia and Belarus",
-        "Online support",
-        "We help you avoid renovation mistakes"
+        "Scope agreed before starting",
+        "Remote discussion",
+        "Stage reviews",
+        "Extra services priced separately"
       ],
       "ctaTitle": "Want a process this clear?",
-      "ctaText": "Let's discuss your project and estimate the cost in 30 minutes.",
+      "ctaText": "Tell us about your space and needs so we can discuss a suitable package.",
       "cta": "Discuss a project"
     },
     "achievements": {
-      "eyebrow": "Achievements",
-      "title": "Projects trusted across Russia and Belarus",
-      "subtitle": "Numbers and reviews from clients for whom we've already created clear, comfortable interiors.",
-      "stats": [
+      "eyebrow": "Our approach",
+      "title": "From your needs to the right project scope",
+      "subtitle": "Choose the level of detail you need, from a layout to a full set of drawings and visualisations.",
+      "items": [
         {
-          "value": "500+",
-          "label": "completed design projects"
+          "title": "Start with the layout",
+          "text": "Consider room dimensions, furniture positions and your everyday needs."
         },
         {
-          "value": "5 years",
-          "label": "of interior design experience"
+          "title": "Agree on the scope",
+          "text": "Drawings, collages and visualisations belong to different packages. Choose what your project needs."
         },
         {
-          "value": "50+",
-          "label": "cities across Russia, Belarus and the CIS"
+          "title": "Discuss it online",
+          "text": "You can share plans, photographs and preferences remotely."
         },
         {
-          "value": "4.9",
-          "label": "average client rating",
-          "rating": 4.9
+          "title": "Separate extra services",
+          "text": "Design supervision, procurement and implementation are discussed separately from the design project."
         }
       ],
-      "reviewsTitle": "Client reviews",
-      "prevReview": "Previous review",
-      "nextReview": "Next review",
-      "reviews": [
-        {
-          "text": "We got a clear project with no fluff. The layout was reworked around our lifestyle - the renovation went calmly and predictably.",
-          "author": "Anna & Dmitry",
-          "role": "Apartment 64 m², Moscow",
-          "rating": 5
-        },
-        {
-          "text": "We did everything remotely from another city and never regretted it. They were always in touch and helped us stay on budget.",
-          "author": "Ekaterina",
-          "role": "Studio 38 m², Kazan",
-          "rating": 5
-        },
-        {
-          "text": "I liked that all the details were discussed in advance. The interior turned out convenient, and the builders worked from clear schemes.",
-          "author": "Sergey",
-          "role": "House 120 m², Krasnodar",
-          "rating": 5
-        }
-      ],
-      "team": {
-        "title": "Designed as a whole",
-        "text": "From layouts and visualizations to a clear set of documents for implementation.",
-        "cta": "About the studio"
-      }
+      "cta": "More about the studio"
     },
     "geography": {
       "eyebrow": "Geography",
-      "title": "We deliver design projects across Russia and Belarus",
-      "subtitle": "You don't need to come to the office. Measurements, brief, edits and handover all happen online.",
-      "remoteTitle": "We work from anywhere",
-      "remoteText": "All you need is the internet and your phone to create a convenient, beautiful interior.",
+      "title": "Interior design online",
+      "subtitle": "Discuss projects for Russia and Belarus remotely. Share your room plan, photographs and preferences online.",
+      "remoteTitle": "Start from your own city",
+      "remoteText": "Prepare a plan, photographs and a list of needs for the initial discussion. Measurement arrangements and working terms are agreed separately.",
       "cities": {
         "spb": "Saint Petersburg",
         "moscow": "Moscow",
@@ -539,46 +269,45 @@
         "irkutsk": "Irkutsk",
         "vlk": "Vladivostok"
       },
-      "caseLabel": "Project in Moscow",
-      "caseTitle": "Apartment 64 m²",
-      "caseCity": "Moscow",
-      "caseCta": "View case",
+      "caseLabel": "Portfolio",
+      "caseTitle": "Interiors in detail",
+      "caseCta": "Explore the portfolio",
       "stats": [
         {
-          "value": "50+",
-          "label": "cities in Russia, Belarus and the CIS, all served online"
+          "value": "Online",
+          "label": "discuss the brief and review project materials"
         },
         {
-          "value": "30 minutes",
-          "label": "preliminary estimate during business hours"
+          "value": "Plan",
+          "label": "dimensions and features of your room"
         },
         {
-          "value": "24/7",
-          "label": "send a website enquiry whenever it suits you"
+          "value": "PDF",
+          "label": "project materials in digital format"
         },
         {
           "value": "RUB / BYN",
-          "label": "payments accepted in Russian and Belarusian rubles"
+          "label": "prices on the Russian and Belarusian versions"
         }
       ],
       "howTitle": "How online work goes",
       "howSteps": [
         {
-          "title": "You send the layout and photos of the apartment",
-          "desc": "We discuss goals, wishes, style and budget."
+          "title": "Prepare a plan and photographs",
+          "desc": "Add your preferences for space, style and budget."
         },
         {
-          "title": "We discuss your project online or by phone",
-          "desc": "We propose layouts and concepts and agree on the details."
+          "title": "Discuss the brief",
+          "desc": "Choose a package and agree on the scope."
         },
         {
-          "title": "We hand over the project as a PDF and support edits online",
-          "desc": "You receive a complete set and our support."
+          "title": "Review the materials",
+          "desc": "Agree on delivery format and revisions before starting."
         }
       ],
       "ctaTitle": "Estimate your project online",
-      "ctaText": "We'll reply within 30 minutes during business hours.",
-      "cta": "Start the estimate"
+      "ctaText": "Leave your contact details and a short description. We will get in touch to discuss it.",
+      "cta": "Discuss a project"
     },
     "fears": {
       "eyebrow": "We understand your concerns",
@@ -624,55 +353,7 @@
         "total": "Cost"
       },
       "formatTitle": "1. Choose the project format",
-      "formats": [
-        {
-          "name": "Layout",
-          "price": "from 1,500 ₽/m²",
-          "desc": "Project planning and furniture arrangement. A convenient, functional plan for you."
-        },
-        {
-          "name": "Layout + collages",
-          "price": "from 2,000 ₽/m²",
-          "desc": "A layout solution and style collages with a selection of materials and furniture."
-        },
-        {
-          "name": "Layout + 3D visualization",
-          "price": "from 3,000 ₽/m²",
-          "desc": "Plan, concept and a realistic 3D visualization of the future interior."
-        },
-        {
-          "name": "Full project",
-          "price": "from 3,900 ₽/m²",
-          "desc": "Layout, collages, 3D visualizations, plans, drawings and materials selection."
-        }
-      ],
       "addonsTitle": "2. Add extra services",
-      "addons": [
-        {
-          "name": "3D visualization",
-          "price": "+ 1,000 ₽/m²"
-        },
-        {
-          "name": "Design supervision",
-          "price": "+ 30,000 ₽"
-        },
-        {
-          "name": "Furnishing & procurement",
-          "price": "price on request"
-        },
-        {
-          "name": "Electrical plan",
-          "price": "+ 1,500 ₽/m²"
-        },
-        {
-          "name": "Ergonomics consultation",
-          "price": "+ 20,000 ₽"
-        },
-        {
-          "name": "Pre-renovation consultation",
-          "price": "+ 20,000 ₽"
-        }
-      ],
       "included": "Included in the package",
       "areaTitle": "3. Enter the area",
       "areaUnit": "m²",
@@ -685,10 +366,9 @@
       "resultAreaLabel": "Area",
       "resultAddonsLabel": "Extra services",
       "resultAddonsEmpty": "none selected",
-      "resultTermLabel": "Development time",
-      "resultTerms": ["from 2 days", "from 5 days", "from 10 days", "from 14 days"],
-      "resultTotalLabel": "Total cost",
-      "resultNote": "An approximate project cost. We'll confirm the exact amount after a consultation.",
+      "resultTermLabel": "Schedule and terms",
+      "resultTotalLabel": "Preliminary project cost",
+      "resultNote": "A preliminary estimate based on the area entered. We confirm the scope and final price after discussing your needs.",
       "cta": "Get the exact cost",
       "trust": [
         "No pressure",
@@ -702,71 +382,46 @@
       "subtitle": "We answer the important questions about work, timelines and the process.",
       "items": [
         {
-          "q": "Do I need to come to your office?",
-          "a": "No. We do most projects entirely online: we have calls, discuss the layout, send materials and agree on decisions remotely."
+          "q": "What is included in Layout?",
+          "a": "A measured survey plan, two layout options, furniture and equipment placement, and black-and-white 3D views. The rate is {{planning}}. Working drawings, collages and photorealistic visualizations are excluded."
         },
         {
-          "q": "Do you work with small apartments?",
-          "a": "Yes. For small apartments a thoughtful layout matters even more - we help you use every square meter."
+          "q": "How do Drawings and Drawings + collages differ?",
+          "a": "Both include the layout and a set of working drawings. The second adds room-by-room collages and a more detailed specification. Photorealistic visualizations are excluded from both."
         },
         {
-          "q": "How long does a design project take?",
-          "a": "It depends on the format: from 2 days for a layout and from 14 days for a full project. We confirm the exact timeline in the contract."
+          "q": "Does Layout + visualizations include working drawings?",
+          "a": "No. It includes a measured plan, two layout options, furniture placement, black-and-white 3D views and photorealistic room visualizations. Working drawings and collages are excluded."
         },
         {
-          "q": "Can I order just the layout without visualization?",
-          "a": "Yes, the \"Layout\" format is a separate package. Visualization can be added later."
+          "q": "Does the full project include implementation?",
+          "a": "The full design project costs {{full}} and includes the layout, collages, visualizations of the main rooms, working drawings and specifications. Supervision, procurement and implementation are paid separately."
         },
         {
-          "q": "What does design supervision include?",
-          "a": "Support during implementation: advising the contractor, checking compliance with the project and answering questions as the renovation goes."
+          "q": "How does the calculator handle extra services?",
+          "a": "3D visualizations are added only when the selected package does not already include them. Supervision costs {{supervision}}. Monthly charges, procurement and consultations quoted on request are excluded from the project subtotal."
         },
         {
-          "q": "How is the project paid for?",
-          "a": "We work under a contract. Payment is split into stages - without full prepayment at the start."
-        },
-        {
-          "q": "What if I don't like the result?",
-          "a": "We agree on the concept step by step: you see and approve every decision before final delivery, so there are no surprises."
+          "q": "How accurate is the estimate, and how long does a project take?",
+          "a": "The calculator provides a preliminary estimate based on your area and services. Prices marked “from” are starting rates. The final price, scope and schedule are agreed after discussing your needs."
         }
       ]
     },
     "reviews": {
       "eyebrow": "Reviews",
-      "title": "What our clients say",
-      "subtitle": "Real impressions from the people we've already worked with.",
-      "ratingValue": "4.9",
-      "ratingLabel": "based on 500+ projects",
-      "ratingCta": "All reviews",
-      "items": [
-        {
-          "name": "Olga & Mikhail",
-          "city": "Moscow, Sever complex",
-          "rating": 5,
-          "text": "We're very grateful to the studio for their professionalism! They took all our wishes into account, and the layout turned out convenient and well thought through. We got a cozy, modern interior that's a pleasure to be in. Special thanks for the approach and support at every stage - it was calm and clear all the way."
-        },
-        {
-          "name": "Andrey",
-          "city": "Kazan, 64 m²",
-          "rating": 5,
-          "text": "I came to the studio for a design project of a 64 m² apartment in a new building. The budget was limited, but the result exceeded expectations. Everything was clear, to the point, no fluff."
-        },
-        {
-          "name": "Tatyana",
-          "city": "Saint Petersburg",
-          "rating": 5,
-          "text": "The designers suggested a few non-obvious solutions, and now the apartment looks more expensive than its size. Very happy with the result - highly recommend!"
-        }
-      ]
+      "title": "Client reviews",
+      "subtitle": "Published with the authors’ permission and links to their sources.",
+      "source": "Review source",
+      "more": "Show more reviews"
     },
     "contactCta": {
       "eyebrow": "Contact",
       "title": "Let's discuss your project",
       "subtitle": "No pressure. We'll suggest options, tell you what suits you, and give you a sense of the cost.",
       "checks": [
-        "A designer will answer",
+        "Discuss your brief",
         "Online across Russia and Belarus",
-        "We usually reply in 15-30 minutes"
+        "We will use your chosen contact details"
       ],
       "socialsTitle": "Message us in whichever way is most convenient",
       "form": {
@@ -811,41 +466,52 @@
   },
   "services": {
     "title": "Services",
-    "subtitle": "A full cycle of work - we handle everything from idea to delivery.",
+    "subtitle": "Choose the scope your project needs. Site supervision, procurement and implementation are charged separately.",
     "landingsTitle": "Individual services",
     "landingsSubtitle": "Every service can be ordered on its own - with a clear price per m² and fixed timelines.",
     "landingsCta": "More about this service"
   },
   "portfolio": {
     "title": "Portfolio",
-    "subtitle": "Completed apartment and house projects.",
+    "subtitle": "Interiors, compositions and details: choose a direction to discuss for your own project.",
     "meta": {
       "area": "Area",
       "year": "Year",
       "location": "Location",
       "style": "Style",
       "areaUnit": "m²"
+    },
+    "project": {
+      "task": "Brief",
+      "solution": "Design response",
+      "gallery": "Additional images",
+      "ctaTitle": "Let’s discuss your interior",
+      "ctaText": "Tell us which details you liked. We can discuss your room layout and the project scope you need.",
+      "cta": "Discuss a similar interior",
+      "faqTitle": "Questions about this interior"
     }
   },
   "blog": {
     "title": "Blog",
-    "subtitle": "Ideas, trends and useful notes on interior design."
+    "subtitle": "Ideas, trends and useful notes on interior design.",
+    "readOriginal": "Read the full article on Dzen (Russian)"
   },
   "achievements": {
-    "title": "Achievements",
-    "subtitle": "Awards, publications and results of our projects."
+    "title": "Our approach",
+    "subtitle": "Choose the level of detail you need, from a layout to a full set of drawings and visualisations."
   },
   "about": {
     "title": "About the studio",
-    "subtitle": "We are a team in love with details and meaningful spaces.",
+    "subtitle": "Design Seichas — interior design with attention to layout, light and everyday life.",
     "story": [
-      "ДизайнСейчас is an interior design studio. We craft apartment and home projects where form and comfort work together.",
-      "Every project starts with understanding how a person lives. Then come layout, materials, light and a precise estimate, so the result matches expectations."
+      "We develop interior design projects for apartments and houses. We begin with your needs: how you use the space, what you want to change and what you need the project to deliver.",
+      "The scope depends on your chosen package. Layouts, working drawings, collages and photorealistic visualisations are available in different combinations. Design supervision, procurement and implementation are discussed and charged separately.",
+      "The first discussion can take place online. A plan, photographs and your preferences are useful starting materials. After understanding the brief, we agree on the scope and project terms."
     ]
   },
   "contact": {
     "title": "Get in touch",
-    "subtitle": "Tell us about your project. We'll prepare an estimate and recommend the right solution.",
+    "subtitle": "Tell us about your space and preferences to discuss the project scope and cost.",
     "email": "dizain.seichas@yandex.ru",
     "details": {
       "title": "Direct contacts",
@@ -856,11 +522,11 @@
       "geoLabel": "Coverage",
       "geoValue": "Working remotely across Russia and Belarus",
       "paymentLabel": "Payment",
-      "paymentValue": "MIR, BELKART and bank transfer. RUB and BYN"
+      "paymentValue": "Payment terms and methods are agreed in the contract."
     }
   },
   "footer": {
-    "tagline": "We create interiors that are comfortable to live in every day.",
+    "tagline": "Interior design for apartments and houses: layouts, drawings and visual direction.",
     "rights": "All rights reserved.",
     "navTitle": "Navigation",
     "nav": [
@@ -912,94 +578,166 @@
     "planirovka": {
       "slug": "planirovka-kvartiry",
       "h1": "Apartment layout",
-      "subtitle": "A convenient layout where everything is in its place - the foundation of a comfortable renovation.",
-      "intro": "The layout solution is the foundation of the project. We think through furniture arrangement, zoning, storage and your family's living scenarios.",
-      "includesTitle": "What's included",
-      "includes": [
-        "Measurement plan and apartment analysis",
-        "Several layout options",
-        "Furniture arrangement and zoning",
-        "A dimensioned plan for the renovation"
-      ],
-      "priceLabel": "Cost",
-      "price": "from 1,500 ₽/m²",
-      "termLabel": "Timeline",
-      "term": "from 2 days",
-      "faqTitle": "FAQ",
+      "subtitle": "Two layout options, furniture placement and black-and-white 3D views of the selected option.",
+      "intro": "Two layout options, furniture placement and black-and-white 3D views of the selected option.",
+      "includesTitle": "What is included",
+      "priceLabel": "Price",
+      "termLabel": "Schedule and terms",
+      "faqTitle": "Questions about this service",
       "faq": [
         {
-          "q": "How is a layout different from a full project?",
-          "a": "The layout solves function and arrangement. A full project adds visualizations, materials and concept plans."
+          "q": "How much does this service cost?",
+          "a": "{{price}}. {{exclusions}}"
         },
         {
-          "q": "Can visualization be added later?",
-          "a": "Yes, visualization and other services can be added as a separate stage."
+          "q": "How are the schedule and final scope agreed?",
+          "a": "We discuss the property, source materials and selected package, then document the scope, working arrangements and schedule in the proposal and contract."
         }
       ],
-      "cta": "Estimate a layout"
+      "cta": "Discuss your project"
     },
     "viz3d": {
       "slug": "3d-vizualizaciya-interera",
-      "h1": "Interior 3D visualization",
-      "subtitle": "See the future interior before the renovation begins - in photorealistic 3D visualizations.",
-      "intro": "Visualization shows how materials, lighting, furniture and colour will work together in your interior. It removes uncertainty and helps protect the budget.",
-      "includesTitle": "What's included",
-      "includes": [
-        "Photorealistic angles of each room",
-        "Selection of materials and furniture",
-        "Lighting and colour development",
-        "Edits until the concept is approved"
-      ],
-      "priceLabel": "Cost",
-      "price": "from 1,000 ₽/m²",
-      "termLabel": "Timeline",
-      "term": "from 5 days",
-      "faqTitle": "FAQ",
+      "h1": "3D interior visualization",
+      "subtitle": "Photorealistic images of the future interior. The scope is agreed before quoting.",
+      "intro": "Photorealistic images of the future interior. The scope is agreed before quoting.",
+      "includesTitle": "What is included",
+      "priceLabel": "Price",
+      "termLabel": "Schedule and terms",
+      "faqTitle": "Questions about this service",
       "faq": [
         {
-          "q": "How closely will the visualization match the result?",
-          "a": "We pick real materials and furniture, so the result is as close to the visualization as possible."
+          "q": "How much does this service cost?",
+          "a": "{{price}}. {{exclusions}}"
         },
         {
-          "q": "How many angles do you make?",
-          "a": "Usually 2-3 angles per key room; the count is discussed per project."
+          "q": "How are the schedule and final scope agreed?",
+          "a": "We discuss the property, source materials and selected package, then document the scope, working arrangements and schedule in the proposal and contract."
         }
       ],
-      "cta": "Order visualization"
+      "cta": "Discuss your project"
     },
     "sketch": {
       "slug": "eskiznyj-dizajn-proekt",
-      "h1": "Concept design project",
-      "subtitle": "The ideal format to start a renovation without overpaying: layout, concept and key schemes.",
-      "intro": "A concept project gives you everything for a confident renovation: a thoughtful layout, a visual concept and concept plans for furniture, light and sockets.",
-      "includesTitle": "What's included",
-      "includes": [
-        "Layout solution",
-        "Visual concept and collages",
-        "Concept plans (furniture, light, sockets)",
-        "Recommendations for implementation"
-      ],
-      "priceLabel": "Cost",
-      "price": "from 3,900 ₽/m²",
-      "termLabel": "Timeline",
-      "term": "from 14 days",
-      "faqTitle": "FAQ",
+      "h1": "Full design project",
+      "subtitle": "Layout, collages, visualizations of the main rooms, working drawings and specifications.",
+      "intro": "Layout, collages, visualizations of the main rooms, working drawings and specifications.",
+      "includesTitle": "What is included",
+      "priceLabel": "Price",
+      "termLabel": "Schedule and terms",
+      "faqTitle": "Questions about this service",
       "faq": [
         {
-          "q": "Is a concept project enough for contractors?",
-          "a": "Yes, the concept plans are enough for the crew to understand the key project decisions."
+          "q": "How much does this service cost?",
+          "a": "{{price}}. {{exclusions}}"
         },
         {
-          "q": "How is a concept project different from a working one?",
-          "a": "The concept project fixes the concept and key schemes; working documentation is more detailed drawings for complex solutions."
+          "q": "How are the schedule and final scope agreed?",
+          "a": "We discuss the property, source materials and selected package, then document the scope, working arrangements and schedule in the proposal and contract."
         }
       ],
-      "cta": "Estimate a concept project"
+      "cta": "Discuss your project"
     }
   },
   "notFound": {
     "title": "Page not found",
     "subtitle": "Looks like this page doesn't exist.",
     "back": "Back home"
+  },
+  "tariffs": {
+    "from": "from",
+    "onRequest": "On request",
+    "perM2": "/m²",
+    "perMonth": "/month",
+    "scopePending": "Scope agreed individually",
+    "terms": "Schedule and working arrangements are agreed in the contract",
+    "separateEstimate": "Supervision is billed monthly; procurement and consultations are quoted separately. They are excluded from the project subtotal.",
+    "preliminary": "Preliminary estimate",
+    "select": "Send an enquiry",
+    "exclusionsTitle": "Terms and exclusions",
+    "allPackages": "All packages and services",
+    "rateDate": "Static BYN rates fixed on 4 October 2026.",
+    "items": {
+      "planning": {
+        "name": "Layout",
+        "description": "Two layout options, furniture placement and black-and-white 3D views."
+      },
+      "drawings": {
+        "name": "Drawings",
+        "description": "Everything in Layout, plus working drawings and an indicative specification."
+      },
+      "collages": {
+        "name": "Drawings + collages",
+        "description": "Working drawings, room-by-room collages and a more detailed specification."
+      },
+      "planViz": {
+        "name": "Layout + visualizations",
+        "description": "Space planning and photorealistic room visualizations."
+      },
+      "full": {
+        "name": "Full design project",
+        "description": "Layout, collages, visualizations of the main rooms, working drawings and specifications."
+      },
+      "electric": {
+        "name": "Layout + electrical",
+        "description": "A separate project format. The detailed scope is agreed before work begins."
+      },
+      "viz3d": {
+        "name": "3D visualizations",
+        "description": "Photorealistic interior images as a separate service."
+      },
+      "supervision": {
+        "name": "Design supervision",
+        "description": "A separate service during renovation, billed monthly."
+      },
+      "procurement": {
+        "name": "Procurement",
+        "description": "Procurement scope and cost are quoted on request."
+      },
+      "consultation": {
+        "name": "Consultations",
+        "description": "The subject, scope and cost of a consultation are agreed for your needs."
+      }
+    },
+    "features": {
+      "measuredPlan": "Measured survey plan",
+      "twoLayouts": "Two layout options",
+      "furniture": "Furniture and equipment placement",
+      "mono3d": "Black-and-white 3D views of the selected layout",
+      "demolition": "Demolition plan",
+      "partitions": "Partition construction plan",
+      "finalPlan": "Final floor plan",
+      "furniturePlan": "Furniture and equipment plan",
+      "plumbing": "Plumbing plan",
+      "flooring": "Floor finishes plan",
+      "underfloorHeating": "Underfloor heating plan",
+      "ceilings": "Ceiling plan",
+      "lighting": "Lighting plan",
+      "switches": "Switch plan",
+      "sockets": "Sockets and electrical outlets plan",
+      "wallFinishes": "Wall finishes plan",
+      "elevations": "Room elevations",
+      "approximateSpec": "Indicative specification",
+      "collages": "Room-by-room collages: style, colours, materials, furniture and lighting",
+      "detailedSpec": "More detailed specification",
+      "roomVisualizations": "Photorealistic 3D room visualizations",
+      "mainRoomVisualizations": "Photorealistic visualizations of the main rooms",
+      "specifications": "Specifications",
+      "planningScope": "Space planning",
+      "workingDrawings": "Complete set of working drawings",
+      "visualizations": "Photorealistic 3D visualizations"
+    },
+    "exclusions": {
+      "noDrawingsCollagesViz": "Working drawings, collages and photorealistic visualizations are excluded.",
+      "noCollagesViz": "Collages and photorealistic visualizations are excluded.",
+      "noViz": "Photorealistic visualizations are excluded.",
+      "noDrawingsCollages": "Working drawings and collages are excluded.",
+      "separateDelivery": "Design supervision, procurement and implementation are paid separately.",
+      "scopeToAgree": "The detailed scope has not yet been defined. We will agree it in the proposal; the displayed estimate is preliminary.",
+      "visualizationScope": "Rooms, views and source materials are agreed before quoting.",
+      "supervisionScope": "Support scope and site visits are agreed separately. Monthly fees are outside the design project price.",
+      "procurementScope": "Scope and price will be specified in the proposal. This service is outside the project estimate.",
+      "consultationScope": "Price and scope have not yet been set. We agree them before booking; this service is excluded from the project estimate."
+    }
   }
 }

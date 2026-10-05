@@ -14,7 +14,7 @@ function Icon({ children, ...props }: IconProps) {
       height="1em"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"

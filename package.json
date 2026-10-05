@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "react-router dev",
-    "build": "react-router build && node scripts/generate-sitemap.mjs && node scripts/generate-404.mjs",
+    "build": "react-router build && node scripts/generate-sitemap.mjs && node scripts/generate-404.mjs && node scripts/audit-release.mjs",
     "preview": "node scripts/preview.mjs --port 3000",
     "typecheck": "react-router typegen && tsc",
     "lint": "eslint . && stylelint \"src/**/*.scss\"",

@@ -1,10 +1,9 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 async function openHome(page: Page) {
   await page.goto('/');
-  // The prerendered page is visible before hydration. Wait until the application
-  // has removed its startup curtain before driving scroll and keyboard events.
-  await expect(page.locator('body > div[aria-hidden="true"]')).toHaveCount(0);
+  // Prerendered content is visible before hydration; wait for event handlers.
+  await expect(page.locator('[aria-controls="header-menu"]')).toBeEnabled();
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 }
 

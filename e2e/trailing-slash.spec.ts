@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 // Apache serves prerendered directories with a trailing slash, while prerendering
 // uses canonical paths without it. Both must select the same document on hydration.
@@ -9,7 +9,7 @@ const directoryRoutes = [
   ['/consent/', 'Согласие на обработку персональных данных'],
   ['/planirovka-kvartiry/', 'Планировка квартиры'],
   ['/3d-vizualizaciya-interera/', '3D-визуализация интерьера'],
-  ['/eskiznyj-dizajn-proekt/', 'Эскизный дизайн-проект'],
+  ['/eskiznyj-dizajn-proekt/', 'Полный дизайн-проект'],
 ] as const;
 
 for (const [path, heading] of directoryRoutes) {

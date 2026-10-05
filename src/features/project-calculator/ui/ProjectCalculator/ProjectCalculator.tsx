@@ -8,9 +8,11 @@ import {
   CALC_FORMATS,
   CALC_FORMATS_BYN,
   calcTotal,
+  getTariff,
+  getCalculationContext,
+  isFromEstimate,
 } from '@entities/package';
-import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
-import { cn, formatMoney, useLocale } from '@shared/lib';
+import { cn, formatMoney, openLeadDialog, useLocale } from '@shared/lib';
 import {
   Button,
   GlassPanel,
@@ -30,21 +32,18 @@ import styles from './ProjectCalculator.module.scss';
 
 type Icon = ComponentType<SVGProps<SVGSVGElement>>;
 
-// Иконки по порядку i18n `home.calculator.formats` / `addons`.
-const FORMAT_ICONS: Icon[] = [IconLayout, IconArmchair, IconCube, IconClipboardCheck];
-const ADDON_ICONS: Icon[] = [IconCube, IconShield, IconWallet, IconBolt, IconArmchair, IconChat];
+// Иконки соответствуют порядку единого каталога тарифов и дополнительных услуг.
+const FORMAT_ICONS: Icon[] = [
+  IconLayout,
+  IconClipboardCheck,
+  IconArmchair,
+  IconCube,
+  IconClipboardCheck,
+  IconBolt,
+];
+const ADDON_ICONS: Icon[] = [IconCube, IconShield, IconWallet, IconChat];
 
-interface FormatText {
-  name: string;
-  price: string;
-  desc: string;
-}
-interface AddonText {
-  name: string;
-  price: string;
-}
-
-const DEFAULT_FORMAT = 2;
+const DEFAULT_FORMAT = 3;
 const DEFAULT_ADDONS: number[] = [];
 
 /** Интерактивный калькулятор (макет 09): формат → доп.услуги → площадь, справа live-сводка «Ваш
@@ -53,10 +52,7 @@ export function ProjectCalculator() {
   const { t } = useTranslation();
   const locale = useLocale();
 
-  const formatTexts = t('home.calculator.formats', { returnObjects: true }) as FormatText[];
-  const addonTexts = t('home.calculator.addons', { returnObjects: true }) as AddonText[];
   const trust = t('home.calculator.trust', { returnObjects: true }) as string[];
-  const resultTerms = t('home.calculator.resultTerms', { returnObjects: true }) as string[];
   const unit = t('home.calculator.areaUnit');
 
   const [formatIdx, setFormatIdx] = useState(DEFAULT_FORMAT);
@@ -64,6 +60,8 @@ export function ProjectCalculator() {
   const [area, setArea] = useState<number>(CALC_AREA.default);
   const calcFormats = locale === 'be' ? CALC_FORMATS_BYN : CALC_FORMATS;
   const calcAddons = locale === 'be' ? CALC_ADDONS_BYN : CALC_ADDONS;
+  const formatTexts = calcFormats.map(({ id }) => getTariff(id, locale));
+  const addonTexts = calcAddons.map(({ id }) => getTariff(id, locale));
   const includedAddonIds = calcFormats[formatIdx]?.includedAddonIds ?? [];
   const includedAddonIndexes = calcAddons.reduce<number[]>((indexes, addon, index) => {
     if (includedAddonIds.includes(addon.id)) indexes.push(index);
@@ -91,12 +89,14 @@ export function ProjectCalculator() {
     [formatIdx, addons, area, calcFormats, calcAddons],
   );
 
+  const from = isFromEstimate(
+    calcFormats[formatIdx],
+    addons.map((i) => calcAddons[i]),
+  );
   const money = (amount: number) => formatMoney(amount, locale);
 
   const FormatIcon = FORMAT_ICONS[formatIdx] ?? FORMAT_ICONS[0];
-  const selectedAddons = [...new Set([...addons, ...includedAddonIndexes])].sort(
-    (a, b) => a - b,
-  );
+  const selectedAddons = [...new Set([...addons, ...includedAddonIndexes])].sort((a, b) => a - b);
 
   const steps = t('home.calculator.steps', { returnObjects: true }) as Record<string, string>;
 
@@ -135,8 +135,8 @@ export function ProjectCalculator() {
                       <Icon />
                     </span>
                     <span className={styles.formatName}>{f.name}</span>
-                    <span className={styles.formatPrice}>{f.price}</span>
-                    <span className={styles.formatDesc}>{f.desc}</span>
+                    <span className={styles.formatPrice}>{f.priceLabel}</span>
+                    <span className={styles.formatDesc}>{f.description}</span>
                   </button>
                 );
               })}
@@ -170,7 +170,7 @@ export function ProjectCalculator() {
                     <span className={styles.addonInfo}>
                       <span className={styles.addonName}>{a.name}</span>
                       <span className={styles.addonPrice}>
-                        {included ? t('home.calculator.included') : a.price}
+                        {included ? t('home.calculator.included') : a.priceLabel}
                       </span>
                     </span>
                     <span className={styles.addonCheck} aria-hidden="true">
@@ -219,7 +219,9 @@ export function ProjectCalculator() {
                 </span>
                 <span>
                   <span className={styles.rowFormatName}>{formatTexts[formatIdx]?.name}</span>
-                  <span className={styles.rowFormatPrice}>{formatTexts[formatIdx]?.price}</span>
+                  <span className={styles.rowFormatPrice}>
+                    {formatTexts[formatIdx]?.priceLabel}
+                  </span>
                 </span>
               </dd>
             </div>
@@ -244,7 +246,7 @@ export function ProjectCalculator() {
                         <span className={styles.addonSummaryPrice}>
                           {includedAddonIndexes.includes(i)
                             ? t('home.calculator.included')
-                            : addonTexts[i]?.price}
+                            : addonTexts[i]?.priceLabel}
                         </span>
                       </li>
                     ))}
@@ -255,20 +257,36 @@ export function ProjectCalculator() {
 
             <div className={styles.row}>
               <dt className={styles.rowLabel}>{t('home.calculator.resultTermLabel')}</dt>
-              <dd className={styles.rowValue}>{resultTerms[formatIdx]}</dd>
+              <dd className={styles.rowValue}>{t('tariffs.terms')}</dd>
             </div>
           </dl>
 
           <div className={styles.totalRow}>
             <span className={styles.totalLabel}>{t('home.calculator.resultTotalLabel')}</span>
             <span className={styles.totalValue} aria-live="polite">
+              {from ? `${t('tariffs.from')} ` : ''}
               {money(total)}
             </span>
           </div>
 
           <p className={styles.note}>{t('home.calculator.resultNote')}</p>
+          <p className={styles.note}>{t('tariffs.separateEstimate')}</p>
 
-          <Button to={homeSectionPath(HOME_SECTIONS.request)} size="lg" className={styles.cta}>
+          <Button
+            type="button"
+            onClick={() =>
+              openLeadDialog(
+                getCalculationContext(
+                  calcFormats[formatIdx].id,
+                  addons.map((i) => calcAddons[i].id),
+                  area,
+                  locale,
+                ),
+              )
+            }
+            size="lg"
+            className={styles.cta}
+          >
             {t('home.calculator.cta')}
           </Button>
 

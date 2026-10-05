@@ -60,7 +60,6 @@ h1 {
     --fs-3xl: 2.4rem; // ≤768px → 33.6px
     --fs-2xl: 2rem; // ≤768px → 28px
   }
-
 }
 
 @include down(sm) {
@@ -105,9 +104,17 @@ a {
   --color-muted-bg: var(--clr-dark-elevated);
   --color-strong: var(--clr-light);
   --color-hairline: var(--clr-dark-border); // hairline на тёмном — холодный бордер вместо светлого
-  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white); // на тёмном hover осветляем
+  --color-accent-hover: color-mix(
+    in srgb,
+    var(--clr-accent) 86%,
+    white
+  ); // на тёмном hover осветляем
+
   --btn-ghost-color: var(--clr-light); // ghost-кнопка на тёмном — светлый текст
-  --btn-ghost-bg: var(--clr-dark-elevated); // вторичная кнопка на тёмном — заполненная графитовая пилюля
+  --btn-ghost-bg: var(
+    --clr-dark-elevated
+  ); // вторичная кнопка на тёмном — заполненная графитовая пилюля
+
   --btn-ghost-border: transparent; // без видимой рамки (как в макете 01)
 
   color: var(--color-text);
@@ -204,19 +211,68 @@ a {
   }
 }
 
-// Кинематографичное зерно поверх всей страницы: под прелоадером, над контентом и модалками.
-body::after {
-  pointer-events: none;
-  content: '';
-
-  position: fixed;
-  z-index: calc(var(--z-preloader) - 50);
-  inset: 0;
-
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
 // Металлик статичен: бесконечная анимация background-position на clip:text — это
 // перерисовка растра каждого заголовка каждый кадр (~10 h2 одновременно на главной).
 // Градиент сам по себе даёт «дорогой» вид; блик при появлении делает useScrollReveal.
+
+// Semantic surfaces follow the selected theme. Photograph overlays remain dark.
+html[data-theme='light'] {
+  background-color: var(--color-bg);
+
+  [data-tone]:not([data-theme-fixed]) {
+    --color-bg: #f5f6f8;
+    --color-surface: #fff;
+    --color-text: #20242a;
+    --color-text-muted: #535d68;
+    --color-border: #ccd1d8;
+    --color-muted-bg: #e7ebef;
+    --color-strong: #171b21;
+    --color-hairline: #d5dae0;
+    --color-danger: #b5241c;
+    --color-accent: #795600;
+    --btn-ghost-color: #20242a;
+    --btn-ghost-bg: #e7ebef;
+    --btn-ghost-border: #ccd1d8;
+    --focus-ring: #795600;
+    --glass-bg: #fff;
+    --glass-bg-deep: linear-gradient(160deg, #fff, #f0f2f5);
+    --glass-border: #ccd1d8;
+    --glass-border-grad: linear-gradient(#ccd1d8, #d5dae0);
+    --shadow-glass: 0 0.5rem 1.5rem rgb(23 30 42 / 8%);
+
+    color-scheme: light;
+    background-image: none;
+  }
+
+  [data-tone='light'] {
+    --color-bg: #fff;
+  }
+
+  [data-tone='paper'] {
+    --color-bg: #eef0f3;
+  }
+
+  [data-tone]:not([data-theme-fixed]) h2 {
+    background: none;
+
+    -webkit-text-fill-color: currentcolor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+[data-theme-fixed='dark'] {
+  --color-accent: var(--clr-accent);
+  --color-danger: var(--clr-danger);
+  --focus-ring: var(--clr-accent);
+
+  color-scheme: dark;
+}

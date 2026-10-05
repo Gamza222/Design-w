@@ -1,6 +1,6 @@
-// Локальный preview собранной статики, зеркалящий поведение Vercel:
-//  - `/services` и `/services/` → build/client/services/index.html (директорийный index);
-//  - неизвестный путь → 404.html со статусом 404 (Vercel для статики делает то же сам).
+// Локальный preview собранной статики, зеркалящий REG.RU / Apache:
+//  - `/services` → 301 `/services/` → build/client/services/index.html;
+//  - неизвестный путь → 404.html со статусом 404.
 // `vite preview` для этого не подходит: его SPA-режим отдаёт корневой index.html для любых
 // путей без хвостового слэша → на каждой странице кроме главной ловится hydration mismatch.
 
@@ -74,6 +74,18 @@ function resolveFile(urlPath) {
 
 createServer((req, res) => {
   const resolved = resolveFile(req.url ?? '/');
+  const requested = new URL(req.url ?? '/', `http://${HOST}:${PORT}`);
+  if (resolved?.endsWith(`${sep}index.html`)) {
+    const path = requested.pathname.replace(/index\.html$/, '');
+    const canonical = `${path.replace(/\/+$/, '')}/`;
+    if (requested.pathname !== canonical) {
+      res.writeHead(301, {
+        Location: `${canonical}${requested.search}`,
+        'Cache-Control': 'no-cache',
+      });
+      return res.end();
+    }
+  }
   const file = resolved ?? NOT_FOUND;
   const type = MIME[extname(file).toLowerCase()] ?? 'application/octet-stream';
   // Хешированные ассеты Vite можно кешировать навечно; HTML — нет.

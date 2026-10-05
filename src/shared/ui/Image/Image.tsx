@@ -2,6 +2,7 @@ import type { ImgHTMLAttributes } from 'react';
 
 import { cn } from '../../lib/cn/cn';
 import styles from './Image.module.scss';
+import { responsiveImages } from './responsiveImages';
 
 interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   /** CSS aspect-ratio, e.g. "4 / 3". */
@@ -20,12 +21,23 @@ export function Image({
   style,
   alt = '',
   loading,
+  src,
+  srcSet,
+  sizes,
+  width,
+  height,
   ...rest
 }: ImageProps) {
+  const responsive = src ? responsiveImages[src] : undefined;
   return (
     <img
       className={cn(styles.image, className)}
       style={{ aspectRatio: ratio, ...style }}
+      src={src}
+      srcSet={srcSet ?? responsive?.srcSet}
+      sizes={sizes ?? '(max-width: 767px) 100vw, 50vw'}
+      width={width ?? responsive?.width}
+      height={height ?? responsive?.height}
       alt={alt}
       loading={loading ?? (priority ? 'eager' : 'lazy')}
       decoding="async"

@@ -27,6 +27,19 @@ if (required.telegramChatId === required.telegramAdditionalChatId) {
   throw new Error('The two Telegram recipients must have distinct chat IDs');
 }
 
+const stateDirectory = process.env.LEAD_STATE_DIR ?? '';
+if (
+  stateDirectory !== '' &&
+  (!stateDirectory.startsWith('/') ||
+    stateDirectory === '/' ||
+    [...stateDirectory].some((character) => character.charCodeAt(0) < 32) ||
+    stateDirectory.includes('\\') ||
+    stateDirectory.split('/').some((part) => part === '.' || part === '..') ||
+    /^\/(?:private\/)?(?:tmp|var\/tmp)(?:\/|$)/.test(stateDirectory))
+) {
+  throw new Error('LEAD_STATE_DIR must be an absolute persistent directory outside the web root');
+}
+
 const target = resolve(process.argv[2] ?? 'build/client/api/.lead-config.php');
 const encode = (value) => Buffer.from(value, 'utf8').toString('base64');
 const php = `<?php
@@ -40,6 +53,7 @@ return [
     'telegramBotToken' => base64_decode('${encode(required.telegramBotToken)}', true),
     'telegramChatId' => base64_decode('${encode(required.telegramChatId)}', true),
     'telegramAdditionalChatId' => base64_decode('${encode(required.telegramAdditionalChatId)}', true),
+    'stateDirectory' => base64_decode('${encode(stateDirectory)}', true),
 ];
 `;
 await mkdir(dirname(target), { recursive: true });

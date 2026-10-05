@@ -1,3 +1,5 @@
+import { openLeadDialog } from '@shared/lib';
+import { ThemeSwitcher } from '@features/theme-switcher';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
@@ -5,8 +7,8 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 import { LocaleSwitcher } from '@features/locale-switcher';
-import { CONTACTS, HOME_SECTIONS, ROUTES, homeSectionPath, stripLocale } from '@shared/config';
-import { cn, useHydrated, usePreloaderDone } from '@shared/lib';
+import { CONTACTS, ROUTES, stripLocale } from '@shared/config';
+import { cn, useHydrated } from '@shared/lib';
 import { AppLink, Button, Container, Logo, SocialLinks } from '@shared/ui';
 
 import { useHeaderScroll } from '../../lib/useHeaderScroll';
@@ -22,7 +24,6 @@ export function Header() {
   const scrolled = useHeaderScroll();
   const root = useRef<HTMLElement>(null);
   const hydrated = useHydrated();
-  const preloaderDone = usePreloaderDone();
 
   // Хедер прозрачный (светлый текст) только над тёмным Hero главной. На остальных страницах
   // верх контента светлый — держим сплошную navy-подложку с самого верха, иначе светлая
@@ -70,29 +71,21 @@ export function Header() {
     };
   }, [open]);
 
-  // Входная анимация — часть флоу «сначала прелоадер, потом сайт»: хедер появляется, КОГДА шторка
-  // уходит (preloaderDone). useGSAP = layout-effect (до пейнта), prerendered HTML сохраняет разметку →
-  // SEO/гидрация не страдают. Анимируем сам <header> (не .inner): остаточный transform от GSAP делает
-  // элемент containing-block'ом, поэтому fixed-панель мобильного меню должна считаться от <header>
-  // (top:0), а не от вертикально-центрированного .inner — иначе панель уезжает на ~20px вниз.
+  // A small transform entrance keeps navigation readable even when frames stall.
   useGSAP(
     () => {
       if (!root.current) return;
       const media = gsap.matchMedia();
       media.add('(prefers-reduced-motion: no-preference)', () => {
-        if (!preloaderDone) {
-          gsap.set(root.current, { autoAlpha: 0, y: -20 });
-          return;
-        }
         gsap.fromTo(
           root.current,
-          { autoAlpha: 0, y: -20 },
-          { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' },
+          { y: -12 },
+          { y: 0, duration: 0.5, ease: 'power3.out', clearProps: 'transform' },
         );
       });
       return () => media.revert();
     },
-    { scope: root, dependencies: [preloaderDone], revertOnUpdate: true },
+    { scope: root },
   );
 
   return (
@@ -129,15 +122,23 @@ export function Header() {
               <LocaleSwitcher />
             </div>
             <Button
-              to={homeSectionPath(HOME_SECTIONS.calculator)}
               className={styles.cta}
-              onClick={close}
+              onClick={() => {
+                close();
+                openLeadDialog(
+                  { source: 'header' },
+                  open
+                    ? root.current?.querySelector<HTMLElement>('[aria-controls="header-menu"]')
+                    : null,
+                );
+              }}
             >
               {t('cta.calculate')}
             </Button>
           </div>
         </div>
 
+        <ThemeSwitcher />
         <Burger
           open={open}
           disabled={!hydrated}

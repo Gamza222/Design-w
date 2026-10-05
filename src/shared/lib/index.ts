@@ -13,3 +13,11 @@ export { formatDate } from './date/formatDate';
 export { formatMoney } from './number/formatMoney';
 export { createLeadSubmissionId, submitLead } from './leads/submitLead';
 export type { LeadKind, LeadPayload } from './leads/submitLead';
+
+export {
+  openLeadDialog,
+  captureLeadAttribution,
+  getLeadAttribution,
+  LEAD_DIALOG_EVENT,
+} from './leads/leadDialog';
+export type { LeadContext, LeadDialogRequest, LeadAttribution } from './leads/leadDialog';

@@ -1,10 +1,11 @@
 {
-  "source": "Isolated HEAD production build, local gzip preview port 3001. Cold navigation. Lighthouse simulated throttling.",
+  "date": "2026-10-05",
+  "source": "Isolated commit284d19a, local gzip production preview port3001; Lighthouse simulated throttling, cold navigation; scroll on macOS headless engines",
   "results": [
     {
       "profile": "mobile",
       "lighthouse": "13.5.0",
-      "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
       "settings": {
         "rttMs": 150,
         "throughputKbps": 1638.4,
@@ -13,16 +14,16 @@
         "uploadThroughputKbps": 675,
         "cpuSlowdownMultiplier": 4
       },
-      "lcpMs": 6159.744,
+      "lcpMs": 5626.657499999999,
       "cls": 0,
-      "tbtMs": 50.5,
-      "performance": 0.63,
-      "bytes": 1356435
+      "tbtMs": 51.5,
+      "performance": 0.7,
+      "bytes": 1354267
     },
     {
       "profile": "desktop",
       "lighthouse": "13.5.0",
-      "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
       "settings": {
         "rttMs": 40,
         "throughputKbps": 10240,
@@ -31,11 +32,11 @@
         "uploadThroughputKbps": 0,
         "cpuSlowdownMultiplier": 1
       },
-      "lcpMs": 1521.756,
-      "cls": 0.01040828685462452,
-      "tbtMs": 0,
-      "performance": 0.93,
-      "bytes": 1921370
+      "lcpMs": 1680.2200000000003,
+      "cls": 0.008567,
+      "tbtMs": 5.999999999999886,
+      "performance": 0.91,
+      "bytes": 1919202
     }
   ],
   "scroll": [
@@ -43,17 +44,17 @@
       "engine": "chromium",
       "viewport": "1366x768",
       "durationMs": 4000,
-      "frames": 242,
+      "frames": 240,
       "over50ms": 0,
-      "p95ms": 16.8
+      "p95ms": 18.2
     },
     {
       "engine": "webkit",
       "viewport": "1366x768",
       "durationMs": 4000,
-      "frames": 239,
+      "frames": 237,
       "over50ms": 1,
-      "p95ms": 18
+      "p95ms": 19
     }
   ]
 }

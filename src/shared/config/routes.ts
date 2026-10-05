@@ -62,24 +62,34 @@ export const STATIC_PATHS: readonly string[] = [
   ...Object.values(SERVICE_LANDINGS),
 ];
 
-/** Убираем хвостовой слэш (кроме корня). Статические хосты отдают одну страницу и по
- *  `/services`, и по `/services/`, а HTML пререндерен для пути без слэша — нормализация
- *  держит `lang`/canonical/og:url одинаковыми на сервере и клиенте (иначе hydration mismatch). */
+/** Slashless lookup key. Public page URLs use canonicalPathname instead. */
 export function normalizePathname(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, '');
   return trimmed === '' ? '/' : trimmed;
 }
 
-/** Prefix a canonical path with a locale (default locale stays unprefixed). */
-export function localizePath(path: string, locale: Locale): string {
-  if (locale === DEFAULT_LOCALE) return path;
+/** Match Apache's directory URL, without moving a query or fragment into the path. */
+export function canonicalPathname(path: string): string {
+  const suffixIndex = path.search(/[?#]/);
+  const pathname = suffixIndex === -1 ? path : path.slice(0, suffixIndex);
+  const suffix = suffixIndex === -1 ? '' : path.slice(suffixIndex);
+  const normalized = normalizePathname(pathname);
+  return `${normalized === '/' ? '/' : `${normalized}/`}${suffix}`;
+}
 
+/** Prefix a page path with a locale and emit its final, trailing-slash URL. */
+export function localizePath(path: string, locale: Locale): string {
   const suffixIndex = path.search(/[?#]/);
   const pathname = suffixIndex === -1 ? path : path.slice(0, suffixIndex);
   const suffix = suffixIndex === -1 ? '' : path.slice(suffixIndex);
   const prefix = LOCALE_PATHS[locale];
-  const localized = pathname === '/' ? `/${prefix}` : `/${prefix}${pathname}`;
-  return `${localized}${suffix}`;
+  const localized =
+    locale === DEFAULT_LOCALE
+      ? pathname
+      : pathname === '/'
+        ? `/${prefix}`
+        : `/${prefix}${pathname}`;
+  return canonicalPathname(`${localized}${suffix}`);
 }
 
 /** Read the locale segment from a pathname (falls back to default). */

@@ -20,8 +20,8 @@
 
   color: var(--color-text);
 
-  background: color-mix(in srgb, var(--clr-dark) 94%, transparent);
-  backdrop-filter: var(--glass-blur);
+  background: var(--color-surface);
+  backdrop-filter: none;
   box-shadow: var(--shadow-glass);
 
   @include down(sm) {

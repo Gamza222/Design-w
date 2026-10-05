@@ -182,7 +182,7 @@
     border-color: transparent;
     color: var(--color-on-accent);
     background: linear-gradient(180deg, var(--clr-accent-hi), var(--clr-accent-lo));
-    box-shadow: 0 0.4rem 1.4rem color-mix(in srgb, var(--clr-accent) 35%, transparent);
+    box-shadow: none;
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -190,7 +190,24 @@
       border-color: transparent;
       color: var(--color-on-accent);
       background: linear-gradient(180deg, var(--clr-accent-hi), var(--clr-accent-lo));
-      box-shadow: 0 0.4rem 1.4rem color-mix(in srgb, var(--clr-accent) 35%, transparent);
+      box-shadow: none;
     }
+  }
+}
+
+html[data-theme='light'] .card {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+
+  .num {
+    color: var(--color-text-muted);
+    background: none;
+
+    -webkit-text-fill-color: currentcolor;
+  }
+
+  .more {
+    border-color: var(--color-border);
   }
 }

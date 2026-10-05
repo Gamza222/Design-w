@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useScrollReveal } from '@shared/lib';
+import { getTariff } from '@entities/package';
+
+import { useLocale, useScrollReveal } from '@shared/lib';
 import { Accordion, Container, SectionHeader } from '@shared/ui';
 
 import styles from './Faq.module.scss';
@@ -15,7 +17,13 @@ interface FaqItem {
  *  независимые колонки стеклянных аккордеонов. Открыт один пункт за раз. Контент — i18n `home.faq`. */
 export function Faq() {
   const { t } = useTranslation();
-  const items = t('home.faq.items', { returnObjects: true }) as FaqItem[];
+  const locale = useLocale();
+  const items = t('home.faq.items', {
+    returnObjects: true,
+    planning: getTariff('planning', locale).priceLabel,
+    full: getTariff('full', locale).priceLabel,
+    supervision: getTariff('supervision', locale).priceLabel,
+  }) as FaqItem[];
   const [open, setOpen] = useState(0);
 
   // Появление шапки и колонок аккордеонов по скроллу (общий хук).

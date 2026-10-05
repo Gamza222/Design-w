@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
+import { openLeadDialog } from '@shared/lib';
 import { Button, IconCalculator } from '@shared/ui';
 
 import styles from './CalcCard.module.scss';
@@ -16,7 +16,7 @@ export function CalcCard() {
       <h3 className={styles.title}>{t('home.packages.calc.title')}</h3>
       <p className={styles.text}>{t('home.packages.calc.description')}</p>
       <Button
-        to={homeSectionPath(HOME_SECTIONS.calculator)}
+        onClick={() => openLeadDialog({ source: 'package-calculation' })}
         variant="ghost"
         className={styles.cta}
       >

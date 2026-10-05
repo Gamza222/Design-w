@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
+import { openLeadDialog } from '@shared/lib';
 import { Button, IconArrowRight, IconCalculator } from '@shared/ui';
 
 import styles from './IntroCard.module.scss';
@@ -17,7 +17,11 @@ export function IntroCard() {
         <p className={styles.text}>{t('home.packages.description')}</p>
       </div>
       <div className={styles.actions}>
-        <Button to={homeSectionPath(HOME_SECTIONS.calculator)} className={styles.cta} size="sm">
+        <Button
+          onClick={() => openLeadDialog({ source: 'package-intro' })}
+          className={styles.cta}
+          size="sm"
+        >
           <IconCalculator aria-hidden="true" />
           {t('home.packages.calc.cta')}
         </Button>

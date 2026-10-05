@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 const layoutRoutes = [
   '/',
@@ -86,15 +86,15 @@ test('service SEO landing renders in all locales', async ({ page }) => {
   await page.goto('/planirovka-kvartiry');
   await expect(page.getByRole('heading', { level: 1, name: 'Планировка квартиры' })).toBeVisible();
   // Ключевые блоки посадки: карточка условий (цена) и FAQ-аккордеон.
-  await expect(page.getByText('от 1 500 ₽/м²').first()).toBeVisible();
-  await expect(page.getByRole('button', { name: /планировка отличается/i })).toBeVisible();
+  await expect(page.getByText('1 500 ₽/м²').first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Какова стоимость услуги?' })).toBeVisible();
 
   await page.goto('/en/planirovka-kvartiry');
   await expect(page.getByRole('heading', { level: 1, name: 'Apartment layout' })).toBeVisible();
 
   await page.goto('/by/planirovka-kvartiry');
   await expect(page.getByRole('heading', { level: 1, name: 'Планіроўка кватэры' })).toBeVisible();
-  await expect(page.getByText('ад 55 BYN/м²').first()).toBeVisible();
+  await expect(page.getByText('55 BYN/м²').first()).toBeVisible();
 });
 
 test('service price card stays inside its rail with a wider fallback font', async ({ page }) => {
@@ -102,7 +102,7 @@ test('service price card stays inside its rail with a wider fallback font', asyn
   await page.goto('/eskiznyj-dizajn-proekt');
   await page.evaluate(() => {
     document.documentElement.style.setProperty('--font-sans', 'Verdana, sans-serif');
-    const cta = document.querySelector<HTMLElement>('aside a');
+    const cta = document.querySelector<HTMLElement>('aside button');
     if (cta) cta.style.letterSpacing = '2px';
   });
   const bounds = await page.locator('main aside').evaluate((card) => {
@@ -126,24 +126,26 @@ test('service order opens the full form with the selected package', async ({ pag
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ ok: true, requestId: 'e2e-request' }),
+      body: JSON.stringify({ ok: true, leadNumber: 'ABCD23456', requestId: 'e2e-request' }),
     });
   });
   await page.goto('/#services');
-  await page.getByRole('button', { name: /Планировка квартиры.*1\s*500\s*₽\/м²/i }).click();
+  await page
+    .locator('#services')
+    .getByRole('button', { name: /Планировка.*1\s*500\s*₽\/м²/i })
+    .click();
 
-  const offerDialog = page.getByRole('dialog', { name: 'Планировка квартиры' });
+  const offerDialog = page.getByRole('dialog', { name: 'Планировка' });
   await expect(offerDialog).toBeVisible();
-  await offerDialog.getByRole('button', { name: 'Заказать этот пакет' }).click();
+  await offerDialog.getByRole('button', { name: 'Обсудить эту услугу' }).click();
 
   const formDialog = page.getByRole('dialog', { name: 'Расскажите о вашем объекте' });
   await expect(formDialog).toBeVisible();
-  await expect(formDialog.getByLabel('Пакет или услуга')).toHaveValue('planning');
+  await expect(formDialog).toContainText('Планировка');
+  await expect(formDialog.locator('select')).toHaveCount(0);
 
   await formDialog.getByLabel('Ваше имя').fill('Анна');
   await formDialog.getByLabel('Телефон').fill('+7 999 123-45-67');
-  await formDialog.getByLabel('Тип помещения').selectOption('apartment');
-  await formDialog.getByLabel('Площадь объекта (м²)').fill('72');
   await formDialog
     .getByText('Соглашаюсь с обработкой персональных данных', { exact: true })
     .click();
@@ -151,12 +153,10 @@ test('service order opens the full form with the selected package', async ({ pag
   await expect(formDialog.getByText(/Спасибо! Мы свяжемся/)).toBeVisible();
   expect(submittedLead).toEqual(
     expect.objectContaining({
-      kind: 'project',
+      kind: 'consultation',
       name: 'Анна',
       phone: '+7 999 123-45-67',
-      premises: 'apartment',
-      area: '72',
-      package: 'planning',
+      context: expect.objectContaining({ packageId: 'planning' }),
       consent: true,
     }),
   );
@@ -172,7 +172,7 @@ test('consultation form sends a complete lead and confirms delivery', async ({ p
       contentType: 'application/json',
       body: JSON.stringify(
         isRetry
-          ? { ok: true, requestId: 'e2e-consultation' }
+          ? { ok: true, leadNumber: 'ABCD23456', requestId: 'e2e-consultation' }
           : { ok: false, error: 'delivery_failed' },
       ),
     });
@@ -201,26 +201,17 @@ test('consultation form sends a complete lead and confirms delivery', async ({ p
   expect(submittedLeads[1]?.submissionId).toBe(submittedLeads[0]?.submissionId);
 });
 
-test('calculator includes bundled 3D once and changes the timeline with the format', async ({
-  page,
-}) => {
+test('calculator does not bill included visualizations twice', async ({ page }) => {
   await page.goto('/#calculator');
   const calculator = page.locator('#calculator');
-
-  const bundled3d = calculator.getByRole('button', {
-    name: /3D-визуализация Включено в пакет/i,
-  });
+  await calculator.getByRole('button', { name: /Планировка \+ визуализации/i }).click();
+  const bundled3d = calculator.getByRole('button', { name: /3D-визуализации Включено в пакет/i });
   await expect(bundled3d).toHaveAttribute('aria-pressed', 'true');
   await expect(bundled3d).toBeDisabled();
-  await expect(calculator.getByText('от 10 дней', { exact: true })).toBeVisible();
   await expect(calculator.getByText('216 000 ₽', { exact: true })).toBeVisible();
-
-  await calculator.getByRole('button', { name: /^01.*Планировка.*1\s*500\s*₽\/м²/i }).click();
-  await expect(calculator.getByText('от 2 дней', { exact: true })).toBeVisible();
+  await calculator.getByRole('button', { name: /Планировка.*1\s*500\s*₽\/м²/i }).click();
   await expect(calculator.getByText('108 000 ₽', { exact: true })).toBeVisible();
-  await expect(
-    calculator.getByRole('button', { name: /3D-визуализация \+ 1 000 ₽\/м²/i }),
-  ).toBeEnabled();
+  await expect(calculator.getByRole('button', { name: /3D-визуализации.*1\s*000/ })).toBeEnabled();
 });
 
 test('footer contains the Yandex map and the cookie notice can be acknowledged', async ({
@@ -265,7 +256,7 @@ test('services hub links to the SEO landings', async ({ page }) => {
     .getByRole('link', { name: /3D-визуализация интерьера/i })
     .first()
     .click();
-  await expect(page).toHaveURL(/\/3d-vizualizaciya-interera$/);
+  await expect(page).toHaveURL(/\/3d-vizualizaciya-interera\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 });
 
@@ -279,7 +270,7 @@ test('language switch navigates between country versions', async ({ page }) => {
   await trigger.click();
   await expect(page.getByRole('menuitem', { name: 'BY' })).toBeVisible();
   await page.getByRole('menuitem', { name: 'EN' }).click();
-  await expect(page).toHaveURL(/\/en$/);
+  await expect(page).toHaveURL(/\/en\/$/);
 
   const localeCookie = (await page.context().cookies()).find(
     (cookie) => cookie.name === 'tdn_locale',
@@ -315,13 +306,15 @@ test('published contacts and external channels are linked', async ({ page }) => 
   );
 });
 
-test('Belarus home uses BYN and exposes payment methods', async ({ page }) => {
+test('Belarus home uses BYN and explains that payment terms are agreed', async ({ page }) => {
   await page.goto('/by');
   await expect(page.locator('html')).toHaveAttribute('lang', 'be-BY');
   await expect(page.getByText('BYN/м²').first()).toBeVisible();
 
   await page.goto('/by/contact');
-  await expect(page.getByText(/БЕЛКАРТ/).first()).toBeVisible();
+  await expect(
+    page.getByText('Умовы і спосаб аплаты ўзгадняюцца ў дагаворы.').first(),
+  ).toBeVisible();
 });
 
 test('header glass does not flicker around the scroll threshold', async ({ page }) => {

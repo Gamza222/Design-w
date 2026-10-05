@@ -30,8 +30,8 @@
   align-items: center;
   justify-content: center;
 
-  width: 2.9rem;
-  height: 2.9rem;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-full);
 
@@ -53,7 +53,7 @@
     &:hover:not([aria-disabled='true']) {
       border-color: var(--color-accent);
       color: var(--color-accent);
-      box-shadow: 0 0 1.5rem color-mix(in srgb, var(--clr-accent) 22%, transparent);
+      box-shadow: none;
     }
   }
 }
@@ -216,4 +216,9 @@
 
 .bottom {
   margin-top: var(--section-gap-dense);
+}
+
+.perk > span:first-child {
+  min-width: 44px;
+  min-height: 44px;
 }

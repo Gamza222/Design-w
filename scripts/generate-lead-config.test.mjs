@@ -9,6 +9,7 @@ const fixture = {
   LEAD_TELEGRAM_BOT_TOKEN: `123456:${'a'.repeat(32)}`,
   LEAD_TELEGRAM_CHAT_ID: '100001',
   LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: '100002',
+  LEAD_STATE_DIR: '',
 };
 
 async function generate(overrides, verify) {
@@ -33,11 +34,22 @@ test('generates a protected config for both distinct Telegram recipients', async
     assert.match(content, /http_response_code\(404\)/);
     assert.match(content, /telegramAdditionalChatId/);
     assert.doesNotMatch(content, /smtp|email|yandex/i);
-    for (const value of Object.values(fixture)) {
+    for (const value of Object.values(fixture).filter(Boolean)) {
       assert.ok(content.includes(Buffer.from(value).toString('base64')));
       assert.ok(!result.stdout.includes(value));
       assert.ok(!result.stderr.includes(value));
     }
+  });
+});
+
+test('supports a persistent absolute storage path for a future VPS', async () => {
+  await generate({ LEAD_STATE_DIR: '/var/lib/designseichas/leads' }, async (result, target) => {
+    assert.equal(result.status, 0);
+    assert.ok(
+      (await readFile(target, 'utf8')).includes(
+        Buffer.from('/var/lib/designseichas/leads').toString('base64'),
+      ),
+    );
   });
 });
 
@@ -48,6 +60,10 @@ for (const [name, overrides] of [
   ['personal username', { LEAD_TELEGRAM_CHAT_ID: '@some_user' }],
   ['duplicate recipients', { LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: '100001' }],
   ['invalid bot token', { LEAD_TELEGRAM_BOT_TOKEN: 'invalid' }],
+  ['temporary storage', { LEAD_STATE_DIR: '/tmp/designseichas' }],
+  ['relative storage', { LEAD_STATE_DIR: './leads' }],
+  ['traversal storage', { LEAD_STATE_DIR: '/var/lib/../tmp/leads' }],
+  ['root storage', { LEAD_STATE_DIR: '/' }],
 ]) {
   test(`blocks deployment with ${name}`, async () => {
     await generate(overrides, async (result, target) => {

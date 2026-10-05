@@ -25,7 +25,7 @@ import { Footer } from '@widgets/footer';
 import { Header } from '@widgets/header';
 import { CookieNotice } from '@widgets/cookie-notice';
 
-import { Preloader } from './preloader/Preloader';
+import { LeadDialog } from '@widgets/lead-dialog';
 import { Providers } from './providers';
 import type { Route } from './+types/root';
 import styles from './root.module.scss';
@@ -45,9 +45,14 @@ export function Layout({ children }: { children: ReactNode }) {
   const canonical = stripLocale(pathname);
 
   return (
-    <html lang={LOCALE_HREFLANGS[locale]}>
+    <html lang={LOCALE_HREFLANGS[locale]} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{document.documentElement.dataset.theme=localStorage.getItem('designseichas-theme')==='light'?'light':'dark'}catch{document.documentElement.dataset.theme='dark'}`,
+          }}
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon-32.png?v=ds" type="image/png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ds" sizes="180x180" />
@@ -55,7 +60,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <meta name="application-name" content="ДизайнСейчас" />
         <meta name="apple-mobile-web-app-title" content="ДизайнСейчас" />
         <meta property="og:site_name" content="ДизайнСейчас" />
-        <link rel="canonical" href={SITE_URL + pathname} />
+        <link rel="canonical" href={SITE_URL + localizePath(canonical, locale)} />
         {LOCALES.map((alternateLocale) => (
           <link
             key={alternateLocale}
@@ -84,7 +89,7 @@ export function Layout({ children }: { children: ReactNode }) {
 export default function App() {
   return (
     <Providers>
-      <Preloader />
+      <LeadDialog />
       <Header />
       <main className={styles.main}>
         <Outlet />

@@ -8,8 +8,8 @@ import { useGSAP } from '@gsap/react';
 // и подгружается лениво внутри эффекта (см. useGSAP ниже).
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
-import { cn } from '@shared/lib';
+import { ROUTES } from '@shared/config';
+import { cn, openLeadDialog } from '@shared/lib';
 import {
   AppLink,
   Button,
@@ -22,6 +22,7 @@ import {
   IconGlobe,
   IconMapPin,
   IconWallet,
+  Image,
   SectionHeader,
   Stat,
 } from '@shared/ui';
@@ -302,18 +303,18 @@ export function Geography() {
 
             {/* Полоса кейса под картой — фото слева, текст справа */}
             <article className={styles.caseCard}>
-              <div
+              <Image
                 className={styles.casePhoto}
-                style={{ backgroundImage: `url(${caseImage})` }}
-                aria-hidden="true"
+                src={caseImage}
+                alt=""
+                width={1456}
+                height={816}
+                sizes="(min-width: 40rem) 13rem, 100vw"
               />
               <div className={styles.caseBody}>
                 <p className={styles.caseLabel}>{t('home.geography.caseLabel')}</p>
                 <p className={styles.caseTitle}>{t('home.geography.caseTitle')}</p>
-                <p className={styles.caseCity}>
-                  <IconMapPin aria-hidden="true" /> {t('home.geography.caseCity')}
-                </p>
-                <AppLink to={homeSectionPath(HOME_SECTIONS.portfolio)} className={styles.caseCta}>
+                <AppLink to={ROUTES.portfolio} className={styles.caseCta}>
                   <span>{t('home.geography.caseCta')}</span>
                   <IconArrowRight aria-hidden="true" />
                 </AppLink>
@@ -362,7 +363,11 @@ export function Geography() {
           <div className={styles.ctaCard}>
             <h3 className={styles.ctaTitle}>{t('home.geography.ctaTitle')}</h3>
             <p className={styles.ctaText}>{t('home.geography.ctaText')}</p>
-            <Button to={homeSectionPath(HOME_SECTIONS.request)} size="lg" className={styles.ctaBtn}>
+            <Button
+              onClick={() => openLeadDialog({ source: 'geography' })}
+              size="lg"
+              className={styles.ctaBtn}
+            >
               {t('home.geography.cta')}
             </Button>
           </div>

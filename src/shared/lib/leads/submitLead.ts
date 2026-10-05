@@ -1,3 +1,5 @@
+import type { LeadAttribution, LeadContext } from './leadDialog';
+
 export type LeadKind = 'project' | 'consultation';
 
 export interface LeadPayload {
@@ -13,6 +15,8 @@ export interface LeadPayload {
   locale?: string;
   page?: string;
   website?: string;
+  context?: LeadContext;
+  attribution?: LeadAttribution;
 }
 
 /** Stable per-attempt id: retries can finish only the delivery channel that previously failed. */
@@ -25,7 +29,7 @@ export function createLeadSubmissionId(): string {
 }
 
 /** Sends a lead to the same-origin server function. Delivery credentials stay server-side. */
-export async function submitLead(payload: LeadPayload): Promise<void> {
+export async function submitLead(payload: LeadPayload): Promise<{ leadNumber: string }> {
   const controller = new AbortController();
   const timeout = globalThis.setTimeout(() => controller.abort(), 30_000);
   try {
@@ -46,10 +50,14 @@ export async function submitLead(payload: LeadPayload): Promise<void> {
       typeof confirmation !== 'object' ||
       confirmation === null ||
       !('ok' in confirmation) ||
-      confirmation.ok !== true
+      confirmation.ok !== true ||
+      !('leadNumber' in confirmation) ||
+      typeof confirmation.leadNumber !== 'string' ||
+      !/^[A-Z2-9]{8,10}$/.test(confirmation.leadNumber)
     ) {
       throw new Error('The server did not confirm lead delivery');
     }
+    return { leadNumber: confirmation.leadNumber };
   } finally {
     globalThis.clearTimeout(timeout);
   }

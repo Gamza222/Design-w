@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next';
 
+import { getTariff } from '@entities/package';
+import { useLocale } from '@shared/lib';
+
 import { IconArrowRight } from '@shared/ui';
 
 import type { Offer } from '../../model/types';
@@ -16,7 +19,7 @@ interface OfferCardProps {
  *  приподнимается, борт и стрелка вспыхивают. Детали услуги — в модалке (по клику). */
 export function OfferCard({ offer, onOpen }: OfferCardProps) {
   const { t } = useTranslation();
-  const base = `home.services.items.${offer.id}`;
+  const tariff = getTariff(offer.id, useLocale());
 
   return (
     <button
@@ -30,10 +33,10 @@ export function OfferCard({ offer, onOpen }: OfferCardProps) {
       <span className={styles.num} aria-hidden="true">
         {offer.num}
       </span>
-      <span className={styles.name}>{t(`${base}.name`)}</span>
-      <span className={styles.desc}>{t(`${base}.cardDesc`)}</span>
+      <span className={styles.name}>{tariff.name}</span>
+      <span className={styles.desc}>{tariff.description}</span>
       <span className={styles.footer}>
-        <span className={styles.price}>{t(`${base}.price`)}</span>
+        <span className={styles.price}>{tariff.priceLabel}</span>
         <span className={styles.more} aria-hidden="true">
           <IconArrowRight />
         </span>

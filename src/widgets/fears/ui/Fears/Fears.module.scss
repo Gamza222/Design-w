@@ -183,9 +183,13 @@
 
   background-color: color-mix(in srgb, var(--color-accent) 9%, var(--color-surface));
 
+  transition:
+    transform var(--transition-base),
+    background-color var(--transition-base);
+
   svg {
-    width: 1.45em;
-    height: 1.45em;
+    width: 1.55em;
+    height: 1.55em;
   }
 }
 
@@ -253,4 +257,11 @@
   flex-shrink: 0;
   font-size: var(--fs-2xl);
   color: var(--color-accent);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .item:hover .itemIcon {
+    transform: translateY(-3px) rotate(-3deg);
+    background-color: color-mix(in srgb, var(--color-accent) 18%, var(--color-surface));
+  }
 }

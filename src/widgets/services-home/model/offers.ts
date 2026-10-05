@@ -1,54 +1,44 @@
 import type { Offer, OfferId } from './types';
 
 const STANDARD_ADDONS = [
+  'viz3d',
   'supervision',
-  'ergonomics',
-  'prelaunch',
+  'procurement',
+  'consultation',
 ] as const satisfies readonly OfferId[];
+const VISUALIZED_ADDONS = STANDARD_ADDONS.filter((id) => id !== 'viz3d');
 
-/** 10 услуг блока «Наши услуги» в порядке ленты. Тексты — в i18n
- *  `home.services.items.*` (ru+en зеркально), картинки галерей — `config/images.ts` по слотам. */
+/** Galleries show only deliverables confirmed in the shared tariff catalogue. */
 export const OFFERS: Offer[] = [
-  { id: 'planning', num: '01', gallery: ['plan', 'views3d'], addons: STANDARD_ADDONS },
+  { id: 'planning', num: '01', gallery: ['plan', 'furniturePlan'], addons: STANDARD_ADDONS },
   {
-    id: 'collages',
+    id: 'drawings',
     num: '02',
-    gallery: ['plan', 'views3d', 'concept'],
+    gallery: ['plan', 'drawings', 'electrics'],
     addons: STANDARD_ADDONS,
   },
   {
-    id: 'full',
+    id: 'collages',
     num: '03',
-    popular: true,
-    gallery: ['plan', 'concept', 'viz', 'drawings', 'materials', 'spec'],
+    gallery: ['plan', 'drawings', 'electrics'],
     addons: STANDARD_ADDONS,
   },
   {
     id: 'planViz',
     num: '04',
-    gallery: ['plan', 'viz', 'materials', 'concept'],
-    addons: STANDARD_ADDONS,
+    gallery: ['plan', 'furniturePlan', 'viz'],
+    addons: VISUALIZED_ADDONS,
   },
   {
-    id: 'electric',
+    id: 'full',
     num: '05',
-    gallery: ['plan', 'drawings', 'spec'],
-    addons: STANDARD_ADDONS,
+    popular: true,
+    gallery: ['plan', 'concept', 'viz', 'drawings', 'electrics'],
+    addons: VISUALIZED_ADDONS,
   },
-  { id: 'viz3d', num: '06', gallery: ['viz'], addons: STANDARD_ADDONS },
-  {
-    id: 'procurement',
-    num: '07',
-    gallery: ['materials', 'spec'],
-    addons: STANDARD_ADDONS,
-  },
-  {
-    id: 'supervision',
-    num: '08',
-    gallery: [],
-    addons: ['procurement', 'ergonomics', 'prelaunch'],
-    hasReceiveList: true,
-  },
-  { id: 'ergonomics', num: '09', gallery: ['plan'], hasNote: true },
-  { id: 'prelaunch', num: '10', gallery: ['drawings'], hasNote: true },
+  { id: 'electric', num: '06', gallery: [] },
+  { id: 'viz3d', num: '07', gallery: ['viz'] },
+  { id: 'supervision', num: '08', gallery: [] },
+  { id: 'procurement', num: '09', gallery: [] },
+  { id: 'consultation', num: '10', gallery: [] },
 ];

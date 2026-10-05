@@ -1,19 +1,9 @@
+import { MAIN_PACKAGE_IDS } from './tariffs';
 import type { Package } from './types';
 
-// Пакеты дизайн-проекта — data-driven. Добавить/убрать пакет или фичу можно здесь;
-// тексты подтянутся из i18n по id/ключу фичи (home.packages.*).
-export const PACKAGES: Package[] = [
-  {
-    id: 'start',
-    featureKeys: ['planning'],
-  },
-  {
-    id: 'comfort',
-    featureKeys: ['planning', 'collages'],
-  },
-  {
-    id: 'full',
-    featureKeys: ['planning', 'collages', 'viz3d', 'sketchPlans', 'materials'],
-    popular: true,
-  },
-];
+export const PACKAGES: Package[] = MAIN_PACKAGE_IDS.map((id) => ({ id, popular: id === 'full' }));
+
+/** Three representative packages keep the first screen compact; all five appear below. */
+export const HOME_PACKAGES = PACKAGES.filter(({ id }) =>
+  ['planning', 'collages', 'full'].includes(id),
+);

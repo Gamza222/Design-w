@@ -26,7 +26,7 @@ const ru: Record<LegalDocumentId, LegalDocument> = {
   privacy: {
     title: 'Политика конфиденциальности',
     description: 'Правила обработки и защиты персональных данных пользователей сайта ДизайнСейчас.',
-    updated: 'Редакция от 25 августа 2026 года',
+    updated: 'Редакция от 3 октября 2026 года',
     sections: [
       {
         title: '1. Общие положения',
@@ -40,6 +40,7 @@ const ru: Record<LegalDocumentId, LegalDocument> = {
         items: [
           'Имя, номер телефона и адрес электронной почты.',
           'Сведения об объекте, площадь, комментарий и материалы, которые пользователь передал для расчёта проекта.',
+          'Выбранная услуга, предварительный расчёт и страница обращения. При отправке формы с согласием также передаются рекламные UTM-метки и домен источника перехода, если они доступны. До отправки эти метки хранятся только в памяти открытой страницы.',
           'Технические данные браузера и устройства, если они собираются системой аналитики или хостингом.',
         ],
       },
@@ -181,7 +182,7 @@ const en: Record<LegalDocumentId, LegalDocument> = {
     title: 'Privacy policy',
     description:
       'How ДизайнСейчас processes and protects personal data submitted through this website.',
-    updated: 'Effective 25 August 2026',
+    updated: 'Effective 3 October 2026',
     sections: [
       {
         title: '1. Scope',
@@ -194,6 +195,7 @@ const en: Record<LegalDocumentId, LegalDocument> = {
         items: [
           'Name, telephone number and email address.',
           'Project details, area, comments and files supplied for an estimate.',
+          'The selected service, preliminary estimate and enquiry page. When you submit a form with consent, available UTM campaign tags and the referring domain are also sent. Before submission, these tags remain only in the open page memory.',
           'Browser and device data collected by hosting or analytics services, when enabled.',
         ],
       },
@@ -314,7 +316,7 @@ const be: Record<LegalDocumentId, LegalDocument> = {
     title: 'Палітыка прыватнасці',
     description:
       'Правілы апрацоўкі і абароны персанальных даных карыстальнікаў сайта ДизайнСейчас.',
-    updated: 'Рэдакцыя ад 25 жніўня 2026 года',
+    updated: 'Рэдакцыя ад 3 кастрычніка 2026 года',
     sections: [
       {
         title: '1. Агульныя палажэнні',
@@ -328,6 +330,7 @@ const be: Record<LegalDocumentId, LegalDocument> = {
         items: [
           'Імя, нумар тэлефона і адрас электроннай пошты.',
           'Звесткі аб аб’екце, плошча, каментарый і матэрыялы, перададзеныя для разліку праекта.',
+          'Выбраная паслуга, папярэдні разлік і старонка звароту. Пры адпраўцы формы са згодай таксама перадаюцца даступныя UTM-пазнакі і дамен крыніцы пераходу. Да адпраўкі пазнакі захоўваюцца толькі ў памяці адкрытай старонкі.',
           'Тэхнічныя даныя браўзера і прылады, калі іх збірае сістэма аналітыкі або хостынг.',
         ],
       },

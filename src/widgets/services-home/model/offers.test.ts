@@ -1,26 +1,25 @@
 import { describe, expect, it } from 'vitest';
 
+import { TARIFFS, TARIFF_IDS } from '@entities/package';
+
 import { OFFERS } from './offers';
 
-describe('service add-ons', () => {
-  it('uses the add-ons stated for standard services', () => {
-    expect(OFFERS.find((offer) => offer.id === 'planning')?.addons).toEqual([
-      'supervision',
-      'ergonomics',
-      'prelaunch',
-    ]);
+describe('service details', () => {
+  it('uses the confirmed catalogue without obsolete paid extras', () => {
+    expect(new Set(OFFERS.map(({ id }) => id))).toEqual(new Set(TARIFF_IDS));
+    for (const offer of OFFERS) {
+      expect(offer.addons?.every((id) => TARIFF_IDS.includes(id)) ?? true).toBe(true);
+      expect(
+        offer.addons?.some((id) => TARIFFS[offer.id].includedAddonIds.includes(id as 'viz3d')) ??
+          false,
+      ).toBe(false);
+    }
   });
 
-  it('uses the distinct author-supervision add-ons', () => {
-    expect(OFFERS.find((offer) => offer.id === 'supervision')?.addons).toEqual([
-      'procurement',
-      'ergonomics',
-      'prelaunch',
-    ]);
-  });
-
-  it('does not invent add-ons for consultations', () => {
-    expect(OFFERS.find((offer) => offer.id === 'ergonomics')?.addons).toBeUndefined();
-    expect(OFFERS.find((offer) => offer.id === 'prelaunch')?.addons).toBeUndefined();
+  it('does not illustrate unconfirmed electrical or consultation deliverables', () => {
+    expect(OFFERS.find(({ id }) => id === 'electric')?.gallery).toEqual([]);
+    expect(OFFERS.find(({ id }) => id === 'consultation')?.gallery).toEqual([]);
+    expect(OFFERS.find(({ id }) => id === 'planViz')?.gallery).not.toContain('concept');
+    expect(OFFERS.find(({ id }) => id === 'planViz')?.gallery).not.toContain('drawings');
   });
 });

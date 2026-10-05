@@ -3,8 +3,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
-
 interface RevealOptions {
   /** Сдвиг по Y перед появлением (px). */
   y?: number;
@@ -20,6 +18,7 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(options: Revea
 
   useGSAP(
     () => {
+      gsap.registerPlugin(useGSAP, ScrollTrigger);
       const targets = ref.current?.querySelectorAll('[data-reveal]');
       if (!targets || targets.length === 0) return;
 
@@ -27,7 +26,6 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(options: Revea
       media.add('(prefers-reduced-motion: no-preference)', () => {
         gsap.from(targets, {
           y,
-          autoAlpha: 0,
           duration,
           ease: 'power3.out',
           stagger,

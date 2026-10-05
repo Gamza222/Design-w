@@ -1,28 +1,20 @@
+import type { TariffId } from '@entities/package';
+
 /** Смысловые слоты изображений результата — подписи в i18n `home.services.slots.*`,
  *  файлы в `config/images.ts`. Один слот переиспользуется в карточках и галереях модалки. */
 export type ResultSlot =
   | 'plan' // Планировочное решение (№1)
-  | 'spec' // Спецификация (№2)
+  | 'electrics' // План розеток и электровыводов
   | 'materials' // Подбор материалов и мебели (№3)
   | 'drawings' // Схемы и чертежи (№4)
   | 'viz' // 3D-визуализации (№5)
   | 'concept' // Концепция интерьера (№6)
-  | 'views3d' // 3D-виды в чёрно-белом формате
+  | 'furniturePlan' // План расстановки мебели
   | 'supervision'; // интерьерное фото для «Авторского надзора»
 
-export type OfferId =
-  | 'planning'
-  | 'collages'
-  | 'full'
-  | 'planViz'
-  | 'electric'
-  | 'viz3d'
-  | 'procurement'
-  | 'supervision'
-  | 'ergonomics'
-  | 'prelaunch';
+export type OfferId = TariffId;
 
-/** Структура услуги; все тексты — в i18n `home.services.items.<id>.*`.
+/** Структура услуги; все тексты — в едином каталоге `@entities/package`.
  *  Карточка ленты — текстовая (без фото и вариантов размера): изображения
  *  живут только в галерее модалки. */
 export interface Offer {
@@ -35,8 +27,4 @@ export interface Offer {
   gallery: ResultSlot[];
   /** Услуги, которые явно перечислены в исходном тексте в блоке «Дополнительно». */
   addons?: readonly OfferId[];
-  /** Вместо галереи — текстовый список результатов (i18n `receive[]`, авторский надзор). */
-  hasReceiveList?: boolean;
-  /** У услуги есть примечание о консультационном характере (i18n `note`). */
-  hasNote?: boolean;
 }

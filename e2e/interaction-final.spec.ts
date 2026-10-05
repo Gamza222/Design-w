@@ -1,4 +1,4 @@
-import { expect, test, type Locator, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from './fixtures';
 
 async function fillProjectForm(form: Locator) {
   await form.getByLabel('Ваше имя').fill('Анна');
@@ -11,11 +11,13 @@ async function fillProjectForm(form: Locator) {
 
 async function openOrder(page: Page) {
   await page.goto('/#services');
-  const trigger = page.getByRole('button', { name: /Планировка квартиры.*1\s*500\s*₽\/м²/i });
+  const trigger = page
+    .locator('#services')
+    .getByRole('button', { name: /Планировка.*1\s*500\s*₽\/м²/i });
   await trigger.click();
   await page
-    .getByRole('dialog', { name: 'Планировка квартиры' })
-    .getByRole('button', { name: 'Заказать этот пакет' })
+    .getByRole('dialog', { name: 'Планировка' })
+    .getByRole('button', { name: 'Обсудить эту услугу' })
     .click();
   return { dialog: page.getByRole('dialog', { name: 'Расскажите о вашем объекте' }), trigger };
 }
@@ -36,7 +38,7 @@ for (const kind of ['consultation', 'project'] as const) {
       await route.fulfill({
         status: attempt === 3 ? 200 : 502,
         contentType: 'application/json',
-        body: JSON.stringify({ ok: attempt === 3 }),
+        body: JSON.stringify({ ok: attempt === 3, leadNumber: 'ABCD23456' }),
       });
     });
 
@@ -77,7 +79,11 @@ test('order dialog keeps keyboard focus inside during validation and after succe
   page,
 }) => {
   await page.route('**/api/lead.php', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }),
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: '{"ok":true,"leadNumber":"ABCD23456"}',
+    }),
   );
   const { dialog, trigger } = await openOrder(page);
   const close = dialog.getByRole('button', { name: /закрыть/i });
@@ -88,7 +94,11 @@ test('order dialog keeps keyboard focus inside during validation and after succe
   await expect(dialog.getByLabel('Ваше имя')).toBeFocused();
   await dialog.getByRole('button', { name: 'Обсудить проект' }).click();
   await expect(dialog.getByLabel('Ваше имя')).toBeFocused();
-  await fillProjectForm(dialog);
+  await dialog.getByLabel('Ваше имя').fill('Анна');
+  await dialog.getByLabel('Телефон').fill('+7 999 123-45-67');
+  await dialog.getByRole('checkbox').focus();
+  await page.keyboard.press('Space');
+  await expect(dialog.getByRole('checkbox')).toBeChecked();
   await dialog.getByRole('button', { name: 'Обсудить проект' }).click();
   await expect(dialog.getByRole('status')).toBeFocused();
   await page.keyboard.press('Tab');
@@ -145,7 +155,7 @@ test('short mobile menu scrolls to its last action and closes accessibly', async
   }));
   expect(metrics.bottom).toBeLessThanOrEqual(metrics.viewport + 1);
   expect(metrics.scrollable).toBe(true);
-  const calculator = menu.getByRole('link', { name: /Рассчитать/i });
+  const calculator = menu.getByRole('button', { name: /Рассчитать/i });
   await calculator.scrollIntoViewIfNeeded();
   await expect(calculator).toBeInViewport();
   await page.keyboard.press('Escape');
@@ -153,9 +163,12 @@ test('short mobile menu scrolls to its last action and closes accessibly', async
   await expect(burger).toHaveAttribute('aria-expanded', 'false');
   await burger.click();
   await calculator.click();
-  await expect(page).toHaveURL(/\/#calculator$/);
-  await expect(page.locator('#calculator')).toBeInViewport();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page).toHaveURL(/\/$/);
   await expect(burger).toHaveAttribute('aria-expanded', 'false');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(burger).toBeFocused();
 });
 
 test('language menu supports arrow navigation, Escape and keyboard selection', async ({ page }) => {
@@ -177,5 +190,5 @@ test('language menu supports arrow navigation, Escape and keyboard selection', a
   const english = page.getByRole('menuitem', { name: 'EN', exact: true });
   await english.focus();
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(/\/en$/);
+  await expect(page).toHaveURL(/\/en\/$/);
 });

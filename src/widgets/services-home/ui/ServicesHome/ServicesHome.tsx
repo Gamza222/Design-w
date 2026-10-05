@@ -7,7 +7,9 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { cn, useScrollReveal } from '@shared/lib';
+import { getTariff, PROJECT_PACKAGE_IDS } from '@entities/package';
+
+import { cn, openLeadDialog, useLocale, useScrollReveal } from '@shared/lib';
 import { HOME_SECTIONS } from '@shared/config';
 import {
   Container,
@@ -24,7 +26,6 @@ import { OFFERS } from '../../model/offers';
 import type { Offer, OfferId } from '../../model/types';
 import { OfferCard } from '../OfferCard/OfferCard';
 import { OfferModal } from '../OfferModal/OfferModal';
-import { OrderModal } from '../OrderModal/OrderModal';
 import { ServicesCta } from '../ServicesCta/ServicesCta';
 import styles from './ServicesHome.module.scss';
 
@@ -48,8 +49,8 @@ const scrollBehavior = (): ScrollBehavior =>
  *  «крючок» листания. Детали услуги — в модальном окне, снизу «Кому подойдут» + форма. */
 export function ServicesHome() {
   const { t } = useTranslation();
+  const locale = useLocale();
   const [openedId, setOpenedId] = useState<OfferId | null>(null);
-  const [orderedId, setOrderedId] = useState<OfferId | null>(null);
   // Карточка, открывшая модалку, — для возврата фокуса после закрытия.
   const triggerRef = useRef<HTMLElement | null>(null);
 
@@ -60,7 +61,6 @@ export function ServicesHome() {
 
   const perks = t('home.services.perks', { returnObjects: true }) as Perk[];
   const opened = OFFERS.find((o) => o.id === openedId) ?? null;
-  const ordered = OFFERS.find((o) => o.id === orderedId) ?? null;
 
   // --- Карусель ---------------------------------------------------------------
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -77,7 +77,9 @@ export function ServicesHome() {
     const track = trackRef.current;
     const card = track?.firstElementChild as HTMLElement | null;
     if (!track || !card) return 1;
-    return card.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0');
+    return (
+      card.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0')
+    );
   }, []);
 
   // Синхронизация состояния ленты: не чаще кадра (rAF-троттлинг), setState — только
@@ -188,26 +190,30 @@ export function ServicesHome() {
     triggerRef.current = null;
   };
 
-  // «Заказать этот пакет»: сохранить выбранную услугу и открыть полную форму.
   const orderFromModal = () => {
     if (!openedId) return;
-    setOrderedId(openedId);
+    const tariff = getTariff(openedId, locale);
+    const packageId = PROJECT_PACKAGE_IDS.find((id) => id === openedId);
+    const trigger = triggerRef.current;
     setOpenedId(null);
-  };
-
-  const closeOrder = () => {
-    setOrderedId(null);
-    triggerRef.current?.focus();
-    triggerRef.current = null;
+    // Open after the details dialog has restored the page scroll lock.
+    requestAnimationFrame(() =>
+      openLeadDialog(
+        {
+          source: 'service-details',
+          service: tariff.name,
+          packageId,
+          packageName: packageId ? tariff.name : undefined,
+          currency: tariff.currency,
+          preliminary: tariff.from,
+        },
+        trigger,
+      ),
+    );
   };
 
   return (
-    <section
-      id={HOME_SECTIONS.services}
-      className={styles.services}
-      data-tone="light"
-      ref={root}
-    >
+    <section id={HOME_SECTIONS.services} className={styles.services} data-tone="light" ref={root}>
       <Container>
         {/* Шапка: на мобильных стрелки уезжают под преимущества — вплотную к ленте. */}
         <div className={styles.headRow}>
@@ -299,7 +305,6 @@ export function ServicesHome() {
           onOrder={orderFromModal}
         />
       )}
-      {ordered && <OrderModal offer={ordered} onClose={closeOrder} />}
     </section>
   );
 }

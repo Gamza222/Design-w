@@ -1,6 +1,8 @@
-import { SERVICES, ServiceCard } from '@entities/service';
-import { useScrollReveal } from '@shared/lib';
-import { Container } from '@shared/ui';
+import { useTranslation } from 'react-i18next';
+
+import { getTariff, TARIFF_IDS, PROJECT_PACKAGE_IDS } from '@entities/package';
+import { openLeadDialog, useLocale, useScrollReveal } from '@shared/lib';
+import { Button, Container } from '@shared/ui';
 
 import styles from './ServicesList.module.scss';
 
@@ -9,16 +11,46 @@ interface ServicesListProps {
 }
 
 export function ServicesList({ title }: ServicesListProps) {
-  // Появление заголовка и карточек по скроллу (общий хук).
+  const { t } = useTranslation();
+  const locale = useLocale();
   const root = useScrollReveal<HTMLDivElement>([`.${styles.title}`, `.${styles.grid} > *`]);
 
   return (
     <Container ref={root}>
-      {title && <h2 className={styles.title}>{title}</h2>}
+      <h2 className={styles.title}>{title ?? t('tariffs.allPackages')}</h2>
       <div className={styles.grid}>
-        {SERVICES.map((service, index) => (
-          <ServiceCard key={service.id} service={service} index={index} />
-        ))}
+        {TARIFF_IDS.map((id) => {
+          const tariff = getTariff(id, locale);
+          const packageId = PROJECT_PACKAGE_IDS.find((candidate) => candidate === id);
+          return (
+            <article key={id} className={styles.card}>
+              <h3>{tariff.name}</h3>
+              <p>{tariff.description}</p>
+              <p className={styles.price}>{tariff.priceLabel}</p>
+              {tariff.exclusions.map((item) => (
+                <p key={item} className={styles.note}>
+                  {item}
+                </p>
+              ))}
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() =>
+                  openLeadDialog({
+                    source: 'services-list',
+                    service: tariff.name,
+                    packageId,
+                    packageName: packageId ? tariff.name : undefined,
+                    currency: tariff.currency,
+                    preliminary: tariff.from,
+                  })
+                }
+              >
+                {t('tariffs.select')}
+              </Button>
+            </article>
+          );
+        })}
       </div>
     </Container>
   );

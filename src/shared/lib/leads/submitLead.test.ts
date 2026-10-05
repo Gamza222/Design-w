@@ -18,10 +18,12 @@ afterEach(() => {
 
 describe('lead submission', () => {
   it('posts the complete lead to the REG.RU PHP endpoint', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(Response.json({ ok: true }));
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(Response.json({ ok: true, leadNumber: 'ABCD23456' }));
     vi.stubGlobal('fetch', fetchMock);
 
-    await submitLead(payload);
+    await expect(submitLead(payload)).resolves.toEqual({ leadNumber: 'ABCD23456' });
 
     expect(fetchMock).toHaveBeenCalledOnce();
     expect(fetchMock).toHaveBeenCalledWith(
@@ -42,7 +44,14 @@ describe('lead submission', () => {
     await expect(submitLead(payload)).rejects.toThrow('status 502');
   });
 
-  it.each([null, {}, { ok: false }, { ok: 'true' }])(
+  it.each([
+    null,
+    {},
+    { ok: false },
+    { ok: 'true' },
+    { ok: true },
+    { ok: true, leadNumber: 'an-internal-uuid' },
+  ])(
     'does not treat HTTP 200 without explicit delivery confirmation as success: %j',
     async (confirmation) => {
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json(confirmation)));

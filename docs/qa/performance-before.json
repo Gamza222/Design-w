@@ -1,0 +1,59 @@
+{
+  "source": "Isolated HEAD production build, local gzip preview port 3001. Cold navigation. Lighthouse simulated throttling.",
+  "results": [
+    {
+      "profile": "mobile",
+      "lighthouse": "13.5.0",
+      "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "settings": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "lcpMs": 6159.744,
+      "cls": 0,
+      "tbtMs": 50.5,
+      "performance": 0.63,
+      "bytes": 1356435
+    },
+    {
+      "profile": "desktop",
+      "lighthouse": "13.5.0",
+      "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "settings": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "lcpMs": 1521.756,
+      "cls": 0.01040828685462452,
+      "tbtMs": 0,
+      "performance": 0.93,
+      "bytes": 1921370
+    }
+  ],
+  "scroll": [
+    {
+      "engine": "chromium",
+      "viewport": "1366x768",
+      "durationMs": 4000,
+      "frames": 242,
+      "over50ms": 0,
+      "p95ms": 16.8
+    },
+    {
+      "engine": "webkit",
+      "viewport": "1366x768",
+      "durationMs": 4000,
+      "frames": 239,
+      "over50ms": 1,
+      "p95ms": 18
+    }
+  ]
+}

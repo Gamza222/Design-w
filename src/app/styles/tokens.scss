@@ -211,3 +211,29 @@
   --z-overlay: 900;
   --z-preloader: 1000;
 }
+
+// The photo-led hero retains its dark scrim in both themes.
+:root {
+  --glow-accent: 0 0 0 1px var(--color-accent);
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --color-bg: #f5f6f8;
+  --color-surface: #fff;
+  --color-text: #20242a;
+  --color-text-muted: #535d68;
+  --color-border: #ccd1d8;
+  --color-muted-bg: #e7ebef;
+  --color-strong: #171b21;
+  --color-hairline: #d5dae0;
+  --color-danger: #b5241c;
+  --focus-ring: #795600;
+  --color-accent: #795600;
+  --shadow-sm: 0 1px 2px rgb(23 30 42 / 8%);
+  --shadow-md: 0 0.75rem 2rem rgb(23 30 42 / 12%);
+  --shadow-card: 0 1px 2px rgb(23 30 42 / 8%), 0 0.75rem 2rem rgb(23 30 42 / 8%);
+
+  color-scheme: light;
+}

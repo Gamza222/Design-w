@@ -6,14 +6,46 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
 
   @include up(sm) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @include up(lg) {
-    grid-template-columns: repeat(4, 1fr);
+  @include up(xl) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  min-width: 0;
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  overflow-wrap: anywhere;
+
+  background: var(--color-surface);
+
+  button {
+    align-self: flex-start;
+    max-width: 100%;
+    margin-top: auto;
+    white-space: normal;
+  }
+}
+
+.price {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.note {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
 }

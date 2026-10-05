@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 for (const path of ['/contact', '/#services-request']) {
   test(`form waits for its handlers before accepting input at ${path}`, async ({ page }) => {

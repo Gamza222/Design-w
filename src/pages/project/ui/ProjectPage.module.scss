@@ -1,8 +1,17 @@
 @use 'app/styles/abstracts' as *;
 
+.article {
+  max-width: 90rem;
+  margin-inline: auto;
+}
+
 .back {
-  display: inline-block;
-  margin-bottom: var(--space-8);
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 2.75rem;
+  margin-bottom: var(--space-6);
+
   font-size: var(--fs-sm);
   color: var(--color-text-muted);
 
@@ -17,9 +26,8 @@
   gap: var(--space-4);
 
   max-width: 68ch;
-  margin-bottom: var(--space-12);
+  margin-bottom: var(--space-8);
 
-  // Как у статьи блога: дисплейные 5rem — перебор для длинных названий кейсов.
   h1 {
     font-size: var(--fs-3xl);
     text-wrap: balance;
@@ -31,23 +39,37 @@
   color: var(--color-text-muted);
 }
 
-.cover {
-  margin-bottom: var(--space-12);
+.coverFigure,
+.gallery figure {
+  margin: 0;
+
+  figcaption {
+    max-width: 75ch;
+    margin-top: var(--space-3);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+}
+
+.cover,
+.galleryImage {
+  width: 100%;
+  height: auto;
+  max-height: 75vh;
   border-radius: var(--radius-lg);
+
+  object-fit: contain;
+  background: var(--color-surface);
 }
 
 .facts {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   gap: var(--space-6);
 
-  margin-bottom: var(--space-12);
-  padding-block: var(--space-8);
+  margin-block: var(--space-8) var(--space-12);
+  padding-block: var(--space-6);
   border-block: 1px solid var(--color-border);
-
-  @include up(md) {
-    grid-template-columns: repeat(4, 1fr);
-  }
 }
 
 .factLabel {
@@ -58,21 +80,53 @@
 }
 
 .factValue {
-  margin-top: var(--space-2);
+  margin: var(--space-2) 0 0;
   font-size: var(--fs-lg);
+}
+
+.confirmed {
+  display: grid;
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+
+  h2 {
+    margin-bottom: var(--space-3);
+  }
+}
+
+.gallerySection,
+.faq {
+  margin-top: var(--space-12);
+
+  > h2 {
+    margin-bottom: var(--space-6);
+    font-size: var(--fs-2xl);
+  }
 }
 
 .gallery {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-6);
-  margin-top: var(--space-16);
-
-  @include up(md) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  gap: var(--space-8);
 }
 
-.galleryImage {
-  border-radius: var(--radius-lg);
+.nextStep {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: var(--space-12);
+  padding-block: var(--space-8);
+  border-block: 1px solid var(--color-border);
+
+  h2 {
+    margin-bottom: var(--space-3);
+    font-size: var(--fs-2xl);
+  }
+
+  p {
+    max-width: 60ch;
+    color: var(--color-text-muted);
+  }
 }

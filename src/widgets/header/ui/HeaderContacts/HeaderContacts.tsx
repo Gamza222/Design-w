@@ -15,10 +15,7 @@ export function HeaderContacts() {
           {CONTACTS.phone}
         </a>
       )}
-      <span className={styles.hours}>
-        <span className={styles.dot} role="img" aria-label={t('header.online')} />
-        {t('header.hours')}
-      </span>
+      <span className={styles.hours}>{t('header.hours')}</span>
     </div>
   );
 }

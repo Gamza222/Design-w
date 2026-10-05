@@ -1,8 +1,15 @@
+import { openLeadDialog } from '@shared/lib';
 import { useTranslation } from 'react-i18next';
 
-import { HOME_SECTIONS, homeSectionPath } from '@shared/config';
 import { useScrollReveal } from '@shared/lib';
-import { Button, Container, IconArrowRight, IconBadge, IconShield, SectionHeader } from '@shared/ui';
+import {
+  Button,
+  Container,
+  IconArrowRight,
+  IconBadge,
+  IconShield,
+  SectionHeader,
+} from '@shared/ui';
 
 import { fearsImage } from '../../config/images';
 import { FEAR_ICONS } from '../fear-icons';
@@ -52,7 +59,11 @@ export function Fears() {
             {t('home.fears.missionText')}
           </p>
           <div className={styles.cta}>
-            <Button to={homeSectionPath(HOME_SECTIONS.request)} size="lg" className={styles.ctaBtn}>
+            <Button
+              onClick={() => openLeadDialog({ source: 'fears' })}
+              size="lg"
+              className={styles.ctaBtn}
+            >
               <span>{t('home.fears.cta')}</span>
               <IconArrowRight aria-hidden="true" />
             </Button>

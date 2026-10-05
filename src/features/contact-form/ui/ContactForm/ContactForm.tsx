@@ -4,20 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { createLeadSubmissionId, submitLead, useHydrated } from '@shared/lib';
 import { Button, Checkbox, Field, IconCheck, IconLock, Input, Textarea } from '@shared/ui';
 
-import styles from './ContactForm.module.scss';
+import { TARIFF_IDS, getTariff, type TariffId } from '@entities/package';
+import { useLocale } from '@shared/lib';
+import { getLeadAttribution, type LeadContext } from '@shared/lib';
 
-const PACKAGE_IDS = [
-  'planning',
-  'collages',
-  'full',
-  'planViz',
-  'electric',
-  'viz3d',
-  'procurement',
-  'supervision',
-  'ergonomics',
-  'prelaunch',
-] as const;
+import styles from './ContactForm.module.scss';
 
 type FieldName = 'name' | 'phone' | 'area' | 'premises' | 'package' | 'comment';
 type Errors = Partial<Record<FieldName | 'consent', string>>;
@@ -25,6 +16,7 @@ type Errors = Partial<Record<FieldName | 'consent', string>>;
 interface ContactFormProps {
   /** Preselects the service that opened the order dialog. */
   initialPackage?: string;
+  context?: LeadContext;
 }
 
 interface Values {
@@ -36,7 +28,7 @@ interface Values {
   comment: string;
 }
 
-const PACKAGE_ID_SET = new Set<string>(PACKAGE_IDS);
+const PACKAGE_ID_SET = new Set<string>(TARIFF_IDS);
 
 /** Match the delivery endpoint's phone limits while allowing familiar formatting. */
 function isValidPhone(value: string): boolean {
@@ -55,9 +47,10 @@ function initialValues(initialPackage?: string): Values {
   };
 }
 
-/** Full project enquiry form delivered to the studio email and Telegram via a server function. */
-export function ContactForm({ initialPackage }: ContactFormProps) {
+/** Enquiry delivered to both studio Telegram recipients by the PHP endpoint. */
+export function ContactForm({ initialPackage, context }: ContactFormProps) {
   const hydrated = useHydrated();
+  const locale = useLocale();
   const { t, i18n } = useTranslation();
   const uid = useId();
   const fid = (name: string) => `${uid}-${name}`;
@@ -66,6 +59,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+  const [leadNumber, setLeadNumber] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const successRef = useRef<HTMLDivElement>(null);
@@ -89,16 +83,17 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
     if (values.name.trim().length < 2) next.name = t('home.contactCta.form.errorRequired');
     if (!values.phone.trim()) next.phone = t('home.contactCta.form.errorRequired');
     else if (!isValidPhone(values.phone)) next.phone = t('home.contactCta.form.errorPhone');
-    if (!values.premises) next.premises = t('home.contactCta.form.errorRequired');
+    if (!context && !values.premises) next.premises = t('home.contactCta.form.errorRequired');
     if (
-      !values.area ||
-      !Number.isFinite(Number(values.area)) ||
-      Number(values.area) <= 0 ||
-      Number(values.area) > 100000
+      !context &&
+      (!values.area ||
+        !Number.isFinite(Number(values.area)) ||
+        Number(values.area) <= 0 ||
+        Number(values.area) > 100000)
     ) {
       next.area = t('home.contactCta.form.errorRequired');
     }
-    if (!values.package) next.package = t('home.contactCta.form.errorRequired');
+    if (!context && !values.package) next.package = t('home.contactCta.form.errorRequired');
     if (!consent) next.consent = t('home.contactCta.form.errorRequired');
     return next;
   }
@@ -123,15 +118,27 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
 
     try {
       submissionIdRef.current ??= createLeadSubmissionId();
-      await submitLead({
-        kind: 'project',
+      const result = await submitLead({
+        kind: context ? 'consultation' : 'project',
         ...values,
         consent: true,
         submissionId: submissionIdRef.current,
         locale: i18n.resolvedLanguage ?? i18n.language,
         page: window.location.pathname,
         website,
+        context: context ?? {
+          source: 'contact-form',
+          area: Number(values.area),
+          ...(PACKAGE_ID_SET.has(values.package)
+            ? {
+                packageId: values.package,
+                packageName: getTariff(values.package as TariffId, locale).name,
+              }
+            : {}),
+        },
+        attribution: getLeadAttribution(),
       });
+      setLeadNumber(result.leadNumber);
       setSent(true);
     } catch {
       setSubmitError(true);
@@ -148,6 +155,7 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
           <IconCheck />
         </span>
         <p>{t('home.contactCta.form.success')}</p>
+        {leadNumber && <p>№ {leadNumber}</p>}
       </div>
     );
   }
@@ -212,85 +220,89 @@ export function ContactForm({ initialPackage }: ContactFormProps) {
         </Field>
       </div>
 
-      <div className={styles.row}>
-        <Field
-          id={fid('premises')}
-          label={t('home.contactCta.form.premises.label')}
-          error={errors.premises}
-          required
-        >
-          <select
-            id={fid('premises')}
-            name="premises"
-            disabled={!hydrated || submitting}
-            aria-required="true"
-            className={styles.select}
-            value={values.premises}
-            onChange={set('premises')}
-            aria-invalid={!!errors.premises || undefined}
-            aria-describedby={errors.premises ? `${fid('premises')}-error` : undefined}
+      {!context && (
+        <>
+          <div className={styles.row}>
+            <Field
+              id={fid('premises')}
+              label={t('home.contactCta.form.premises.label')}
+              error={errors.premises}
+              required
+            >
+              <select
+                id={fid('premises')}
+                name="premises"
+                disabled={!hydrated || submitting}
+                aria-required="true"
+                className={styles.select}
+                value={values.premises}
+                onChange={set('premises')}
+                aria-invalid={!!errors.premises || undefined}
+                aria-describedby={errors.premises ? `${fid('premises')}-error` : undefined}
+              >
+                <option value="" disabled>
+                  {t('home.contactCta.form.premises.placeholder')}
+                </option>
+                <option value="apartment">{t('home.contactCta.form.premises.apartment')}</option>
+                <option value="house">{t('home.contactCta.form.premises.house')}</option>
+                <option value="office">{t('home.contactCta.form.premises.office')}</option>
+              </select>
+            </Field>
+
+            <Field
+              id={fid('area')}
+              label={t('home.contactCta.form.area.label')}
+              error={errors.area}
+              required
+            >
+              <Input
+                id={fid('area')}
+                name="area"
+                disabled={!hydrated || submitting}
+                aria-required="true"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={100000}
+                value={values.area}
+                onChange={set('area')}
+                invalid={!!errors.area}
+                aria-describedby={errors.area ? `${fid('area')}-error` : undefined}
+                placeholder={t('home.contactCta.form.area.placeholder')}
+              />
+            </Field>
+          </div>
+
+          <Field
+            id={fid('package')}
+            label={t('home.contactCta.form.package.label')}
+            error={errors.package}
+            required
           >
-            <option value="" disabled>
-              {t('home.contactCta.form.premises.placeholder')}
-            </option>
-            <option value="apartment">{t('home.contactCta.form.premises.apartment')}</option>
-            <option value="house">{t('home.contactCta.form.premises.house')}</option>
-            <option value="office">{t('home.contactCta.form.premises.office')}</option>
-          </select>
-        </Field>
-
-        <Field
-          id={fid('area')}
-          label={t('home.contactCta.form.area.label')}
-          error={errors.area}
-          required
-        >
-          <Input
-            id={fid('area')}
-            name="area"
-            disabled={!hydrated || submitting}
-            aria-required="true"
-            type="number"
-            inputMode="numeric"
-            min={1}
-            max={100000}
-            value={values.area}
-            onChange={set('area')}
-            invalid={!!errors.area}
-            aria-describedby={errors.area ? `${fid('area')}-error` : undefined}
-            placeholder={t('home.contactCta.form.area.placeholder')}
-          />
-        </Field>
-      </div>
-
-      <Field
-        id={fid('package')}
-        label={t('home.contactCta.form.package.label')}
-        error={errors.package}
-        required
-      >
-        <select
-          id={fid('package')}
-          name="package"
-          disabled={!hydrated || submitting}
-          aria-required="true"
-          className={styles.select}
-          value={values.package}
-          onChange={set('package')}
-          aria-invalid={!!errors.package || undefined}
-          aria-describedby={errors.package ? `${fid('package')}-error` : undefined}
-        >
-          <option value="" disabled>
-            {t('home.contactCta.form.package.placeholder')}
-          </option>
-          <option value="unknown">{t('home.contactCta.form.package.unknown')}</option>
-          {PACKAGE_IDS.map((packageId) => (
-            <option key={packageId} value={packageId}>
-              {t(`home.services.items.${packageId}.name`)}
-            </option>
-          ))}
-        </select>
-      </Field>
+            <select
+              id={fid('package')}
+              name="package"
+              disabled={!hydrated || submitting}
+              aria-required="true"
+              className={styles.select}
+              value={values.package}
+              onChange={set('package')}
+              aria-invalid={!!errors.package || undefined}
+              aria-describedby={errors.package ? `${fid('package')}-error` : undefined}
+            >
+              <option value="" disabled>
+                {t('home.contactCta.form.package.placeholder')}
+              </option>
+              <option value="unknown">{t('home.contactCta.form.package.unknown')}</option>
+              {TARIFF_IDS.map((packageId) => (
+                <option key={packageId} value={packageId}>
+                  {getTariff(packageId as TariffId, locale).name}
+                </option>
+              ))}
+            </select>
+          </Field>
+        </>
+      )}
 
       <Field id={fid('comment')} label={t('home.contactCta.form.comment.label')}>
         <Textarea

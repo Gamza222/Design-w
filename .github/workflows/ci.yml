@@ -27,7 +27,9 @@ jobs:
         run: |
           php -l public/api/lead.php
           php -l scripts/check-lead-delivery.php
+          php -l scripts/migrate-lead-state.php
           php tests/backend/lead-test.php
+          node --test tests/backend/http-test.mjs
           node --test scripts/generate-lead-config.test.mjs
           node scripts/setup-leads.mjs --self-test
       - run: npm run build
@@ -86,6 +88,7 @@ jobs:
           LEAD_TELEGRAM_BOT_TOKEN: ${{ secrets.LEAD_TELEGRAM_BOT_TOKEN }}
           LEAD_TELEGRAM_CHAT_ID: ${{ secrets.LEAD_TELEGRAM_CHAT_ID }}
           LEAD_TELEGRAM_CHAT_ID_ADDITIONAL: ${{ secrets.LEAD_TELEGRAM_CHAT_ID_ADDITIONAL }}
+          LEAD_STATE_DIR: ${{ vars.LEAD_STATE_DIR }}
         run: node scripts/generate-lead-config.mjs
 
       - name: Verify lead delivery credentials
@@ -142,8 +145,15 @@ jobs:
           set ssl:verify-certificate yes
           set net:max-retries 2
           set net:timeout 20
+          # A chrooted FTP account may not reach this sibling; PHP also creates it.
+          # The post-deploy health check verifies the actual PHP filesystem path.
+          set cmd:fail-exit no
+          mkdir -p "$DEPLOY_PATH/../.designseichas-leads"
+          chmod 700 "$DEPLOY_PATH/../.designseichas-leads"
+          set cmd:fail-exit yes
           mirror --reverse --delete --verbose=1 --parallel=4 \
             --exclude='^\.well-known(/|$)' \
+            --exclude='^\.designseichas-leads(/|$)' \
             build/client/ "$DEPLOY_PATH/"
           put build/client/api/.lead-config.php -o "$DEPLOY_PATH/api/.lead-config.php"
           chmod 600 "$DEPLOY_PATH/api/.lead-config.php"
@@ -152,3 +162,18 @@ jobs:
           cls -l "$DEPLOY_PATH/404.html"
           bye
           LFTP
+
+      - name: Verify deployed PHP and persistent lead storage
+        run: |
+          curl --fail --silent --show-error --max-time 20 \
+            --retry 3 --retry-delay 2 --retry-all-errors \
+            "$VITE_SITE_URL/api/lead.php?health=1" \
+            | node --input-type=module -e '
+              let raw = "";
+              for await (const chunk of process.stdin) raw += chunk;
+              const body = JSON.parse(raw);
+              if (body.ok !== true || body.storage !== "ready" || body.recipients !== 2) {
+                throw new Error("Deployed lead backend is not ready");
+              }
+              console.log("Deployed PHP, private persistent storage and two recipients: OK (no messages sent)");
+            '

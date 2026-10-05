@@ -140,3 +140,8 @@
     color: var(--color-accent);
   }
 }
+
+html[data-theme='light'] .panel {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+}

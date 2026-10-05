@@ -1,4 +1,4 @@
-import { expect, test, type Locator } from '@playwright/test';
+import { expect, test, type Locator } from './fixtures';
 
 async function geometry(track: Locator) {
   return track.evaluate((element) => {
@@ -32,14 +32,12 @@ for (const width of [320, 390, 768, 1280, 1440, 1920]) {
     expect(before.controlGap).toBeGreaterThanOrEqual(36);
     expect(before.counterGap).toBeGreaterThanOrEqual(36);
 
-    const sizes = await section
-      .locator('[class*="perks"] > li svg')
-      .evaluateAll((icons) =>
-        icons.map((icon) => ({
-          width: icon.getBoundingClientRect().width,
-          height: icon.getBoundingClientRect().height,
-        })),
-      );
+    const sizes = await section.locator('[class*="perks"] > li svg').evaluateAll((icons) =>
+      icons.map((icon) => ({
+        width: icon.getBoundingClientRect().width,
+        height: icon.getBoundingClientRect().height,
+      })),
+    );
     expect(sizes).toHaveLength(4);
     for (const size of sizes) {
       expect(size.width).toBeGreaterThanOrEqual(20);
@@ -83,11 +81,14 @@ test('hover and keyboard focus remain inside carousel vertical clearance', async
 test('order dialog keeps real internal padding', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/#services');
-  await page.getByRole('button', { name: /Планировка квартиры.*1\s*500/ }).click();
-  await page.getByRole('button', { name: 'Заказать этот пакет' }).click();
+  await page
+    .locator('#services')
+    .getByRole('button', { name: /Планировка.*1\s*500/ })
+    .click();
+  await page.getByRole('button', { name: 'Обсудить эту услугу' }).click();
   const dialog = page.getByRole('dialog', { name: 'Расскажите о вашем объекте' });
   await expect(dialog.getByLabel('Ваше имя')).toBeFocused();
-  const padding = await dialog.locator('[class*="scroller"]').evaluate((element) => {
+  const padding = await dialog.evaluate((element) => {
     const style = getComputedStyle(element);
     return {
       top: parseFloat(style.paddingTop),

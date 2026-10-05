@@ -1,15 +1,9 @@
 import { useTranslation } from 'react-i18next';
 
+import { getTariff, SERVICE_LANDING_TARIFFS } from '@entities/package';
 import { SERVICE_LANDINGS, type ServiceLandingKey } from '@shared/config';
-import { buildMeta, localeDict, useScrollReveal, type RouteMetaArgs } from '@shared/lib';
-import {
-  AppLink,
-  Container,
-  IconArrowRight,
-  PageHeader,
-  Section,
-  SectionHeader,
-} from '@shared/ui';
+import { buildMeta, localeDict, useLocale, useScrollReveal, type RouteMetaArgs } from '@shared/lib';
+import { AppLink, Container, IconArrowRight, PageHeader, Section, SectionHeader } from '@shared/ui';
 import { ContactCta } from '@widgets/contact-cta';
 import { Process } from '@widgets/process';
 import { ServicesList } from '@widgets/services-list';
@@ -23,11 +17,12 @@ export function meta({ location }: RouteMetaArgs) {
 
 const LANDING_KEYS = Object.keys(SERVICE_LANDINGS) as ServiceLandingKey[];
 
-/** «Услуги» — список направлений + хаб SEO-посадок (планировка / 3D / эскизный проект) +
+/** «Услуги» — список направлений + хаб SEO-посадок (планировка / 3D / полный проект) +
  *  этапы работы + финальный CTA. Секции переиспользованы с главной, чтобы страница была
  *  насыщенной и вела к заявке, а не обрывалась на четырёх карточках. */
 export default function ServicesPage() {
   const { t } = useTranslation();
+  const locale = useLocale();
 
   // Появление карточек-посадок по скроллу (общий хук).
   const landingsRoot = useScrollReveal<HTMLDivElement>(
@@ -54,7 +49,7 @@ export default function ServicesPage() {
                 <h3 className={styles.landingTitle}>{t(`servicePages.${key}.h1`)}</h3>
                 <p className={styles.landingText}>{t(`servicePages.${key}.subtitle`)}</p>
                 <span className={styles.landingMeta}>
-                  {t(`servicePages.${key}.price`)} · {t(`servicePages.${key}.term`)}
+                  {getTariff(SERVICE_LANDING_TARIFFS[key], locale).priceLabel}
                 </span>
                 <span className={styles.landingCta}>
                   <span>{t('services.landingsCta')}</span>

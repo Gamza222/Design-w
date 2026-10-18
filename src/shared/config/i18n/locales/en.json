@@ -1,0 +1,743 @@
+{
+  "brand": "ДизайнСейчас",
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "achievements": "Our approach",
+    "blog": "Blog",
+    "about": "About us",
+    "contact": "Contact",
+    "breadcrumbs": "Breadcrumbs"
+  },
+  "cta": {
+    "request": "Request a quote",
+    "discuss": "Discuss a project",
+    "calculate": "Get an estimate",
+    "viewAll": "View all",
+    "readMore": "Read more",
+    "viewProject": "View project"
+  },
+  "header": {
+    "hours": "10:00-19:00",
+    "menu": "Menu",
+    "language": "Website language",
+    "online": "Online enquiries"
+  },
+  "cookie": {
+    "title": "Cookies",
+    "text": "This site uses a technical cookie to remember your language. The embedded Yandex Map operates under Yandex's terms.",
+    "policy": "Privacy policy",
+    "acknowledge": "Got it"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Interior design for Russia and Belarus",
+      "titleLead": "An interior design project",
+      "titleAccent": "for your life and needs",
+      "subtitle": "Layouts, drawings, collages and visualisations in your chosen package. Calculate a preliminary estimate.",
+      "ctaExamples": "View our work",
+      "bullets": {
+        "consult": "Discuss your brief",
+        "contract": "Agree on the scope",
+        "remote": "Online across Russia and Belarus"
+      },
+      "benefitsTitle": "Choose the project scope you need",
+      "benefits": {
+        "planning": {
+          "title": "Space planning",
+          "desc": "Two layout options, with furniture and equipment positions."
+        },
+        "concept": {
+          "title": "Collages and visualisations",
+          "desc": "Discuss the look of the interior through the relevant packages."
+        },
+        "sketches": {
+          "title": "Working drawings",
+          "desc": "Available in Drawings, Drawings + collages and the Full design project."
+        },
+        "support": {
+          "title": "Additional services",
+          "desc": "Supervision, procurement and implementation are discussed separately."
+        }
+      }
+    },
+    "services": {
+      "eyebrow": "Our services",
+      "title": "A design project for any task",
+      "subtitle": "We create interiors considered down to the last detail and built without costly mistakes or rework.",
+      "perks": [
+        {
+          "title": "Pricing",
+          "desc": "Clear price per m²"
+        },
+        {
+          "title": "Contract",
+          "desc": "Contract-based work"
+        },
+        {
+          "title": "Remote",
+          "desc": "Across Russia"
+        },
+        {
+          "title": "Support",
+          "desc": "At every stage"
+        }
+      ],
+      "popular": "Popular",
+      "popularPackage": "Popular package",
+      "whatsIncluded": "What's included",
+      "slots": {
+        "plan": "Measured survey plan",
+        "materials": "Materials and furniture selection",
+        "drawings": "Schemes and drawings",
+        "viz": "3D visualizations",
+        "concept": "Interior concept",
+        "supervision": "Design supervision",
+        "furniturePlan": "Furniture placement plan",
+        "electrics": "Sockets and electrical outlets plan"
+      },
+      "modal": {
+        "close": "Close",
+        "includesTitle": "What's included",
+        "forWhomTitle": "Who it's for",
+        "receiveTitle": "Examples of project materials",
+        "addonsTitle": "Additional services",
+        "order": "Discuss this service",
+        "specLabels": {
+          "term": "Timeline",
+          "revisions": "Revisions",
+          "format": "Format",
+          "coverage": "Coverage"
+        }
+      },
+      "orderForm": {
+        "eyebrow": "Project enquiry",
+        "title": "Tell us about your property",
+        "subtitle": "You selected “{{service}}”. You can change the service in the form.",
+        "close": "Close the form"
+      },
+      "who": {
+        "title": "Who our services are for",
+        "items": [
+          "You bought a new-build apartment",
+          "You are renovating a resale home",
+          "You want to refresh your interior",
+          "You rent out your apartment",
+          "You fear mistakes and wasted costs"
+        ]
+      },
+      "cta": {
+        "title": "Not sure what to choose?",
+        "text": "Tell us about your task - we will suggest the best project format and give a preliminary cost estimate.",
+        "benefits": [
+          "We reply within one business day",
+          "No pushy sales",
+          "Working across Russia and Belarus"
+        ],
+        "form": {
+          "name": {
+            "label": "Your name",
+            "placeholder": "Your name"
+          },
+          "phone": {
+            "label": "Phone",
+            "placeholder": "+7 (___) ___-__-__"
+          },
+          "consent": "I agree to the processing of personal data",
+          "submit": "Get a consultation",
+          "submitting": "Sending…",
+          "success": "Thank you! We will contact you within one business day.",
+          "errorSubmit": "We couldn't send your request. Please try again or call us.",
+          "errorRequired": "This field is required",
+          "errorPhone": "Enter a valid phone number"
+        }
+      },
+      "carousel": {
+        "prev": "Previous services",
+        "next": "Next services",
+        "trackLabel": "Services strip - scrolls horizontally"
+      }
+    },
+    "portfolio": {
+      "eyebrow": "Portfolio",
+      "title": "Interiors in detail",
+      "subtitle": "Explore palettes, furniture shapes and lighting in our selection.",
+      "cta": "See all works",
+      "more": "More",
+      "areaUnit": "m²"
+    },
+    "blog": {
+      "eyebrow": "Blog & insights",
+      "title": "We share experience and inspiration",
+      "subtitle": "Useful articles about interior design, renovation and creating a comfortable space.",
+      "cta": "View all articles"
+    },
+    "packages": {
+      "kicker": "Ways to work",
+      "title": "Design project packages",
+      "description": "Choose a suitable package or get a personal estimate.",
+      "pick": "Choose a package",
+      "select": "Choose",
+      "packageLabel": "Package",
+      "sampleProject": "View a sample project",
+      "popular": "Popular",
+      "calc": {
+        "title": "Need an estimate?",
+        "description": "Answer a few questions and get a preliminary project cost.",
+        "cta": "Calculate"
+      }
+    },
+    "process": {
+      "eyebrow": "How we work",
+      "title": "How your project progresses",
+      "subtitle": "Define the brief and scope first, then review the materials included in your chosen package.",
+      "steps": [
+        {
+          "title": "Enquiry",
+          "desc": "Leave your contact details and a short description."
+        },
+        {
+          "title": "Discussion",
+          "desc": "Review your plan, preferences and budget."
+        },
+        {
+          "title": "Scope and price",
+          "desc": "Agree on the package, cost and schedule before starting."
+        },
+        {
+          "title": "Space planning",
+          "desc": "Prepare two layout options."
+        },
+        {
+          "title": "Package development",
+          "desc": "Create drawings, collages or visualisations according to the selected scope."
+        },
+        {
+          "title": "Material delivery",
+          "desc": "Deliver the agreed set of project materials."
+        }
+      ],
+      "perks": [
+        "Scope agreed before starting",
+        "Remote discussion",
+        "Stage reviews",
+        "Extra services priced separately"
+      ],
+      "ctaTitle": "Want a process this clear?",
+      "ctaText": "Tell us about your space and needs so we can discuss a suitable package.",
+      "cta": "Discuss a project"
+    },
+    "achievements": {
+      "eyebrow": "Our approach",
+      "title": "From your needs to the right project scope",
+      "subtitle": "Choose the level of detail you need, from a layout to a full set of drawings and visualisations.",
+      "items": [
+        {
+          "title": "Start with the layout",
+          "text": "Consider room dimensions, furniture positions and your everyday needs."
+        },
+        {
+          "title": "Agree on the scope",
+          "text": "Drawings, collages and visualisations belong to different packages. Choose what your project needs."
+        },
+        {
+          "title": "Discuss it online",
+          "text": "You can share plans, photographs and preferences remotely."
+        },
+        {
+          "title": "Separate extra services",
+          "text": "Design supervision, procurement and implementation are discussed separately from the design project."
+        }
+      ],
+      "cta": "More about the studio"
+    },
+    "geography": {
+      "eyebrow": "Geography",
+      "title": "Interior design online",
+      "subtitle": "Discuss projects for Russia and Belarus remotely. Share your room plan, photographs and preferences online.",
+      "remoteTitle": "Start from your own city",
+      "remoteText": "Prepare a plan, photographs and a list of needs for the initial discussion. Measurement arrangements and working terms are agreed separately.",
+      "cities": {
+        "spb": "Saint Petersburg",
+        "moscow": "Moscow",
+        "krasnodar": "Krasnodar",
+        "sochi": "Sochi",
+        "kazan": "Kazan",
+        "ekb": "Yekaterinburg",
+        "nsk": "Novosibirsk",
+        "irkutsk": "Irkutsk",
+        "vlk": "Vladivostok"
+      },
+      "caseLabel": "Portfolio",
+      "caseTitle": "Interiors in detail",
+      "caseCta": "Explore the portfolio",
+      "stats": [
+        {
+          "value": "Online",
+          "label": "discuss the brief and review project materials"
+        },
+        {
+          "value": "Plan",
+          "label": "dimensions and features of your room"
+        },
+        {
+          "value": "PDF",
+          "label": "project materials in digital format"
+        },
+        {
+          "value": "RUB / BYN",
+          "label": "prices on the Russian and Belarusian versions"
+        }
+      ],
+      "howTitle": "How online work goes",
+      "howSteps": [
+        {
+          "title": "Prepare a plan and photographs",
+          "desc": "Add your preferences for space, style and budget."
+        },
+        {
+          "title": "Discuss the brief",
+          "desc": "Choose a package and agree on the scope."
+        },
+        {
+          "title": "Review the materials",
+          "desc": "Agree on delivery format and revisions before starting."
+        }
+      ],
+      "ctaTitle": "Estimate your project online",
+      "ctaText": "Leave your contact details and a short description. We will get in touch to discuss it.",
+      "cta": "Discuss a project"
+    },
+    "fears": {
+      "eyebrow": "We understand your concerns",
+      "title": "A renovation shouldn't turn into stress",
+      "subtitle": "We discuss the important details in advance so you can feel confident in the result and avoid unnecessary stress, delays and expense.",
+      "missionTitle": "Our mission",
+      "missionText": "to make the process clear, predictable and comfortable for you at every stage of work.",
+      "cta": "Discuss your apartment",
+      "ctaNote": "We'll reply personally, with no scripts or pressure.",
+      "guaranteeLead": "We work under a contract.",
+      "guarantee": "We fix the project scope, timeline and cost before work begins.",
+      "items": [
+        {
+          "fear": "I'm afraid of going over budget",
+          "answer": "We help choose solutions that fit the real renovation cost and discuss priorities in advance."
+        },
+        {
+          "fear": "I'm afraid the interior will be inconvenient",
+          "answer": "We think through storage, passages, light and your family's living scenarios at the layout stage."
+        },
+        {
+          "fear": "I don't understand how to hand the project to builders",
+          "answer": "We prepare clear materials for implementation and stay in touch after the handover."
+        },
+        {
+          "fear": "I'm afraid no one will answer after the project",
+          "answer": "We support the client and help you calmly get through the implementation stage."
+        },
+        {
+          "fear": "What if I need to change something",
+          "answer": "Adjustments are discussed calmly and recorded - without chaos or endless reworks."
+        }
+      ]
+    },
+    "calculator": {
+      "eyebrow": "Cost calculator",
+      "title": "Estimate a project for your apartment",
+      "subtitle": "Answer a few questions and get a preliminary estimate for your design project.",
+      "steps": {
+        "format": "Project format",
+        "addons": "Add-ons",
+        "area": "Area",
+        "total": "Cost"
+      },
+      "formatTitle": "1. Choose the project format",
+      "addonsTitle": "2. Add extra services",
+      "included": "Included in the package",
+      "areaTitle": "3. Enter the area",
+      "areaUnit": "m²",
+      "areaHint": "If you don't know the exact area, enter an approximate one - we'll clarify during the estimate.",
+      "areaDecrease": "Decrease area",
+      "areaIncrease": "Increase area",
+      "resultTitle": "Your project",
+      "resultEdit": "Reset",
+      "resultFormatLabel": "Selected format",
+      "resultAreaLabel": "Area",
+      "resultAddonsLabel": "Extra services",
+      "resultAddonsEmpty": "none selected",
+      "resultTermLabel": "Schedule and terms",
+      "resultTotalLabel": "Preliminary project cost",
+      "resultNote": "A preliminary estimate based on the area entered. We confirm the scope and final price after discussing your needs.",
+      "cta": "Get the exact cost",
+      "trust": [
+        "No pressure",
+        "A designer will answer, not a call center",
+        "Exact cost after a short conversation"
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "The questions we get asked most",
+      "subtitle": "We answer the important questions about work, timelines and the process.",
+      "items": [
+        {
+          "q": "What is included in Layout?",
+          "a": "A measured survey plan, two layout options, furniture and equipment placement, and black-and-white 3D views. The rate is {{planning}}. Working drawings, collages and photorealistic visualizations are excluded."
+        },
+        {
+          "q": "How do Drawings and Drawings + collages differ?",
+          "a": "Both include the layout and a set of working drawings. The second adds room-by-room collages and a more detailed specification. Photorealistic visualizations are excluded from both."
+        },
+        {
+          "q": "Does Layout + visualizations include working drawings?",
+          "a": "No. It includes a measured plan, two layout options, furniture placement, black-and-white 3D views and photorealistic room visualizations. Working drawings and collages are excluded."
+        },
+        {
+          "q": "Does the full project include implementation?",
+          "a": "The full design project costs {{full}} and includes the layout, collages, visualizations of the main rooms, working drawings and specifications. Supervision, procurement and implementation are paid separately."
+        },
+        {
+          "q": "How does the calculator handle extra services?",
+          "a": "3D visualizations are added only when the selected package does not already include them. Supervision costs {{supervision}}. Monthly charges, procurement and consultations quoted on request are excluded from the project subtotal."
+        },
+        {
+          "q": "How accurate is the estimate, and how long does a project take?",
+          "a": "The calculator provides a preliminary estimate based on your area and services. Prices marked “from” are starting rates. The final price, scope and schedule are agreed after discussing your needs."
+        }
+      ]
+    },
+    "reviews": {
+      "eyebrow": "Reviews",
+      "title": "Client reviews",
+      "subtitle": "Published with the authors’ permission and links to their sources.",
+      "source": "Review source",
+      "more": "Show more reviews"
+    },
+    "contactCta": {
+      "eyebrow": "Contact",
+      "title": "Let's discuss your project",
+      "subtitle": "No pressure. We'll suggest options, tell you what suits you, and give you a sense of the cost.",
+      "checks": [
+        "Discuss your brief",
+        "Online across Russia and Belarus",
+        "We will use your chosen contact details"
+      ],
+      "socialsTitle": "Message us in whichever way is most convenient",
+      "form": {
+        "name": {
+          "label": "Your name",
+          "placeholder": "Your name"
+        },
+        "phone": {
+          "label": "Phone",
+          "placeholder": "+7 (___) ___-__-__"
+        },
+        "premises": {
+          "label": "Property type",
+          "placeholder": "Select a property type",
+          "apartment": "Apartment",
+          "house": "House",
+          "office": "Office"
+        },
+        "area": {
+          "label": "Area (m²)",
+          "placeholder": "For example, 72"
+        },
+        "package": {
+          "label": "Package or service",
+          "placeholder": "Select a package",
+          "unknown": "I'm not sure which to choose"
+        },
+        "comment": {
+          "label": "Comment (optional)",
+          "placeholder": "Briefly about the task"
+        },
+        "consent": "I agree to the processing of personal data",
+        "submit": "Discuss a project",
+        "submitting": "Sending…",
+        "privacy": "We use your details only to respond to this request.",
+        "success": "Thank you! We'll get in touch with you shortly.",
+        "errorSubmit": "We couldn't send your request. Please try again or call us.",
+        "errorRequired": "Please fill in this field",
+        "errorPhone": "Please enter a valid phone number"
+      }
+    }
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Choose the scope your project needs. Site supervision, procurement and implementation are charged separately.",
+    "landingsTitle": "Individual services",
+    "landingsSubtitle": "Every service can be ordered on its own - with a clear price per m² and fixed timelines.",
+    "landingsCta": "More about this service"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Interiors, compositions and details: choose a direction to discuss for your own project.",
+    "meta": {
+      "area": "Area",
+      "year": "Year",
+      "location": "Location",
+      "style": "Style",
+      "areaUnit": "m²"
+    },
+    "project": {
+      "task": "Brief",
+      "solution": "Design response",
+      "gallery": "Additional images",
+      "ctaTitle": "Let’s discuss your interior",
+      "ctaText": "Tell us which details you liked. We can discuss your room layout and the project scope you need.",
+      "cta": "Discuss a similar interior",
+      "faqTitle": "Questions about this interior"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Ideas, trends and useful notes on interior design.",
+    "readOriginal": "Read the full article on Dzen (Russian)"
+  },
+  "achievements": {
+    "title": "Our approach",
+    "subtitle": "Choose the level of detail you need, from a layout to a full set of drawings and visualisations."
+  },
+  "about": {
+    "title": "About the studio",
+    "subtitle": "Design Seichas — interior design with attention to layout, light and everyday life.",
+    "story": [
+      "We develop interior design projects for apartments and houses. We begin with your needs: how you use the space, what you want to change and what you need the project to deliver.",
+      "The scope depends on your chosen package. Layouts, working drawings, collages and photorealistic visualisations are available in different combinations. Design supervision, procurement and implementation are discussed and charged separately.",
+      "The first discussion can take place online. A plan, photographs and your preferences are useful starting materials. After understanding the brief, we agree on the scope and project terms."
+    ]
+  },
+  "contact": {
+    "title": "Get in touch",
+    "subtitle": "Tell us about your space and preferences to discuss the project scope and cost.",
+    "email": "dizain.seichas@yandex.ru",
+    "details": {
+      "title": "Direct contacts",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "addressLabel": "Address",
+      "hoursLabel": "Working hours",
+      "geoLabel": "Coverage",
+      "geoValue": "Working remotely across Russia and Belarus",
+      "paymentLabel": "Payment",
+      "paymentValue": "Payment terms and methods are agreed in the contract."
+    }
+  },
+  "footer": {
+    "tagline": "Interior design for apartments and houses: layouts, drawings and visual direction.",
+    "rights": "All rights reserved.",
+    "navTitle": "Navigation",
+    "nav": [
+      {
+        "label": "Services",
+        "to": "/services"
+      },
+      {
+        "label": "Portfolio",
+        "to": "/portfolio"
+      },
+      {
+        "label": "Blog",
+        "to": "/blog"
+      },
+      {
+        "label": "About us",
+        "to": "/about"
+      },
+      {
+        "label": "Contact",
+        "to": "/contact"
+      }
+    ],
+    "contactsTitle": "Contacts",
+    "mapTitle": "Find us",
+    "mapOpen": "Open in Yandex Maps",
+    "documentsTitle": "Documents",
+    "documents": [
+      {
+        "label": "Privacy policy",
+        "to": "/privacy"
+      },
+      {
+        "label": "Public offer",
+        "to": "/offer"
+      },
+      {
+        "label": "Company details",
+        "to": "/requisites"
+      },
+      {
+        "label": "Consent to data processing",
+        "to": "/consent"
+      }
+    ]
+  },
+  "servicePages": {
+    "planirovka": {
+      "slug": "planirovka-kvartiry",
+      "h1": "Apartment layout",
+      "subtitle": "Two layout options, furniture placement and black-and-white 3D views of the selected option.",
+      "intro": "Two layout options, furniture placement and black-and-white 3D views of the selected option.",
+      "includesTitle": "What is included",
+      "priceLabel": "Price",
+      "termLabel": "Schedule and terms",
+      "faqTitle": "Questions about this service",
+      "faq": [
+        {
+          "q": "How much does this service cost?",
+          "a": "{{price}}. {{exclusions}}"
+        },
+        {
+          "q": "How are the schedule and final scope agreed?",
+          "a": "We discuss the property, source materials and selected package, then document the scope, working arrangements and schedule in the proposal and contract."
+        }
+      ],
+      "cta": "Discuss your project"
+    },
+    "viz3d": {
+      "slug": "3d-vizualizaciya-interera",
+      "h1": "3D interior visualization",
+      "subtitle": "Photorealistic images of the future interior. The scope is agreed before quoting.",
+      "intro": "Photorealistic images of the future interior. The scope is agreed before quoting.",
+      "includesTitle": "What is included",
+      "priceLabel": "Price",
+      "termLabel": "Schedule and terms",
+      "faqTitle": "Questions about this service",
+      "faq": [
+        {
+          "q": "How much does this service cost?",
+          "a": "{{price}}. {{exclusions}}"
+        },
+        {
+          "q": "How are the schedule and final scope agreed?",
+          "a": "We discuss the property, source materials and selected package, then document the scope, working arrangements and schedule in the proposal and contract."
+        }
+      ],
+      "cta": "Discuss your project"
+    },
+    "sketch": {
+      "slug": "eskiznyj-dizajn-proekt",
+      "h1": "Full design project",
+      "subtitle": "Layout, collages, visualizations of the main rooms, working drawings and specifications.",
+      "intro": "Layout, collages, visualizations of the main rooms, working drawings and specifications.",
+      "includesTitle": "What is included",
+      "priceLabel": "Price",
+      "termLabel": "Schedule and terms",
+      "faqTitle": "Questions about this service",
+      "faq": [
+        {
+          "q": "How much does this service cost?",
+          "a": "{{price}}. {{exclusions}}"
+        },
+        {
+          "q": "How are the schedule and final scope agreed?",
+          "a": "We discuss the property, source materials and selected package, then document the scope, working arrangements and schedule in the proposal and contract."
+        }
+      ],
+      "cta": "Discuss your project"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "subtitle": "Looks like this page doesn't exist.",
+    "back": "Back home"
+  },
+  "tariffs": {
+    "from": "from",
+    "onRequest": "On request",
+    "perM2": "/m²",
+    "perMonth": "/month",
+    "scopePending": "Scope agreed individually",
+    "terms": "Schedule and working arrangements are agreed in the contract",
+    "separateEstimate": "Supervision is billed monthly; procurement and consultations are quoted separately. They are excluded from the project subtotal.",
+    "preliminary": "Preliminary estimate",
+    "select": "Send an enquiry",
+    "exclusionsTitle": "Terms and exclusions",
+    "allPackages": "All packages and services",
+    "rateDate": "Static BYN rates fixed on 4 October 2026.",
+    "items": {
+      "planning": {
+        "name": "Layout",
+        "description": "Two layout options, furniture placement and black-and-white 3D views."
+      },
+      "drawings": {
+        "name": "Drawings",
+        "description": "Everything in Layout, plus working drawings and an indicative specification."
+      },
+      "collages": {
+        "name": "Drawings + collages",
+        "description": "Working drawings, room-by-room collages and a more detailed specification."
+      },
+      "planViz": {
+        "name": "Layout + visualizations",
+        "description": "Space planning and photorealistic room visualizations."
+      },
+      "full": {
+        "name": "Full design project",
+        "description": "Layout, collages, visualizations of the main rooms, working drawings and specifications."
+      },
+      "electric": {
+        "name": "Layout + electrical",
+        "description": "A separate project format. The detailed scope is agreed before work begins."
+      },
+      "viz3d": {
+        "name": "3D visualizations",
+        "description": "Photorealistic interior images as a separate service."
+      },
+      "supervision": {
+        "name": "Design supervision",
+        "description": "A separate service during renovation, billed monthly."
+      },
+      "procurement": {
+        "name": "Procurement",
+        "description": "Procurement scope and cost are quoted on request."
+      },
+      "consultation": {
+        "name": "Consultations",
+        "description": "The subject, scope and cost of a consultation are agreed for your needs."
+      }
+    },
+    "features": {
+      "measuredPlan": "Measured survey plan",
+      "twoLayouts": "Two layout options",
+      "furniture": "Furniture and equipment placement",
+      "mono3d": "Black-and-white 3D views of the selected layout",
+      "demolition": "Demolition plan",
+      "partitions": "Partition construction plan",
+      "finalPlan": "Final floor plan",
+      "furniturePlan": "Furniture and equipment plan",
+      "plumbing": "Plumbing plan",
+      "flooring": "Floor finishes plan",
+      "underfloorHeating": "Underfloor heating plan",
+      "ceilings": "Ceiling plan",
+      "lighting": "Lighting plan",
+      "switches": "Switch plan",
+      "sockets": "Sockets and electrical outlets plan",
+      "wallFinishes": "Wall finishes plan",
+      "elevations": "Room elevations",
+      "approximateSpec": "Indicative specification",
+      "collages": "Room-by-room collages: style, colours, materials, furniture and lighting",
+      "detailedSpec": "More detailed specification",
+      "roomVisualizations": "Photorealistic 3D room visualizations",
+      "mainRoomVisualizations": "Photorealistic visualizations of the main rooms",
+      "specifications": "Specifications",
+      "planningScope": "Space planning",
+      "workingDrawings": "Complete set of working drawings",
+      "visualizations": "Photorealistic 3D visualizations"
+    },
+    "exclusions": {
+      "noDrawingsCollagesViz": "Working drawings, collages and photorealistic visualizations are excluded.",
+      "noCollagesViz": "Collages and photorealistic visualizations are excluded.",
+      "noViz": "Photorealistic visualizations are excluded.",
+      "noDrawingsCollages": "Working drawings and collages are excluded.",
+      "separateDelivery": "Design supervision, procurement and implementation are paid separately.",
+      "scopeToAgree": "The detailed scope has not yet been defined. We will agree it in the proposal; the displayed estimate is preliminary.",
+      "visualizationScope": "Rooms, views and source materials are agreed before quoting.",
+      "supervisionScope": "Support scope and site visits are agreed separately. Monthly fees are outside the design project price.",
+      "procurementScope": "Scope and price will be specified in the proposal. This service is outside the project estimate.",
+      "consultationScope": "Price and scope have not yet been set. We agree them before booking; this service is excluded from the project estimate."
+    }
+  }
+}

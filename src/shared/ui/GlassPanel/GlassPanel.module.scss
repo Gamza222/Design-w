@@ -1,0 +1,43 @@
+.panel {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: var(--space-6);
+  border-radius: var(--glass-radius);
+
+  background: var(--glass-bg-deep);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-glass);
+
+  // Фолбэк: если backdrop-filter не поддержан → непрозрачная поверхность (контраст текста).
+  @supports not (backdrop-filter: blur(1px)) {
+    background: var(--clr-dark-surface);
+  }
+}
+
+// Градиентный серебряно-золотой борт: двухслойный фон (заливка в padding-box,
+// градиент борта в border-box) + прозрачная рамка.
+.bordered {
+  border: 1px solid transparent;
+  background:
+    var(--glass-bg-deep) padding-box,
+    var(--glass-border-grad) border-box;
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background:
+      linear-gradient(var(--clr-dark-surface), var(--clr-dark-surface)) padding-box,
+      var(--glass-border-grad) border-box;
+  }
+}
+
+.lined::before {
+  content: '';
+
+  position: absolute;
+  inset: 0 0 auto;
+
+  height: 1px;
+
+  background: var(--glass-line);
+}

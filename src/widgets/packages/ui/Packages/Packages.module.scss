@@ -1,0 +1,58 @@
+@use 'app/styles/abstracts' as *;
+
+.packages {
+  width: 100%;
+}
+
+.panel {
+  --color-text: var(--clr-light);
+  --color-text-muted: var(--clr-muted);
+  --color-strong: var(--clr-light);
+  --color-border: color-mix(in srgb, var(--clr-light) 22%, transparent);
+  --color-hairline: color-mix(in srgb, var(--clr-light) 10%, transparent);
+  --btn-ghost-color: var(--clr-light);
+  --btn-ghost-bg: transparent;
+  --btn-ghost-border: currentcolor;
+  --color-accent-hover: color-mix(in srgb, var(--clr-accent) 86%, white);
+
+  padding: clamp(var(--space-2), 0.9vw, var(--space-3));
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+
+  color: var(--color-text);
+
+  background:
+    linear-gradient(155deg, rgb(33 37 44 / 90%), rgb(16 18 23 / 94%)) padding-box,
+    var(--glass-border-grad) border-box;
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-glass);
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background:
+      linear-gradient(var(--clr-dark-surface), var(--clr-dark-surface)) padding-box,
+      var(--glass-border-grad) border-box;
+  }
+
+  @include down(sm) {
+    padding: var(--space-2);
+  }
+
+  @media (min-width: $bp-xl) and (height <= 800px) {
+    padding: var(--space-2);
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(var(--space-2), 0.8vw, var(--space-3));
+  margin: 0;
+
+  @include up(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include up(xl) {
+    grid-template-columns: minmax(15rem, 1.08fr) repeat(3, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "engine": "Chromium",
+  "viewport": "1366x768",
+  "axe": "4.13.0",
+  "thirdPartyMap": "isolated HTML fixture; site map URL tested separately",
+  "results": [
+    {
+      "path": "/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/3d-vizualizaciya-interera/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/about/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/blog/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/blog/natural-light/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/blog/seamless-bathroom/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/blog/small-apartment/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/3d-vizualizaciya-interera/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/about/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/blog/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/blog/natural-light/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/blog/seamless-bathroom/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/blog/small-apartment/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/consent/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/contact/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/eskiznyj-dizajn-proekt/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/offer/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/planirovka-kvartiry/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/portfolio/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/portfolio/classic-living/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/portfolio/cozy-bedroom/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/portfolio/minimal-loft/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/portfolio/modern-kitchen/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/portfolio/studio-loft/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/portfolio/warm-scandi/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/privacy/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/requisites/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/by/services/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/consent/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/contact/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/3d-vizualizaciya-interera/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/about/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/blog/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/blog/natural-light/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/blog/seamless-bathroom/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/blog/small-apartment/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/consent/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/contact/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/eskiznyj-dizajn-proekt/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "path": "/en/offer/",
+      "theme": "dark",
+      "errors": [],
+      "violations": []
+    }
+  ]
+}

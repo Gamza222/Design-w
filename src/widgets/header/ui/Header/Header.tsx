@@ -1,0 +1,152 @@
+import { openLeadDialog } from '@shared/lib';
+import { ThemeSwitcher } from '@features/theme-switcher';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+
+import { LocaleSwitcher } from '@features/locale-switcher';
+import { CONTACTS, ROUTES, stripLocale } from '@shared/config';
+import { cn, useHydrated } from '@shared/lib';
+import { AppLink, Button, Container, Logo, SocialLinks } from '@shared/ui';
+
+import { useHeaderScroll } from '../../lib/useHeaderScroll';
+import { Burger } from '../Burger/Burger';
+import { HeaderContacts } from '../HeaderContacts/HeaderContacts';
+import { HeaderNav } from '../HeaderNav/HeaderNav';
+import styles from './Header.module.scss';
+
+export function Header() {
+  const { t } = useTranslation();
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+  const scrolled = useHeaderScroll();
+  const root = useRef<HTMLElement>(null);
+  const hydrated = useHydrated();
+
+  // Хедер прозрачный (светлый текст) только над тёмным Hero главной. На остальных страницах
+  // верх контента светлый — держим сплошную navy-подложку с самого верха, иначе светлая
+  // навигация «пропадает» на светлом фоне (нечитабельна). Тёмный тон = текст всегда контрастен.
+  const isHome = stripLocale(pathname) === ROUTES.home;
+  const solid = scrolled || open || !isHome;
+
+  const close = () => setOpen(false);
+
+  // Закрываем мобильное меню при клике вне хедера
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: PointerEvent) => {
+      if (root.current && !root.current.contains(e.target as Node)) close();
+    };
+    document.addEventListener('pointerdown', handler);
+    const menu = root.current?.querySelector<HTMLElement>('#header-menu');
+    const opener = root.current?.querySelector<HTMLElement>('[aria-controls="header-menu"]');
+    // Safari may leave focus on the previous element after a pointer click on a button.
+    const focusOrigin = document.activeElement;
+    const focusDeadline = performance.now() + 500;
+    let focusFrame = 0;
+    const focusMenu = () => {
+      // Stop if the user has already moved focus. Opening CSS can still be hidden
+      // on the first frame, and a reduced-motion transition may end before this
+      // effect runs, so retry briefly instead of depending on transitionend.
+      if (document.activeElement !== opener && document.activeElement !== focusOrigin) return;
+      const firstLink = menu?.querySelector<HTMLElement>('a[href]');
+      if (firstLink && getComputedStyle(firstLink).visibility === 'visible') {
+        firstLink.focus({ preventScroll: true });
+        if (document.activeElement === firstLink) return;
+      }
+      if (performance.now() < focusDeadline) focusFrame = requestAnimationFrame(focusMenu);
+    };
+    focusFrame = requestAnimationFrame(focusMenu);
+    const desktop = window.matchMedia('(min-width: 1280px)');
+    const onDesktop = () => {
+      if (desktop.matches) close();
+    };
+    desktop.addEventListener('change', onDesktop);
+    return () => {
+      document.removeEventListener('pointerdown', handler);
+      desktop.removeEventListener('change', onDesktop);
+      cancelAnimationFrame(focusFrame);
+    };
+  }, [open]);
+
+  // A small transform entrance keeps navigation readable even when frames stall.
+  useGSAP(
+    () => {
+      if (!root.current) return;
+      const media = gsap.matchMedia();
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        gsap.fromTo(
+          root.current,
+          { y: -12 },
+          { y: 0, duration: 0.5, ease: 'power3.out', clearProps: 'transform' },
+        );
+      });
+      return () => media.revert();
+    },
+    { scope: root },
+  );
+
+  return (
+    <header
+      ref={root}
+      className={cn(styles.header, solid && styles.scrolled, open && styles.menuExpanded)}
+      onKeyDown={(event) => {
+        if (open && event.key === 'Escape' && !event.defaultPrevented) {
+          close();
+          root.current?.querySelector<HTMLElement>('[aria-controls="header-menu"]')?.focus();
+        }
+      }}
+      onBlur={(event) => {
+        if (open && event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) {
+          close();
+        }
+      }}
+    >
+      <Container className={styles.inner}>
+        <AppLink to={ROUTES.home} className={styles.brand} aria-label={t('brand')} onClick={close}>
+          <Logo title={t('brand')} className={styles.brandMark} aria-hidden="true" />
+          <span className={styles.wordmark} aria-hidden="true">
+            {t('brand')}
+          </span>
+        </AppLink>
+
+        <div id="header-menu" className={cn(styles.menu, open && styles.menuOpen)}>
+          <HeaderNav onNavigate={close} className={styles.nav} />
+
+          <div className={styles.actions}>
+            <SocialLinks items={CONTACTS.socials} />
+            <HeaderContacts />
+            <div className={styles.lang}>
+              <LocaleSwitcher />
+            </div>
+            <Button
+              className={styles.cta}
+              onClick={() => {
+                close();
+                openLeadDialog(
+                  { source: 'header' },
+                  open
+                    ? root.current?.querySelector<HTMLElement>('[aria-controls="header-menu"]')
+                    : null,
+                );
+              }}
+            >
+              {t('cta.calculate')}
+            </Button>
+          </div>
+        </div>
+
+        <ThemeSwitcher />
+        <Burger
+          open={open}
+          disabled={!hydrated}
+          aria-label={t('header.menu')}
+          aria-controls="header-menu"
+          onClick={() => setOpen((value) => !value)}
+        />
+      </Container>
+    </header>
+  );
+}

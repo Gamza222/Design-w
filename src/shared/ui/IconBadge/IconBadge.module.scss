@@ -1,0 +1,47 @@
+.badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.75em;
+  height: 2.75em;
+  border-radius: var(--radius-md);
+
+  font-size: var(--fs-lg); // 1em иконки масштабируется отсюда
+
+  // The symbol should read at a glance, not occupy only one third of its badge.
+  // Preserve the outer footprint so perk rows and process connectors stay aligned.
+  > svg {
+    flex: none;
+    width: 1.5em;
+    height: 1.5em;
+  }
+}
+
+.sm {
+  font-size: var(--fs-base);
+}
+
+.lg {
+  font-size: var(--fs-xl);
+}
+
+.surface {
+  border: 1px solid var(--color-border);
+  color: var(--color-accent);
+  background-color: var(--color-muted-bg);
+}
+
+.accent {
+  color: var(--color-on-accent);
+  background-color: var(--clr-accent);
+}
+
+// Контурный чип: прозрачная подложка + золотое кольцо + акцентная иконка (макет 01 —
+// панель Hero «Что вы получите», этапы процесса). На тёмной секции «дыра» = тёмный фон.
+.outline {
+  border: 1px solid color-mix(in srgb, var(--color-accent) 38%, transparent);
+  color: var(--color-accent);
+  background: none;
+}

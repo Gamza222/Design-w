@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-05",
+  "source": "Isolated commit284d19a, local gzip production preview port3001; Lighthouse simulated throttling, cold navigation; scroll on macOS headless engines",
+  "results": [
+    {
+      "profile": "mobile",
+      "lighthouse": "13.5.0",
+      "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "settings": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "lcpMs": 5626.657499999999,
+      "cls": 0,
+      "tbtMs": 51.5,
+      "performance": 0.7,
+      "bytes": 1354267
+    },
+    {
+      "profile": "desktop",
+      "lighthouse": "13.5.0",
+      "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/148.0.7778.96 Safari/537.36",
+      "settings": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "lcpMs": 1680.2200000000003,
+      "cls": 0.008567,
+      "tbtMs": 5.999999999999886,
+      "performance": 0.91,
+      "bytes": 1919202
+    }
+  ],
+  "scroll": [
+    {
+      "engine": "chromium",
+      "viewport": "1366x768",
+      "durationMs": 4000,
+      "frames": 240,
+      "over50ms": 0,
+      "p95ms": 18.2
+    },
+    {
+      "engine": "webkit",
+      "viewport": "1366x768",
+      "durationMs": 4000,
+      "frames": 237,
+      "over50ms": 1,
+      "p95ms": 19
+    }
+  ]
+}

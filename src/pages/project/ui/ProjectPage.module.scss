@@ -1,0 +1,132 @@
+@use 'app/styles/abstracts' as *;
+
+.article {
+  max-width: 90rem;
+  margin-inline: auto;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 2.75rem;
+  margin-bottom: var(--space-6);
+
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  max-width: 68ch;
+  margin-bottom: var(--space-8);
+
+  h1 {
+    font-size: var(--fs-3xl);
+    text-wrap: balance;
+  }
+}
+
+.lead {
+  font-size: var(--fs-lg);
+  color: var(--color-text-muted);
+}
+
+.coverFigure,
+.gallery figure {
+  margin: 0;
+
+  figcaption {
+    max-width: 75ch;
+    margin-top: var(--space-3);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
+}
+
+.cover,
+.galleryImage {
+  width: 100%;
+  height: auto;
+  max-height: 75vh;
+  border-radius: var(--radius-lg);
+
+  object-fit: contain;
+  background: var(--color-surface);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space-6);
+
+  margin-block: var(--space-8) var(--space-12);
+  padding-block: var(--space-6);
+  border-block: 1px solid var(--color-border);
+}
+
+.factLabel {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.factValue {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-lg);
+}
+
+.confirmed {
+  display: grid;
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+
+  h2 {
+    margin-bottom: var(--space-3);
+  }
+}
+
+.gallerySection,
+.faq {
+  margin-top: var(--space-12);
+
+  > h2 {
+    margin-bottom: var(--space-6);
+    font-size: var(--fs-2xl);
+  }
+}
+
+.gallery {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.nextStep {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: var(--space-12);
+  padding-block: var(--space-8);
+  border-block: 1px solid var(--color-border);
+
+  h2 {
+    margin-bottom: var(--space-3);
+    font-size: var(--fs-2xl);
+  }
+
+  p {
+    max-width: 60ch;
+    color: var(--color-text-muted);
+  }
+}

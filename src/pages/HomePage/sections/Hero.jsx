@@ -2,9 +2,9 @@ import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
 const STATS = [
-  { num: '500+',  label: 'выполненных проектов' },
+  { num: '500+', label: 'выполненных проектов' },
   { num: '5 лет', label: 'на рынке с 2021 года' },
-  { num: '50+',   label: 'городов России и СНГ' },
+  { num: '50+', label: 'городов России и СНГ' },
   { num: '4.9 ★', label: 'средняя оценка' },
 ]
 
@@ -93,14 +93,17 @@ export default function Hero() {
               style={{
                 fontFamily: "'Great Vibes', cursive",
                 fontWeight: 400,
+                fontStyle: 'normal',
                 fontSize: 'clamp(48px, 8.2vw, 110px)',
                 lineHeight: 1.1,
                 verticalAlign: 'middle',
                 whiteSpace: 'nowrap',
+                display: 'inline-block',
                 background: 'linear-gradient(90deg, #FEC104 0%, #F0D898 50%, #FEC104 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
+                color: 'transparent',
               }}
             >
               вашей мечты

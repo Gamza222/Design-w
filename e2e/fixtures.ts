@@ -13,6 +13,10 @@ export const test = base.extend<{ externalMaps: void }>({
           body: '<!doctype html><html lang="ru"><title>Карта — тестовый ответ</title></html>',
         }),
       );
+      // Проверяем локальную интеграцию, не отправляя тестовые визиты в живую Метрику.
+      await context.route(/^https:\/\/mc\.yandex\.(ru|com)\//, (route) =>
+        route.fulfill({ contentType: 'application/javascript', body: '' }),
+      );
       await use();
     },
     { auto: true },

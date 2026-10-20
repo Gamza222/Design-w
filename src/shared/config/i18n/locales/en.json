@@ -1,5 +1,5 @@
 {
-  "brand": "ДизайнСейчас",
+  "brand": "Дизайн Сейчас",
   "nav": {
     "home": "Home",
     "services": "Services",
@@ -26,13 +26,17 @@
   },
   "cookie": {
     "title": "Cookies",
-    "text": "This site uses a technical cookie to remember your language. The embedded Yandex Map operates under Yandex's terms.",
+    "text": "This site uses a cookie to remember your language and Yandex Metrica to analyse traffic. Metrica uses cookies, and Session Replay records visitors’ interactions with the site. The embedded Yandex Map operates under Yandex's terms.",
     "policy": "Privacy policy",
     "acknowledge": "Got it"
   },
   "home": {
+    "seo": {
+      "title": "Дизайн Сейчас — interior design studio",
+      "description": "Design Seichas (Дизайн Сейчас) creates interior design projects for apartments and houses: layouts, working drawings and 3D visualisations. Online across Russia and Belarus."
+    },
     "hero": {
-      "eyebrow": "Interior design for Russia and Belarus",
+      "eyebrow": "Дизайн Сейчас · Interior design studio",
       "titleLead": "An interior design project",
       "titleAccent": "for your life and needs",
       "subtitle": "Layouts, drawings, collages and visualisations in your chosen package. Calculate a preliminary estimate.",

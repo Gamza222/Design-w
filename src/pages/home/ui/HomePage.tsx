@@ -1,6 +1,6 @@
 import { getPosts } from '@entities/post';
 import { getProjects } from '@entities/project';
-import { buildMeta, localeDict, useLocale, type RouteMetaArgs } from '@shared/lib';
+import { buildHomeMeta, useLocale, type RouteMetaArgs } from '@shared/lib';
 import { Achievements } from '@widgets/achievements';
 import { BlogHome } from '@widgets/blog-home';
 import { Calculator } from '@widgets/calculator';
@@ -16,8 +16,7 @@ import { Reviews } from '@widgets/reviews';
 import { ServicesHome } from '@widgets/services-home';
 
 export function meta({ location }: RouteMetaArgs) {
-  const t = localeDict(location.pathname);
-  return buildMeta(`${t.brand} | ${t.home.hero.eyebrow}`, t.home.hero.subtitle, location.pathname);
+  return buildHomeMeta(location.pathname);
 }
 
 export default function HomePage() {

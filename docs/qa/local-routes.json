@@ -5,399 +5,399 @@
   "pages": [
     {
       "path": "/",
-      "title": "ДизайнСейчас | Дизайн интерьера для России и Беларуси",
+      "title": "Дизайн Сейчас — студия дизайна интерьера",
       "h1": "Дизайн-проект интерьера под вашу жизнь и задачи",
-      "images": 14
+      "images": 15
     },
     {
       "path": "/3d-vizualizaciya-interera/",
-      "title": "3D-визуализация интерьера | ДизайнСейчас",
+      "title": "3D-визуализация интерьера | Дизайн Сейчас",
       "h1": "3D-визуализация интерьера",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/about/",
-      "title": "О студии | ДизайнСейчас",
+      "title": "О студии | Дизайн Сейчас",
       "h1": "О студии",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/blog/",
-      "title": "Блог | ДизайнСейчас",
+      "title": "Блог | Дизайн Сейчас",
       "h1": "Блог",
-      "images": 3
+      "images": 4
     },
     {
       "path": "/blog/natural-light/",
-      "title": "Как спроектировать квартиру, которая не устареет вместе с вашим образом жизни | ДизайнСейчас",
+      "title": "Как спроектировать квартиру, которая не устареет вместе с вашим образом жизни | Дизайн Сейчас",
       "h1": "Как спроектировать квартиру, которая не устареет вместе с вашим образом жизни",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/blog/seamless-bathroom/",
-      "title": "Ванная почти без швов: микроцемент, крупный керамогранит, краска или панели? | ДизайнСейчас",
+      "title": "Ванная почти без швов: микроцемент, крупный керамогранит, краска или панели? | Дизайн Сейчас",
       "h1": "Ванная почти без швов: микроцемент, крупный керамогранит, краска или панели?",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/blog/small-apartment/",
-      "title": "Почему белая кухня часто выглядит дешевле цветной и как этого избежать | ДизайнСейчас",
+      "title": "Почему белая кухня часто выглядит дешевле цветной и как этого избежать | Дизайн Сейчас",
       "h1": "Почему белая кухня часто выглядит дешевле цветной и как этого избежать",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/by/",
-      "title": "ДизайнСейчас | Дызайн інтэр’ера для Расіі і Беларусі",
+      "title": "Дизайн Сейчас — студыя дызайну інтэр’ера",
       "h1": "Дызайн-праект інтэр’ера пад ваша жыццё і задачы",
-      "images": 14
+      "images": 15
     },
     {
       "path": "/by/3d-vizualizaciya-interera/",
-      "title": "3D-візуалізацыя інтэр’ера | ДизайнСейчас",
+      "title": "3D-візуалізацыя інтэр’ера | Дизайн Сейчас",
       "h1": "3D-візуалізацыя інтэр’ера",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/by/about/",
-      "title": "Пра студыю | ДизайнСейчас",
+      "title": "Пра студыю | Дизайн Сейчас",
       "h1": "Пра студыю",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/by/blog/",
-      "title": "Блог пра дызайн інтэр’ера | ДизайнСейчас",
+      "title": "Блог пра дызайн інтэр’ера | Дизайн Сейчас",
       "h1": "Блог пра дызайн інтэр’ера",
-      "images": 3
+      "images": 4
     },
     {
       "path": "/by/blog/natural-light/",
-      "title": "Як спраектаваць кватэру, якая адаптуецца да вашага ладу жыцця | ДизайнСейчас",
+      "title": "Як спраектаваць кватэру, якая адаптуецца да вашага ладу жыцця | Дизайн Сейчас",
       "h1": "Як спраектаваць кватэру, якая адаптуецца да вашага ладу жыцця",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/by/blog/seamless-bathroom/",
-      "title": "Ванная амаль без швоў: мікрацэмент, керамограніт, фарба або панэлі? | ДизайнСейчас",
+      "title": "Ванная амаль без швоў: мікрацэмент, керамограніт, фарба або панэлі? | Дизайн Сейчас",
       "h1": "Ванная амаль без швоў: мікрацэмент, керамограніт, фарба або панэлі?",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/by/blog/small-apartment/",
-      "title": "Чаму белая кухня часта выглядае танней за каляровую і як гэтага пазбегнуць | ДизайнСейчас",
+      "title": "Чаму белая кухня часта выглядае танней за каляровую і як гэтага пазбегнуць | Дизайн Сейчас",
       "h1": "Чаму белая кухня часта выглядае танней за каляровую і як гэтага пазбегнуць",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/by/consent/",
-      "title": "Згода на апрацоўку персанальных даных | ДизайнСейчас",
+      "title": "Згода на апрацоўку персанальных даных | Дизайн Сейчас",
       "h1": "Згода на апрацоўку персанальных даных",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/by/contact/",
-      "title": "Звяжыцеся з намі | ДизайнСейчас",
+      "title": "Звяжыцеся з намі | Дизайн Сейчас",
       "h1": "Звяжыцеся з намі",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/by/eskiznyj-dizajn-proekt/",
-      "title": "Поўны дызайн-праект | ДизайнСейчас",
+      "title": "Поўны дызайн-праект | Дизайн Сейчас",
       "h1": "Поўны дызайн-праект",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/by/offer/",
-      "title": "Дагавор публічнай аферты | ДизайнСейчас",
+      "title": "Дагавор публічнай аферты | Дизайн Сейчас",
       "h1": "Дагавор публічнай аферты",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/by/planirovka-kvartiry/",
-      "title": "Планіроўка кватэры | ДизайнСейчас",
+      "title": "Планіроўка кватэры | Дизайн Сейчас",
       "h1": "Планіроўка кватэры",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/by/portfolio/",
-      "title": "Партфоліа | ДизайнСейчас",
+      "title": "Партфоліа | Дизайн Сейчас",
       "h1": "Партфоліа",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/by/portfolio/classic-living/",
-      "title": "Класічная гасцёўня | ДизайнСейчас",
+      "title": "Класічная гасцёўня | Дизайн Сейчас",
       "h1": "Класічная гасцёўня",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/by/portfolio/cozy-bedroom/",
-      "title": "Спальня ў цёплых танах | ДизайнСейчас",
+      "title": "Спальня ў цёплых танах | Дизайн Сейчас",
       "h1": "Спальня ў цёплых танах",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/by/portfolio/minimal-loft/",
-      "title": "Мінімалістычны лофт | ДизайнСейчас",
+      "title": "Мінімалістычны лофт | Дизайн Сейчас",
       "h1": "Мінімалістычны лофт",
-      "images": 2
-    },
-    {
-      "path": "/by/portfolio/modern-kitchen/",
-      "title": "Кухня-гасцёўня | ДизайнСейчас",
-      "h1": "Кухня-гасцёўня",
-      "images": 2
-    },
-    {
-      "path": "/by/portfolio/studio-loft/",
-      "title": "Студыя-лофт | ДизайнСейчас",
-      "h1": "Студыя-лофт",
-      "images": 1
-    },
-    {
-      "path": "/by/portfolio/warm-scandi/",
-      "title": "Цёплы сканды | ДизайнСейчас",
-      "h1": "Цёплы сканды",
-      "images": 2
-    },
-    {
-      "path": "/by/privacy/",
-      "title": "Палітыка прыватнасці | ДизайнСейчас",
-      "h1": "Палітыка прыватнасці",
-      "images": 0
-    },
-    {
-      "path": "/by/requisites/",
-      "title": "Рэквізіты выканаўцы | ДизайнСейчас",
-      "h1": "Рэквізіты выканаўцы",
-      "images": 0
-    },
-    {
-      "path": "/by/services/",
-      "title": "Паслугі | ДизайнСейчас",
-      "h1": "Паслугі",
-      "images": 0
-    },
-    {
-      "path": "/consent/",
-      "title": "Согласие на обработку персональных данных | ДизайнСейчас",
-      "h1": "Согласие на обработку персональных данных",
-      "images": 0
-    },
-    {
-      "path": "/contact/",
-      "title": "Свяжитесь с нами | ДизайнСейчас",
-      "h1": "Свяжитесь с нами",
-      "images": 0
-    },
-    {
-      "path": "/en/",
-      "title": "ДизайнСейчас | Interior design for Russia and Belarus",
-      "h1": "An interior design project for your life and needs",
-      "images": 14
-    },
-    {
-      "path": "/en/3d-vizualizaciya-interera/",
-      "title": "3D interior visualization | ДизайнСейчас",
-      "h1": "3D interior visualization",
-      "images": 6
-    },
-    {
-      "path": "/en/about/",
-      "title": "About the studio | ДизайнСейчас",
-      "h1": "About the studio",
-      "images": 0
-    },
-    {
-      "path": "/en/blog/",
-      "title": "Blog | ДизайнСейчас",
-      "h1": "Blog",
       "images": 3
     },
     {
-      "path": "/en/blog/natural-light/",
-      "title": "How to design an apartment that adapts to your life | ДизайнСейчас",
-      "h1": "How to design an apartment that adapts to your life",
+      "path": "/by/portfolio/modern-kitchen/",
+      "title": "Кухня-гасцёўня | Дизайн Сейчас",
+      "h1": "Кухня-гасцёўня",
+      "images": 3
+    },
+    {
+      "path": "/by/portfolio/studio-loft/",
+      "title": "Студыя-лофт | Дизайн Сейчас",
+      "h1": "Студыя-лофт",
+      "images": 2
+    },
+    {
+      "path": "/by/portfolio/warm-scandi/",
+      "title": "Цёплы сканды | Дизайн Сейчас",
+      "h1": "Цёплы сканды",
+      "images": 3
+    },
+    {
+      "path": "/by/privacy/",
+      "title": "Палітыка прыватнасці | Дизайн Сейчас",
+      "h1": "Палітыка прыватнасці",
       "images": 1
+    },
+    {
+      "path": "/by/requisites/",
+      "title": "Рэквізіты выканаўцы | Дизайн Сейчас",
+      "h1": "Рэквізіты выканаўцы",
+      "images": 1
+    },
+    {
+      "path": "/by/services/",
+      "title": "Паслугі | Дизайн Сейчас",
+      "h1": "Паслугі",
+      "images": 1
+    },
+    {
+      "path": "/consent/",
+      "title": "Согласие на обработку персональных данных | Дизайн Сейчас",
+      "h1": "Согласие на обработку персональных данных",
+      "images": 1
+    },
+    {
+      "path": "/contact/",
+      "title": "Свяжитесь с нами | Дизайн Сейчас",
+      "h1": "Свяжитесь с нами",
+      "images": 1
+    },
+    {
+      "path": "/en/",
+      "title": "Дизайн Сейчас — interior design studio",
+      "h1": "An interior design project for your life and needs",
+      "images": 15
+    },
+    {
+      "path": "/en/3d-vizualizaciya-interera/",
+      "title": "3D interior visualization | Дизайн Сейчас",
+      "h1": "3D interior visualization",
+      "images": 7
+    },
+    {
+      "path": "/en/about/",
+      "title": "About the studio | Дизайн Сейчас",
+      "h1": "About the studio",
+      "images": 1
+    },
+    {
+      "path": "/en/blog/",
+      "title": "Blog | Дизайн Сейчас",
+      "h1": "Blog",
+      "images": 4
+    },
+    {
+      "path": "/en/blog/natural-light/",
+      "title": "How to design an apartment that adapts to your life | Дизайн Сейчас",
+      "h1": "How to design an apartment that adapts to your life",
+      "images": 2
     },
     {
       "path": "/en/blog/seamless-bathroom/",
-      "title": "A nearly seamless bathroom: microcement, porcelain tile, paint or panels? | ДизайнСейчас",
+      "title": "A nearly seamless bathroom: microcement, porcelain tile, paint or panels? | Дизайн Сейчас",
       "h1": "A nearly seamless bathroom: microcement, porcelain tile, paint or panels?",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/en/blog/small-apartment/",
-      "title": "Why a white kitchen can look cheaper than a colourful one | ДизайнСейчас",
+      "title": "Why a white kitchen can look cheaper than a colourful one | Дизайн Сейчас",
       "h1": "Why a white kitchen can look cheaper than a colourful one",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/en/consent/",
-      "title": "Consent to personal data processing | ДизайнСейчас",
+      "title": "Consent to personal data processing | Дизайн Сейчас",
       "h1": "Consent to personal data processing",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/en/contact/",
-      "title": "Get in touch | ДизайнСейчас",
+      "title": "Get in touch | Дизайн Сейчас",
       "h1": "Get in touch",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/en/eskiznyj-dizajn-proekt/",
-      "title": "Full design project | ДизайнСейчас",
+      "title": "Full design project | Дизайн Сейчас",
       "h1": "Full design project",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/en/offer/",
-      "title": "Public offer agreement | ДизайнСейчас",
+      "title": "Public offer agreement | Дизайн Сейчас",
       "h1": "Public offer agreement",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/en/planirovka-kvartiry/",
-      "title": "Apartment layout | ДизайнСейчас",
+      "title": "Apartment layout | Дизайн Сейчас",
       "h1": "Apartment layout",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/en/portfolio/",
-      "title": "Portfolio | ДизайнСейчас",
+      "title": "Portfolio | Дизайн Сейчас",
       "h1": "Portfolio",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/en/portfolio/classic-living/",
-      "title": "Classic living room | ДизайнСейчас",
+      "title": "Classic living room | Дизайн Сейчас",
       "h1": "Classic living room",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/en/portfolio/cozy-bedroom/",
-      "title": "Bedroom in warm tones | ДизайнСейчас",
+      "title": "Bedroom in warm tones | Дизайн Сейчас",
       "h1": "Bedroom in warm tones",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/en/portfolio/minimal-loft/",
-      "title": "Minimalist loft | ДизайнСейчас",
+      "title": "Minimalist loft | Дизайн Сейчас",
       "h1": "Minimalist loft",
-      "images": 2
+      "images": 3
     },
     {
       "path": "/en/portfolio/modern-kitchen/",
-      "title": "Kitchen and living space | ДизайнСейчас",
+      "title": "Kitchen and living space | Дизайн Сейчас",
       "h1": "Kitchen and living space",
-      "images": 2
+      "images": 3
     },
     {
       "path": "/en/portfolio/studio-loft/",
-      "title": "Loft studio | ДизайнСейчас",
+      "title": "Loft studio | Дизайн Сейчас",
       "h1": "Loft studio",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/en/portfolio/warm-scandi/",
-      "title": "Warm Scandinavian interior | ДизайнСейчас",
+      "title": "Warm Scandinavian interior | Дизайн Сейчас",
       "h1": "Warm Scandinavian interior",
-      "images": 2
+      "images": 3
     },
     {
       "path": "/en/privacy/",
-      "title": "Privacy policy | ДизайнСейчас",
+      "title": "Privacy policy | Дизайн Сейчас",
       "h1": "Privacy policy",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/en/requisites/",
-      "title": "Contractor details | ДизайнСейчас",
+      "title": "Contractor details | Дизайн Сейчас",
       "h1": "Contractor details",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/en/services/",
-      "title": "Services | ДизайнСейчас",
+      "title": "Services | Дизайн Сейчас",
       "h1": "Services",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/eskiznyj-dizajn-proekt/",
-      "title": "Полный дизайн-проект | ДизайнСейчас",
+      "title": "Полный дизайн-проект | Дизайн Сейчас",
       "h1": "Полный дизайн-проект",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/offer/",
-      "title": "Договор публичной оферты | ДизайнСейчас",
+      "title": "Договор публичной оферты | Дизайн Сейчас",
       "h1": "Договор публичной оферты",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/planirovka-kvartiry/",
-      "title": "Планировка квартиры | ДизайнСейчас",
+      "title": "Планировка квартиры | Дизайн Сейчас",
       "h1": "Планировка квартиры",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/portfolio/",
-      "title": "Портфолио | ДизайнСейчас",
+      "title": "Портфолио | Дизайн Сейчас",
       "h1": "Портфолио",
-      "images": 6
+      "images": 7
     },
     {
       "path": "/portfolio/classic-living/",
-      "title": "Классическая гостиная | ДизайнСейчас",
+      "title": "Классическая гостиная | Дизайн Сейчас",
       "h1": "Классическая гостиная",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/portfolio/cozy-bedroom/",
-      "title": "Спальня в тёплых тонах | ДизайнСейчас",
+      "title": "Спальня в тёплых тонах | Дизайн Сейчас",
       "h1": "Спальня в тёплых тонах",
-      "images": 1
+      "images": 2
     },
     {
       "path": "/portfolio/minimal-loft/",
-      "title": "Минималистичный лофт | ДизайнСейчас",
+      "title": "Минималистичный лофт | Дизайн Сейчас",
       "h1": "Минималистичный лофт",
-      "images": 2
+      "images": 3
     },
     {
       "path": "/portfolio/modern-kitchen/",
-      "title": "Кухня-гостиная | ДизайнСейчас",
+      "title": "Кухня-гостиная | Дизайн Сейчас",
       "h1": "Кухня-гостиная",
-      "images": 2
+      "images": 3
     },
     {
       "path": "/portfolio/studio-loft/",
-      "title": "Студия-лофт | ДизайнСейчас",
+      "title": "Студия-лофт | Дизайн Сейчас",
       "h1": "Студия-лофт",
-      "images": 1
-    },
-    {
-      "path": "/portfolio/warm-scandi/",
-      "title": "Тёплый сканди | ДизайнСейчас",
-      "h1": "Тёплый сканди",
       "images": 2
     },
     {
+      "path": "/portfolio/warm-scandi/",
+      "title": "Тёплый сканди | Дизайн Сейчас",
+      "h1": "Тёплый сканди",
+      "images": 3
+    },
+    {
       "path": "/privacy/",
-      "title": "Политика конфиденциальности | ДизайнСейчас",
+      "title": "Политика конфиденциальности | Дизайн Сейчас",
       "h1": "Политика конфиденциальности",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/requisites/",
-      "title": "Реквизиты исполнителя | ДизайнСейчас",
+      "title": "Реквизиты исполнителя | Дизайн Сейчас",
       "h1": "Реквизиты исполнителя",
-      "images": 0
+      "images": 1
     },
     {
       "path": "/services/",
-      "title": "Услуги | ДизайнСейчас",
+      "title": "Услуги | Дизайн Сейчас",
       "h1": "Услуги",
-      "images": 0
+      "images": 1
     }
   ]
 }

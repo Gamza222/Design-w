@@ -25,13 +25,14 @@ export const LEGAL_ROUTE_IDS: Record<string, LegalDocumentId> = {
 const ru: Record<LegalDocumentId, LegalDocument> = {
   privacy: {
     title: 'Политика конфиденциальности',
-    description: 'Правила обработки и защиты персональных данных пользователей сайта ДизайнСейчас.',
+    description:
+      'Правила обработки и защиты персональных данных пользователей сайта Дизайн Сейчас.',
     updated: 'Редакция от 3 октября 2026 года',
     sections: [
       {
         title: '1. Общие положения',
         paragraphs: [
-          'Политика применяется к данным, которые пользователь передаёт через формы сайта, по электронной почте или в мессенджерах ДизайнСейчас.',
+          'Политика применяется к данным, которые пользователь передаёт через формы сайта, по электронной почте или в мессенджерах Дизайн Сейчас.',
           'Оператор обрабатывает данные только для связи с пользователем, подготовки расчёта, заключения и исполнения договора, а также выполнения требований закона.',
         ],
       },
@@ -152,7 +153,7 @@ const ru: Record<LegalDocumentId, LegalDocument> = {
   },
   consent: {
     title: 'Согласие на обработку персональных данных',
-    description: 'Условия обработки данных, переданных через формы и каналы связи ДизайнСейчас.',
+    description: 'Условия обработки данных, переданных через формы и каналы связи Дизайн Сейчас.',
     updated: 'Редакция от 25 августа 2026 года',
     sections: [
       {
@@ -181,13 +182,13 @@ const en: Record<LegalDocumentId, LegalDocument> = {
   privacy: {
     title: 'Privacy policy',
     description:
-      'How ДизайнСейчас processes and protects personal data submitted through this website.',
+      'How Дизайн Сейчас processes and protects personal data submitted through this website.',
     updated: 'Effective 3 October 2026',
     sections: [
       {
         title: '1. Scope',
         paragraphs: [
-          'This policy applies to data submitted through website forms, email and ДизайнСейчас messaging channels. Data is used to answer enquiries, prepare estimates, enter into and perform contracts, and comply with applicable law.',
+          'This policy applies to data submitted through website forms, email and Дизайн Сейчас messaging channels. Data is used to answer enquiries, prepare estimates, enter into and perform contracts, and comply with applicable law.',
         ],
       },
       {
@@ -286,13 +287,13 @@ const en: Record<LegalDocumentId, LegalDocument> = {
   consent: {
     title: 'Consent to personal data processing',
     description:
-      'Terms for processing data submitted through ДизайнСейчас forms and communication channels.',
+      'Terms for processing data submitted through Дизайн Сейчас forms and communication channels.',
     updated: 'Effective 25 August 2026',
     sections: [
       {
         title: 'Consent',
         paragraphs: [
-          'By submitting a form or contacting ДизайнСейчас through a listed channel, you freely consent to processing your name, telephone number, email address, project details and message.',
+          'By submitting a form or contacting Дизайн Сейчас through a listed channel, you freely consent to processing your name, telephone number, email address, project details and message.',
         ],
       },
       {
@@ -315,13 +316,13 @@ const be: Record<LegalDocumentId, LegalDocument> = {
   privacy: {
     title: 'Палітыка прыватнасці',
     description:
-      'Правілы апрацоўкі і абароны персанальных даных карыстальнікаў сайта ДизайнСейчас.',
+      'Правілы апрацоўкі і абароны персанальных даных карыстальнікаў сайта Дизайн Сейчас.',
     updated: 'Рэдакцыя ад 3 кастрычніка 2026 года',
     sections: [
       {
         title: '1. Агульныя палажэнні',
         paragraphs: [
-          'Палітыка дзейнічае для даных, якія карыстальнік перадае праз формы сайта, электронную пошту або месенджары ДизайнСейчас.',
+          'Палітыка дзейнічае для даных, якія карыстальнік перадае праз формы сайта, электронную пошту або месенджары Дизайн Сейчас.',
           'Аператар апрацоўвае даныя толькі для сувязі з карыстальнікам, падрыхтоўкі разліку, заключэння і выканання дагавора, а таксама выканання патрабаванняў закона.',
         ],
       },
@@ -420,7 +421,7 @@ const be: Record<LegalDocumentId, LegalDocument> = {
   },
   consent: {
     title: 'Згода на апрацоўку персанальных даных',
-    description: 'Умовы апрацоўкі даных, перададзеных праз формы і каналы сувязі ДизайнСейчас.',
+    description: 'Умовы апрацоўкі даных, перададзеных праз формы і каналы сувязі Дизайн Сейчас.',
     updated: 'Рэдакцыя ад 25 жніўня 2026 года',
     sections: [
       {

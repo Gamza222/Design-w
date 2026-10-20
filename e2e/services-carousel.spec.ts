@@ -63,7 +63,9 @@ test('hover and keyboard focus remain inside carousel vertical clearance', async
   await expect(page.locator('[class*="preloader"]')).toHaveCount(0);
   const track = page.locator('#services').getByRole('group', { name: /Лента услуг/ });
   await track.scrollIntoViewIfNeeded();
-  await expect(track).toHaveCSS('opacity', '1');
+  // Reveal keeps opacity at 1; measure spacing only once both translated siblings settle.
+  await expect(track).toHaveCSS('transform', 'none');
+  await expect(track.locator('xpath=following-sibling::*[1]')).toHaveCSS('transform', 'none');
   const card = track.getByRole('button').first();
   await card.hover();
   await expect(card).not.toHaveCSS('transform', 'none');

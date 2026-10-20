@@ -7,7 +7,7 @@ export { useHydrated } from './hydration/useHydrated';
 export { useReveal } from './reveal/useReveal';
 export { useScrollReveal } from './reveal/useScrollReveal';
 export { usePreloaderDone, completePreloader } from './preloader/preloaderSignal';
-export { localeDict, buildMeta } from './seo/seo';
+export { localeDict, buildMeta, buildHomeMeta } from './seo/seo';
 export type { RouteMetaArgs } from './seo/seo';
 export { formatDate } from './date/formatDate';
 export { formatMoney } from './number/formatMoney';

@@ -2,6 +2,8 @@ import {
   getDict,
   getLocaleFromPath,
   canonicalPathname,
+  CONTACTS,
+  LOCALES,
   SITE_URL,
   type Dictionary,
 } from '../../config';
@@ -40,5 +42,45 @@ export function buildMeta(
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:image', content: socialImage },
     { name: 'twitter:image:alt', content: options.imageAlt ?? title },
+  ];
+}
+
+/** Название сайта едино для всех языковых версий на одном домене. */
+export function buildHomeMeta(pathname: string) {
+  const t = localeDict(pathname);
+  const siteUrl = `${SITE_URL}/`;
+  const organizationId = `${siteUrl}#organization`;
+  const alternateName = ['ДизайнСейчас', 'Design Seichas'];
+
+  return [
+    ...buildMeta(t.home.seo.title, t.home.seo.description, pathname),
+    {
+      'script:ld+json': {
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebSite',
+            '@id': `${siteUrl}#website`,
+            url: siteUrl,
+            name: t.brand,
+            alternateName,
+            inLanguage: [...LOCALES],
+            publisher: { '@id': organizationId },
+          },
+          {
+            '@type': 'Organization',
+            '@id': organizationId,
+            url: siteUrl,
+            name: t.brand,
+            alternateName,
+            description: t.home.seo.description,
+            email: CONTACTS.email,
+            ...(CONTACTS.phone ? { telephone: CONTACTS.phone } : {}),
+            ...(CONTACTS.address ? { address: CONTACTS.address } : {}),
+            sameAs: CONTACTS.socials.map(({ href }) => href),
+          },
+        ],
+      },
+    },
   ];
 }

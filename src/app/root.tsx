@@ -26,6 +26,7 @@ import { Header } from '@widgets/header';
 import { CookieNotice } from '@widgets/cookie-notice';
 
 import { LeadDialog } from '@widgets/lead-dialog';
+import { YandexMetrika } from './analytics/YandexMetrika';
 import { Providers } from './providers';
 import type { Route } from './+types/root';
 import styles from './root.module.scss';
@@ -57,9 +58,9 @@ export function Layout({ children }: { children: ReactNode }) {
         <link rel="icon" href="/favicon-32.png?v=ds" type="image/png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=ds" sizes="180x180" />
         <meta name="theme-color" content="#191c22" />
-        <meta name="application-name" content="ДизайнСейчас" />
-        <meta name="apple-mobile-web-app-title" content="ДизайнСейчас" />
-        <meta property="og:site_name" content="ДизайнСейчас" />
+        <meta name="application-name" content="Дизайн Сейчас" />
+        <meta name="apple-mobile-web-app-title" content="Дизайн Сейчас" />
+        <meta property="og:site_name" content="Дизайн Сейчас" />
         <link rel="canonical" href={SITE_URL + localizePath(canonical, locale)} />
         {LOCALES.map((alternateLocale) => (
           <link
@@ -76,9 +77,20 @@ export function Layout({ children }: { children: ReactNode }) {
         />
         <Meta />
         <Links />
+        <script defer src="/metrika.js" />
       </head>
       <body>
+        <noscript>
+          <div>
+            <img
+              src="https://mc.yandex.ru/watch/113598335"
+              style={{ position: 'absolute', left: '-9999px' }}
+              alt=""
+            />
+          </div>
+        </noscript>
         {children}
+        <YandexMetrika />
         <ScrollRestoration />
         <Scripts />
       </body>

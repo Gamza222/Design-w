@@ -30,6 +30,9 @@ for (const width of layoutViewports) {
     for (const route of layoutRoutes) {
       const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
       expect(response?.status(), `${route} must render successfully`).toBeLessThan(400);
+      // Route styles and responsive header layout must be committed before measuring.
+      await expect(page.locator('[aria-controls="header-menu"]')).toBeEnabled();
+      await page.evaluate(() => document.fonts.ready);
 
       const metrics = await page.evaluate(() => {
         const containers = Array.from(

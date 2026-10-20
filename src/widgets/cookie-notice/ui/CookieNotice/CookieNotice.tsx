@@ -8,7 +8,7 @@ import styles from './CookieNotice.module.scss';
 
 const STORAGE_KEY = 'tdn_cookie_notice_v1';
 
-/** Informational notice for the locale cookie and the embedded Yandex map. */
+/** Информационное уведомление о cookie, Метрике с Вебвизором и встроенной карте. */
 export function CookieNotice() {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);

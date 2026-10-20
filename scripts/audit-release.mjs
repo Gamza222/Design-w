@@ -17,6 +17,59 @@ const errors = [];
 const pages = [];
 const titles = new Map();
 const descriptions = new Map();
+const brand = 'Дизайн Сейчас';
+const homePaths = new Set(['/', '/en/', '/by/']);
+
+function checkAnalytics(doc, check) {
+  const scripts = doc.querySelectorAll('script[src="/metrika.js"]');
+  check(scripts.length === 1, 'expected exactly one Metrika script');
+  check(scripts[0]?.hasAttribute('defer'), 'Metrika script must use defer');
+  const pixels = doc.querySelectorAll('img[src="https://mc.yandex.ru/watch/113598335"]');
+  check(pixels.length === 1, 'expected exactly one Metrika pixel');
+  check(!!pixels[0]?.closest('body noscript'), 'Metrika pixel must be inside body noscript');
+  check(
+    doc.querySelector('meta[property="og:site_name"]')?.content === brand,
+    'og:site_name mismatch',
+  );
+}
+
+function checkHomeSchema(doc, check) {
+  const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
+  check(scripts.length === 1, 'expected one homepage structured data graph');
+  if (scripts.length !== 1) return;
+  let schema;
+  try {
+    schema = JSON.parse(scripts[0].textContent);
+  } catch {
+    check(false, 'invalid structured data JSON');
+    return;
+  }
+  check(schema?.['@context'] === 'https://schema.org', 'structured data context mismatch');
+  const graph = Array.isArray(schema?.['@graph']) ? schema['@graph'] : [];
+  const websites = graph.filter((node) => node?.['@type'] === 'WebSite');
+  const organizations = graph.filter((node) => node?.['@type'] === 'Organization');
+  check(websites.length === 1, 'expected one WebSite entity');
+  check(organizations.length === 1, 'expected one Organization entity');
+  const website = websites[0];
+  const organization = organizations[0];
+  for (const entity of [website, organization]) {
+    check(entity?.name === brand, 'structured data brand mismatch');
+    check(
+      Array.isArray(entity?.alternateName) && entity.alternateName.includes('ДизайнСейчас'),
+      'missing compact brand alias',
+    );
+    check(entity?.url === `${origin}/`, 'structured data must use canonical domain homepage');
+  }
+  check(
+    organization?.['@id'] === `${origin}/#organization`,
+    'Organization must have a stable domain ID',
+  );
+  check(
+    !!organization?.['@id'] && website?.publisher?.['@id'] === organization['@id'],
+    'WebSite publisher must reference Organization',
+  );
+}
+
 async function exists(path) {
   try {
     return (await stat(path)).isFile();
@@ -24,6 +77,8 @@ async function exists(path) {
     return false;
   }
 }
+
+if (!(await exists(join(root, 'metrika.js')))) errors.push('Missing metrika.js build asset');
 
 for (const url of urls) {
   const path = new URL(url).pathname;
@@ -53,9 +108,17 @@ for (const url of urls) {
   }
   const dom = new JSDOM(html, { url });
   const doc = dom.window.document;
+  checkAnalytics(doc, check);
+  if (homePaths.has(path)) checkHomeSchema(doc, check);
   const meta = (selector) => doc.querySelector(selector)?.getAttribute('content');
   const title = doc.title.trim();
   const description = meta('meta[name="description"]');
+  check(
+    ![...doc.querySelectorAll('meta[name="robots"], meta[name="googlebot"]')].some((node) =>
+      /(?:^|[\s,])(?:noindex|none)(?:$|[\s,])/i.test(node.content),
+    ),
+    'indexable page must not use noindex',
+  );
   check(doc.querySelectorAll('h1').length === 1, 'expected exactly one H1');
   check(!!title, 'empty title');
   check(!!description, 'empty description');
@@ -119,10 +182,26 @@ for (const url of urls) {
   pages.push({ path, title, h1: doc.querySelector('h1')?.textContent, images: doc.images.length });
   dom.window.close();
 }
+let notFoundHtml;
 if (liveOrigin) {
   const missing = await fetch(new URL('/finaltask-does-not-exist/', liveOrigin));
   if (missing.status !== 404) errors.push(`Unknown URL HTTP ${missing.status}, expected 404`);
+  notFoundHtml = await missing.text();
+} else {
+  notFoundHtml = await readFile(join(root, '404.html'), 'utf8');
 }
+const notFoundDom = new JSDOM(notFoundHtml);
+checkAnalytics(notFoundDom.window.document, (condition, message) => {
+  if (!condition) errors.push(`404: ${message}`);
+});
+if (
+  !notFoundDom.window.document
+    .querySelector('meta[name="robots"]')
+    ?.content.split(/[\s,]+/)
+    .includes('noindex')
+)
+  errors.push('404: expected noindex');
+notFoundDom.window.close();
 await mkdir('docs/qa', { recursive: true });
 await writeFile(
   `docs/qa/${liveOrigin ? 'live' : 'local'}-routes.json`,
@@ -132,6 +211,6 @@ await writeFile(
     2,
   ) + '\n',
 );
-console.log(`${pages.length} routes audited; ${errors.length} errors`);
+console.log(`${pages.length} routes + 404 audited; ${errors.length} errors`);
 for (const error of errors) console.error(error);
 process.exitCode = errors.length ? 1 : 0;

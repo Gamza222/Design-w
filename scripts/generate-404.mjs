@@ -2,7 +2,7 @@
 // Зачем не React-страница: при `ssr: false` любой «чужой» URL раньше уходил через
 // vercel.json-rewrite в __spa-fallback.html (статус 200) и ловил hydration mismatch
 // (React #418): фолбэк пререндерен для «/», а Layout рендерит location-зависимый
-// head (canonical/hreflang). Статичный 404 без JS решает обе проблемы разом:
+// head (canonical/hreflang). Статичный 404 без React решает обе проблемы разом:
 // честный статус 404 (Vercel отдаёт 404.html автоматически) и ноль гидрации.
 // Тексты берём из i18n-словарей — единый источник правды с ErrorBoundary.
 
@@ -22,7 +22,7 @@ const locale = (name) =>
 
 const ru = locale('ru.json');
 const en = locale('en.json');
-const BRAND = 'ДизайнСейчас';
+const BRAND = 'Дизайн Сейчас';
 
 // Шрифт — те же self-hosted сабсеты, что и у сайта (public/fonts — стабильные пути).
 const font = (weight, subset) =>
@@ -41,6 +41,7 @@ const html = `<!doctype html>
 <meta name="application-name" content="${BRAND}">
 <meta name="apple-mobile-web-app-title" content="${BRAND}">
 <meta property="og:site_name" content="${BRAND}">
+<script defer src="/metrika.js"></script>
 <style>
 ${font(400, 'cyrillic')}${font(400, 'latin')}${font(600, 'cyrillic')}${font(600, 'latin')}
 :root{--dark:#191c22;--surface:#23262d;--border:#3a3f48;--light:#eef0f3;--muted:#a3aab4;--accent:#febc04;--silver:#d3d8e0}
@@ -64,6 +65,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </style>
 </head>
 <body>
+<noscript><div><img src="https://mc.yandex.ru/watch/113598335" style="position:absolute;left:-9999px" alt=""></div></noscript>
 <main>
 <a class="brand" href="/" aria-label="${BRAND}"><img class="logo" src="/images/logo.png" alt=""><span>${BRAND}</span></a>
 <div class="code" aria-hidden="true">404</div>

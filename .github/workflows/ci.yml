@@ -114,11 +114,15 @@ jobs:
 
       - name: Verify REG.RU FTPS certificate
         run: |
+          set -euo pipefail
           certificate="$RUNNER_TEMP/reg-ru-ftps.pem"
           openssl s_client \
             -connect "$DEPLOY_HOST:$DEPLOY_PORT" \
             -servername "$DEPLOY_HOST" \
             -starttls ftp \
+            -verify_return_error \
+            -verify_hostname "$DEPLOY_HOST" \
+            -CAfile /etc/ssl/certs/ca-certificates.crt \
             -showcerts </dev/null 2>/dev/null \
             | openssl x509 -outform PEM > "$certificate"
 
@@ -129,9 +133,6 @@ jobs:
             exit 1
           fi
 
-          chmod 600 "$certificate"
-          echo "DEPLOY_FTP_CA_FILE=$certificate" >> "$GITHUB_ENV"
-
       - name: Upload static site
         env:
           DEPLOY_FTP_PASSWORD: ${{ secrets.DEPLOY_FTP_PASSWORD }}
@@ -140,7 +141,9 @@ jobs:
           set cmd:fail-exit yes
           set ftp:ssl-force yes
           set ftp:ssl-protect-data yes
-          set ssl:ca-file "$DEPLOY_FTP_CA_FILE"
+          # The server presents a CA-signed leaf and intermediate. Trust the system
+          # CA bundle; a leaf-only ca-file breaks GnuTLS chain verification.
+          set ssl:ca-file /etc/ssl/certs/ca-certificates.crt
           set ssl:check-hostname yes
           set ssl:verify-certificate yes
           set net:max-retries 2

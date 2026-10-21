@@ -6,9 +6,9 @@ import { AppLink, Button } from '@shared/ui';
 
 import styles from './CookieNotice.module.scss';
 
-const STORAGE_KEY = 'tdn_cookie_notice_v1';
+const STORAGE_KEY = 'tdn_cookie_notice_v2';
 
-/** Информационное уведомление о cookie, Метрике с Вебвизором и встроенной карте. */
+/** Информационное уведомление о cookie, Google Analytics, Метрике и встроенной карте. */
 export function CookieNotice() {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);

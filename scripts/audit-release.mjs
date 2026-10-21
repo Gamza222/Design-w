@@ -3,6 +3,7 @@
 import { readFile, stat, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { JSDOM } from 'jsdom';
+import { GOOGLE_TAG_URL, GOOGLE_TAG_INIT } from '../src/shared/config/googleTag.js';
 
 const root = join(process.cwd(), 'build/client');
 const origin = 'https://designseichas.ru';
@@ -21,6 +22,14 @@ const brand = 'Дизайн Сейчас';
 const homePaths = new Set(['/', '/en/', '/by/']);
 
 function checkAnalytics(doc, check) {
+  const googleTags = [...doc.querySelectorAll('script[src]')].filter(
+    (script) => script.getAttribute('src') === GOOGLE_TAG_URL,
+  );
+  check(googleTags.length === 1, 'expected exactly one Google tag');
+  check(googleTags[0]?.hasAttribute('async'), 'Google tag must load asynchronously');
+  const googleInit = doc.querySelectorAll('script#google-analytics-init');
+  check(googleInit.length === 1, 'expected exactly one Google Analytics initialization');
+  check(googleInit[0]?.textContent.trim() === GOOGLE_TAG_INIT, 'Google Analytics config mismatch');
   const scripts = doc.querySelectorAll('script[src="/metrika.js"]');
   check(scripts.length === 1, 'expected exactly one Metrika script');
   check(scripts[0]?.hasAttribute('defer'), 'Metrika script must use defer');

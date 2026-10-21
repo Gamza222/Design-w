@@ -26,7 +26,7 @@
   },
   "cookie": {
     "title": "Cookies",
-    "text": "This site uses a cookie to remember your language and Yandex Metrica to analyse traffic. Metrica uses cookies, and Session Replay records visitors’ interactions with the site. The embedded Yandex Map operates under Yandex's terms.",
+    "text": "This site uses a cookie to remember your language and Google Analytics and Yandex Metrica to analyse traffic. These services use cookies, and Session Replay records visitors’ interactions with the site. The embedded Yandex Map operates under Yandex's terms.",
     "policy": "Privacy policy",
     "acknowledge": "Got it"
   },

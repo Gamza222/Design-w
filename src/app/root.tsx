@@ -17,6 +17,8 @@ import {
   localizePath,
   normalizePathname,
   SITE_URL,
+  GOOGLE_TAG_URL,
+  GOOGLE_TAG_INIT,
   stripLocale,
 } from '@shared/config';
 import { localeDict } from '@shared/lib';
@@ -77,6 +79,8 @@ export function Layout({ children }: { children: ReactNode }) {
         />
         <Meta />
         <Links />
+        <script id="google-analytics-init" dangerouslySetInnerHTML={{ __html: GOOGLE_TAG_INIT }} />
+        <script async src={GOOGLE_TAG_URL} />
         <script defer src="/metrika.js" />
       </head>
       <body>

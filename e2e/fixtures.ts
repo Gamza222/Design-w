@@ -17,6 +17,12 @@ export const test = base.extend<{ externalMaps: void }>({
       await context.route(/^https:\/\/mc\.yandex\.(ru|com)\//, (route) =>
         route.fulfill({ contentType: 'application/javascript', body: '' }),
       );
+      await context.route('https://www.googletagmanager.com/**', (route) =>
+        route.fulfill({ contentType: 'application/javascript', body: '' }),
+      );
+      await context.route(/^https:\/\/([^/]+\.)?google-analytics\.com\//, (route) =>
+        route.fulfill({ status: 204 }),
+      );
       await use();
     },
     { auto: true },

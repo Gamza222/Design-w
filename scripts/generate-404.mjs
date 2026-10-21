@@ -9,6 +9,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { cwd, exit } from 'node:process';
+import { GOOGLE_TAG_URL, GOOGLE_TAG_INIT } from '../src/shared/config/googleTag.js';
 
 const CLIENT_DIR = join(cwd(), 'build', 'client');
 
@@ -41,6 +42,8 @@ const html = `<!doctype html>
 <meta name="application-name" content="${BRAND}">
 <meta name="apple-mobile-web-app-title" content="${BRAND}">
 <meta property="og:site_name" content="${BRAND}">
+<script id="google-analytics-init">${GOOGLE_TAG_INIT}</script>
+<script async src="${GOOGLE_TAG_URL}"></script>
 <script defer src="/metrika.js"></script>
 <style>
 ${font(400, 'cyrillic')}${font(400, 'latin')}${font(600, 'cyrillic')}${font(600, 'latin')}

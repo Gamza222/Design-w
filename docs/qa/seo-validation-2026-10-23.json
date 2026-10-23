@@ -1,0 +1,204 @@
+{
+  "date": "2026-10-23",
+  "schemaOrg": [
+    {
+      "page": "en",
+      "errors": 0,
+      "warnings": 0,
+      "items": 1
+    },
+    {
+      "page": "eskiznyj-dizajn-proekt",
+      "errors": 0,
+      "warnings": 0,
+      "items": 2
+    },
+    {
+      "page": "planirovka-kvartiry",
+      "errors": 0,
+      "warnings": 0,
+      "items": 2
+    },
+    {
+      "page": "by",
+      "errors": 0,
+      "warnings": 0,
+      "items": 1
+    },
+    {
+      "page": "3d-vizualizaciya-interera",
+      "errors": 0,
+      "warnings": 0,
+      "items": 2
+    },
+    {
+      "page": "home",
+      "errors": 0,
+      "warnings": 0,
+      "items": 1
+    },
+    {
+      "page": "contact",
+      "errors": 0,
+      "warnings": 0,
+      "items": 1
+    }
+  ],
+  "cookieBrowserChecks": [
+    {
+      "engine": "chromium",
+      "scenario": "new",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "engine": "chromium",
+      "scenario": "acknowledged",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "engine": "chromium",
+      "scenario": "storage-denied",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "engine": "chromium",
+      "scenario": "no-javascript",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "engine": "webkit",
+      "scenario": "new",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "engine": "webkit",
+      "scenario": "acknowledged",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "engine": "webkit",
+      "scenario": "storage-denied",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "engine": "webkit",
+      "scenario": "no-javascript",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "apache": {
+    "apache": "2.4.62",
+    "passed": 14,
+    "results": [
+      {
+        "path": "/about/",
+        "status": 200,
+        "location": null
+      },
+      {
+        "path": "/about/?utm_source=https://ads.example/a//b&x=1",
+        "status": 200,
+        "location": null
+      },
+      {
+        "path": "//about/",
+        "status": 301,
+        "location": "https://designseichas.ru/about/"
+      },
+      {
+        "path": "///about/?utm_source=https://ads.example/a//b&x=1",
+        "status": 301,
+        "location": "https://designseichas.ru/about/?utm_source=https://ads.example/a//b&x=1"
+      },
+      {
+        "path": "/about//",
+        "status": 301,
+        "location": "https://designseichas.ru/about/"
+      },
+      {
+        "path": "/about///?utm_source=a%2Fb&x=https://example.org//page",
+        "status": 301,
+        "location": "https://designseichas.ru/about/?utm_source=a%2Fb&x=https://example.org//page"
+      },
+      {
+        "path": "/a///b//c/",
+        "status": 301,
+        "location": "https://designseichas.ru/a/b//c/"
+      },
+      {
+        "path": "/a%20b//c/?q=%2F%2F",
+        "status": 301,
+        "location": "https://designseichas.ru/a%20b/c/?q=%2F%2F"
+      },
+      {
+        "path": "/a%3Fb//c/?utm_source=ad",
+        "status": 301,
+        "location": "https://designseichas.ru/a%3Fb/c/?utm_source=ad"
+      },
+      {
+        "path": "/a%23b//c/?q=a%26b",
+        "status": 301,
+        "location": "https://designseichas.ru/a%23b/c/?q=a%26b"
+      },
+      {
+        "no_loop_from": "//about/",
+        "hops": 1,
+        "final_path": "/about/",
+        "status": 200
+      },
+      {
+        "no_loop_from": "/about////",
+        "hops": 1,
+        "final_path": "/about/",
+        "status": 200
+      },
+      {
+        "no_loop_from": "////a///b////c///?utm_source=https://ads.example/a//b",
+        "hops": 4,
+        "final_path": "/a/b/c/?utm_source=https://ads.example/a//b",
+        "status": 200
+      },
+      {
+        "fallback_status": 200,
+        "fallback_x_robots_tag": "noindex",
+        "normal_pages_no_noindex": true
+      }
+    ]
+  },
+  "labMetrics": {
+    "mobile": {
+      "score": 0.85,
+      "lcpMs": 3929.803,
+      "cls": 0,
+      "tbtMs": 75
+    },
+    "desktop": {
+      "score": 0.97,
+      "lcpMs": 1134.5785,
+      "cls": 0.00393,
+      "tbtMs": 0
+    },
+    "local-before-devtools": {
+      "score": 0.68,
+      "lcpMs": 5533.681,
+      "cls": 0,
+      "tbtMs": 240.53899999999885
+    },
+    "local-after-devtools": {
+      "score": 0.82,
+      "lcpMs": 3153.928,
+      "cls": 0.020247,
+      "tbtMs": 248.45199999999932
+    }
+  },
+  "fieldMetrics": "Unavailable: PageSpeed API returned 429 quota=0; these lab measurements do not establish field INP.",
+  "analyticsBlockedDuringLab": true
+}

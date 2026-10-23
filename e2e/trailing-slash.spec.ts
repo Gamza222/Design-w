@@ -20,7 +20,11 @@ for (const [path, heading] of directoryRoutes) {
     expect(response?.status()).toBe(200);
     await expect(page.locator('[aria-controls="header-menu"]')).toBeEnabled();
     await expect(page.getByRole('heading', { level: 1, name: heading, exact: true })).toBeVisible();
-    await expect(page).toHaveTitle(new RegExp(heading));
+    const title =
+      path === '/planirovka-kvartiry/'
+        ? /Планировочное решение квартиры в Москве \| Дизайн Сейчас/
+        : new RegExp(heading);
+    await expect(page).toHaveTitle(title);
     expect(errors).toEqual([]);
   });
 }

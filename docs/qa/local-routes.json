@@ -5,13 +5,13 @@
   "pages": [
     {
       "path": "/",
-      "title": "Дизайн Сейчас — студия дизайна интерьера",
+      "title": "Дизайн Сейчас — студия дизайна интерьера в Москве",
       "h1": "Дизайн-проект интерьера под вашу жизнь и задачи",
       "images": 15
     },
     {
       "path": "/3d-vizualizaciya-interera/",
-      "title": "3D-визуализация интерьера | Дизайн Сейчас",
+      "title": "3D-визуализация интерьера в Москве | Дизайн Сейчас",
       "h1": "3D-визуализация интерьера",
       "images": 7
     },
@@ -47,13 +47,13 @@
     },
     {
       "path": "/by/",
-      "title": "Дизайн Сейчас — студыя дызайну інтэр’ера",
+      "title": "Дизайн Сейчас — студыя дызайну інтэр’ера ў Маскве",
       "h1": "Дызайн-праект інтэр’ера пад ваша жыццё і задачы",
       "images": 15
     },
     {
       "path": "/by/3d-vizualizaciya-interera/",
-      "title": "3D-візуалізацыя інтэр’ера | Дизайн Сейчас",
+      "title": "3D-візуалізацыя інтэр’ера ў Маскве | Дизайн Сейчас",
       "h1": "3D-візуалізацыя інтэр’ера",
       "images": 7
     },
@@ -95,13 +95,13 @@
     },
     {
       "path": "/by/contact/",
-      "title": "Звяжыцеся з намі | Дизайн Сейчас",
+      "title": "Кантакты студыі ў Маскве | Дизайн Сейчас",
       "h1": "Звяжыцеся з намі",
       "images": 1
     },
     {
       "path": "/by/eskiznyj-dizajn-proekt/",
-      "title": "Поўны дызайн-праект | Дизайн Сейчас",
+      "title": "Поўны дызайн-праект кватэры ў Маскве | Дизайн Сейчас",
       "h1": "Поўны дызайн-праект",
       "images": 7
     },
@@ -113,7 +113,7 @@
     },
     {
       "path": "/by/planirovka-kvartiry/",
-      "title": "Планіроўка кватэры | Дизайн Сейчас",
+      "title": "Планіровачнае рашэнне кватэры ў Маскве | Дизайн Сейчас",
       "h1": "Планіроўка кватэры",
       "images": 7
     },
@@ -173,7 +173,7 @@
     },
     {
       "path": "/by/services/",
-      "title": "Паслугі | Дизайн Сейчас",
+      "title": "Паслугі дызайну інтэр’ера ў Маскве: склад і цэны | Дизайн Сейчас",
       "h1": "Паслугі",
       "images": 1
     },
@@ -185,19 +185,19 @@
     },
     {
       "path": "/contact/",
-      "title": "Свяжитесь с нами | Дизайн Сейчас",
+      "title": "Контакты студии в Москве | Дизайн Сейчас",
       "h1": "Свяжитесь с нами",
       "images": 1
     },
     {
       "path": "/en/",
-      "title": "Дизайн Сейчас — interior design studio",
+      "title": "Design Seichas — interior design studio in Moscow",
       "h1": "An interior design project for your life and needs",
       "images": 15
     },
     {
       "path": "/en/3d-vizualizaciya-interera/",
-      "title": "3D interior visualization | Дизайн Сейчас",
+      "title": "3D interior visualisation in Moscow | Design Seichas",
       "h1": "3D interior visualization",
       "images": 7
     },
@@ -239,13 +239,13 @@
     },
     {
       "path": "/en/contact/",
-      "title": "Get in touch | Дизайн Сейчас",
+      "title": "Contact our Moscow studio | Design Seichas — Дизайн Сейчас",
       "h1": "Get in touch",
       "images": 1
     },
     {
       "path": "/en/eskiznyj-dizajn-proekt/",
-      "title": "Full design project | Дизайн Сейчас",
+      "title": "Full apartment design project in Moscow | Design Seichas",
       "h1": "Full design project",
       "images": 7
     },
@@ -257,7 +257,7 @@
     },
     {
       "path": "/en/planirovka-kvartiry/",
-      "title": "Apartment layout | Дизайн Сейчас",
+      "title": "Apartment layout design in Moscow | Design Seichas",
       "h1": "Apartment layout",
       "images": 7
     },
@@ -317,13 +317,13 @@
     },
     {
       "path": "/en/services/",
-      "title": "Services | Дизайн Сейчас",
+      "title": "Interior design services in Moscow: scope and prices | Design Seichas",
       "h1": "Services",
       "images": 1
     },
     {
       "path": "/eskiznyj-dizajn-proekt/",
-      "title": "Полный дизайн-проект | Дизайн Сейчас",
+      "title": "Полный дизайн-проект квартиры в Москве | Дизайн Сейчас",
       "h1": "Полный дизайн-проект",
       "images": 7
     },
@@ -335,7 +335,7 @@
     },
     {
       "path": "/planirovka-kvartiry/",
-      "title": "Планировка квартиры | Дизайн Сейчас",
+      "title": "Планировочное решение квартиры в Москве | Дизайн Сейчас",
       "h1": "Планировка квартиры",
       "images": 7
     },
@@ -395,7 +395,7 @@
     },
     {
       "path": "/services/",
-      "title": "Услуги | Дизайн Сейчас",
+      "title": "Услуги дизайна интерьера в Москве: состав и цены | Дизайн Сейчас",
       "h1": "Услуги",
       "images": 1
     }

@@ -1,4 +1,5 @@
 import type { LeadAttribution, LeadContext } from './leadDialog';
+import { trackConfirmedLead } from './trackLead';
 
 export type LeadKind = 'project' | 'consultation';
 
@@ -57,6 +58,7 @@ export async function submitLead(payload: LeadPayload): Promise<{ leadNumber: st
     ) {
       throw new Error('The server did not confirm lead delivery');
     }
+    trackConfirmedLead(payload.submissionId, payload.kind);
     return { leadNumber: confirmation.leadNumber };
   } finally {
     globalThis.clearTimeout(timeout);

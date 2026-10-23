@@ -1,12 +1,20 @@
 import { useTranslation } from 'react-i18next';
 
-import { buildMeta, localeDict, type RouteMetaArgs } from '@shared/lib';
+import { buildMeta, buildOrganizationSchema, localeDict, type RouteMetaArgs } from '@shared/lib';
 import { PageHeader } from '@shared/ui';
 import { ContactCta } from '@widgets/contact-cta';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
-  return buildMeta(`${t.contact.title} | ${t.brand}`, t.contact.subtitle, location.pathname);
+  return [
+    ...buildMeta(t.contact.seo.title, t.contact.seo.description, location.pathname),
+    {
+      'script:ld+json': {
+        '@context': 'https://schema.org',
+        ...buildOrganizationSchema(location.pathname),
+      },
+    },
+  ];
 }
 
 /** Страница «Контакты»: стандартный hero внутренних страниц (H1 + сабтайтл) + блок

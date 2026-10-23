@@ -43,6 +43,20 @@ for (const kind of ['consultation', 'project'] as const) {
     });
 
     await page.goto(kind === 'project' ? '/contact' : '/#services-request');
+    await page.evaluate(() => {
+      const events: unknown[][] = [];
+      Object.assign(window, {
+        __confirmedLeadEvents: events,
+        gtag: (...args: unknown[]) => events.push(args),
+        ym: (...args: unknown[]) => {
+          if (args[1] === 'reachGoal') events.push(args);
+        },
+      });
+    });
+    const readEvents = () =>
+      page.evaluate(
+        () => (window as Window & { __confirmedLeadEvents?: unknown[][] }).__confirmedLeadEvents,
+      );
     const form =
       kind === 'project' ? page.locator('main form') : page.locator('#services-request form');
     if (kind === 'project') {
@@ -65,6 +79,7 @@ for (const kind of ['consultation', 'project'] as const) {
     await submit.click();
     await expect(form.getByText(/Не удалось отправить заявку/)).toBeVisible();
     expect(requests[1]?.submissionId).toBe(requests[0]?.submissionId);
+    expect(await readEvents()).toEqual([]);
 
     await form.getByLabel('Ваше имя').fill('Анна — исправленная заявка');
     await submit.click();
@@ -72,6 +87,10 @@ for (const kind of ['consultation', 'project'] as const) {
     expect(requests).toHaveLength(3);
     expect(requests[2]?.submissionId).not.toBe(requests[1]?.submissionId);
     expect(requests[2]?.name).toBe('Анна — исправленная заявка');
+    expect(await readEvents()).toEqual([
+      ['event', 'generate_lead', { lead_type: kind, send_to: 'G-FGETKE5FZQ' }],
+      [113598335, 'reachGoal', 'lead_success', { lead_type: kind }],
+    ]);
   });
 }
 

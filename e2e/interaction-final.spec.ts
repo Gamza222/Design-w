@@ -55,7 +55,7 @@ for (const kind of ['consultation', 'project'] as const) {
     });
     const readEvents = () =>
       page.evaluate(
-        () => (window as Window & { __confirmedLeadEvents: unknown[][] }).__confirmedLeadEvents,
+        () => (window as Window & { __confirmedLeadEvents?: unknown[][] }).__confirmedLeadEvents,
       );
     const form =
       kind === 'project' ? page.locator('main form') : page.locator('#services-request form');

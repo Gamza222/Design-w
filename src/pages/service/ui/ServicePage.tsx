@@ -7,6 +7,7 @@ import { getProjects } from '@entities/project';
 import { ROUTES, SERVICE_LANDINGS, stripLocale, type ServiceLandingKey } from '@shared/config';
 import {
   buildMeta,
+  buildServiceSchema,
   localeDict,
   openLeadDialog,
   useLocale,
@@ -15,6 +16,7 @@ import {
 } from '@shared/lib';
 import {
   Accordion,
+  AppLink,
   Breadcrumbs,
   Button,
   Container,
@@ -43,7 +45,10 @@ function landingKey(pathname: string): ServiceLandingKey {
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
   const page = t.servicePages[landingKey(location.pathname)];
-  return buildMeta(`${page.h1} | ${t.brand}`, page.subtitle, location.pathname);
+  return [
+    ...buildMeta(page.seo.title, page.seo.description, location.pathname),
+    buildServiceSchema(location.pathname, page.h1, page.intro),
+  ];
 }
 
 /** SEO-посадка услуги (ТЗ, Фаза 1): H1 + интро, «что входит», цена/срок + CTA,
@@ -107,6 +112,9 @@ export default function ServicePage() {
                 {item}
               </p>
             ))}
+            <p className={styles.intro}>
+              <AppLink to={ROUTES.services}>{t('services.compare')}</AppLink>
+            </p>
           </div>
 
           <aside className={styles.card}>

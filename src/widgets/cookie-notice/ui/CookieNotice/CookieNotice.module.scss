@@ -1,5 +1,9 @@
 @use 'app/styles/abstracts' as *;
 
+html[data-cookie-notice='acknowledged'] .notice {
+  display: none;
+}
+
 .notice {
   position: fixed;
   z-index: calc(var(--z-overlay) - 1);

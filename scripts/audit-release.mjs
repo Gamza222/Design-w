@@ -8,18 +8,86 @@ import { GOOGLE_TAG_URL, GOOGLE_TAG_INIT } from '../src/shared/config/googleTag.
 const root = join(process.cwd(), 'build/client');
 const origin = 'https://designseichas.ru';
 const liveOrigin = process.argv[2];
-const sitemap = new JSDOM(await readFile(join(root, 'sitemap.xml'), 'utf8'), {
-  contentType: 'text/xml',
-});
-const urls = [...sitemap.window.document.getElementsByTagName('loc')].map(
-  (node) => node.textContent,
-);
 const errors = [];
 const pages = [];
 const titles = new Map();
 const descriptions = new Map();
 const brand = 'Дизайн Сейчас';
 const homePaths = new Set(['/', '/en/', '/by/']);
+const alternatesByUrl = new Map();
+
+// In live mode inspect the published discovery files, not just the local build.
+async function readDiscoveryFile(name) {
+  if (!liveOrigin) return readFile(join(root, name), 'utf8');
+  const response = await fetch(new URL(`/${name}`, liveOrigin), {
+    redirect: 'manual',
+    signal: AbortSignal.timeout(20000),
+  });
+  if (response.status !== 200) errors.push(`${name}: HTTP ${response.status}, expected 200`);
+  return response.text();
+}
+
+const sitemap = new JSDOM(await readDiscoveryFile('sitemap.xml'), {
+  contentType: 'text/xml',
+});
+const sitemapDocument = sitemap.window.document;
+if (
+  sitemapDocument.documentElement.localName !== 'urlset' ||
+  sitemapDocument.documentElement.namespaceURI !== 'http://www.sitemaps.org/schemas/sitemap/0.9'
+)
+  errors.push('sitemap.xml: expected a sitemap urlset');
+const sitemapEntries = [...sitemapDocument.getElementsByTagName('url')];
+const urls = sitemapEntries.map((entry) => entry.querySelector('loc')?.textContent.trim());
+const urlSet = new Set(urls);
+if (!urls.length) errors.push('sitemap.xml: no page URLs');
+if (urls.length !== urlSet.size) errors.push('sitemap.xml: duplicate page URLs');
+const xmlAlternatesByUrl = new Map(
+  sitemapEntries.map((entry, index) => [
+    urls[index],
+    [...entry.getElementsByTagNameNS('http://www.w3.org/1999/xhtml', 'link')].map((link) => ({
+      language: link.getAttribute('hreflang'),
+      href: link.getAttribute('href'),
+      rel: link.getAttribute('rel'),
+    })),
+  ]),
+);
+if (liveOrigin) {
+  const localSitemap = new JSDOM(await readFile(join(root, 'sitemap.xml'), 'utf8'), {
+    contentType: 'text/xml',
+  });
+  const localUrls = [...localSitemap.window.document.getElementsByTagName('loc')].map((node) =>
+    node.textContent.trim(),
+  );
+  if (JSON.stringify([...urls].sort()) !== JSON.stringify(localUrls.sort()))
+    errors.push('sitemap.xml: published page URLs differ from the release build');
+  localSitemap.window.close();
+}
+const robots = await readDiscoveryFile('robots.txt');
+const declaredSitemaps = [...robots.matchAll(/^\s*Sitemap:\s*(\S+)\s*$/gim)].map(
+  (match) => match[1],
+);
+if (!declaredSitemaps.includes(`${origin}/sitemap.xml`))
+  errors.push('robots.txt: missing canonical Sitemap declaration');
+
+function expectedAlternates(path) {
+  const base = path.replace(/^\/(?:en|by)(?=\/)/, '') || '/';
+  return [
+    { language: 'ru-RU', href: `${origin}${base}`, rel: 'alternate' },
+    { language: 'en', href: `${origin}/en${base}`, rel: 'alternate' },
+    { language: 'be-BY', href: `${origin}/by${base}`, rel: 'alternate' },
+    { language: 'x-default', href: `${origin}${base}`, rel: 'alternate' },
+  ];
+}
+
+function serializeAlternates(links) {
+  return JSON.stringify(
+    links.map(({ language, href, rel }) => `${language}|${href}|${rel}`).sort(),
+  );
+}
+
+function hasSchemaType(node, type) {
+  return [node?.['@type']].flat().includes(type);
+}
 
 function checkAnalytics(doc, check) {
   const googleTags = [...doc.querySelectorAll('script[src]')].filter(
@@ -55,8 +123,8 @@ function checkHomeSchema(doc, check) {
   }
   check(schema?.['@context'] === 'https://schema.org', 'structured data context mismatch');
   const graph = Array.isArray(schema?.['@graph']) ? schema['@graph'] : [];
-  const websites = graph.filter((node) => node?.['@type'] === 'WebSite');
-  const organizations = graph.filter((node) => node?.['@type'] === 'Organization');
+  const websites = graph.filter((node) => hasSchemaType(node, 'WebSite'));
+  const organizations = graph.filter((node) => hasSchemaType(node, 'Organization'));
   check(websites.length === 1, 'expected one WebSite entity');
   check(organizations.length === 1, 'expected one Organization entity');
   const website = websites[0];
@@ -90,16 +158,24 @@ async function exists(path) {
 if (!(await exists(join(root, 'metrika.js')))) errors.push('Missing metrika.js build asset');
 
 for (const url of urls) {
+  if (!URL.canParse(url)) {
+    errors.push(`sitemap.xml: invalid absolute URL ${url}`);
+    continue;
+  }
   const path = new URL(url).pathname;
   const check = (condition, message) => {
     if (!condition) errors.push(`${path}: ${message}`);
   };
+  check(url === origin + path, 'sitemap URL must use the canonical origin without query/hash');
   check(path.endsWith('/'), 'sitemap URL needs final slash');
   let html;
   if (liveOrigin) {
-    const response = await fetch(new URL(path, liveOrigin));
+    const response = await fetch(new URL(path, liveOrigin), { redirect: 'manual' });
     check(response.status === 200, `HTTP ${response.status}`);
-    check(new URL(response.url).pathname === path, `unexpected redirect to ${response.url}`);
+    check(
+      !/(?:^|[\s,:])(?:noindex|none)(?:$|[\s,])/i.test(response.headers.get('x-robots-tag') ?? ''),
+      'indexable page must not use an HTTP noindex directive',
+    );
     html = await response.text();
     if (path !== '/') {
       const redirect = await fetch(new URL(path.slice(0, -1), liveOrigin), { redirect: 'manual' });
@@ -117,6 +193,12 @@ for (const url of urls) {
   }
   const dom = new JSDOM(html, { url });
   const doc = dom.window.document;
+  const expectedLanguage = path.startsWith('/en/')
+    ? 'en'
+    : path.startsWith('/by/')
+      ? 'be-BY'
+      : 'ru-RU';
+  check(doc.documentElement.lang === expectedLanguage, 'HTML language does not match the route');
   checkAnalytics(doc, check);
   if (homePaths.has(path)) checkHomeSchema(doc, check);
   const meta = (selector) => doc.querySelector(selector)?.getAttribute('content');
@@ -141,10 +223,23 @@ for (const url of urls) {
   check(doc.querySelectorAll('link[rel="canonical"]').length === 1, 'one canonical required');
   check(doc.querySelector('link[rel="canonical"]')?.href === url, 'canonical mismatch');
   check(meta('meta[property="og:url"]') === url, 'og:url mismatch');
-  const alternates = [...doc.querySelectorAll('link[hreflang]')];
-  check(alternates.length === 4, 'expected RU/EN/BE/x-default alternates');
+  const alternates = [...doc.querySelectorAll('link[hreflang]')].map((link) => ({
+    language: link.getAttribute('hreflang'),
+    href: link.getAttribute('href'),
+    rel: link.getAttribute('rel'),
+  }));
+  const expected = serializeAlternates(expectedAlternates(path));
+  check(
+    serializeAlternates(alternates) === expected,
+    'expected exact reciprocal RU/EN/BE/x-default language URLs',
+  );
+  check(
+    serializeAlternates(xmlAlternatesByUrl.get(url) ?? []) === serializeAlternates(alternates),
+    'HTML and Sitemap hreflang differ',
+  );
   for (const alternate of alternates)
-    check(urls.includes(alternate.href), `missing alternate ${alternate.href}`);
+    check(urlSet.has(alternate.href), `missing alternate ${alternate.href}`);
+  alternatesByUrl.set(url, alternates);
   const ogImage = meta('meta[property="og:image"]');
   check(!!ogImage, 'missing OG image');
   if (ogImage && new URL(ogImage, origin).origin === origin)
@@ -191,9 +286,18 @@ for (const url of urls) {
   pages.push({ path, title, h1: doc.querySelector('h1')?.textContent, images: doc.images.length });
   dom.window.close();
 }
+for (const [url, alternates] of alternatesByUrl) {
+  for (const alternate of alternates) {
+    if (!alternatesByUrl.get(alternate.href)?.some((link) => link.href === url))
+      errors.push(`${url}: missing hreflang return link from ${alternate.href}`);
+  }
+}
+sitemap.window.close();
 let notFoundHtml;
 if (liveOrigin) {
-  const missing = await fetch(new URL('/finaltask-does-not-exist/', liveOrigin));
+  const missing = await fetch(new URL('/finaltask-does-not-exist/', liveOrigin), {
+    redirect: 'manual',
+  });
   if (missing.status !== 404) errors.push(`Unknown URL HTTP ${missing.status}, expected 404`);
   notFoundHtml = await missing.text();
 } else {

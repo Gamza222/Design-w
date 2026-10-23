@@ -12,7 +12,7 @@ import styles from './ServicesPage.module.scss';
 
 export function meta({ location }: RouteMetaArgs) {
   const t = localeDict(location.pathname);
-  return buildMeta(`${t.services.title} | ${t.brand}`, t.services.subtitle, location.pathname);
+  return buildMeta(t.services.seo.title, t.services.seo.description, location.pathname);
 }
 
 const LANDING_KEYS = Object.keys(SERVICE_LANDINGS) as ServiceLandingKey[];

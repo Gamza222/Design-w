@@ -53,7 +53,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <meta charSet="utf-8" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{document.documentElement.dataset.theme=localStorage.getItem('designseichas-theme')==='light'?'light':'dark'}catch{document.documentElement.dataset.theme='dark'}`,
+            __html: `try{document.documentElement.dataset.theme=localStorage.getItem('designseichas-theme')==='light'?'light':'dark'}catch{document.documentElement.dataset.theme='dark'};try{if(localStorage.getItem('tdn_cookie_notice_v2')==='acknowledged')document.documentElement.dataset.cookieNotice='acknowledged'}catch{}`,
           }}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

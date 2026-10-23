@@ -32,14 +32,14 @@
   },
   "home": {
     "seo": {
-      "title": "Дизайн Сейчас — interior design studio",
-      "description": "Design Seichas (Дизайн Сейчас) creates interior design projects for apartments and houses: layouts, working drawings and 3D visualisations. Online across Russia and Belarus."
+      "title": "Design Seichas — interior design studio in Moscow",
+      "description": "Design Seichas (Дизайн Сейчас): a Moscow studio for apartment and house interiors, layouts, working drawings and 3D visualisations. Online across Russia and Belarus."
     },
     "hero": {
       "eyebrow": "Дизайн Сейчас · Interior design studio",
       "titleLead": "An interior design project",
       "titleAccent": "for your life and needs",
-      "subtitle": "Layouts, drawings, collages and visualisations in your chosen package. Calculate a preliminary estimate.",
+      "subtitle": "A Moscow design studio. Layouts, drawings, collages and visualisations are included according to your package. Calculate a preliminary price.",
       "ctaExamples": "View our work",
       "bullets": {
         "consult": "Discuss your brief",
@@ -258,8 +258,8 @@
     },
     "geography": {
       "eyebrow": "Geography",
-      "title": "Interior design online",
-      "subtitle": "Discuss projects for Russia and Belarus remotely. Share your room plan, photographs and preferences online.",
+      "title": "Moscow studio, online projects",
+      "subtitle": "Our office and team are based in Moscow. We work online with clients elsewhere in Russia and Belarus: share your room plan, photographs and preferences remotely.",
       "remoteTitle": "Start from your own city",
       "remoteText": "Prepare a plan, photographs and a list of needs for the initial discussion. Measurement arrangements and working terms are agreed separately.",
       "cities": {
@@ -470,10 +470,15 @@
   },
   "services": {
     "title": "Services",
-    "subtitle": "Choose the scope your project needs. Site supervision, procurement and implementation are charged separately.",
+    "subtitle": "Compare the scope and price of apartment layouts, working drawings, collages and full design projects. Based in Moscow, with online work across Russia and Belarus.",
     "landingsTitle": "Individual services",
-    "landingsSubtitle": "Every service can be ordered on its own - with a clear price per m² and fixed timelines.",
-    "landingsCta": "More about this service"
+    "landingsSubtitle": "Explore the scope of layouts, 3D visualisation and full design projects. We agree the schedule and working terms for your property.",
+    "landingsCta": "More about this service",
+    "seo": {
+      "title": "Interior design services in Moscow: scope and prices | Design Seichas",
+      "description": "Compare apartment layouts, working drawings, collages, full design projects and 3D visualisation from our Moscow studio. Package scope and prices per m²."
+    },
+    "compare": "Compare the scope and price of all services"
   },
   "portfolio": {
     "title": "Portfolio",
@@ -506,7 +511,7 @@
   },
   "about": {
     "title": "About the studio",
-    "subtitle": "Design Seichas — interior design with attention to layout, light and everyday life.",
+    "subtitle": "Design Seichas is an interior design studio with an office and team in Moscow. We design apartments and houses, also working online across Russia and Belarus.",
     "story": [
       "We develop interior design projects for apartments and houses. We begin with your needs: how you use the space, what you want to change and what you need the project to deliver.",
       "The scope depends on your chosen package. Layouts, working drawings, collages and photorealistic visualisations are available in different combinations. Design supervision, procurement and implementation are discussed and charged separately.",
@@ -524,9 +529,13 @@
       "addressLabel": "Address",
       "hoursLabel": "Working hours",
       "geoLabel": "Coverage",
-      "geoValue": "Working remotely across Russia and Belarus",
+      "geoValue": "Office and team in Moscow; online projects across Russia and Belarus",
       "paymentLabel": "Payment",
       "paymentValue": "Payment terms and methods are agreed in the contract."
+    },
+    "seo": {
+      "title": "Contact our Moscow studio | Design Seichas — Дизайн Сейчас",
+      "description": "Contact Design Seichas in Moscow: 22 Bolshoy Karetny Lane, building 3. Phone, email and project enquiries. Online projects across Russia and Belarus."
     }
   },
   "footer": {
@@ -583,7 +592,7 @@
       "slug": "planirovka-kvartiry",
       "h1": "Apartment layout",
       "subtitle": "Two layout options, furniture placement and black-and-white 3D views of the selected option.",
-      "intro": "Two layout options, furniture placement and black-and-white 3D views of the selected option.",
+      "intro": "Layout design helps determine the position of furniture and equipment before working drawings are prepared. We compare two options and present the chosen one in monochrome 3D views. Our studio is in Moscow; plans and preferences can also be shared online.",
       "includesTitle": "What is included",
       "priceLabel": "Price",
       "termLabel": "Schedule and terms",
@@ -594,17 +603,25 @@
           "a": "{{price}}. {{exclusions}}"
         },
         {
+          "q": "Does the layout package include working drawings for renovation?",
+          "a": "This package includes a measured plan, two layout options, furniture placement and monochrome 3D views. Working drawings, collages and photorealistic visualisations are available in other packages."
+        },
+        {
           "q": "How are the schedule and final scope agreed?",
           "a": "We discuss the property, source materials and selected package, then document the scope, working arrangements and schedule in the proposal and contract."
         }
       ],
-      "cta": "Discuss your project"
+      "cta": "Discuss your project",
+      "seo": {
+        "title": "Apartment layout design in Moscow | Design Seichas",
+        "description": "Apartment layout design in Moscow: two options, furniture placement and monochrome 3D views. Explore the service scope, price per m² and ordering terms."
+      }
     },
     "viz3d": {
       "slug": "3d-vizualizaciya-interera",
       "h1": "3D interior visualization",
       "subtitle": "Photorealistic images of the future interior. The scope is agreed before quoting.",
-      "intro": "Photorealistic images of the future interior. The scope is agreed before quoting.",
+      "intro": "3D visualisation presents the future interior in photorealistic images. We agree the rooms, camera angles and source materials before calculating the price. Discuss the service with our Moscow team or online.",
       "includesTitle": "What is included",
       "priceLabel": "Price",
       "termLabel": "Schedule and terms",
@@ -615,17 +632,25 @@
           "a": "{{price}}. {{exclusions}}"
         },
         {
+          "q": "What needs to be agreed before ordering visualisations?",
+          "a": "The rooms, required camera angles and source materials. These define the scope; photorealistic images can be ordered as a separate service."
+        },
+        {
           "q": "How are the schedule and final scope agreed?",
           "a": "We discuss the property, source materials and selected package, then document the scope, working arrangements and schedule in the proposal and contract."
         }
       ],
-      "cta": "Discuss your project"
+      "cta": "Discuss your project",
+      "seo": {
+        "title": "3D interior visualisation in Moscow | Design Seichas",
+        "description": "3D interior visualisation by our Moscow studio: photorealistic room images. Price per m², camera angles and source materials agreed for your project."
+      }
     },
     "sketch": {
       "slug": "eskiznyj-dizajn-proekt",
       "h1": "Full design project",
       "subtitle": "Layout, collages, visualizations of the main rooms, working drawings and specifications.",
-      "intro": "Layout, collages, visualizations of the main rooms, working drawings and specifications.",
+      "intro": "A full design project brings the layout and visual concept together with working documentation. It includes collages, main-room visualisations, drawings and specifications. Discuss the project with our Moscow team or online; the scope is agreed before work begins.",
       "includesTitle": "What is included",
       "priceLabel": "Price",
       "termLabel": "Schedule and terms",
@@ -636,11 +661,19 @@
           "a": "{{price}}. {{exclusions}}"
         },
         {
+          "q": "Does the full project include support during renovation?",
+          "a": "The package covers project materials: layouts, collages, main-room visualisations, working drawings and specifications. Site supervision, procurement and implementation are discussed and paid for separately."
+        },
+        {
           "q": "How are the schedule and final scope agreed?",
           "a": "We discuss the property, source materials and selected package, then document the scope, working arrangements and schedule in the proposal and contract."
         }
       ],
-      "cta": "Discuss your project"
+      "cta": "Discuss your project",
+      "seo": {
+        "title": "Full apartment design project in Moscow | Design Seichas",
+        "description": "Full interior design in Moscow: layouts, collages, main-room visualisations, working drawings and specifications. Package scope and price per m²."
+      }
     }
   },
   "notFound": {

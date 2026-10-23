@@ -5,6 +5,7 @@ import {
   CONTACTS,
   LOCALES,
   SITE_URL,
+  localizePath,
   type Dictionary,
 } from '../../config';
 
@@ -67,20 +68,78 @@ export function buildHomeMeta(pathname: string) {
             inLanguage: [...LOCALES],
             publisher: { '@id': organizationId },
           },
-          {
-            '@type': 'Organization',
-            '@id': organizationId,
-            url: siteUrl,
-            name: t.brand,
-            alternateName,
-            description: t.home.seo.description,
-            email: CONTACTS.email,
-            ...(CONTACTS.phone ? { telephone: CONTACTS.phone } : {}),
-            ...(CONTACTS.address ? { address: CONTACTS.address } : {}),
-            sameAs: CONTACTS.socials.map(({ href }) => href),
-          },
+          buildOrganizationSchema(pathname),
         ],
       },
     },
   ];
+}
+
+/** Один реальный офис; дистанционная работа не превращается в вымышленные филиалы. */
+export function buildOrganizationSchema(pathname: string) {
+  const t = localeDict(pathname);
+  return {
+    '@type': ['Organization', 'LocalBusiness'],
+    '@id': `${SITE_URL}/#organization`,
+    url: `${SITE_URL}/`,
+    name: t.brand,
+    alternateName: ['ДизайнСейчас', 'Design Seichas'],
+    description: t.about.subtitle,
+    image: `${SITE_URL}/realimages/web/about-poster.webp`,
+    email: CONTACTS.email,
+    ...(CONTACTS.phone ? { telephone: CONTACTS.phone } : {}),
+    ...(CONTACTS.address
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: CONTACTS.address.replace(/^Москва,\s*/, ''),
+            addressLocality: 'Москва',
+            addressCountry: 'RU',
+          },
+        }
+      : {}),
+    ...(CONTACTS.mapPoint ? { geo: { '@type': 'GeoCoordinates', ...CONTACTS.mapPoint } } : {}),
+    areaServed: serviceAreas(),
+    sameAs: CONTACTS.socials.map(({ href }) => href),
+  };
+}
+
+function serviceAreas() {
+  return [
+    { '@type': 'City', name: 'Москва' },
+    { '@type': 'Country', name: 'Россия' },
+    { '@type': 'Country', name: 'Беларусь' },
+  ];
+}
+
+/** Разметка отражает опубликованный состав услуги и видимые хлебные крошки. */
+export function buildServiceSchema(pathname: string, name: string, description: string) {
+  const t = localeDict(pathname);
+  const locale = getLocaleFromPath(pathname);
+  const url = SITE_URL + canonicalPathname(pathname);
+  return {
+    'script:ld+json': {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Service',
+          '@id': `${url}#service`,
+          url,
+          name,
+          description,
+          serviceType: name,
+          provider: { '@id': `${SITE_URL}/#organization` },
+          areaServed: serviceAreas(),
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { name: t.nav.home, item: SITE_URL + localizePath('/', locale) },
+            { name: t.nav.services, item: SITE_URL + localizePath('/services', locale) },
+            { name, item: url },
+          ].map((item, index) => ({ '@type': 'ListItem', position: index + 1, ...item })),
+        },
+      ],
+    },
+  };
 }

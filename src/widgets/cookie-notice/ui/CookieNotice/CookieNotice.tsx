@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ROUTES } from '@shared/config';
@@ -11,15 +11,9 @@ const STORAGE_KEY = 'tdn_cookie_notice_v2';
 /** Информационное уведомление о cookie, Google Analytics, Метрике и встроенной карте. */
 export function CookieNotice() {
   const { t } = useTranslation();
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    try {
-      setVisible(window.localStorage.getItem(STORAGE_KEY) !== 'acknowledged');
-    } catch {
-      setVisible(true);
-    }
-  }, []);
+  // Render the notice in the initial HTML. The head script and CSS hide it before
+  // paint for returning visitors, without changing React's hydration markup.
+  const [visible, setVisible] = useState(true);
 
   if (!visible) return null;
 
@@ -29,6 +23,7 @@ export function CookieNotice() {
     } catch {
       // The notice still closes for this visit when storage is unavailable.
     }
+    document.documentElement.dataset.cookieNotice = 'acknowledged';
     setVisible(false);
   };
 
